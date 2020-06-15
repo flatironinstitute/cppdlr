@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# TRIQS documentation build configuration file
+# documentation build configuration file
 
 import sys
 sys.path.insert(0, "@CMAKE_CURRENT_SOURCE_DIR@/sphinxext")
@@ -87,7 +87,7 @@ html_sidebars = {'index': ['sideb.html', 'searchbox.html']}
 
 htmlhelp_basename = '@PROJECT_NAME@doc'
 
-intersphinx_mapping = {'python': ('https://docs.python.org/3.8', None), 'triqslibs': ('https://triqs.github.io/triqs/latest', None)}
+intersphinx_mapping = {'python': ('https://docs.python.org/3.8', None)}
 
 # open links in new tab instead of same window
 from sphinx.writers.html import HTMLTranslator
