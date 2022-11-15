@@ -2,10 +2,10 @@
 
 .. _install:
 
-Install app4triqs
+Install cppdlr
 *******************
 
-Compiling app4triqs from source
+Compiling cppdlr from source
 ===============================
 
 .. note:: To guarantee reproducibility in scientific calculations we strongly recommend the use of a stable `release <https://github.com/TRIQS/triqs/releases>`_ of both TRIQS and its applications.
@@ -13,17 +13,17 @@ Compiling app4triqs from source
 Installation steps
 ------------------
 
-#. Download the source code of the latest stable version by cloning the ``TRIQS/app4triqs`` repository from GitHub::
+#. Download the source code of the latest stable version by cloning the ``TRIQS/cppdlr`` repository from GitHub::
 
-     $ git clone https://github.com/TRIQS/app4triqs app4triqs.src
+     $ git clone https://github.com/TRIQS/cppdlr cppdlr.src
 
 #. Create and move to a new directory where you will compile the code::
 
-     $ mkdir app4triqs.build && cd app4triqs.build
+     $ mkdir cppdlr.build && cd cppdlr.build
 
 #. In the build directory call cmake, including any additional custom CMake options, see below::
 
-     $ cmake -DCMAKE_INSTALL_PREFIX=path_to_install_dir ../app4triqs.src
+     $ cmake -DCMAKE_INSTALL_PREFIX=path_to_install_dir ../cppdlr.src
 
 #. Compile the code, run the tests and install the application::
 
@@ -36,7 +36,7 @@ Versions
 
 To use a particular version, go into the directory with the sources, and look at all available versions::
 
-     $ cd app4triqs.src && git tag
+     $ cd cppdlr.src && git tag
 
 Checkout the version of the code that you want::
 
@@ -47,14 +47,14 @@ and follow steps 2 to 4 above to compile the code.
 Custom CMake options
 --------------------
 
-The compilation of ``app4triqs`` can be configured using CMake-options::
+The compilation of ``cppdlr`` can be configured using CMake-options::
 
-    cmake ../app4triqs.src -DOPTION1=value1 -DOPTION2=value2 ...
+    cmake ../cppdlr.src -DOPTION1=value1 -DOPTION2=value2 ...
 
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Options                                                         | Syntax                                        |
 +=================================================================+===============================================+
-| Specify an installation path other than path_to_triqs           | -DCMAKE_INSTALL_PREFIX=path_to_app4triqs      |
+| Specify an installation path other than path_to_triqs           | -DCMAKE_INSTALL_PREFIX=path_to_cppdlr      |
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Build in Debugging Mode                                         | -DCMAKE_BUILD_TYPE=Debug                      |
 +-----------------------------------------------------------------+-----------------------------------------------+

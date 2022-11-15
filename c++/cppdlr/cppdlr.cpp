@@ -1,7 +1,7 @@
 #include <cmath>
-#include "./app4triqs.hpp"
+#include "./cppdlr.hpp"
 
-namespace app4triqs {
+namespace cppdlr {
 
   toto &toto::operator+=(toto const &b) {
     this->i += b.i;
@@ -34,4 +34,4 @@ namespace app4triqs {
     return i * int(pow(10, n_digits_j)) + j;
   }
 
-} // namespace app4triqs
+} // namespace cppdlr

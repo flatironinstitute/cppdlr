@@ -1,5 +1,5 @@
 FROM ubuntu:focal
-ARG APPNAME=app4triqs
+ARG APPNAME=cppdlr
 ARG LLVM=12
 ARG NTHREAD=10
 
