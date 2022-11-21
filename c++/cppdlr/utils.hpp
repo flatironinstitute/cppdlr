@@ -17,13 +17,17 @@ namespace cppdlr {
   class barycheb {
 
     public:
+    barycheb(int n);
 
-      barycheb(int n);
+    // [Q] Should this be const or ref? How to do this?
+    nda::vector_view<double> getnodes();
+
+    // [Q] Is &x and &f correct?
+    // [Q] Should f be a view?
+    double interp(double &x, nda::vector<double> &f);
 
     private:
-
-      nda::vector<double> xc; /// Chebshev nodes
-      nda::vector<double> wc; /// Chebshev weights
-
+    nda::vector<double> xc; /// Chebshev nodes
+    nda::vector<double> wc; /// Chebshev weights
   };
-}
+} // namespace cppdlr

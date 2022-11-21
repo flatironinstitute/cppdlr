@@ -71,3 +71,9 @@ external_dependency(h5
   GIT_REPO https://github.com/TRIQS/h5
   GIT_TAG unstable
 )
+
+# -- nda --
+external_dependency(nda
+  GIT_REPO https://github.com/TRIQS/nda
+  GIT_TAG unstable
+)

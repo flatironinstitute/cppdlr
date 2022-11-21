@@ -27,6 +27,9 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION include FILES_MATCHING
 # Link against HDF5 C++ Interface
 target_link_libraries(${PROJECT_NAME}_c PUBLIC h5::h5_c)
 
+# Link against NDA
+target_link_libraries(${PROJECT_NAME}_c PUBLIC nda::nda_c)
+
 # ========= Static Analyzer Checks ==========
 
 option(ANALYZE_SOURCES OFF "Run static analyzer checks if found (clang-tidy, cppcheck)")
