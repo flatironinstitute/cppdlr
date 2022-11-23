@@ -19,15 +19,14 @@ namespace cppdlr {
     public:
     barycheb(int n);
 
-    // [Q] Should this be const or ref? How to do this?
-    nda::vector_view<double> getnodes();
+    nda::vector<double> const& getnodes();
 
-    // [Q] Is &x and &f correct?
-    // [Q] Should f be a view?
-    double interp(double &x, nda::vector<double> &f);
+    double interp(double x, nda::vector_const_view<double> f);
 
     private:
     nda::vector<double> xc; /// Chebshev nodes
     nda::vector<double> wc; /// Chebshev weights
+    const int n;            /// Chebyshev n
+
   };
 } // namespace cppdlr
