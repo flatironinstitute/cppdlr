@@ -8,7 +8,8 @@ endforeach()
 #file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 set(all_tests 
   basic.cpp
-  barycheb_test.cpp
+  barycheb.cpp
+  dlr_build.cpp
   )
 
 foreach(test ${all_tests})
