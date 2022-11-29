@@ -9,39 +9,30 @@ auto _ = range::all;
 
 namespace cppdlr {
 
-  fineparams::fineparams(double lambda) : lambda(lambda) {
-   
+  fineparams::fineparams(double lambda) : 
+
     // All values have been chosen empirically to give fine discretization of
     // Lehmann kernel accurate to double machine precision
-    
-    p = 24; 
-    npt = max((int) ceil(log(lambda)/log(2.0))-2,1);
-    npo = max((int) ceil(log(lambda)/log(2.0)),1);
-    nt = 2*p*npt;
-    no = 2*p*npo;
-    
-  }
+
+    lambda(lambda),
+    p(24), 
+    npt(max((int) ceil(log(lambda)/log(2.0))-2,1)),
+    npo(max((int) ceil(log(lambda)/log(2.0)),1)),
+    nt(2*p*npt),
+    no(2*p*npo) { }
+   
 
   tuple<nda::vector<double>, nda::vector<double>>
     get_finegrids(fineparams &fine) {
-
-      // [Q] Is this kind of unpacking standard?
 
       int p = fine.p;
       int npt = fine.npt;
       int npo = fine.npo;
 
-      // [Q] Is this legal?
+      barycheb bc(p); // Get barycheb object for Chebyshev nodes
 
-      barycheb barycheb(fine.p); // Get barycheb object for Chebyshev nodes
+      auto xc = (bc.getnodes()+1)/2; // Cheb nodes on [0,1]
 
-
-      // auto xc = (barycheb.getnodes()+1.0)/2.0; // Cheb nodes on [0,1]
-
-      // [Q] Why does this seem to have desired effect but above doesn't?
-
-      auto xc = barycheb.getnodes();
-      xc = (xc + 1.0)/2.0;
 
       // Imaginary time grid points
 

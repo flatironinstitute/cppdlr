@@ -14,19 +14,12 @@ namespace cppdlr {
     public:
     fineparams(double lambda);
 
-    // [Q] I want to make all of these const, so that they are set in the
-    // constructor once and then can't be modified. It isn't really essential,
-    // because this is not a user-facing class, but it seems technically
-    // correct. But it seems that if I do this, I'm forced to set the values of
-    // these variables in the first line of the constructor, which is awkward
-    // and ugly. What's the right way to do this?
-    
-    double lambda; /// DLR cutoff
-    int p; /// Fine grid Chebyshev order
-    int npt; /// Number fine imaginary time grid panels
-    int npo; /// Number fine frequency grid panels
-    int nt; /// Total number fine imaginary time grid points
-    int no; /// Total number fine frequency grid points
+    const double lambda; /// DLR cutoff
+    const int p; /// Fine grid Chebyshev order
+    const int npt; /// Number fine imaginary time grid panels
+    const int npo; /// Number fine frequency grid panels
+    const int nt; /// Total number fine imaginary time grid points
+    const int no; /// Total number fine frequency grid points
 
   };
 
