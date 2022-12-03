@@ -1,6 +1,4 @@
 #pragma once
-#include <vector>
-#include <variant>
 #include <nda/nda.hpp>
 
 namespace cppdlr {
