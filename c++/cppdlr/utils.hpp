@@ -19,7 +19,7 @@ namespace cppdlr {
     public:
     barycheb(int n);
 
-    nda::vector<double> const& getnodes();
+    nda::vector<double> const &getnodes();
 
     double interp(double x, nda::vector_const_view<double> f);
 
@@ -27,6 +27,9 @@ namespace cppdlr {
     nda::vector<double> xc; /// Chebshev nodes
     nda::vector<double> wc; /// Chebshev weights
     const int n;            /// Chebyshev n
-
   };
+
+  std::tuple<nda::matrix<double>, nda::vector<double>> pivdgs(nda::matrix<double> a, double eps);
+
+
 } // namespace cppdlr

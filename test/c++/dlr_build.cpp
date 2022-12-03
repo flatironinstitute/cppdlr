@@ -6,6 +6,9 @@ using namespace cppdlr;
 
 TEST(dlr_build, fineparams) {
 
+  fineparams fine1(100.0,7);
+  EXPECT_EQ(fine1.p, 7);
+
   fineparams fine(100.0);
 
   EXPECT_EQ(fine.p, 24);
@@ -15,15 +18,16 @@ TEST(dlr_build, fineparams) {
   EXPECT_EQ(fine.no , 2*fine.p*fine.npo);
 }
 
-TEST(dlr_build, get_finegrids) {
+TEST(dlr_build, get_kfine) {
 
-  fineparams fine(10.0);
+  fineparams fine(100.0);
 
   auto [t,om] = get_finegrids(fine);
 
-  std::cout << t << std::endl;
-  std::cout << om << std::endl;
-
   auto kmat = get_kfine(fine,t,om);
+  auto [errt,errom] = get_kfineerr(fine,t,om,kmat);
+
+  EXPECT_LT(errt,   1e-14);
+  EXPECT_LT(errom,  1e-14);
 
 }

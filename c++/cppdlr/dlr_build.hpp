@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <variant>
 #include <nda/nda.hpp>
 
 namespace cppdlr {
@@ -12,7 +13,9 @@ namespace cppdlr {
   class fineparams {
 
     public:
-    fineparams(double lambda);
+    fineparams(double lambda, int p = 24);
+
+    // [Q] Is this a reasonable way of dealing with this optional parameter?
 
     const double lambda; /// DLR cutoff
     const int p; /// Fine grid Chebyshev order
@@ -37,5 +40,13 @@ namespace cppdlr {
 
   nda::matrix<double> get_kfine(fineparams &fine, nda::vector<double> &t,
       nda::vector<double> &om);
+
+  /** 
+   * Test accuracy of fine discretization of Lehmann kernel produced by function
+   * get_kfine 
+   * */
+
+  std::tuple<double,double> get_kfineerr(fineparams &fine, nda::vector<double> &t,
+      nda::vector<double> &om, nda::matrix<double> kmat);
   
 } // namespace cppdlr

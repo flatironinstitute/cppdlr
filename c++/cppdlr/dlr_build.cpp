@@ -5,17 +5,17 @@
 using namespace std;
 using namespace nda;
 
-auto _ = range::all;
+// auto _ = range::all;
 
 namespace cppdlr {
 
-  fineparams::fineparams(double lambda) : 
+  fineparams::fineparams(double lambda, int p) : 
 
     // All values have been chosen empirically to give fine discretization of
     // Lehmann kernel accurate to double machine precision
 
     lambda(lambda),
-    p(24), 
+    p(p),
     npt(max((int) ceil(log(lambda)/log(2.0))-2,1)),
     npo(max((int) ceil(log(lambda)/log(2.0)),1)),
     nt(2*p*npt),
@@ -78,6 +78,9 @@ namespace cppdlr {
   nda::matrix<double> get_kfine(fineparams &fine, nda::vector<double> &t,
       nda::vector<double> &om) {
 
+
+    auto _ = range::all;
+
     int nt = fine.nt;
     int no = fine.no;
     
@@ -93,8 +96,74 @@ namespace cppdlr {
 
     return kmat;
     
-    // TODO: Add error checking
-    
   }
 
+  std::tuple<double,double> get_kfineerr(fineparams &fine, nda::vector<double> &t,
+      nda::vector<double> &om, nda::matrix<double> kmat) {
+
+    auto _ = range::all;
+
+    int nt = fine.nt;
+    int no = fine.no;
+    int p   = fine.p;
+    int npt = fine.npt;
+    int npo = fine.npo;
+    
+    // Get fine composite Chebyshev time and frequency grids with double the
+    // number of points per panel as the given fine grid
+
+    fineparams fine2(fine.lambda,2*fine.p);
+    auto [ttst,omtst] = get_finegrids(fine2);
+    int p2 = fine2.p;
+
+    // Interpolate values in K matrix to finer grids using barycentral Chebyshev
+    // interpolation, and test against exact expression for kernel.
+
+    barycheb bc(p);
+    barycheb bc2(p2);
+    auto xc = bc2.getnodes(); // Cheb nodes on [-1,1]
+
+    double ktru,ktst,errtmp,errt,errom;
+
+    // First test time discretization for each fixed frequency.
+
+    errt = 0;
+    for (int j=0; j<no; ++j) {
+      errtmp = 0;
+      for (int i=0; i<npt; ++i) { // Only need to test first half of matrix
+        for (int k=0; k<p2; ++k) {
+          
+          ktru = kfun(ttst(i*p2+k),om(j));
+          ktst = bc.interp(xc(k),kmat(range(i*p,(i+1)*p),j));
+
+          errtmp = max(errtmp, abs(ktru-ktst));
+
+        }
+      }
+      errt = max(errt,errtmp/max_element(kmat(_,j)));
+    }
+
+
+    // Next test frequency discretization for each fixed time.
+
+    errom = 0;
+    for (int i=0; i<nt/2; ++i) {
+      errtmp = 0;
+      for (int j=0; j<2*npo; ++j) {
+        for (int k=0; k<p2; ++k) {
+          
+          ktru = kfun(t(i),omtst(j*p2+k));
+          ktst = bc.interp(xc(k),kmat(i,range(j*p,(j+1)*p)));
+
+          errtmp = max(errtmp, abs(ktru-ktst));
+        }
+      }
+      errom = max(errom,errtmp/max_element(kmat(i,_)));
+    }
+
+
+    return {errt,errom};
+
+  }
+    
 } // namespace cppdlr
