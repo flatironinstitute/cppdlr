@@ -7,7 +7,6 @@ endforeach()
 # List of all tests
 #file(GLOB_RECURSE all_tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 set(all_tests 
-  basic.cpp
   barycheb.cpp
   dlr_build.cpp
   pivrgs.cpp
