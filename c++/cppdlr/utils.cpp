@@ -1,5 +1,6 @@
 #include <numbers>
 #include "utils.hpp"
+#include <nda/blas.hpp>
 
 using namespace nda;
 using std::numbers::pi;
@@ -48,95 +49,91 @@ namespace cppdlr {
     return num / den;
   }
 
-  /** Rank-revealing pivoted reorthogonalized Gram-Schmidt
-   * 
-   *  This is a translation of the fortran subroutine "qrdgrm" by V. Rokhlin
-   * 
+  /** 
+   * Rank-revealing pivoted reorthogonalized Gram-Schmidt
+   *
+   * This is a translation of the fortran subroutine "qrdgrm" by V. Rokhlin.
    */
 
-//  std::tuple<nda::matrix<double>, nda::vector<double>> pivrgs(nda::matrix<double> a, double eps) {
-//
-//    // Get matrix dimensions
-//
-//    int m = a.shape(0);
-//    int n = a.shape(1);
-//
-//    // Compute norms of columns of input matrix
-//
-//    nda::vector<double> norms(n);
-//
-//    double epsscal = 0.0; // Scaled eps threshold parameter
-//
-//    // Get norms of columns of matrix, and Frobenius norm of matrix
-//
-//    for (int j = 0; j < n; ++j) {
-//      norms(j) = dot(a(_, j), a(_, j));
-//      epsscal  = epsscal + norms(j);
-//    }
-//
-//    epsscal *= eps * eps;
-//
-//    // Begin pivoted double Gram-Schmidt procedure
-//
-//    int jpiv;
-//    double nrm;
-//    nda::vector<double> tmp(m);
-//
-//    for (int j = 0; j < n; ++j) {
-//
-//      // Find next pivot
-//
-//      jpiv = j;
-//      for (int k = j + 1; k < n; ++k) {
-//        if (norms(k) > norms(j)) { jpiv = k; }
-//      }
-//
-//      // Swap current column with chosen pivot column
-//
-//      tmp        = a(_, j);
-//      a(_, j)    = a(_, jpiv);
-//      a(_, jpiv) = tmp;
-//
-//      nrm         = norms(j);
-//      norms(j)    = norms(jpiv);
-//      norms(jpiv) = nrm;
-//
-//      // Orthogonalize current column (now the chosen pivot column) against all
-//      // previously chosen columns
-//
-//      for (int k = 0; k < j; ++j) { a(_, j) = a(_, j) - a(_, k) * dot(a(_, j), a(_, k)); }
-//
-//      // Get norm of current column
-//
-//      nrm = dot(a(_, j), a(_, j));
-//
-//      // Terminate if sufficiently small, and return previously selected columns
-//      // (not including current column)
-//
-//      if (nrm <= epsscal) { return {a(_, range(0, j)), norms(range(0, j))}; };
-//
-//      // Normalize current column
-//
-//      a(_, j) = a(_, j) * (1 / nrm);
-//
-//      // Orthogonalize remaining columns against current column
-//
-//      for (int k = j + 1; k < n; ++k) {
-//
-//        if (norms(k) <= epsscal) { continue; } // Can skip columns with norm less than tolerance
-//
-//        // [Q] Below could be made more efficient using for loop; is this advisable?
-//
-//        a(_, k)  = a(_, k) - a(_, j) * dot(a(_, k), a(_, j));
-//        norms(k) = dot(a(_, k), a(_, k));
-//      }
-//    }
-//
-//    return {a, norms};
-//  }
-//}
-//
-////return {q,norms};
-//}
+  std::tuple<nda::matrix<double>, nda::vector<double>> pivrgs(nda::matrix<double> a, double eps) {
+
+    // Get matrix dimensions
+
+    auto [m, n] = a.shape();
+
+    // Compute norms of columns of input matrix
+
+    nda::vector<double> norms(n);
+
+    double epsscal = 0.0; // Scaled eps threshold parameter
+
+    // Get norms of columns of matrix, and Frobenius norm of matrix
+
+    for (int j = 0; j < n; ++j) {
+      norms(j) = blas::dot(a(_, j), a(_, j));
+      epsscal += norms(j);
+    }
+
+    epsscal *= eps * eps;
+
+    // Begin pivoted double Gram-Schmidt procedure
+
+    int jpiv;
+    double nrm;
+    nda::vector<double> tmp(m);
+
+    for (int j = 0; j < n; ++j) {
+
+      // Find next pivot
+
+      // TODO: make this more concise. Just need index of max of norms(j+1:end).
+      jpiv = j;
+      for (int k = j + 1; k < n; ++k) {
+        if (norms(k) > norms(j)) { jpiv = k; }
+      }
+
+      // Swap current column with chosen pivot column
+
+      tmp        = a(_, j);
+      a(_, j)    = a(_, jpiv);
+      a(_, jpiv) = tmp;
+
+      nrm         = norms(j);
+      norms(j)    = norms(jpiv);
+      norms(jpiv) = nrm;
+
+      // Orthogonalize current column (now the chosen pivot column) against all
+      // previously chosen columns
+
+      for (int k = 0; k < j; ++k) { a(_, j) = a(_, j) - a(_, k) * blas::dot(a(_, j), a(_, k)); }
+
+      // Get norm of current column
+
+      nrm = blas::dot(a(_, j), a(_, j));
+
+      // Terminate if sufficiently small, and return previously selected columns
+      // (not including current column)
+
+      if (nrm <= epsscal) { return {a(_, range(0, j)), norms(range(0, j))}; };
+
+      // Normalize current column
+
+      a(_, j) = a(_, j) * (1 / sqrt(nrm));
+
+      // Orthogonalize remaining columns against current column
+
+      for (int k = j + 1; k < n; ++k) {
+
+        if (norms(k) <= epsscal) { continue; } // Can skip columns with norm less than tolerance
+
+        // [Q] Below could be made more efficient using for loop; is this advisable?
+
+        a(_, k)  = a(_, k) - a(_, j) * blas::dot(a(_, k), a(_, j));
+        norms(k) = blas::dot(a(_, k), a(_, k));
+      }
+    }
+
+    return {a, norms};
+  }
 
 } // namespace cppdlr

@@ -10,6 +10,7 @@ set(all_tests
   basic.cpp
   barycheb.cpp
   dlr_build.cpp
+  pivrgs.cpp
   )
 
 foreach(test ${all_tests})

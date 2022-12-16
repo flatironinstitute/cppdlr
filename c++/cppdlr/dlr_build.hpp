@@ -13,8 +13,6 @@ namespace cppdlr {
     public:
     fineparams(double lambda, int p = 24);
 
-    // [Q] Is this a reasonable way of dealing with this optional parameter?
-
     const double lambda; /// DLR cutoff
     const int p; /// Fine grid Chebyshev order
     const int npt; /// Number fine imaginary time grid panels
