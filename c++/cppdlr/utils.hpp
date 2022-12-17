@@ -29,6 +29,6 @@ namespace cppdlr {
     const int n;            /// Chebyshev n
   };
 
-  std::tuple<nda::matrix<double>, nda::vector<double>> pivrgs(nda::matrix<double> a, double eps);
+  std::tuple<nda::matrix<double>, nda::vector<double>, nda::vector<int>> pivrgs(nda::matrix<double> a, double eps);
 
 } // namespace cppdlr

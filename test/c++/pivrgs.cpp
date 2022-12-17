@@ -27,8 +27,8 @@ TEST(pivrgs, pivrgs) {
   // tests whether behavior of pivrgs is correct for numerically full rank
   // matrix.
 
-  auto [u, norms1] = pivrgs(a1, 1e-100);
-  auto [v, norms2] = pivrgs(a2, 1e-100);
+  auto [u, norms1, piv1] = pivrgs(a1, 1e-100);
+  auto [v, norms2, piv2] = pivrgs(a2, 1e-100);
 
   // [Q] How to do this more concisely?
 
@@ -52,8 +52,8 @@ TEST(pivrgs, pivrgs) {
 
   // Gram-Schmidt to obtain orthonormal basis Q of column space of A
 
-  auto [q, norms] = pivrgs(a, eps);
-  int r           = norms.size(); // Estimated rank
+  auto [q, norms, piv] = pivrgs(a, eps);
+  int r                = norms.size(); // Estimated rank
 
   // Verify rank is almost correct
 
@@ -64,19 +64,38 @@ TEST(pivrgs, pivrgs) {
 
   EXPECT_LE(frobenius_norm(nda::eye<double>(r) - transpose(q) * q), 1e-14);
 
-  // Verify column space of A contained in that of Q; make sure projection
-  // onto col(Q) of random linear combination of columns of A yields identity to
-  // within target accuracy
+  // Verify column space of A contained in that of Q; make sure projection onto
+  // col(Q) of random linear combination of columns of A yields identity to
+  // within roughly target accuracy.
 
   auto x = nda::vector<double>::rand(n);
   x      = 2 * x - 1;
   x /= sqrt(nda::blas::dot(x, x));
   auto b = a * x;
 
-  auto tmp = b-q*(transpose(q)*b);
+  auto tmp = b - q * (transpose(q) * b);
 
   EXPECT_LT(sqrt(nda::blas::dot(tmp, tmp)), 10 * eps);
 
-  // EXPECT_LT(frobenius_norm(a - q * transpose(q) * a), 10 * eps); // More stringent test...
-  //
+  // More stringent test: make sure projection of A onto column space of Q is A
+  // to within roughly target accuracy.
+
+  EXPECT_LT(frobenius_norm(a - q * transpose(q) * a), 10 * eps);
+
+  // Verify that calling pivoted GS on matrix of pivot columns yields an
+  // identical Q matrix, and the correct order of pivots; this tests that the
+  // function returns the correct pivots
+
+  // [Q] Why can't I just do the following?
+  // auto athin = a(_,piv);
+
+  auto athin = nda::matrix<double>(m, r);
+  for (int i = 0; i < r; ++i) { athin(_, i) = a(_, piv(i)); }
+
+  auto [qthin, normthin, pivthin] = pivrgs(athin, eps);
+
+  EXPECT_EQ(pivthin.size(), r);
+  // [Q] Can this be made more concise?
+  for (int i = 0; i < r; ++i) { EXPECT_EQ(pivthin(i), i); }
+  EXPECT_LE(frobenius_norm(q - qthin), 1e-14);
 }

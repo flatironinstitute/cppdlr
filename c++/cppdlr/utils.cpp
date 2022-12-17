@@ -55,7 +55,7 @@ namespace cppdlr {
    * This is a translation of the fortran subroutine "qrdgrm" by V. Rokhlin.
    */
 
-  std::tuple<nda::matrix<double>, nda::vector<double>> pivrgs(nda::matrix<double> a, double eps) {
+  std::tuple<nda::matrix<double>, nda::vector<double>, nda::vector<int>> pivrgs(nda::matrix<double> a, double eps) {
 
     // Get matrix dimensions
 
@@ -78,18 +78,23 @@ namespace cppdlr {
 
     // Begin pivoted double Gram-Schmidt procedure
 
-    int jpiv;
+    int jpiv, jj;
     double nrm;
+    auto piv = nda::arange(0, n);
     nda::vector<double> tmp(m);
 
     for (int j = 0; j < n; ++j) {
 
       // Find next pivot
 
-      // TODO: make this more concise. Just need index of max of norms(j+1:end).
+      // TODO: make this more concise. Just need index of max of norms(j:end).
       jpiv = j;
+      nrm  = norms(j);
       for (int k = j + 1; k < n; ++k) {
-        if (norms(k) > norms(j)) { jpiv = k; }
+        if (norms(k) > nrm) {
+          jpiv = k;
+          nrm  = norms(k);
+        }
       }
 
       // Swap current column with chosen pivot column
@@ -101,6 +106,10 @@ namespace cppdlr {
       nrm         = norms(j);
       norms(j)    = norms(jpiv);
       norms(jpiv) = nrm;
+
+      jj        = piv(j);
+      piv(j)    = piv(jpiv);
+      piv(jpiv) = jj;
 
       // Orthogonalize current column (now the chosen pivot column) against all
       // previously chosen columns
@@ -114,7 +123,7 @@ namespace cppdlr {
       // Terminate if sufficiently small, and return previously selected columns
       // (not including current column)
 
-      if (nrm <= epsscal) { return {a(_, range(0, j)), norms(range(0, j))}; };
+      if (nrm <= epsscal) { return {a(_, range(0, j)), norms(range(0, j)), piv(range(0, j))}; };
 
       // Normalize current column
 
@@ -133,7 +142,7 @@ namespace cppdlr {
       }
     }
 
-    return {a, norms};
+    return {a, norms, piv};
   }
 
 } // namespace cppdlr
