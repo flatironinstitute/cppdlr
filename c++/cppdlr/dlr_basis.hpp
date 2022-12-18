@@ -12,6 +12,8 @@ namespace cppdlr {
     public:
     dlr_basis(double lambda, double eps);
 
+    nda::vector<double> get_rf();
+
     private:
     int r;                     /// DLR rank
     nda::vector<double> omega; /// DLR frequencies

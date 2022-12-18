@@ -11,6 +11,7 @@ set(all_tests
   barycheb.cpp
   dlr_build.cpp
   pivrgs.cpp
+  dlr_basis.cpp
   )
 
 foreach(test ${all_tests})
