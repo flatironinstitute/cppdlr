@@ -5,7 +5,7 @@
 using namespace nda;
 using std::numbers::pi;
 
-auto _ = range::all;
+static constexpr auto _ = range::all;
 
 namespace cppdlr {
 
@@ -36,8 +36,7 @@ namespace cppdlr {
       if (x == xc(i)) { return f(i); }
     }
 
-    double num = 0.0, den = 0.0;
-    double dif, q;
+    double num = 0, den = 0, dif = 0, q = 0;
 
     for (int i = 0; i < n; ++i) {
       dif = x - xc(i);
@@ -55,22 +54,25 @@ namespace cppdlr {
    * This is a translation of the fortran subroutine "qrdgrm" by V. Rokhlin.
    */
 
+  // TODO: Change this to a row-pivoted code in order to make things contiguous
+  // in memory
+
   std::tuple<nda::matrix<double>, nda::vector<double>, nda::vector<int>> pivrgs(nda::matrix<double> a, double eps) {
 
     // Get matrix dimensions
 
     auto [m, n] = a.shape();
 
-    // Compute norms of columns of input matrix
+    // Compute norms of rows of input matrix
 
-    nda::vector<double> norms(n);
+    auto norms = nda::vector<double>(m);
 
-    double epsscal = 0.0; // Scaled eps threshold parameter
+    double epsscal = 0; // Scaled eps threshold parameter
 
-    // Get norms of columns of matrix, and Frobenius norm of matrix
+    // Get norms of rows of matrix, and Frobenius norm of matrix
 
-    for (int j = 0; j < n; ++j) {
-      norms(j) = blas::dot(a(_, j), a(_, j));
+    for (int j = 0; j < m; ++j) {
+      norms(j) = blas::dot(a(j, _), a(j, _));
       epsscal += norms(j);
     }
 
@@ -78,30 +80,29 @@ namespace cppdlr {
 
     // Begin pivoted double Gram-Schmidt procedure
 
-    int jpiv, jj;
-    double nrm;
-    auto piv = nda::arange(0, n);
-    nda::vector<double> tmp(m);
+    int jpiv = 0, jj = 0;
+    double nrm = 0;
+    auto piv   = nda::arange(0, m);
+    auto tmp   = nda::vector<double>(n);
 
-    for (int j = 0; j < n; ++j) {
+    for (int j = 0; j < m; ++j) {
 
       // Find next pivot
 
-      // TODO: make this more concise. Just need index of max of norms(j:end).
       jpiv = j;
       nrm  = norms(j);
-      for (int k = j + 1; k < n; ++k) {
+      for (int k = j + 1; k < m; ++k) {
         if (norms(k) > nrm) {
           jpiv = k;
           nrm  = norms(k);
         }
       }
 
-      // Swap current column with chosen pivot column
+      // Swap current row with chosen pivot row
 
-      tmp        = a(_, j);
-      a(_, j)    = a(_, jpiv);
-      a(_, jpiv) = tmp;
+      tmp        = a(j, _);
+      a(j, _)    = a(jpiv, _);
+      a(jpiv, _) = tmp;
 
       nrm         = norms(j);
       norms(j)    = norms(jpiv);
@@ -111,34 +112,32 @@ namespace cppdlr {
       piv(j)    = piv(jpiv);
       piv(jpiv) = jj;
 
-      // Orthogonalize current column (now the chosen pivot column) against all
-      // previously chosen columns
+      // Orthogonalize current rows (now the chosen pivot row) against all
+      // previously chosen rows
 
-      for (int k = 0; k < j; ++k) { a(_, j) = a(_, j) - a(_, k) * blas::dot(a(_, j), a(_, k)); }
+      for (int k = 0; k < j; ++k) { a(j, _) = a(j, _) - a(k, _) * blas::dot(a(j, _), a(k, _)); }
 
-      // Get norm of current column
+      // Get norm of current row
 
-      nrm = blas::dot(a(_, j), a(_, j));
+      nrm = blas::dot(a(j, _), a(j, _));
 
-      // Terminate if sufficiently small, and return previously selected columns
-      // (not including current column)
+      // Terminate if sufficiently small, and return previously selected rows
+      // (not including current row)
 
-      if (nrm <= epsscal) { return {a(_, range(0, j)), norms(range(0, j)), piv(range(0, j))}; };
+      if (nrm <= epsscal) { return {a(range(0, j), _), norms(range(0, j)), piv(range(0, j))}; };
 
-      // Normalize current column
+      // Normalize current row
 
-      a(_, j) = a(_, j) * (1 / sqrt(nrm));
+      a(j, _) = a(j, _) * (1 / sqrt(nrm));
 
-      // Orthogonalize remaining columns against current column
+      // Orthogonalize remaining rows against current row
 
-      for (int k = j + 1; k < n; ++k) {
+      for (int k = j + 1; k < m; ++k) {
 
-        if (norms(k) <= epsscal) { continue; } // Can skip columns with norm less than tolerance
+        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
 
-        // [Q] Below could be made more efficient using for loop; is this advisable?
-
-        a(_, k)  = a(_, k) - a(_, j) * blas::dot(a(_, k), a(_, j));
-        norms(k) = blas::dot(a(_, k), a(_, k));
+        a(k, _)  = a(k, _) - a(j, _) * blas::dot(a(k, _), a(j, _));
+        norms(k) = blas::dot(a(k, _), a(k, _));
       }
     }
 

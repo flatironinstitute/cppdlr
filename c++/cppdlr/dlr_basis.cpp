@@ -20,14 +20,14 @@ namespace cppdlr {
 
     // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
 
-    auto [q, norms, piv] = pivrgs(kmat, eps);
+    auto [q, norms, piv] = pivrgs(transpose(kmat), eps);
     int r                = norms.size();
 
-    auto omega = nda::vector<double>(r);
-    // [Q] Can this be done more concisely?
+    omega = nda::vector<double>(r);
+
     for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
   }
 
-  nda::vector<double> dlr_basis::get_rf() { return omega; }
+  nda::vector_const_view<double> dlr_basis::get_rf() const { return omega; }
 
 } // namespace cppdlr
