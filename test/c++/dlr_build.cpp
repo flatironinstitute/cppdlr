@@ -22,7 +22,8 @@ TEST(dlr_build, get_kfine) {
 
   fineparams fine(100.0);
 
-  auto [t,om] = get_finegrids(fine);
+  auto t = get_tfine(fine);
+  auto om = get_omfine(fine);
 
   auto kmat = get_kfine(fine,t,om);
   auto [errt,errom] = get_kfineerr(fine,t,om,kmat);

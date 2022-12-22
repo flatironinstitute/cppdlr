@@ -9,4 +9,10 @@ namespace cppdlr {
 
    nda::vector<double> dlr_freq(double lambda, double eps);
 
+   /**
+   * Construct DLR imaginary time grid
+   */ 
+
+   nda::vector<double> dlr_it(nda::vector<double> dlr_rf);
+
 } // namespace cppdlr
