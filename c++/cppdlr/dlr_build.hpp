@@ -28,22 +28,23 @@ namespace cppdlr {
   nda::vector<double> get_omfine(fineparams &fine);
 
   /**
-   * Get fine grid (composite Chebyshev grid) in imaginary time
+   * Get fine grid (composite Chebyshev grid) in imaginary time; note that relative time format is used
    */
 
   nda::vector<double> get_tfine(fineparams &fine);
 
   /**
-   * Get fine discretization of Lehmann kernel.
+   * Get fine discretization of Lehmann kernel
    */
 
-  nda::matrix<double> get_kfine(fineparams &fine, nda::vector<double> &t, nda::vector<double> &om);
+  nda::matrix<double> get_kfine(nda::vector_const_view<double> t, nda::vector_const_view<double> om);
 
   /** 
    * Test accuracy of fine discretization of Lehmann kernel produced by function
    * get_kfine 
    * */
 
-  std::tuple<double, double> get_kfineerr(fineparams &fine, nda::vector<double> &t, nda::vector<double> &om, nda::matrix<double> kmat);
+  std::tuple<double, double> get_kfineerr(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
+                                          nda::matrix_const_view<double> kmat);
 
 } // namespace cppdlr

@@ -5,7 +5,7 @@
 using namespace std;
 using namespace nda;
 
-// auto _ = range::all;
+static constexpr auto _ = range::all;
 
 namespace cppdlr {
 
@@ -81,25 +81,25 @@ namespace cppdlr {
     return t;
   }
 
-  nda::matrix<double> get_kfine(fineparams &fine, nda::vector<double> &t, nda::vector<double> &om) {
+  nda::matrix<double> get_kfine(nda::vector_const_view<double> t, nda::vector_const_view<double> om) {
 
-    auto _ = range::all;
+    int nt = t.size();
+    int no = om.size();
 
-    int nt = fine.nt;
-    int no = fine.no;
+    auto kmat = nda::matrix<double>(nt, no);
 
-    nda::matrix<double> kmat(nt, no);
-
-    for (int i = 0; i < nt / 2; ++i) {
+    //for (int i = 0; i < nt / 2; ++i) {
+    for (int i = 0; i < nt; ++i) {
       for (int j = 0; j < no; ++j) { kmat(i, j) = kfun(t(i), om(j)); }
     }
 
-    kmat(range(nt / 2, nt), _) = kmat(range(nt / 2 - 1, -1, -1), range(no - 1, -1, -1));
+    // kmat(range(nt / 2, nt), _) = kmat(range(nt / 2 - 1, -1, -1), range(no - 1, -1, -1));
 
     return kmat;
   }
 
-  std::tuple<double, double> get_kfineerr(fineparams &fine, nda::vector<double> &t, nda::vector<double> &om, nda::matrix<double> kmat) {
+  std::tuple<double, double> get_kfineerr(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
+                                          nda::matrix_const_view<double> kmat) {
 
     auto _ = range::all;
 
@@ -124,11 +124,11 @@ namespace cppdlr {
     barycheb bc2(p2);
     auto xc = bc2.getnodes(); // Cheb nodes on [-1,1]
 
-    double ktru, ktst, errtmp, errt, errom;
+    double ktru = 0, ktst = 0, errtmp = 0;
 
     // First test time discretization for each fixed frequency.
 
-    errt = 0;
+    double errt = 0;
     for (int j = 0; j < no; ++j) {
       errtmp = 0;
       for (int i = 0; i < npt; ++i) { // Only need to test first half of matrix
@@ -145,7 +145,7 @@ namespace cppdlr {
 
     // Next test frequency discretization for each fixed time.
 
-    errom = 0;
+    double errom = 0;
     for (int i = 0; i < nt / 2; ++i) {
       errtmp = 0;
       for (int j = 0; j < 2 * npo; ++j) {

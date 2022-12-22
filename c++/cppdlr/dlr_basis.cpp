@@ -12,12 +12,12 @@ namespace cppdlr {
 
     // Get fine grids in frequency and imaginary time
 
-    auto t = get_tfine(fine);
+    auto t  = get_tfine(fine);
     auto om = get_omfine(fine);
 
     // Get discretization of analytic continuation kernel on fine grid (the K matrix)
 
-    auto kmat = get_kfine(fine, t, om);
+    auto kmat = get_kfine(t, om);
 
     // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
 
@@ -29,10 +29,6 @@ namespace cppdlr {
 
     return omega;
   }
-
-  // nda::vector<double> dlr_it(nda::vector<double> dlr_rf) {
-
-
 
   // }
 
