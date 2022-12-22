@@ -4,7 +4,7 @@
 
 namespace cppdlr {
 
-  dlr_basis::dlr_basis(double lambda, double eps) {
+  nda::vector<double> dlr_freq(double lambda, double eps) {
 
     // Get fine grid parameters
 
@@ -23,11 +23,10 @@ namespace cppdlr {
     auto [q, norms, piv] = pivrgs(transpose(kmat), eps);
     int r                = norms.size();
 
-    omega = nda::vector<double>(r);
-
+    auto omega = nda::vector<double>(r);
     for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
-  }
 
-  nda::vector_const_view<double> dlr_basis::get_rf() const { return omega; }
+    return omega;
+  }
 
 } // namespace cppdlr
