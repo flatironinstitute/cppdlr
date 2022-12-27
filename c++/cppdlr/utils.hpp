@@ -31,4 +31,6 @@ namespace cppdlr {
 
   std::tuple<nda::matrix<double>, nda::vector<double>, nda::vector<int>> pivrgs(nda::matrix<double> a, double eps);
 
+  nda::vector<double> eqptsrel(int n);
+
 } // namespace cppdlr
