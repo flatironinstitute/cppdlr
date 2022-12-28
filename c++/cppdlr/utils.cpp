@@ -148,14 +148,15 @@ namespace cppdlr {
   nda::vector<double> eqptsrel(int n) {
 
     auto t = nda::vector<double>(n);
-    for (int i = 0; i < n - 1; ++i) {
-      if (i <= (n - 1) / 2) {
-        t(i) = i * 1.0 / (n - 1);
-      } else {
-        t(i) = -(n - 1 - i) * 1.0 / (n - 1);
-      }
-    }
-    t(n - 1) = 1;
+
+     for (int i = 0; i < n - 1; ++i) {
+       if (i <= (n - 1) / 2) {
+         t(i) = i * 1.0 / (n - 1);
+       } else {
+         t(i) = -(n - 1 - i) * 1.0 / (n - 1);
+       }
+     }
+     t(n - 1) = 1;
 
     return t;
   }

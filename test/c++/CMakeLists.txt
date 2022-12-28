@@ -12,6 +12,7 @@ set(all_tests
   dlr_build.cpp
   pivrgs.cpp
   dlr_basis.cpp
+  eqptsrel.cpp
   )
 
 foreach(test ${all_tests})
