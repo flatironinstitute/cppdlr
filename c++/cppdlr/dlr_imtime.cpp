@@ -2,6 +2,8 @@
 #include "cppdlr/dlr_kernels.hpp"
 #include "dlr_build.hpp"
 #include "utils.hpp"
+#include <iostream>
+#include <fstream>
 
 using namespace nda;
 
@@ -10,9 +12,7 @@ static constexpr auto __ = nda::ellipsis();
 
 namespace cppdlr {
 
-  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : dlr_rf(dlr_rf) {
-
-    r = dlr_rf.size();
+  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     dlr_it    = nda::vector<double>(r);
     cf2it     = nda::matrix<double>(r, r);
@@ -40,11 +40,13 @@ namespace cppdlr {
     // Prepare imaginary time values to coefficients transformation by computing
     // LU factors of coefficient to imaginary time matrix
 
-    it2cf.lu = cf2it;
+    // [Q] Need to transpose first in order to get expected behavior...this should be documented clearly
+    it2cf.lu = transpose(cf2it);
 
     // [Q] How to get rid of compiler warnings about unused info variable?
 
     int info = lapack::getrf(it2cf.lu, it2cf.piv);
+
   }
 
   nda::array<double, 3> imtime_ops::vals2coefs(nda::array_const_view<double, 3> g) {
@@ -58,15 +60,16 @@ namespace cppdlr {
     int norb = g.shape(0);
     auto gc  = nda::array<double, 3>(norb, norb, r);
 
-    auto tmp = nda::array<double, 2>(r, 1);
+    auto tmp = nda::matrix<double>(1, r);
     int info = 0;
     for (int i = 0; i < norb; ++i) {
       for (int j = 0; j < norb; ++j) {
-        tmp(_, 1)   = g(i, j, _);
+        tmp(0, _)   = g(i, j, _);
         info        = lapack::getrs(it2cf.lu, tmp, it2cf.piv);
-        gc(i, j, _) = tmp(_, 1);
+        gc(i, j, _) = tmp(0, _);
       }
     }
+
     return gc;
   }
 
@@ -86,21 +89,24 @@ namespace cppdlr {
     int norb = gc.shape(0);
 
     auto g = nda::matrix<double>(norb, norb);
+    g = 0;
 
     double kval = 0;
     if (t >= 0) {
       for (int l = 0; l < r; ++l) {
         kval = kfun_abs(t, dlr_rf(l));
-        g += kval * gc(__, l);
+        g += kval * gc(_, _, l);
       }
     } else {
       for (int l = 0; l < r; ++l) {
         kval = kfun_abs(-t, -dlr_rf(l));
-        g += kval * gc(__, l);
+        g += kval * gc(_, _, l);
       }
     }
 
     return g;
   }
+
+  nda::vector_const_view<double> imtime_ops::get_itnodes() const {return dlr_it;}
 
 } // namespace cppdlr

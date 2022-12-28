@@ -28,6 +28,9 @@ namespace cppdlr {
     /** Evaluate DLR expansion given by its values on DLR imaginary time grid at an imaginary time points */
     nda::matrix<double> vals2eval(nda::array_const_view<double, 3> gc);
 
+    /** Access DLR imaginary time nodes*/
+    nda::vector_const_view<double> get_itnodes() const;
+
     private:
     int r;                      /// DLR rank
     nda::vector<double> dlr_rf; /// DLR frequencies

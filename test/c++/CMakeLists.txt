@@ -11,8 +11,8 @@ set(all_tests
   barycheb.cpp
   dlr_build.cpp
   pivrgs.cpp
-  dlr_basis.cpp
   eqptsrel.cpp
+  dlr_imtime.cpp
   )
 
 foreach(test ${all_tests})

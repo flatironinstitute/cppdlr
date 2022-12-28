@@ -73,7 +73,10 @@ namespace cppdlr {
 
     for (int j = 0; j < m; ++j) {
       norms(j) = blas::dot(a(j, _), a(j, _));
-      epsscal += norms(j);
+
+      // TODO: Need to choose between these; this choice is consistent w/ libdlr
+      //epsscal += norms(j);
+      epsscal = std::max(epsscal,norms(j));
     }
 
     epsscal *= eps * eps;
