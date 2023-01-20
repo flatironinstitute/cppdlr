@@ -41,13 +41,11 @@ namespace cppdlr {
     // [Q] Need to transpose first in order to get expected behavior...this should be documented clearly
     it2cf.lu = transpose(cf2it);
 
-    // [Q] How to get rid of compiler warnings about unused info variable?
-
-    int info = lapack::getrf(it2cf.lu, it2cf.piv);
-
+    lapack::getrf(it2cf.lu, it2cf.piv);
   }
 
-  nda::array<double, 3> imtime_ops::vals2coefs(nda::array_const_view<double, 3> g) {
+  //nda::array<double, 3> imtime_ops::vals2coefs(nda::array_const_view<double, 3> g) {
+  nda::matrix<double> imtime_ops::vals2coefs_mat(nda::matrix_const_view<double> g) {
 
     // [Q] This is very ugly. Can this be improved? Need to jump through these
     // hoops because (1) getrs must take in rank 2 array, and (2) getrs is using
@@ -55,18 +53,23 @@ namespace cppdlr {
     // lapack::getrs(it2cf.lu, g(__,_), it2cf.piv) and have it do the right
     // thing, i.e., reshape as an norb^2 x r array, and do norb^2 rxr solves.
 
-    int norb = g.shape(0);
-    auto gc  = nda::array<double, 3>(norb, norb, r);
+    //int norb = g.shape(0);
+    //auto gc  = nda::array<double, 3>(norb, norb, r);
 
-    auto tmp = nda::matrix<double>(1, r);
-    int info = 0;
-    for (int i = 0; i < norb; ++i) {
-      for (int j = 0; j < norb; ++j) {
-        tmp(0, _)   = g(i, j, _);
-        info        = lapack::getrs(it2cf.lu, tmp, it2cf.piv);
-        gc(i, j, _) = tmp(0, _);
-      }
-    }
+    //auto tmp = nda::matrix<double>(1, r);
+    //int info = 0;
+    //for (int i = 0; i < norb; ++i) {
+    //  for (int j = 0; j < norb; ++j) {
+    //    tmp(0, _)   = g(i, j, _);
+    //    info        = lapack::getrs(it2cf.lu, tmp, it2cf.piv);
+    //    lapack::getrs(it2cf.lu,g.reshape(norb*norb,r), it2cf.piv);
+    //    gc(i, j, _) = tmp(0, _);
+    //  }
+    //}
+
+    auto gc = nda::matrix<double>(g.shape(1), g.shape(0));
+    gc      = transpose(g);
+    lapack::getrs(it2cf.lu, gc, it2cf.piv);
 
     return gc;
   }
@@ -87,7 +90,7 @@ namespace cppdlr {
     int norb = gc.shape(0);
 
     auto g = nda::matrix<double>(norb, norb);
-    g = 0;
+    g      = 0;
 
     double kval = 0;
     if (t >= 0) {
@@ -105,6 +108,6 @@ namespace cppdlr {
     return g;
   }
 
-  nda::vector_const_view<double> imtime_ops::get_itnodes() const {return dlr_it;}
+  nda::vector_const_view<double> imtime_ops::get_itnodes() const { return dlr_it; }
 
 } // namespace cppdlr

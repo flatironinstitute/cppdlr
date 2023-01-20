@@ -75,5 +75,5 @@ external_dependency(h5
 # -- nda --
 external_dependency(nda
   GIT_REPO https://github.com/TRIQS/nda
-  GIT_TAG unstable
+  GIT_TAG DEV_CUDA_LINALG
 )

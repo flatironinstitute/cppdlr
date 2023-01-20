@@ -54,9 +54,6 @@ namespace cppdlr {
    * This is a translation of the fortran subroutine "qrdgrm" by V. Rokhlin.
    */
 
-  // TODO: Change this to a row-pivoted code in order to make things contiguous
-  // in memory
-
   std::tuple<nda::matrix<double>, nda::vector<double>, nda::vector<int>> pivrgs(nda::matrix<double> a, double eps) {
 
     // Get matrix dimensions
@@ -147,7 +144,6 @@ namespace cppdlr {
     return {a, norms, piv};
   }
 
-  // TODO: write test program for this
   nda::vector<double> eqptsrel(int n) {
 
     auto t = nda::vector<double>(n);
