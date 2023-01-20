@@ -26,14 +26,11 @@ namespace cppdlr {
     // vector/matrix/array (and not a view of these) will still be returned.
 
     template <nda::MemoryArray T> 
-    T::regular_type vals2coefs(T const &g) {
+    typename T::regular_type vals2coefs(T const &g) {
       if (r != g.shape(T::rank - 1)) throw std::runtime_error("Final dim of g != DLR rank r.");
       //return vals2coefs_mat(g.reshape(g.size() / r, r)).reshape(g.shape());
       std::array<long, 2> shape = {g.size()/r, r};
-      auto tmp1 = nda::reshape(g,shape);
-      auto tmp2 = vals2coefs_mat(tmp1);
-      return nda::reshape(tmp2,g.shape());
-      //return nda::reshape(vals2coefs_mat(nda::reshape(g,shape)),g.shape());
+      return nda::reshaped_view(vals2coefs_mat(nda::reshaped_view(g,shape)),g.shape());
     }
 
     /** Transform DLR coefficients of Green's function to its values on DLR imaginary time grid */
