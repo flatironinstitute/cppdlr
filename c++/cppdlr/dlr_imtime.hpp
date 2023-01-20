@@ -14,24 +14,31 @@ namespace cppdlr {
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
 
     /** Transform values of Green's function on DLR imaginary time grid to its DLR coefficients */
-    //nda::array<double, 3> vals2coefs(nda::array_const_view<double, 3> g);
+
+    // This method takes g of any type fulfilling the constraints of the NDA
+    // MemoryArray concept. In particular, it can be an NDA vector, matrix,
+    // array, or view of any of these. The notation T::regular_type indicates
+    // that if a view is passed in, a vector/matrix/array (and not a view of
+    // these) will still be returned. The only constraint is that the final
+    // index of g be of dimension r. So, for a matrix-valued Green's function
+    // G_ij(tau) with 1<=i,j<=n, we pass in an nxnxr array.
+
+    template <nda::MemoryArray T> 
+    typename T::regular_type vals2coefs(T const &g) {
+
+      if (r != g.shape(T::rank - 1)) throw std::runtime_error("Final dim of g != DLR rank r.");
+
+      // First, we reshape g to a matrix with second dimension r. Then we call a
+      // vals->coefs function which operates on matrices. Then we return the
+      // result to its original shape. 
+
+      return nda::reshape(vals2coefs_mat(nda::reshaped_view(g,std::array<long,2> {g.size()/r, r})),g.shape());
+    }
+
     private:
     nda::matrix<double> vals2coefs_mat(nda::matrix_const_view<double> g);
 
     public:
-    // The following method can take any g of a type fulfilling the
-    // constraints of the NDA MemoryArray concept. In particular, it can be an
-    // NDA vector, matrix, array, or view of any of these. The notation
-    // T::regular_type indicates that if a view is passed in, a
-    // vector/matrix/array (and not a view of these) will still be returned.
-
-    template <nda::MemoryArray T> 
-    typename T::regular_type vals2coefs(T const &g) {
-      if (r != g.shape(T::rank - 1)) throw std::runtime_error("Final dim of g != DLR rank r.");
-      //return vals2coefs_mat(g.reshape(g.size() / r, r)).reshape(g.shape());
-      std::array<long, 2> shape = {g.size()/r, r};
-      return nda::reshaped_view(vals2coefs_mat(nda::reshaped_view(g,shape)),g.shape());
-    }
 
     /** Transform DLR coefficients of Green's function to its values on DLR imaginary time grid */
     nda::array<double, 3> coefs2vals(nda::array_const_view<double, 3> gc);

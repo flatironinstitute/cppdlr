@@ -6,6 +6,7 @@
 using namespace cppdlr;
 using namespace nda;
 
+
 // Test pivoted reorthogonalized Gram-Schmidt
 
 TEST(pivrgs, pivrgs) {
@@ -70,9 +71,9 @@ TEST(pivrgs, pivrgs) {
   x /= sqrt(blas::dot(x, x));
   auto b = transpose(a) * x;
 
-  auto tmp = b - transpose(q) * (q * b);
+  auto tmp = make_regular(b - transpose(q) * (q * b));
 
-  EXPECT_LT(sqrt(blas::dot(tmp, tmp)), 10 * eps);
+  EXPECT_LT(sqrt(blas::dot(tmp,tmp)), 10 * eps);
 
   // More stringent test: make sure projection of A onto row space of Q is A
   // to within roughly target accuracy.
@@ -92,3 +93,4 @@ TEST(pivrgs, pivrgs) {
   EXPECT_EQ(pivthin, arange(r));
   EXPECT_LE(frobenius_norm(q - qthin), 1e-14);
 }
+
