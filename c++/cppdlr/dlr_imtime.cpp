@@ -51,40 +51,45 @@ namespace cppdlr {
     return gc;
   }
 
-  nda::array<double, 3> imtime_ops::coefs2vals(nda::array_const_view<double, 3> gc) {
-    int norb = gc.shape(0);
-    auto g   = nda::array<double, 3>(norb, norb, gc.shape(2));
+  nda::matrix<double> imtime_ops::coefs2vals_mat(nda::matrix_const_view<double> gc) {
 
-    // [Q] Can I do this in LAPACK style with one line?
-    for (int i = 0; i < norb; ++i) {
-      for (int j = 0; j < norb; ++j) { g(i, j, _) = cf2it * nda::vector<double>(gc(i, j, _)); }
-    }
-    return g;
+    return transpose(cf2it * transpose(gc));
+
   }
 
-  nda::matrix<double> imtime_ops::coefs2eval(nda::array_const_view<double, 3> gc, double t) {
 
-    int norb = gc.shape(0);
+  nda::vector<double> imtime_ops::coefs2eval_mat(nda::matrix_const_view<double> gc, double t) {
 
-    auto g = nda::matrix<double>(norb, norb);
-    g      = 0;
-
-    double kval = 0;
+    // TODO: this can be further optimized; for example, can reduce # of exponential evaluations.
+    auto kvec = nda::vector<double>(r);
     if (t >= 0) {
       for (int l = 0; l < r; ++l) {
-        kval = kfun_abs(t, dlr_rf(l));
-        g += kval * gc(_, _, l);
+        kvec(l) = kfun_abs(t, dlr_rf(l));
       }
     } else {
       for (int l = 0; l < r; ++l) {
-        kval = kfun_abs(-t, -dlr_rf(l));
-        g += kval * gc(_, _, l);
+        kvec(l) = kfun_abs(-t, -dlr_rf(l));
+      }
+    }
+
+    return gc*kvec;
+  }
+
+  double imtime_ops::coefs2eval_vec(nda::vector_const_view<double> gc, double t) {
+
+    // TODO: this can be further optimized; for example, can reduce # of exponential evaluations.
+    double g = 0;
+    if (t >= 0) {
+      for (int l = 0; l < r; ++l) {
+        g += kfun_abs(t, dlr_rf(l))*gc(l);
+      }
+    } else {
+      for (int l = 0; l < r; ++l) {
+        g += kfun_abs(-t, -dlr_rf(l))*gc(l);
       }
     }
 
     return g;
   }
-
-  nda::vector_const_view<double> imtime_ops::get_itnodes() const { return dlr_it; }
 
 } // namespace cppdlr

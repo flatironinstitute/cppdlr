@@ -85,52 +85,54 @@ TEST(dlr_imtime, interp_matrix) {
 
 // Test DLR interpolation and evaluation for scalar-valued Green's function
 
-//TEST(dlr_imtime, interp_scalar) {
-//
-//  double lambda = 1000;  // DLR cutoff
-//  double eps    = 1e-10; // DLR tolerance
-//
-//  double beta = 1000;  // Inverse temperature
-//  int ntst    = 10000; // # imag time test points
-//
-//  // Get DLR frequencies
-//  auto dlr_rf = dlr_freq(lambda, eps);
-//
-//  // Get DLR imaginary time object
-//  auto itops = imtime_ops(lambda, dlr_rf);
-//
-//  // Sample Green's function G at DLR imaginary time nodes
-//  int r = dlr_rf.size();
-//  // [Q] Is this correct or just auto?
-//  auto const &dlr_it = itops.get_itnodes();
-//
-//  auto g = nda::vector<double>(r);
-//
-//  for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_it(i))(0,0); }
-//
-//  // DLR coefficients of G
-//  auto gc = itops.vals2coefs(g);
-//
-//  // Check that G can be recovered at imaginary time nodes
-//
-//  EXPECT_LT(max_element(abs(itops.coefs2vals(gc) - g)), 1e-14);
-//
-//  // Get test points in relative format
-//  auto ttst = eqptsrel(ntst);
-//
-//  // Compute L infinity error
-//
-//  auto gtru  = nda::vector<double>(ntst);
-//  auto gtst  = nda::vector<double>(ntst);
-//  double err = 0;
-//  for (int i = 0; i < ntst; ++i) {
-//    gtru(i) = gfun(1, beta, ttst(i))(0,0);
-//
-//    // [Q] Best way to clean this up?
-//    gtst(i) = itops.coefs2eval(gc, ttst(i));
-//
-//    err = std::max(err, abs(gtru(i) - gtst(i)));
-//  }
-//
-//  EXPECT_LT(err, 10 * eps);
-//}
+TEST(dlr_imtime, interp_scalar) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+
+  // Get DLR frequencies
+  auto dlr_rf = dlr_freq(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at DLR imaginary time nodes
+  int r = dlr_rf.size();
+  // [Q] Is this correct or just auto?
+  auto const &dlr_it = itops.get_itnodes();
+
+  auto g = nda::vector<double>(r);
+
+  for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_it(i))(0,0); }
+
+  // DLR coefficients of G
+  auto gc2 = itops.vals2coefs(g);
+  auto gc = nda::array<double, 3>(1,1,r);
+  gc(0,0,_) = gc2;
+
+  // Check that G can be recovered at imaginary time nodes
+
+  EXPECT_LT(max_element(abs(itops.coefs2vals(gc2) - g)), 1e-14);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+
+  auto gtru  = nda::vector<double>(ntst);
+  auto gtst  = nda::vector<double>(ntst);
+  double err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru(i) = gfun(1, beta, ttst(i))(0,0);
+
+    // [Q] Best way to clean this up?
+    gtst(i) = itops.coefs2eval(gc, ttst(i))(0,0);
+
+    err = std::max(err, abs(gtru(i) - gtst(i)));
+  }
+
+  EXPECT_LT(err, 10 * eps);
+}
