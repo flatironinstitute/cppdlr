@@ -9,18 +9,28 @@ using namespace cppdlr;
 
 static constexpr auto _ = nda::range::all;
 
+// Green's function G_ij(tau) = sum_l c_ijl K(tau,om_ijl) with random c_ijl, om_ijl
+
 nda::matrix<double> gfun(int norb, double beta, double t) {
 
   int npeak  = 5;
 
   auto g = nda::matrix<double>(norb,norb);
   g = 0;
-  double rnd = 0;
+  auto c = nda::vector<double>(npeak);
+  double om = 0;
   for (int i = 0; i < norb; ++i) {
     for (int j = 0; j < norb; ++j) {
+      // Get random weights that sum to 1
       for (int l = 0; l < npeak; ++l) {
-        rnd = sin(1000.0 * (i+2*j+3*l)); // Quick and dirty random number in [-1,1]
-        g(i,j) += kfun(t, beta * rnd);
+        c(l) = (sin(1000.0 * (i+2*j+3*l+7))+1)/2; // Quick and dirty rand # gen on [0,1]
+      }
+      c = c/sum(c);
+
+      // Evaluate Green's function
+      for (int l = 0; l < npeak; ++l) {
+        om = sin(2000.0 * (3*i+2*j+l+6)); // Rand # on [-1,1]
+        g(i,j) += c(l)*kfun(t, beta * om);
       }
     }
   }
@@ -73,7 +83,6 @@ TEST(dlr_imtime, interp_matrix) {
   for (int i = 0; i < ntst; ++i) {
     gtru(_, _, i) = gfun(norb, beta, ttst(i));
 
-    // [Q] Best way to clean this up?
     gtst(_, _, i) = itops.coefs2eval(gc, ttst(i));
 
     err = std::max(err, max_element(abs(gtru(_, _, i) - gtst(_, _, i))));
@@ -109,13 +118,11 @@ TEST(dlr_imtime, interp_scalar) {
   for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_it(i))(0,0); }
 
   // DLR coefficients of G
-  auto gc2 = itops.vals2coefs(g);
-  auto gc = nda::array<double, 3>(1,1,r);
-  gc(0,0,_) = gc2;
+  auto gc = itops.vals2coefs(g);
 
   // Check that G can be recovered at imaginary time nodes
 
-  EXPECT_LT(max_element(abs(itops.coefs2vals(gc2) - g)), 1e-14);
+  EXPECT_LT(max_element(abs(itops.coefs2vals(gc) - g)), 1e-14);
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
@@ -128,8 +135,7 @@ TEST(dlr_imtime, interp_scalar) {
   for (int i = 0; i < ntst; ++i) {
     gtru(i) = gfun(1, beta, ttst(i))(0,0);
 
-    // [Q] Best way to clean this up?
-    gtst(i) = itops.coefs2eval(gc, ttst(i))(0,0);
+    gtst(i) = itops.coefs2eval(gc, ttst(i));
 
     err = std::max(err, abs(gtru(i) - gtst(i)));
   }

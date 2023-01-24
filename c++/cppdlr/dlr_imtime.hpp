@@ -72,34 +72,33 @@ namespace cppdlr {
 
     /** Evaluate DLR expansion given by its DLR coefficients at an imaginary time point */
     
-     template <nda::MemoryArray T>
-     auto coefs2eval(T const &gc, double t) {
+    template <nda::MemoryArray T>
+    auto coefs2eval(T const &gc, double t) {
 
-       if (r != gc.shape(T::rank - 1)) throw std::runtime_error("Final dim of gc != DLR rank r.");
+      if (r != gc.shape(T::rank - 1)) throw std::runtime_error("Final dim of gc != DLR rank r.");
 
-       if constexpr(T::rank==1) {
+      // Scalar-valued Green's functions are handled differently than matrix-valued Green's functions 
+      if constexpr(T::rank==1) {
+       return coefs2eval_vec(gc,t);
+      } else {
 
-        return coefs2eval_vec(gc,t);
-       } else {
+      // First, we reshape gc to a matrix with second dimension r. Then we call a
+      // coefs->value function which operates on matrices and returns a vector. Then we return the
+      // result to its original shape (leaving out the final dimension, which is summed out). 
 
-       // First, we reshape gc to a matrix with second dimension r. Then we call a
-       // coefs->value function which operates on matrices and returns a vector. Then we return the
-       // result to its original shape (leaving out the final dimension, which is summed out). 
+      auto gc_reshaped = nda::reshaped_view(gc,std::array<long,2> {gc.size()/r, r});
 
-       auto gc_reshaped = nda::reshaped_view(gc,std::array<long,2> {gc.size()/r, r});
+      std::array<long,T::rank - 1> shape_out;
+      for (int i = 0; i < T::rank - 1; ++i) { shape_out[i] = gc.shape(i); }
 
-       std::array<long,T::rank - 1> shape_out;
-       for (int i = 0; i < T::rank - 1; ++i) { shape_out[i] = gc.shape(i); }
+      return reshape(coefs2eval_mat(gc_reshaped,t),shape_out);
 
-       return reshape(coefs2eval_mat(gc_reshaped,t),shape_out);
+      }
 
-       }
-
-     }
+    }
 
     private:
     double coefs2eval_vec(nda::vector_const_view<double> gc, double t);
-
     nda::vector<double> coefs2eval_mat(nda::matrix_const_view<double> gc, double t);
 
     public:
