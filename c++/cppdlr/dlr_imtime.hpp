@@ -26,18 +26,17 @@ namespace cppdlr {
     template <nda::MemoryArray T> 
     typename T::regular_type vals2coefs(T const &g) {
 
-      if (r != g.shape(T::rank - 1)) throw std::runtime_error("Final dim of g != DLR rank r.");
+      if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
       // First, we reshape g to a matrix with second dimension r. Then we call a
       // vals->coefs function which operates on matrices. Then we return the
       // result to its original shape. 
 
-      // [Q] Is this okay? If I replace the last line with a reshape instead of a reshaped_view, it doesn't compile.
-      auto g_reshaped = nda::reshaped_view(g,std::array<long,2> {g.size()/r, r});
+      auto g_reshaped = nda::reshaped_view(g,std::array<long,2> {r,g.size()/r});
       auto gc = vals2coefs_mat(g_reshaped);
+      // [Q] Why reshaped_view instead of reshape? But this works, and reshape doesn't compile.
       return nda::reshaped_view(gc,g.shape());
 
-      //return nda::reshape(vals2coefs_mat(nda::reshaped_view(g,std::array<long,2> {g.size()/r, r})),g.shape());
     }
 
     private:
@@ -50,14 +49,15 @@ namespace cppdlr {
     template <nda::MemoryArray T> 
     typename T::regular_type coefs2vals(T const &gc) {
 
-      if (r != gc.shape(T::rank - 1)) throw std::runtime_error("Final dim of gc != DLR rank r.");
+      if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
       // First, we reshape gc to a matrix with second dimension r. Then we call a
       // coefs->vals function which operates on matrices. Then we return the
       // result to its original shape. 
 
-      auto gc_reshaped = nda::reshaped_view(gc,std::array<long,2> {gc.size()/r, r});
+      auto gc_reshaped = nda::reshaped_view(gc,std::array<long,2> {r, gc.size()/r});
       auto g = coefs2vals_mat(gc_reshaped);
+      // [Q] Why reshaped_view instead of reshape? But this works, and reshape doesn't compile.
       return nda::reshaped_view(g,gc.shape());
 
     }
@@ -75,7 +75,7 @@ namespace cppdlr {
     template <nda::MemoryArray T>
     auto coefs2eval(T const &gc, double t) {
 
-      if (r != gc.shape(T::rank - 1)) throw std::runtime_error("Final dim of gc != DLR rank r.");
+      if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
       // Scalar-valued Green's functions are handled differently than matrix-valued Green's functions 
       if constexpr(T::rank==1) {
@@ -86,10 +86,10 @@ namespace cppdlr {
       // coefs->value function which operates on matrices and returns a vector. Then we return the
       // result to its original shape (leaving out the final dimension, which is summed out). 
 
-      auto gc_reshaped = nda::reshaped_view(gc,std::array<long,2> {gc.size()/r, r});
+      auto gc_reshaped = nda::reshaped_view(gc,std::array<long,2> {r,gc.size()/r});
 
       std::array<long,T::rank - 1> shape_out;
-      for (int i = 0; i < T::rank - 1; ++i) { shape_out[i] = gc.shape(i); }
+      for (int i = 0; i < T::rank - 1; ++i) { shape_out[i] = gc.shape(i+1); }
 
       return reshape(coefs2eval_mat(gc_reshaped,t),shape_out);
 

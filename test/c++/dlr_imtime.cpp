@@ -13,24 +13,24 @@ static constexpr auto _ = nda::range::all;
 
 nda::matrix<double> gfun(int norb, double beta, double t) {
 
-  int npeak  = 5;
+  int npeak = 5;
 
-  auto g = nda::matrix<double>(norb,norb);
-  g = 0;
-  auto c = nda::vector<double>(npeak);
+  auto g    = nda::matrix<double>(norb, norb);
+  g         = 0;
+  auto c    = nda::vector<double>(npeak);
   double om = 0;
   for (int i = 0; i < norb; ++i) {
     for (int j = 0; j < norb; ++j) {
       // Get random weights that sum to 1
       for (int l = 0; l < npeak; ++l) {
-        c(l) = (sin(1000.0 * (i+2*j+3*l+7))+1)/2; // Quick and dirty rand # gen on [0,1]
+        c(l) = (sin(1000.0 * (i + 2 * j + 3 * l + 7)) + 1) / 2; // Quick and dirty rand # gen on [0,1]
       }
-      c = c/sum(c);
+      c = c / sum(c);
 
       // Evaluate Green's function
       for (int l = 0; l < npeak; ++l) {
-        om = sin(2000.0 * (3*i+2*j+l+6)); // Rand # on [-1,1]
-        g(i,j) += c(l)*kfun(t, beta * om);
+        om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
+        g(i, j) += c(l) * kfun(t, beta * om);
       }
     }
   }
@@ -61,9 +61,9 @@ TEST(dlr_imtime, interp_matrix) {
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
 
-  auto g = nda::array<double, 3>(norb, norb, r);
+  auto g = nda::array<double, 3>(r, norb, norb);
 
-  for (int i = 0; i < r; ++i) { g(_, _, i) = gfun(norb, beta, dlr_it(i)); }
+  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
 
   // DLR coefficients of G
   auto gc = itops.vals2coefs(g);
@@ -77,20 +77,18 @@ TEST(dlr_imtime, interp_matrix) {
 
   // Compute L infinity error
 
-  auto gtru  = nda::array<double, 3>(norb, norb, ntst);
-  auto gtst  = nda::array<double, 3>(norb, norb, ntst);
+  auto gtru  = nda::array<double, 3>(ntst, norb, norb);
+  auto gtst  = nda::array<double, 3>(ntst, norb, norb);
   double err = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(_, _, i) = gfun(norb, beta, ttst(i));
+    gtru(i, _, _) = gfun(norb, beta, ttst(i));
+    gtst(i, _, _) = itops.coefs2eval(gc, ttst(i));
 
-    gtst(_, _, i) = itops.coefs2eval(gc, ttst(i));
-
-    err = std::max(err, max_element(abs(gtru(_, _, i) - gtst(_, _, i))));
+    err = std::max(err, max_element(abs(gtru(i, _, _) - gtst(i, _, _))));
   }
 
   EXPECT_LT(err, 10 * eps);
 }
-
 
 // Test DLR interpolation and evaluation for scalar-valued Green's function
 
@@ -115,7 +113,7 @@ TEST(dlr_imtime, interp_scalar) {
 
   auto g = nda::vector<double>(r);
 
-  for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_it(i))(0,0); }
+  for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_it(i))(0, 0); }
 
   // DLR coefficients of G
   auto gc = itops.vals2coefs(g);
@@ -133,7 +131,7 @@ TEST(dlr_imtime, interp_scalar) {
   auto gtst  = nda::vector<double>(ntst);
   double err = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(i) = gfun(1, beta, ttst(i))(0,0);
+    gtru(i) = gfun(1, beta, ttst(i))(0, 0);
 
     gtst(i) = itops.coefs2eval(gc, ttst(i));
 

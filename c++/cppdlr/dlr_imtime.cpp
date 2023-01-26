@@ -45,15 +45,16 @@ namespace cppdlr {
 
   nda::matrix<double> imtime_ops::vals2coefs_mat(nda::matrix_const_view<double> g) {
 
-    auto gc = nda::matrix<double>(g);
+    // [Q] Transposes handled correctly?
+    auto gc = nda::matrix<double>(transpose(g));
     lapack::getrs(it2cf.lu, gc, it2cf.piv);
 
-    return gc;
+    return transpose(gc);
   }
 
   nda::matrix<double> imtime_ops::coefs2vals_mat(nda::matrix_const_view<double> gc) {
 
-    return transpose(cf2it * transpose(gc));
+    return cf2it * gc;
 
   }
 
@@ -72,7 +73,7 @@ namespace cppdlr {
       }
     }
 
-    return gc*kvec;
+    return transpose(gc)*kvec;
   }
 
   double imtime_ops::coefs2eval_vec(nda::vector_const_view<double> gc, double t) {
