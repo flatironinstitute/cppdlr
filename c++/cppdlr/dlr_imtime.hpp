@@ -109,6 +109,9 @@ namespace cppdlr {
     /** Access DLR imaginary time nodes*/
     nda::vector_const_view<double> get_itnodes() const {return dlr_it; };
 
+    /** DLR rank **/
+    int rank() const { return r; }
+
     private:
     int r;                      /// DLR rank
     nda::vector<double> dlr_rf; /// DLR frequencies

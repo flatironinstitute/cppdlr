@@ -57,7 +57,7 @@ TEST(dlr_imtime, interp_matrix) {
   auto itops = imtime_ops(lambda, dlr_rf);
 
   // Sample Green's function G at DLR imaginary time nodes
-  int r = dlr_rf.size();
+  int r = itops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
 
@@ -107,7 +107,7 @@ TEST(dlr_imtime, interp_scalar) {
   auto itops = imtime_ops(lambda, dlr_rf);
 
   // Sample Green's function G at DLR imaginary time nodes
-  int r = dlr_rf.size();
+  int r = itops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
 
