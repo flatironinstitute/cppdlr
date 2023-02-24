@@ -2,6 +2,9 @@
 #include <nda/nda.hpp>
 #include "cppdlr/dlr_kernels.hpp"
 
+#include <h5/h5.hpp>
+#include <nda/h5.hpp>
+
 namespace cppdlr {
 
   /**
@@ -23,6 +26,15 @@ namespace cppdlr {
     * @param[in] dlr_rf DLR frequencies
     */
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
+
+    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf,
+	       nda::vector_const_view<double> dlr_it,
+	       nda::matrix_const_view<double> cf2it,
+	       nda::matrix_const_view<double> it2cf_lu,
+	       nda::vector_const_view<int> it2cf_piv) :
+      lambda_(lambda), dlr_rf(dlr_rf), dlr_it(dlr_it),
+      cf2it(cf2it), it2cf{it2cf_lu, it2cf_piv}
+    {};
 
     /** 
     * @brief Transform values of Green's function G on DLR imaginary time grid to
@@ -144,14 +156,27 @@ namespace cppdlr {
     */
     nda::vector_const_view<double> get_itnodes() const { return dlr_it; };
 
+    /** Evaluate DLR expansion given by its values on DLR imaginary time grid at an imaginary time points */
+    nda::matrix<double> vals2eval(nda::array_const_view<double, 3> g);
+
+    /** Access DLR imaginary real frequency nodes*/
+    nda::vector_const_view<double> get_rfnodes() const { return dlr_rf; };
+
+    /** Accessors */
+    nda::matrix_const_view<double> get_cf2it() const { return cf2it; };
+    nda::matrix_const_view<double> get_it2cf_lu() const { return it2cf.lu; };
+    nda::vector_const_view<int> get_it2cf_piv() const { return it2cf.piv; };
+    
     /** 
     * @brief Get DLR rank
     *
     * @return DLR rank
     */
     int rank() const { return r; }
+    double lambda() const { return lambda_; }
 
     private:
+    double lambda_;
     int r;                      ///< DLR rank
     nda::vector<double> dlr_rf; ///< DLR frequencies
     nda::vector<double> dlr_it; ///< DLR imaginary time nodes
@@ -164,6 +189,41 @@ namespace cppdlr {
       nda::matrix<double> lu;   ///< LU factors (LAPACK format) of imaginary time vals -> coefs matrix
       nda::vector<int> piv;     ///< LU pivots (LAPACK format) of imaginary time vals -> coefs matrix
     } it2cf; 
+
+  // -------------------- hdf5 -------------------
+
+  static std::string hdf5_format() { return "cppdlr::imtime_ops"; }
+
+    friend void h5_write(h5::group fg, std::string const &subgroup_name, imtime_ops const &m) {
+      h5::group gr = fg.create_group(subgroup_name);
+      write_hdf5_format_as_string(gr, "cppdlr::imtime_ops");
+      h5_write(gr, "lambda", m.lambda());
+      h5_write(gr, "dlr_rf", m.get_rfnodes());
+      h5_write(gr, "dlr_it", m.get_itnodes());
+      h5_write(gr, "dlr_cf2it", m.get_cf2it());
+      h5_write(gr, "dlr_it2cf_lu", m.get_it2cf_lu());
+      h5_write(gr, "dlr_it2cf_piv", m.get_it2cf_piv());
+    }
+
+    friend void h5_read(h5::group fg, std::string const &subgroup_name, imtime_ops &m) {
+      h5::group gr = fg.open_group(subgroup_name);
+      assert_hdf5_format_as_string(gr, "cppdlr::imtime_ops", true);
+      double lambda;
+      nda::vector<double> dlr_rf;
+      nda::vector<double> dlr_it;
+      nda::matrix<double> cf2it;
+      nda::matrix<double> it2cf_lu;
+      nda::vector<int> it2cf_piv;
+    
+      h5_read(gr, "lambda", lambda);
+      h5_read(gr, "dlr_rf", dlr_rf);
+      h5_read(gr, "dlr_it", dlr_it);
+      h5_read(gr, "cf2it", cf2it);
+      h5_read(gr, "it2cf_lu", it2cf_lu);
+      h5_read(gr, "it2cf_piv", it2cf_piv);
+    
+      m = imtime_ops(lambda, dlr_rf, dlr_it, cf2it, it2cf_lu, it2cf_piv);
+    }
   };
 
 } // namespace cppdlr
