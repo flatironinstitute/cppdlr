@@ -32,9 +32,11 @@ namespace cppdlr {
 	       nda::matrix_const_view<double> cf2it,
 	       nda::matrix_const_view<double> it2cf_lu,
 	       nda::vector_const_view<int> it2cf_piv) :
-      lambda_(lambda), dlr_rf(dlr_rf), dlr_it(dlr_it),
+      lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it),
       cf2it(cf2it), it2cf{it2cf_lu, it2cf_piv}
     {};
+
+    imtime_ops() = default;
 
     /** 
     * @brief Transform values of Green's function G on DLR imaginary time grid to
@@ -195,34 +197,38 @@ namespace cppdlr {
   static std::string hdf5_format() { return "cppdlr::imtime_ops"; }
 
     friend void h5_write(h5::group fg, std::string const &subgroup_name, imtime_ops const &m) {
+      
       h5::group gr = fg.create_group(subgroup_name);
       write_hdf5_format_as_string(gr, "cppdlr::imtime_ops");
+
       h5_write(gr, "lambda", m.lambda());
-      h5_write(gr, "dlr_rf", m.get_rfnodes());
-      h5_write(gr, "dlr_it", m.get_itnodes());
-      h5_write(gr, "dlr_cf2it", m.get_cf2it());
-      h5_write(gr, "dlr_it2cf_lu", m.get_it2cf_lu());
-      h5_write(gr, "dlr_it2cf_piv", m.get_it2cf_piv());
+      h5_write(gr, "rf", m.get_rfnodes());
+      h5_write(gr, "it", m.get_itnodes());
+      h5_write(gr, "cf2it", m.get_cf2it());
+      h5_write(gr, "it2cf_lu", m.get_it2cf_lu());
+      h5_write(gr, "it2cf_piv", m.get_it2cf_piv());
     }
 
     friend void h5_read(h5::group fg, std::string const &subgroup_name, imtime_ops &m) {
+
       h5::group gr = fg.open_group(subgroup_name);
       assert_hdf5_format_as_string(gr, "cppdlr::imtime_ops", true);
+
       double lambda;
-      nda::vector<double> dlr_rf;
-      nda::vector<double> dlr_it;
+      nda::vector<double> rf;
+      nda::vector<double> it;
       nda::matrix<double> cf2it;
       nda::matrix<double> it2cf_lu;
       nda::vector<int> it2cf_piv;
     
       h5_read(gr, "lambda", lambda);
-      h5_read(gr, "dlr_rf", dlr_rf);
-      h5_read(gr, "dlr_it", dlr_it);
+      h5_read(gr, "rf", rf);
+      h5_read(gr, "it", it);
       h5_read(gr, "cf2it", cf2it);
       h5_read(gr, "it2cf_lu", it2cf_lu);
       h5_read(gr, "it2cf_piv", it2cf_piv);
     
-      m = imtime_ops(lambda, dlr_rf, dlr_it, cf2it, it2cf_lu, it2cf_piv);
+      m = imtime_ops(lambda, rf, it, cf2it, it2cf_lu, it2cf_piv);
     }
   };
 

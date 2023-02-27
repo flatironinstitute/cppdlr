@@ -7,7 +7,7 @@ using namespace nda;
 
 namespace cppdlr {
 
-  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : lambda_(lambda_), r(dlr_rf.size()), dlr_rf(dlr_rf) {
+  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     dlr_it    = nda::vector<double>(r);
     cf2it     = nda::matrix<double>(r, r);

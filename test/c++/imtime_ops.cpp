@@ -6,6 +6,8 @@
 
 #include <gtest/gtest.h>
 #include <nda/nda.hpp>
+#include <nda/gtest_tools.hpp>
+
 #include <cppdlr/dlr_imtime.hpp>
 #include <cppdlr/dlr_basis.hpp>
 #include <cppdlr/utils.hpp>
@@ -155,4 +157,40 @@ TEST(imtime_ops, interp_scalar) {
   auto kvec = itops.get_kevalvec(ttst(ntst-1));
   EXPECT_LT((abs(blas::dot(gc,kvec) - gtst)),1e-14);
 
+}
+
+TEST(dlr_imtime, h5_rw) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  // Get DLR frequencies
+  auto dlr_rf = dlr_freq(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  auto filename = "data_imtime_ops_h5_rw.h5";
+  auto name = "itops";
+
+  {
+    h5::file file(filename, 'w');
+    h5_write(file, name, itops);
+  }
+
+  imtime_ops itops_ref;
+  {
+    h5::file file(filename, 'r');
+    h5_read(file, name, itops_ref);
+  }
+
+  // Check equal
+  EXPECT_EQ(itops.lambda(), itops_ref.lambda());
+  EXPECT_EQ(itops.rank(), itops_ref.rank());
+  EXPECT_EQ_ARRAY(itops.get_rfnodes(), itops_ref.get_rfnodes());
+  EXPECT_EQ_ARRAY(itops.get_itnodes(), itops_ref.get_itnodes());
+  EXPECT_EQ_ARRAY(itops.get_cf2it(), itops_ref.get_cf2it());
+  EXPECT_EQ_ARRAY(itops.get_it2cf_lu(), itops_ref.get_it2cf_lu());
+  EXPECT_EQ_ARRAY(itops.get_it2cf_piv(), itops_ref.get_it2cf_piv());
+  
 }
