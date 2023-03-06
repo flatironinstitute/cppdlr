@@ -4,8 +4,10 @@
 #include <cppdlr/dlr_basis.hpp>
 #include <cppdlr/utils.hpp>
 #include <cppdlr/dlr_kernels.hpp>
+#include <nda/blas.hpp>
 
 using namespace cppdlr;
+using namespace nda;
 
 static constexpr auto _ = nda::range::all;
 
@@ -88,6 +90,7 @@ TEST(dlr_imtime, interp_matrix) {
   }
 
   EXPECT_LT(err, 10 * eps);
+
 }
 
 // Test DLR interpolation and evaluation for scalar-valued Green's function
@@ -139,4 +142,13 @@ TEST(dlr_imtime, interp_scalar) {
   }
 
   EXPECT_LT(err, 10 * eps);
+
+  // Test that constructing vector of evaluation at a point and then applying to
+  // coefficients gives same result as direct evaluation method
+
+  auto kvec = itops.get_kevalvec(ttst(0));
+  EXPECT_LT((abs(blas::dot(gc,kvec) - gtst(0))),1e-14);
+
+  PRINT((abs(blas::dot(gc,kvec) - gtst(0))));
+
 }

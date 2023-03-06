@@ -103,7 +103,10 @@ namespace cppdlr {
 
     public:
 
-    /** Evaluate DLR expansion given by its values on DLR imaginary time grid at an imaginary time points */
+    /** Get vector of evaluation of DLR expansion at a point **/
+    nda::vector<double> get_kevalvec(double t);
+
+    /** Evaluate DLR expansion given by its values on DLR imaginary time grid at an imaginary time point */
     nda::matrix<double> vals2eval(nda::array_const_view<double, 3> g);
 
     /** Access DLR imaginary time nodes*/

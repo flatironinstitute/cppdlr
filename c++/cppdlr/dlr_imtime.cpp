@@ -93,4 +93,21 @@ namespace cppdlr {
     return g;
   }
 
+
+  nda::vector<double> imtime_ops::get_kevalvec(double t) {
+
+    auto kvec = nda::vector<double>(r);
+    if (t >= 0) {
+      for (int l = 0; l < r; ++l) {
+        kvec(l) = kfun_abs(t, dlr_rf(l));
+      }
+    } else {
+      for (int l = 0; l < r; ++l) {
+        kvec(l) = kfun_abs(-t, -dlr_rf(l));
+      }
+    }
+
+    return kvec;
+  }
+
 } // namespace cppdlr
