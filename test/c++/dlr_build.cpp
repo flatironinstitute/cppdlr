@@ -6,16 +6,22 @@ using namespace cppdlr;
 
 TEST(dlr_build, fineparams) {
 
-  fineparams fine1(100.0,7);
-  EXPECT_EQ(fine1.p, 7);
+  fineparams fine1(100.0);
 
-  fineparams fine(100.0);
+  // Check expected default values
+  EXPECT_EQ(fine1.p, 24);
+  EXPECT_EQ(fine1.npom, 7);
+  EXPECT_EQ(fine1.npt, 5);
+  EXPECT_EQ(fine1.nt , 2*fine1.p*fine1.npt);
+  EXPECT_EQ(fine1.nom , 2*fine1.p*fine1.npom);
 
-  EXPECT_EQ(fine.p, 24);
-  EXPECT_EQ(fine.npt, 5);
-  EXPECT_EQ(fine.npo, 7);
-  EXPECT_EQ(fine.nt , 2*fine.p*fine.npt);
-  EXPECT_EQ(fine.no , 2*fine.p*fine.npo);
+  // Check non-default value of p
+  fineparams fine2(100.0,7);
+  EXPECT_EQ(fine2.p, 7);
+
+  // Check error triggered for non-permissible parameters.
+  EXPECT_THROW({fineparams fine3(0.0);}, std::runtime_error);
+  EXPECT_THROW({fineparams fine3(1.0, 0);}, std::runtime_error);
 }
 
 TEST(dlr_build, get_kfine) {

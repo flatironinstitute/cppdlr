@@ -1,53 +1,61 @@
 #include "dlr_build.hpp"
 #include "utils.hpp"
 #include "dlr_kernels.hpp"
+#include <numbers>
 
 using namespace std;
 using namespace nda;
 
-static constexpr auto _ = range::all;
+using std::numbers::pi;
 
 namespace cppdlr {
 
   fineparams::fineparams(double lambda, int p)
      :
-
        // All values have been chosen empirically to give fine discretization of
        // Lehmann kernel accurate to double machine precision
 
+       // TODO: make alt constructor in which iommax is a parameter
+
        lambda(lambda),
        p(p),
+       iommax(pi*lambda), // TODO: is this a good choice?
+       npom(max((int)ceil(log(lambda) / log(2.0)), 1)),
        npt(max((int)ceil(log(lambda) / log(2.0)) - 2, 1)),
-       npo(max((int)ceil(log(lambda) / log(2.0)), 1)),
-       nt(2 * p * npt),
-       no(2 * p * npo) {}
+       npiom(max((int)ceil(log(pi*lambda) / log(2.0)), 1)), // TODO: is this a good choice?
+       nom(2 * p * npom), nt(2 * p * npt), niom(2 * p * npiom) {
+
+       if (lambda <= 0) throw std::runtime_error("Choose lambda > 0.");
+       if (p <= 0) throw std::runtime_error("Choose p > 0.");
+       
+       }
 
   nda::vector<double> get_omfine(fineparams &fine) {
 
     int p   = fine.p;
-    int npo = fine.npo;
+    int npom = fine.npom;
 
     auto bc = barycheb(p);             // Get barycheb object for Chebyshev nodes
     auto xc = (bc.getnodes() + 1) / 2; // Cheb nodes on [0,1]
 
     // Real frequency grid points
 
-    auto om = nda::vector<double>(fine.no);
+    auto om = nda::vector<double>(fine.nom);
 
     double a = 0, b = 0;
 
     // Points on (0,lambda)
 
     a = 0.0;
-    for (int i = 0; i < npo; ++i) {
-      b                                           = fine.lambda / pow(2.0, npo - i - 1);
-      om(range((npo + i) * p, (npo + i + 1) * p)) = a + (b - a) * xc;
+    for (int i = 0; i < npom; ++i) {
+      b                                           = fine.lambda / pow(2.0, npom - i - 1);
+      om(range((npom + i) * p, (npom + i + 1) * p)) = a + (b - a) * xc;
       a                                           = b;
     }
 
     // Points on (-lambda,0)
 
-    om(range(0, npo * p)) = -om(range(2 * npo * p - 1, npo * p - 1, -1));
+    om(range(0, npom * p)) = -om(range(2 * npom * p - 1, npom * p - 1, -1));
 
     return om;
   }
@@ -81,16 +89,48 @@ namespace cppdlr {
     return t;
   }
 
+  nda::vector<double> get_iomfine(fineparams &fine) {
+
+    int p   = fine.p;
+    int npiom = fine.npiom;
+    double iommax = fine.iommax;
+
+    auto bc = barycheb(p);             // Get barycheb object for Chebyshev nodes
+    auto xc = (bc.getnodes() + 1) / 2; // Cheb nodes on [0,1]
+
+    // Imaginary frequency grid points
+
+    auto iom = nda::vector<double>(fine.npiom);
+
+    double a = 0, b = 0;
+
+    // Points on (0,iommax)
+
+    a = 0.0;
+    for (int i = 0; i < npiom; ++i) {
+      b                                           = iommax / pow(2.0, npiom - i - 1);
+      iom(range((npiom + i) * p, (npiom + i + 1) * p)) = a + (b - a) * xc;
+      a                                           = b;
+    }
+
+    // Points on (-iommax,0)
+
+    iom(range(0, npiom * p)) = -iom(range(2 * npiom * p - 1, npiom * p - 1, -1));
+
+    return iom;
+  }
+
+
   nda::matrix<double> get_kfine(nda::vector_const_view<double> t, nda::vector_const_view<double> om) {
 
     int nt = t.size();
-    int no = om.size();
+    int nom = om.size();
 
-    auto kmat = nda::matrix<double>(nt, no);
+    auto kmat = nda::matrix<double>(nt, nom);
 
     //for (int i = 0; i < nt / 2; ++i) {
     for (int i = 0; i < nt; ++i) {
-      for (int j = 0; j < no; ++j) { kmat(i, j) = kfun(t(i), om(j)); }
+      for (int j = 0; j < nom; ++j) { kmat(i, j) = kfun(t(i), om(j)); }
     }
 
     // kmat(range(nt / 2, nt), _) = kmat(range(nt / 2 - 1, -1, -1), range(no - 1, -1, -1));
@@ -104,10 +144,10 @@ namespace cppdlr {
     auto _ = range::all;
 
     int nt  = fine.nt;
-    int no  = fine.no;
+    int nom  = fine.nom;
     int p   = fine.p;
     int npt = fine.npt;
-    int npo = fine.npo;
+    int npom = fine.npom;
 
     // Get fine composite Chebyshev time and frequency grids with double the
     // number of points per panel as the given fine grid
@@ -129,7 +169,7 @@ namespace cppdlr {
     // First test time discretization for each fixed frequency.
 
     double errt = 0;
-    for (int j = 0; j < no; ++j) {
+    for (int j = 0; j < nom; ++j) {
       errtmp = 0;
       for (int i = 0; i < npt; ++i) { // Only need to test first half of matrix
         for (int k = 0; k < p2; ++k) {
@@ -148,7 +188,7 @@ namespace cppdlr {
     double errom = 0;
     for (int i = 0; i < nt / 2; ++i) {
       errtmp = 0;
-      for (int j = 0; j < 2 * npo; ++j) {
+      for (int j = 0; j < 2 * npom; ++j) {
         for (int k = 0; k < p2; ++k) {
 
           ktru = kfun(t(i), omtst(j * p2 + k));
@@ -162,5 +202,21 @@ namespace cppdlr {
 
     return {errt, errom};
   }
+
+
+  nda::matrix<dcomplex> get_kfineif(nda::vector_const_view<double> iom, nda::vector_const_view<double> om) {
+
+    int niom = iom.size();
+    int nom = om.size();
+
+    auto kmat = nda::matrix<dcomplex>(niom, nom);
+
+    for (int i = 0; i < niom; ++i) {
+      for (int j = 0; j < nom; ++j) { kmat(i, j) = kfun_if(iom(i), om(j)); }
+    }
+
+    return kmat;
+  }
+
 
 } // namespace cppdlr
