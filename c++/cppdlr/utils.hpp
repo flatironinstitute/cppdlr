@@ -132,4 +132,10 @@ namespace cppdlr {
 
   nda::vector<double> eqptsrel(int n);
 
+  template <nda::MemoryArray T>
+  using make_real_t = decltype(make_regular(real(std::declval<T>())));
+
+  template <nda::MemoryArray T>
+  using make_cplx_t = decltype(make_regular(imag(std::declval<T>())));
+
 } // namespace cppdlr

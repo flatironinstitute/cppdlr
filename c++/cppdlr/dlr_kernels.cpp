@@ -1,7 +1,8 @@
 #include "dlr_kernels.hpp"
-#include <cmath>
+#include <numbers>
 
 using namespace std;
+using namespace std::numbers;
 
 namespace cppdlr {
 
@@ -25,6 +26,14 @@ namespace cppdlr {
     } else {
       return exp((1.0 - t) * om) / (1.0 + exp(om));
     }
+  }
+
+  /** Evaluate Lehmann kernel in imaginary frequency */
+
+  std::complex<double> kfun_if(int n, double om) {
+
+    return 1.0/(n*pi*1i + om);
+
   }
 
 } // namespace cppdlr
