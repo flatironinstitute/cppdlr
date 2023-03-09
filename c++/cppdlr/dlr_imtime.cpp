@@ -5,9 +5,6 @@
 
 using namespace nda;
 
-static constexpr auto _  = range::all;
-static constexpr auto __ = nda::ellipsis();
-
 namespace cppdlr {
 
   imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : r(dlr_rf.size()), dlr_rf(dlr_rf) {
@@ -38,7 +35,7 @@ namespace cppdlr {
     lapack::getrf(it2cf.lu, it2cf.piv);
   }
 
-  nda::vector<double> imtime_ops::get_kevalvec(double t) {
+  nda::vector<double> imtime_ops::get_kevalvec(double t) const {
 
     // TODO: can be further optimized to reduce # exponential evals.
     auto kvec = nda::vector<double>(r);

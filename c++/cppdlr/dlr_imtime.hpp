@@ -34,7 +34,7 @@ namespace cppdlr {
     */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
       requires(nda::is_scalar_v<S>)
-    typename T::regular_type vals2coefs(T const &g) {
+    typename T::regular_type vals2coefs(T const &g) const {
 
       // MemoryArray type can be nda vector, matrix, array, or view of any of
       // these; taking a regular_type converts, for example, a matrix view to a
@@ -66,7 +66,7 @@ namespace cppdlr {
     * */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
       requires(nda::is_scalar_v<S>)
-    typename T::regular_type coefs2vals(T const &gc) {
+    typename T::regular_type coefs2vals(T const &gc) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -82,7 +82,7 @@ namespace cppdlr {
     }
 
     /** 
-    * @brief Evaluate DLR expansion of G given by DLR coefficients at imaginary
+    * @brief Evaluate DLR expansion of G, given by its DLR coefficients, at imaginary
     * time point 
     *
     * @param[in] gc DLR coefficients of G
@@ -92,7 +92,7 @@ namespace cppdlr {
     */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
       requires(nda::is_scalar_v<S>)
-    auto coefs2eval(T const &gc, double t) {
+    auto coefs2eval(T const &gc, double t) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -129,13 +129,13 @@ namespace cppdlr {
     }
 
     /** 
-    * @brief Get vector of evaluation of DLR expansion at a point 
+    * @brief Get vector of evaluation of DLR expansion at an imaginary time point 
     *
     * @param[in] t  Evaluation point
     *
     * @return Vector of evaluation at @p t
     **/
-    nda::vector<double> get_kevalvec(double t);
+    nda::vector<double> get_kevalvec(double t) const;
 
     /** 
     * @brief Get DLR imaginary time nodes
