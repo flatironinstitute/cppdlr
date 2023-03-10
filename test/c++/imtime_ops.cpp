@@ -1,3 +1,9 @@
+/** 
+* @file imtime_ops.cpp
+*
+* @brief Tests for imtime_ops class.
+*/
+
 #include <gtest/gtest.h>
 #include <nda/nda.hpp>
 #include <cppdlr/dlr_imtime.hpp>
@@ -11,8 +17,17 @@ using namespace nda;
 
 static constexpr auto _ = nda::range::all;
 
-// Green's function G_ij(tau) = sum_l c_ijl K(tau,om_ijl) with random c_ijl, om_ijl
-
+/**
+* @brief Green's function which is a random sum of exponentials
+*
+* G_ij(t) = sum_l c_ijl K(t,om_ijl) with random c_ijl, om_ijl
+*
+* @param norb Number of orbital indices
+* @param beta Inverse temperature
+* @param t    Imaginary time evaluation point
+*
+* @return Green's function evaluated at t
+*/
 nda::matrix<double> gfun(int norb, double beta, double t) {
 
   int npeak = 5;
@@ -23,6 +38,7 @@ nda::matrix<double> gfun(int norb, double beta, double t) {
   double om = 0;
   for (int i = 0; i < norb; ++i) {
     for (int j = 0; j < norb; ++j) {
+
       // Get random weights that sum to 1
       for (int l = 0; l < npeak; ++l) {
         c(l) = (sin(1000.0 * (i + 2 * j + 3 * l + 7)) + 1) / 2; // Quick and dirty rand # gen on [0,1]
@@ -40,9 +56,11 @@ nda::matrix<double> gfun(int norb, double beta, double t) {
   return g;
 }
 
-// Test DLR interpolation and evaluation for matrix-valued Green's function
-
-TEST(dlr_imtime, interp_matrix) {
+/**
+* @brief Test DLR interpolation and evaluation for matrix-valued Green's
+* function
+*/
+TEST(imtime_ops, interp_matrix) {
 
   double lambda = 1000;  // DLR cutoff
   double eps    = 1e-10; // DLR tolerance
@@ -62,40 +80,37 @@ TEST(dlr_imtime, interp_matrix) {
   int r = itops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
-
   auto g = nda::array<double, 3>(r, norb, norb);
-
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
 
   // DLR coefficients of G
   auto gc = itops.vals2coefs(g);
 
   // Check that G can be recovered at imaginary time nodes
-
   EXPECT_LT(max_element(abs(itops.coefs2vals(gc) - g)), 1e-14);
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
 
   // Compute L infinity error
-
-  auto gtru  = nda::array<double, 3>(ntst, norb, norb);
-  auto gtst  = nda::array<double, 3>(ntst, norb, norb);
+  auto gtru  = nda::matrix<double>(norb, norb);
+  auto gtst  = nda::matrix<double>(norb, norb);
   double err = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(i, _, _) = gfun(norb, beta, ttst(i));
-    gtst(i, _, _) = itops.coefs2eval(gc, ttst(i));
-
-    err = std::max(err, max_element(abs(gtru(i, _, _) - gtst(i, _, _))));
+    gtru = gfun(norb, beta, ttst(i));
+    gtst = itops.coefs2eval(gc, ttst(i));
+    err = std::max(err, max_element(abs(gtru - gtst)));
   }
 
   EXPECT_LT(err, 10 * eps);
 
 }
 
-// Test DLR interpolation and evaluation for scalar-valued Green's function
-
-TEST(dlr_imtime, interp_scalar) {
+/**
+* @brief Test DLR interpolation and evaluation for scalar-valued Green's
+* function
+*/
+TEST(imtime_ops, interp_scalar) {
 
   double lambda = 1000;  // DLR cutoff
   double eps    = 1e-10; // DLR tolerance
@@ -113,42 +128,31 @@ TEST(dlr_imtime, interp_scalar) {
   int r = itops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
-
   auto g = nda::vector<double>(r);
-
   for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_it(i))(0, 0); }
 
   // DLR coefficients of G
   auto gc = itops.vals2coefs(g);
 
   // Check that G can be recovered at imaginary time nodes
-
   EXPECT_LT(max_element(abs(itops.coefs2vals(gc) - g)), 1e-14);
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
 
   // Compute L infinity error
-
-  auto gtru  = nda::vector<double>(ntst);
-  auto gtst  = nda::vector<double>(ntst);
-  double err = 0;
+  double gtru  = 0, gtst = 0, err = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(i) = gfun(1, beta, ttst(i))(0, 0);
-
-    gtst(i) = itops.coefs2eval(gc, ttst(i));
-
-    err = std::max(err, abs(gtru(i) - gtst(i)));
+    gtru = gfun(1, beta, ttst(i))(0, 0);
+    gtst = itops.coefs2eval(gc, ttst(i));
+    err = std::max(err, abs(gtru - gtst));
   }
 
   EXPECT_LT(err, 10 * eps);
 
   // Test that constructing vector of evaluation at a point and then applying to
   // coefficients gives same result as direct evaluation method
-
-  auto kvec = itops.get_kevalvec(ttst(0));
-  EXPECT_LT((abs(blas::dot(gc,kvec) - gtst(0))),1e-14);
-
-  PRINT((abs(blas::dot(gc,kvec) - gtst(0))));
+  auto kvec = itops.get_kevalvec(ttst(ntst-1));
+  EXPECT_LT((abs(blas::dot(gc,kvec) - gtst)),1e-14);
 
 }

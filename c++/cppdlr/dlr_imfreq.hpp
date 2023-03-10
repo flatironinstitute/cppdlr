@@ -137,7 +137,7 @@ namespace cppdlr {
       if constexpr (T::rank == 1) {
 
         // Evaluate DLR expansion
-        S g = 0;
+        std::complex<double> g = 0;
         for (int l = 0; l < r; ++l) { g += kfun_if(2*n+(1-xi)/2, dlr_rf(l)) * gc(l); }
 
         return g;
