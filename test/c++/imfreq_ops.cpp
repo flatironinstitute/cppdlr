@@ -86,8 +86,7 @@ TEST(imfreq_ops, interp_matrix) {
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), xi); }
 
   // DLR coefficients of G
-  //auto gc = ifops.vals2realcoefs(g);
-  auto gc = ifops.vals2cplxcoefs(g);
+  auto gc = ifops.vals2coefs(g);
 
   // Check that G can be recovered at imaginary frequency nodes
   EXPECT_LT(max_element(abs(ifops.coefs2vals(gc) - g)), 1e-14);
@@ -132,8 +131,7 @@ TEST(imfreq_ops, interp_scalar) {
   for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_if(i), xi)(0, 0); }
 
   // DLR coefficients of G
-  //auto gc = ifops.vals2realcoefs(g);
-  auto gc = ifops.vals2cplxcoefs(g);
+  auto gc = ifops.vals2coefs(g);
 
   // Check that G can be recovered at imaginary frequency nodes
   EXPECT_LT(max_element(abs(ifops.coefs2vals(gc) - g)), 1e-14);

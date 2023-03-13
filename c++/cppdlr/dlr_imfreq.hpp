@@ -28,50 +28,13 @@ namespace cppdlr {
 
     /** 
     * @brief Transform values of Green's function G on DLR imaginary frequency grid to
-    * real-valued DLR coefficients
-    *
-    * Use this vals2coefs method when the DLR coefficients of G should be
-    * real-valued; in other words, when G is real-valued in imaginary time 
+    * DLR coefficients
     *
     * @param[in] g Values of G on DLR imaginary frequency grid
     *
     * @return DLR coefficients of G
     */
-    template <nda::MemoryArray T> make_real_t<T> vals2realcoefs(T const &g) const {
-
-      // MemoryArray type can be nda vector, matrix, array, or view of any of
-      // these; taking a regular_type converts, for example, a matrix view to a
-      // matrix.
-
-      if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
-
-      // Reshape g to matrix w/ second dimension r
-      auto g_rs = nda::reshaped_view(g, std::array<long, 2>{r, g.size() / r});
-      auto gct  = nda::matrix<nda::dcomplex>(transpose(g_rs));
-
-      // Solve linear system (multiple right hand sides) to convert vals ->
-      // coeffs (we transpose because LAPACK requires index into RHS # to be
-      // slowest)
-      nda::lapack::getrs(if2cf.lu, gct, if2cf.piv);
-
-      // Take real part (imaginary part of DLR coefficients should be zero),
-      // reshape to original dimensions and return
-      auto gc = nda::matrix<double>(transpose(real(gct)));
-      return nda::reshaped_view(gc, g.shape());
-    }
-
-    /** 
-    * @brief Transform values of Green's function G on DLR imaginary frequency grid to
-    * complex-valued DLR coefficients
-    *
-    * Use this vals2coefs method when the DLR coefficients of G should be
-    * complex-valued; in other words, when G is complex-valued in imaginary time
-    *
-    * @param[in] g Values of G on DLR imaginary frequency grid
-    *
-    * @return DLR coefficients of G
-    */
-    template <nda::MemoryArray T> typename T::regular_type vals2cplxcoefs(T const &g) const {
+    template <nda::MemoryArray T> typename T::regular_type vals2coefs(T const &g) const {
 
       // MemoryArray type can be nda vector, matrix, array, or view of any of
       // these; taking a regular_type converts, for example, a matrix view to a
@@ -94,13 +57,13 @@ namespace cppdlr {
     }
 
     /** 
-* @brief Transform DLR coefficients of Green's function G to values on DLR
-* imaginary frequency grid
-*
-* @param[in] gc DLR coefficients of G
-*
-* @return Values of G on DLR imaginary frequency grid
-* */
+    * @brief Transform DLR coefficients of Green's function G to values on DLR
+    * imaginary frequency grid
+    *
+    * @param[in] gc DLR coefficients of G
+    *
+    * @return Values of G on DLR imaginary frequency grid
+    * */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
     requires(nda::is_scalar_v<S>) make_cplx_t<T> coefs2vals(T const &gc)
     const {
