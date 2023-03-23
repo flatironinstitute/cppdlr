@@ -7,7 +7,7 @@ using namespace nda;
 
 namespace cppdlr {
 
-  imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi) : xi(xi), r(dlr_rf.size()), dlr_rf(dlr_rf) {
+  imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi) : lambda_(lambda), xi(xi), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     if (xi != 1 && xi != -1) throw std::runtime_error("xi must be -1 (fermionic) or 1 (bosonic).");
 

@@ -6,6 +6,8 @@
 
 #include <gtest/gtest.h>
 #include <nda/nda.hpp>
+#include <nda/gtest_tools.hpp>
+
 #include <cppdlr/dlr_imfreq.hpp>
 #include <cppdlr/dlr_basis.hpp>
 #include <cppdlr/utils.hpp>
@@ -154,4 +156,41 @@ TEST(imfreq_ops, interp_scalar) {
   auto zgc = nda::vector<dcomplex>(gc);
   EXPECT_LT((abs(blas::dotc(zgc,kvec) - gtst)),1e-14);
 
+}
+
+TEST(dlr_imfreq, h5_rw) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+  int xi        = -1;    // Fermionic Green's function
+
+  // Get DLR frequencies
+  auto dlr_rf = dlr_freq(lambda, eps);
+
+  // Get DLR imaginary frequency object
+  auto ifops = imfreq_ops(lambda, dlr_rf, xi);
+
+  auto filename = "data_imfreq_ops_h5_rw.h5";
+  auto name = "ifops";
+
+  {
+    h5::file file(filename, 'w');
+    h5_write(file, name, ifops);
+  }
+
+  imfreq_ops ifops_ref;
+  {
+    h5::file file(filename, 'r');
+    h5_read(file, name, ifops_ref);
+  }
+
+  // Check equal
+  EXPECT_EQ(ifops.lambda(), ifops_ref.lambda());
+  EXPECT_EQ(ifops.rank(), ifops_ref.rank());
+  EXPECT_EQ_ARRAY(ifops.get_rfnodes(), ifops_ref.get_rfnodes());
+  EXPECT_EQ_ARRAY(ifops.get_ifnodes(), ifops_ref.get_ifnodes());
+  EXPECT_EQ_ARRAY(ifops.get_cf2if(), ifops_ref.get_cf2if());
+  EXPECT_EQ_ARRAY(ifops.get_if2cf_lu(), ifops_ref.get_if2cf_lu());
+  EXPECT_EQ_ARRAY(ifops.get_if2cf_piv(), ifops_ref.get_if2cf_piv());
+  
 }

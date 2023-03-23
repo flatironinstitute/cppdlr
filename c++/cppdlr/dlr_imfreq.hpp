@@ -3,6 +3,9 @@
 #include "cppdlr/dlr_kernels.hpp"
 #include "cppdlr/utils.hpp"
 
+#include <h5/h5.hpp>
+#include <nda/h5.hpp>
+
 namespace cppdlr {
 
   /**
@@ -25,6 +28,17 @@ namespace cppdlr {
     * @param[in] xi     Fermionic (xi = -1) or bosonic (xi = 1) Matsubara frequencies
     */
     imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi);
+
+    imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi,
+	       nda::vector_const_view<int> dlr_if,
+	       nda::matrix_const_view<nda::dcomplex> cf2if,
+	       nda::matrix_const_view<nda::dcomplex> if2cf_lu,
+	       nda::vector_const_view<int> if2cf_piv) :
+      lambda_(lambda), xi(xi), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_if(dlr_if),
+      cf2if(cf2if), if2cf{if2cf_lu, if2cf_piv}
+    {};
+
+    imfreq_ops() = default;
 
     /** 
     * @brief Transform values of Green's function G on DLR imaginary frequency grid to
@@ -138,14 +152,23 @@ namespace cppdlr {
     */
     nda::vector_const_view<int> get_ifnodes() const { return dlr_if; };
 
+    /** Accessors */
+    nda::vector_const_view<double> get_rfnodes() const { return dlr_rf; };
+    nda::matrix_const_view<nda::dcomplex> get_cf2if() const { return cf2if; };
+    nda::matrix_const_view<nda::dcomplex> get_if2cf_lu() const { return if2cf.lu; };
+    nda::vector_const_view<int> get_if2cf_piv() const { return if2cf.piv; };
+
     /** 
     * @brief Get DLR rank
     *
     * @return DLR rank
     */
     int rank() const { return r; }
+    double lambda() const { return lambda_; }
+    int get_xi() const { return xi; }
 
     private:
+    double lambda_;
     int xi;                           ///< Fermionic (xi = -1) or bosonic (xi = 1) Matsubara frequencies
     int r;                            ///< DLR rank
     nda::vector<double> dlr_rf;       ///< DLR frequencies
@@ -159,6 +182,48 @@ namespace cppdlr {
       nda::matrix<nda::dcomplex> lu; ///< LU factors (LAPACK format) of imaginary frequency vals -> coefs matrix
       nda::vector<int> piv;          ///< LU pivots (LAPACK format) of imaginary frequency vals -> coefs matrix
     } if2cf;
-  };
 
+  // -------------------- hdf5 -------------------
+
+  static std::string hdf5_format() { return "cppdlr::imfreq_ops"; }
+
+    friend void h5_write(h5::group fg, std::string const &subgroup_name, imfreq_ops const &m) {
+      
+      h5::group gr = fg.create_group(subgroup_name);
+      write_hdf5_format_as_string(gr, "cppdlr::imfreq_ops");
+
+      h5_write(gr, "lambda", m.lambda());
+      h5_write(gr, "xi", m.get_xi());
+      h5_write(gr, "rf", m.get_rfnodes());
+      h5_write(gr, "if", m.get_ifnodes());
+      h5_write(gr, "cf2if", m.get_cf2if());
+      h5_write(gr, "if2cf_lu", m.get_if2cf_lu());
+      h5_write(gr, "if2cf_piv", m.get_if2cf_piv());
+    }
+
+    friend void h5_read(h5::group fg, std::string const &subgroup_name, imfreq_ops &m) {
+
+      h5::group gr = fg.open_group(subgroup_name);
+      assert_hdf5_format_as_string(gr, "cppdlr::imfreq_ops", true);
+
+      double lambda;
+      int xi;
+      nda::vector<double> rf;
+      nda::vector<int> if_;
+      nda::matrix<nda::dcomplex> cf2if;
+      nda::matrix<nda::dcomplex> if2cf_lu;
+      nda::vector<int> if2cf_piv;
+    
+      h5_read(gr, "lambda", lambda);
+      h5_read(gr, "xi", xi);
+      h5_read(gr, "rf", rf);
+      h5_read(gr, "if", if_);
+      h5_read(gr, "cf2if", cf2if);
+      h5_read(gr, "if2cf_lu", if2cf_lu);
+      h5_read(gr, "if2cf_piv", if2cf_piv);
+    
+      m = imfreq_ops(lambda, rf, xi, if_, cf2if, if2cf_lu, if2cf_piv);
+    }
+  };
+  
 } // namespace cppdlr
