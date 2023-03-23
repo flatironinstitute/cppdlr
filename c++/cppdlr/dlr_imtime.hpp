@@ -63,7 +63,14 @@ namespace cppdlr {
       // Solve linear system (multiple right hand sides) to convert vals ->
       // coeffs (we transpose because LAPACK requires index into RHS # to be
       // slowest)
-      nda::lapack::getrs(it2cf.lu, gct, it2cf.piv);
+      
+      if constexpr ( nda::have_same_value_type_v<T, decltype(it2cf.lu)> ) {
+        nda::lapack::getrs(it2cf.lu, gct, it2cf.piv);
+      } else {
+        // NOTE: getrs require the first and second matrix to have the same value type
+        // So if it2cf.lu does not have the same value type as gct we need a cast.
+        nda::lapack::getrs(nda::matrix<S>(it2cf.lu), gct, it2cf.piv);
+      }
 
       // Reshape to original dimensions and return
       auto gc = nda::matrix<S>(transpose(gct));

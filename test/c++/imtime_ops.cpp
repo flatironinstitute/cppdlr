@@ -109,6 +109,57 @@ TEST(imtime_ops, interp_matrix) {
 }
 
 /**
+* @brief Test DLR interpolation and evaluation for complex and matrix-valued Green's
+* function
+*/
+TEST(imtime_ops, interp_matrix_complex) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+
+  int norb = 2; // Orbital dimensions
+
+  // Get DLR frequencies
+  auto dlr_rf = dlr_freq(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at DLR imaginary time nodes
+  int r = itops.rank();
+  // [Q] Is this correct or just auto?
+  auto const &dlr_it = itops.get_itnodes();
+  auto g = nda::array<std::complex<double>, 3>(r, norb, norb);
+  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
+
+  // DLR coefficients of G
+  auto gc = itops.vals2coefs(g);
+
+  // Check that G can be recovered at imaginary time nodes
+  EXPECT_LT(max_element(abs(itops.coefs2vals(gc) - g)), 1e-14);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  auto gtru  = nda::matrix<std::complex<double>>(norb, norb);
+  auto gtst  = nda::matrix<std::complex<double>>(norb, norb);
+  double err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru = gfun(norb, beta, ttst(i));
+    gtst = itops.coefs2eval(gc, ttst(i));
+    err = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 10 * eps);
+
+}
+
+
+/**
 * @brief Test DLR interpolation and evaluation for scalar-valued Green's
 * function
 */
