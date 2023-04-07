@@ -7,8 +7,8 @@ set     version     @PROJECT_VERSION@
 set     root        @CMAKE_INSTALL_PREFIX@
 set     git_hash    @PROJECT_GIT_HASH@
 
-set     url         "https://github.com/TRIQS/@PROJECT_NAME@"
-set     description "An example application using cpp2py and triqs."
+set     url         "https://github.com/jasonkaye/@PROJECT_NAME@"
+set     description "Discrete Lehmann representation of imaginary time Green's functions with cppdlr."
 
 module-whatis   "$description"
 
