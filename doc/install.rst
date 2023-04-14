@@ -15,7 +15,7 @@ Installation steps
 
 #. Download the source code of the latest stable version by cloning the ``TRIQS/cppdlr`` repository from GitHub::
 
-     $ git clone https://github.com/TRIQS/cppdlr cppdlr.src
+     $ git clone https://github.com/flatironinstitute/cppdlr cppdlr.src
 
 #. Create and move to a new directory where you will compile the code::
 
@@ -54,7 +54,7 @@ The compilation of ``cppdlr`` can be configured using CMake-options::
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Options                                                         | Syntax                                        |
 +=================================================================+===============================================+
-| Specify an installation path other than path_to_triqs           | -DCMAKE_INSTALL_PREFIX=path_to_cppdlr      |
+| Specify an installation path other than path_to_triqs           | -DCMAKE_INSTALL_PREFIX=path_to_cppdlr         |
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Build in Debugging Mode                                         | -DCMAKE_BUILD_TYPE=Debug                      |
 +-----------------------------------------------------------------+-----------------------------------------------+
@@ -62,3 +62,30 @@ The compilation of ``cppdlr`` can be configured using CMake-options::
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Build the documentation                                         | -DBuild_Documentation=ON                      |
 +-----------------------------------------------------------------+-----------------------------------------------+
+
+Dependencies
+--------------------------
+
+The dependencies of ``cppdlr`` are as follows:
+
+* gcc version 12 or later OR clang version 15 or later
+* BLAS/LAPACK
+* hdf5
+* mpi
+
+``hdf5`` and ``mpi`` are required by the ``nda`` library, which is itself built
+automatically with ``cppdlr``.
+
+If you wish to build the documentation, the dependencies also include:
+
+* libclang
+* python
+
+and the Python packages
+
+* sphinx
+* nbsphinx
+* myst_parser
+* sphinx_rtd_theme
+* linkify-it-py
+* clang
