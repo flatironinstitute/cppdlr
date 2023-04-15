@@ -11,10 +11,7 @@ using std::numbers::pi;
 namespace cppdlr {
 
   fineparams::fineparams(double lambda, int p)
-     : // All values have been chosen empirically to give fine discretization of
-       // Lehmann kernel accurate to double machine precision
-
-       // TODO: make alt constructor in which iommax is a parameter
+     : // TODO: make alt constructor in which iommax is a parameter
 
        lambda(lambda),
        p(p),
@@ -173,12 +170,12 @@ namespace cppdlr {
 
     if (xi != 1 && xi != -1) throw std::runtime_error("xi must be -1 (fermionic) or 1 (bosonic).");
 
-    int nom  = om.size();
+    int nom = om.size();
 
-    auto kmat = nda::matrix<dcomplex>(2*nmax, nom);
+    auto kmat = nda::matrix<dcomplex>(2 * nmax, nom);
 
     for (int n = -nmax; n < nmax; ++n) {
-      for (int j = 0; j < nom; ++j) { kmat(nmax+n, j) = kfun_if(2*n+(1-xi)/2, om(j)); }
+      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = kfun_if(2 * n + (1 - xi) / 2, om(j)); }
     }
 
     return kmat;
