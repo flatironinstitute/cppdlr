@@ -28,11 +28,11 @@ TEST(dlr_build, get_kfine) {
 
   fineparams fine(100.0);
 
-  auto t = get_tfine(fine);
-  auto om = get_omfine(fine);
+  auto t = build_it_fine(fine);
+  auto om = build_rf_fine(fine);
 
-  auto kmat = get_kfine(t,om);
-  auto [errt,errom] = get_kfineerr(fine,t,om,kmat);
+  auto kmat = build_k_it(t,om);
+  auto [errt,errom] = geterr_k_it(fine,t,om,kmat);
 
   EXPECT_LT(errt,   1e-14);
   EXPECT_LT(errom,  1e-14);

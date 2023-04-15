@@ -19,7 +19,7 @@ namespace cppdlr {
     // Get analytic continuation kernel at DLR frequencies, up to imaginary
     // frequency cutoff
     auto nmax = fineparams(lambda).nmax;
-    auto kmat = get_kif(nmax, dlr_rf, xi);
+    auto kmat = build_k_if(nmax, dlr_rf, xi);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
     auto [q, norms, piv] = pivrgs(kmat, 1e-100);
@@ -36,7 +36,7 @@ namespace cppdlr {
     lapack::getrf(if2cf.lu, if2cf.piv);
   }
 
-  nda::vector<dcomplex> imfreq_ops::get_kevalvec(int n) const {
+  nda::vector<dcomplex> imfreq_ops::build_evalvec(int n) const {
 
     auto kvec = nda::vector<dcomplex>(r);
     for (int l = 0; l < r; ++l) { kvec(l) = kfun_if(2*n+(1-xi)/2, dlr_rf(l)); }

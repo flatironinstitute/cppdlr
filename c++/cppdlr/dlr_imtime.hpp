@@ -27,14 +27,9 @@ namespace cppdlr {
     */
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
 
-    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf,
-	       nda::vector_const_view<double> dlr_it,
-	       nda::matrix_const_view<double> cf2it,
-	       nda::matrix_const_view<double> it2cf_lu,
-	       nda::vector_const_view<int> it2cf_piv) :
-      lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it),
-      cf2it(cf2it), it2cf{it2cf_lu, it2cf_piv}
-    {};
+    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, nda::vector_const_view<double> dlr_it, nda::matrix_const_view<double> cf2it,
+               nda::matrix_const_view<double> it2cf_lu, nda::vector_const_view<int> it2cf_piv)
+       : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it), cf2it(cf2it), it2cf{it2cf_lu, it2cf_piv} {};
 
     imtime_ops() = default;
 
@@ -63,8 +58,8 @@ namespace cppdlr {
       // Solve linear system (multiple right hand sides) to convert vals ->
       // coeffs (we transpose because LAPACK requires index into RHS # to be
       // slowest)
-      
-      if constexpr ( nda::have_same_value_type_v<T, decltype(it2cf.lu)> ) {
+
+      if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
         nda::lapack::getrs(it2cf.lu, gct, it2cf.piv);
       } else {
         // NOTE: getrs require the first and second matrix to have the same value type
@@ -141,7 +136,7 @@ namespace cppdlr {
         for (int i = 0; i < T::rank - 1; ++i) { shape_out[i] = gc.shape(i + 1); }
 
         // Get vector of evaluation of DLR expansion at a point
-        auto kvec = get_kevalvec(t);
+        auto kvec = build_evalvec(t);
 
         // Evaluate DLR expansion, reshape to original dimensions (with first
         // dimension summed out), and return
@@ -150,13 +145,13 @@ namespace cppdlr {
     }
 
     /** 
-    * @brief Get vector of evaluation of DLR expansion at an imaginary time point 
+    * @brief Build vector of evaluation of DLR expansion at an imaginary time point 
     *
     * @param[in] t  Evaluation point
     *
     * @return Vector of evaluation at @p t
     **/
-    nda::vector<double> get_kevalvec(double t) const;
+    nda::vector<double> build_evalvec(double t) const;
 
     /** 
     * @brief Get DLR imaginary time nodes
@@ -165,9 +160,6 @@ namespace cppdlr {
     */
     nda::vector_const_view<double> get_itnodes() const { return dlr_it; };
 
-    /** Evaluate DLR expansion given by its values on DLR imaginary time grid at an imaginary time points */
-    nda::matrix<double> vals2eval(nda::array_const_view<double, 3> g);
-
     /** Access DLR imaginary real frequency nodes*/
     nda::vector_const_view<double> get_rfnodes() const { return dlr_rf; };
 
@@ -175,7 +167,7 @@ namespace cppdlr {
     nda::matrix_const_view<double> get_cf2it() const { return cf2it; };
     nda::matrix_const_view<double> get_it2cf_lu() const { return it2cf.lu; };
     nda::vector_const_view<int> get_it2cf_piv() const { return it2cf.piv; };
-    
+
     /** 
     * @brief Get DLR rank
     *
@@ -195,16 +187,16 @@ namespace cppdlr {
     * Struct for transformation from DLR imaginary time values to coefficients
     */
     struct {
-      nda::matrix<double> lu;   ///< LU factors (LAPACK format) of imaginary time vals -> coefs matrix
-      nda::vector<int> piv;     ///< LU pivots (LAPACK format) of imaginary time vals -> coefs matrix
-    } it2cf; 
+      nda::matrix<double> lu; ///< LU factors (LAPACK format) of imaginary time vals -> coefs matrix
+      nda::vector<int> piv;   ///< LU pivots (LAPACK format) of imaginary time vals -> coefs matrix
+    } it2cf;
 
-  // -------------------- hdf5 -------------------
+    // -------------------- hdf5 -------------------
 
-  static std::string hdf5_format() { return "cppdlr::imtime_ops"; }
+    static std::string hdf5_format() { return "cppdlr::imtime_ops"; }
 
     friend void h5_write(h5::group fg, std::string const &subgroup_name, imtime_ops const &m) {
-      
+
       h5::group gr = fg.create_group(subgroup_name);
       write_hdf5_format_as_string(gr, "cppdlr::imtime_ops");
 
@@ -227,14 +219,14 @@ namespace cppdlr {
       nda::matrix<double> cf2it;
       nda::matrix<double> it2cf_lu;
       nda::vector<int> it2cf_piv;
-    
+
       h5_read(gr, "lambda", lambda);
       h5_read(gr, "rf", rf);
       h5_read(gr, "it", it);
       h5_read(gr, "cf2it", cf2it);
       h5_read(gr, "it2cf_lu", it2cf_lu);
       h5_read(gr, "it2cf_piv", it2cf_piv);
-    
+
       m = imtime_ops(lambda, rf, it, cf2it, it2cf_lu, it2cf_piv);
     }
   };

@@ -25,7 +25,7 @@ namespace cppdlr {
     if (p <= 0) throw std::runtime_error("Choose p > 0.");
   }
 
-  nda::vector<double> get_omfine(fineparams &fine) {
+  nda::vector<double> build_rf_fine(fineparams &fine) {
 
     int p    = fine.p;
     int npom = fine.npom;
@@ -55,7 +55,7 @@ namespace cppdlr {
     return om;
   }
 
-  nda::vector<double> get_tfine(fineparams &fine) {
+  nda::vector<double> build_it_fine(fineparams &fine) {
 
     int p   = fine.p;
     int npt = fine.npt;
@@ -84,7 +84,7 @@ namespace cppdlr {
     return t;
   }
 
-  nda::matrix<double> get_kfine(nda::vector_const_view<double> t, nda::vector_const_view<double> om) {
+  nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> om) {
 
     int nt  = t.size();
     int nom = om.size();
@@ -101,7 +101,7 @@ namespace cppdlr {
     return kmat;
   }
 
-  std::tuple<double, double> get_kfineerr(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
+  std::tuple<double, double> geterr_k_it(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
                                           nda::matrix_const_view<double> kmat) {
 
     auto _ = range::all;
@@ -116,8 +116,8 @@ namespace cppdlr {
     // number of points per panel as the given fine grid
 
     fineparams fine2(fine.lambda, 2 * fine.p);
-    auto ttst  = get_tfine(fine2);
-    auto omtst = get_omfine(fine2);
+    auto ttst  = build_it_fine(fine2);
+    auto omtst = build_rf_fine(fine2);
     int p2     = fine2.p;
 
     // Interpolate values in K matrix to finer grids using barycentral Chebyshev
@@ -166,7 +166,7 @@ namespace cppdlr {
     return {errt, errom};
   }
 
-  nda::matrix<dcomplex> get_kif(int nmax, nda::vector_const_view<double> om, int xi) {
+  nda::matrix<dcomplex> build_k_if(int nmax, nda::vector_const_view<double> om, int xi) {
 
     if (xi != 1 && xi != -1) throw std::runtime_error("xi must be -1 (fermionic) or 1 (bosonic).");
 
@@ -181,7 +181,7 @@ namespace cppdlr {
     return kmat;
   }
 
-  nda::vector<double> dlr_freq(double lambda, double eps) {
+  nda::vector<double> build_dlr_rf(double lambda, double eps) {
 
     // Get fine grid parameters
 
@@ -189,12 +189,12 @@ namespace cppdlr {
 
     // Get fine grids in frequency and imaginary time
 
-    auto t  = get_tfine(fine);
-    auto om = get_omfine(fine);
+    auto t  = build_it_fine(fine);
+    auto om = build_rf_fine(fine);
 
     // Get discretization of analytic continuation kernel on fine grid (the K matrix)
 
-    auto kmat = get_kfine(t, om);
+    auto kmat = build_k_it(t, om);
 
     // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
 

@@ -17,8 +17,8 @@ namespace cppdlr {
     // Get discretization of analytic continuation kernel on fine grid in
     // imaginary time, at DLR frequencies
     auto fine = fineparams(lambda);
-    auto t    = get_tfine(fine);
-    auto kmat = get_kfine(t, dlr_rf);
+    auto t    = build_it_fine(fine);
+    auto kmat = build_k_it(t, dlr_rf);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
     auto [q, norms, piv] = pivrgs(kmat, 1e-100);
@@ -35,7 +35,7 @@ namespace cppdlr {
     lapack::getrf(it2cf.lu, it2cf.piv);
   }
 
-  nda::vector<double> imtime_ops::get_kevalvec(double t) const {
+  nda::vector<double> imtime_ops::build_evalvec(double t) const {
 
     // TODO: can be further optimized to reduce # exponential evals.
     auto kvec = nda::vector<double>(r);

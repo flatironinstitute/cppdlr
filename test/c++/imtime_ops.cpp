@@ -73,7 +73,7 @@ TEST(imtime_ops, interp_matrix) {
   int norb = 2; // Orbital dimensions
 
   // Get DLR frequencies
-  auto dlr_rf = dlr_freq(lambda, eps);
+  auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf);
@@ -123,7 +123,7 @@ TEST(imtime_ops, interp_matrix_complex) {
   int norb = 2; // Orbital dimensions
 
   // Get DLR frequencies
-  auto dlr_rf = dlr_freq(lambda, eps);
+  auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf);
@@ -172,7 +172,7 @@ TEST(imtime_ops, interp_scalar) {
   int ntst    = 10000; // # imag time test points
 
   // Get DLR frequencies
-  auto dlr_rf = dlr_freq(lambda, eps);
+  auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf);
@@ -205,7 +205,7 @@ TEST(imtime_ops, interp_scalar) {
 
   // Test that constructing vector of evaluation at a point and then applying to
   // coefficients gives same result as direct evaluation method
-  auto kvec = itops.get_kevalvec(ttst(ntst-1));
+  auto kvec = itops.build_evalvec(ttst(ntst-1));
   EXPECT_LT((abs(blas::dot(gc,kvec) - gtst)),1e-14);
 
 }
@@ -216,7 +216,7 @@ TEST(dlr_imtime, h5_rw) {
   double eps    = 1e-10; // DLR tolerance
 
   // Get DLR frequencies
-  auto dlr_rf = dlr_freq(lambda, eps);
+  auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf);

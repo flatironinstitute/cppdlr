@@ -75,7 +75,7 @@ TEST(imfreq_ops, interp_matrix) {
   int norb = 2; // Orbital dimensions
 
   // Get DLR frequencies
-  auto dlr_rf = dlr_freq(lambda, eps);
+  auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary frequency object
   auto ifops = imfreq_ops(lambda, dlr_rf, xi);
@@ -120,7 +120,7 @@ TEST(imfreq_ops, interp_scalar) {
   int nmaxtst = 5000;     // # imag time test points
 
   // Get DLR frequencies
-  auto dlr_rf = dlr_freq(lambda, eps);
+  auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary frequency object
   auto ifops = imfreq_ops(lambda, dlr_rf, xi);
@@ -152,7 +152,7 @@ TEST(imfreq_ops, interp_scalar) {
   // Test that constructing vector of evaluation at a point and then applying to
   // coefficients gives same result as direct evaluation method
   gtst = ifops.coefs2eval(gc, 3);
-  auto kvec = ifops.get_kevalvec(3);
+  auto kvec = ifops.build_evalvec(3);
   auto zgc = nda::vector<dcomplex>(gc);
   EXPECT_LT((abs(blas::dotc(zgc,kvec) - gtst)),1e-14);
 
@@ -165,7 +165,7 @@ TEST(dlr_imfreq, h5_rw) {
   int xi        = -1;    // Fermionic Green's function
 
   // Get DLR frequencies
-  auto dlr_rf = dlr_freq(lambda, eps);
+  auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary frequency object
   auto ifops = imfreq_ops(lambda, dlr_rf, xi);

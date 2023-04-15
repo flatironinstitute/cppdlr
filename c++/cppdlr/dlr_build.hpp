@@ -24,20 +24,20 @@ namespace cppdlr {
     const double lambda; ///< DLR cutoff parameter
     const int p;         ///< Order of composite Chebyshev grid
     const int nmax;      ///< Imaginary frequency cutoff
-    const int npom;      ///< # fine frequency grid panels
+    const int npom;      ///< # fine real frequency grid panels
     const int npt;       ///< # fine imaginary time grid panels
-    const int nom;       ///< Total # fine frequency grid points
+    const int nom;       ///< Total # fine real frequency grid points
     const int nt;        ///< Total # fine imaginary time grid points
   };
 
   /**
-  * @brief Get fine composite Chebyshev grid in frequency 
+  * @brief Build fine composite Chebyshev grid in real frequency 
   *
   * @param[in] fine Fine grid parameters
   *
-  * @return Fine frequency grid
+  * @return Fine real frequency grid
   */
-  nda::vector<double> get_omfine(fineparams &fine);
+  nda::vector<double> build_rf_fine(fineparams &fine);
 
   /**
   * @brief Get fine composite Chebyshev grid in imaginary time
@@ -48,28 +48,28 @@ namespace cppdlr {
   *
   * \note Fine imaginary time grid is given in relative format 
   */
-  nda::vector<double> get_tfine(fineparams &fine);
+  nda::vector<double> build_it_fine(fineparams &fine);
 
   /**
   * @brief Get imaginary time discretization of analytic continuation kernel
   *
   * @param[in] t Imaginary time grid in relative format
-  * @param[in] om Frequency grid
+  * @param[in] om Frequency real grid
   *
   * @return Discretization of analytic continuation kernel on given grid
   */
-  nda::matrix<double> get_kfine(nda::vector_const_view<double> t, nda::vector_const_view<double> om);
+  nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> om);
 
   /**
   * @brief Get imaginary frequency discretization of analytic continuation kernel
   *
   * @param[in] nmax Imaginary frequency cutoff
-  * @param[in] om Frequency grid
+  * @param[in] om Real frequency grid
   * @param[in] xi Fermionic (xi = -1) or bosonic (xi = 1) imaginary frequency grid
   *
   * @return Discretization of analytic continuation kernel on given grid
   */
-  nda::matrix<dcomplex> get_kif(int nmax, nda::vector_const_view<double> om, int xi);
+  nda::matrix<dcomplex> build_k_if(int nmax, nda::vector_const_view<double> om, int xi);
 
   /**
   * @brief Get error of fine composite Chebyshev discretization of analytic
@@ -77,11 +77,11 @@ namespace cppdlr {
   * 
   * @param[in] fine Fine grid parameters
   * @param[in] t Imaginary time grid in relative format
-  * @param[in] om Frequency grid
+  * @param[in] om Real frequency grid
   * @param[in] kmat Discretization of analytic continuation kernel on given grid
   *
   * @return Error of given fine discretization of analytic continuation kernel
-  * in imaginary time and in frequency
+  * in imaginary time and real frequency
   *
   * \note Error is given as an estimate of the maximum absolute value of the
   * difference between the given discretization and the exact analytic
@@ -90,8 +90,8 @@ namespace cppdlr {
   * \note \p kmat should be computed using the function get_kfine with composite
   * Chebyshev grids produced by get_omfine and get_tfine
   */
-  std::tuple<double, double> get_kfineerr(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
-                                          nda::matrix_const_view<double> kmat);
+  std::tuple<double, double> geterr_k_it(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
+                                         nda::matrix_const_view<double> kmat);
 
   /**
    * Construct DLR basis for a given accuracy and cutoff parameter by getting DLR frequencies
@@ -105,6 +105,6 @@ namespace cppdlr {
   *
   * @return DLR frequencies
   */
-  nda::vector<double> dlr_freq(double lambda, double eps);
+  nda::vector<double> build_dlr_rf(double lambda, double eps);
 
 } // namespace cppdlr

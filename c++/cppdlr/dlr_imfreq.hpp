@@ -29,14 +29,9 @@ namespace cppdlr {
     */
     imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi);
 
-    imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi,
-	       nda::vector_const_view<int> dlr_if,
-	       nda::matrix_const_view<nda::dcomplex> cf2if,
-	       nda::matrix_const_view<nda::dcomplex> if2cf_lu,
-	       nda::vector_const_view<int> if2cf_piv) :
-      lambda_(lambda), xi(xi), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_if(dlr_if),
-      cf2if(cf2if), if2cf{if2cf_lu, if2cf_piv}
-    {};
+    imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi, nda::vector_const_view<int> dlr_if,
+               nda::matrix_const_view<nda::dcomplex> cf2if, nda::matrix_const_view<nda::dcomplex> if2cf_lu, nda::vector_const_view<int> if2cf_piv)
+       : lambda_(lambda), xi(xi), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_if(dlr_if), cf2if(cf2if), if2cf{if2cf_lu, if2cf_piv} {};
 
     imfreq_ops() = default;
 
@@ -79,8 +74,8 @@ namespace cppdlr {
     * @return Values of G on DLR imaginary frequency grid
     * */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-    requires(nda::is_scalar_v<S>) make_cplx_t<T> coefs2vals(T const &gc)
-    const {
+      requires(nda::is_scalar_v<S>)
+    make_cplx_t<T> coefs2vals(T const &gc) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -105,7 +100,8 @@ namespace cppdlr {
     * @return Value of G at @p iom
     */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-    requires(nda::is_scalar_v<S>) auto coefs2eval(T const &gc, int n) const {
+      requires(nda::is_scalar_v<S>)
+    auto coefs2eval(T const &gc, int n) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -115,7 +111,7 @@ namespace cppdlr {
 
         // Evaluate DLR expansion
         std::complex<double> g = 0;
-        for (int l = 0; l < r; ++l) { g += kfun_if(2*n+(1-xi)/2, dlr_rf(l)) * gc(l); }
+        for (int l = 0; l < r; ++l) { g += kfun_if(2 * n + (1 - xi) / 2, dlr_rf(l)) * gc(l); }
 
         return g;
       } else {
@@ -128,7 +124,7 @@ namespace cppdlr {
         for (int i = 0; i < T::rank - 1; ++i) { shape_out[i] = gc.shape(i + 1); }
 
         // Get vector of evaluation of DLR expansion at a point
-        auto kvec = get_kevalvec(n);
+        auto kvec = build_evalvec(n);
 
         // Evaluate DLR expansion, reshape to original dimensions (with first
         // dimension summed out), and return
@@ -143,7 +139,7 @@ namespace cppdlr {
     *
     * @return Vector of evaluation at Matsubara frequency with index @p n
     **/
-    nda::vector<nda::dcomplex> get_kevalvec(int n) const;
+    nda::vector<nda::dcomplex> build_evalvec(int n) const;
 
     /** 
     * @brief Get DLR imaginary frequency nodes
@@ -183,12 +179,12 @@ namespace cppdlr {
       nda::vector<int> piv;          ///< LU pivots (LAPACK format) of imaginary frequency vals -> coefs matrix
     } if2cf;
 
-  // -------------------- hdf5 -------------------
+    // -------------------- hdf5 -------------------
 
-  static std::string hdf5_format() { return "cppdlr::imfreq_ops"; }
+    static std::string hdf5_format() { return "cppdlr::imfreq_ops"; }
 
     friend void h5_write(h5::group fg, std::string const &subgroup_name, imfreq_ops const &m) {
-      
+
       h5::group gr = fg.create_group(subgroup_name);
       write_hdf5_format_as_string(gr, "cppdlr::imfreq_ops");
 
@@ -213,7 +209,7 @@ namespace cppdlr {
       nda::matrix<nda::dcomplex> cf2if;
       nda::matrix<nda::dcomplex> if2cf_lu;
       nda::vector<int> if2cf_piv;
-    
+
       h5_read(gr, "lambda", lambda);
       h5_read(gr, "xi", xi);
       h5_read(gr, "rf", rf);
@@ -221,9 +217,9 @@ namespace cppdlr {
       h5_read(gr, "cf2if", cf2if);
       h5_read(gr, "if2cf_lu", if2cf_lu);
       h5_read(gr, "if2cf_piv", if2cf_piv);
-    
+
       m = imfreq_ops(lambda, rf, xi, if_, cf2if, if2cf_lu, if2cf_piv);
     }
   };
-  
+
 } // namespace cppdlr
