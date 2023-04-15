@@ -120,9 +120,9 @@ namespace cppdlr {
         // Evaluate DLR expansion
         S g = 0;
         if (t >= 0) {
-          for (int l = 0; l < r; ++l) { g += kfun_abs(t, dlr_rf(l)) * gc(l); }
+          for (int l = 0; l < r; ++l) { g += k_it_abs(t, dlr_rf(l)) * gc(l); }
         } else {
-          for (int l = 0; l < r; ++l) { g += kfun_abs(-t, -dlr_rf(l)) * gc(l); }
+          for (int l = 0; l < r; ++l) { g += k_it_abs(-t, -dlr_rf(l)) * gc(l); }
         }
 
         return g;

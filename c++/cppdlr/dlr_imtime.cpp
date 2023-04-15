@@ -40,9 +40,9 @@ namespace cppdlr {
     // TODO: can be further optimized to reduce # exponential evals.
     auto kvec = nda::vector<double>(r);
     if (t >= 0) {
-      for (int l = 0; l < r; ++l) { kvec(l) = kfun_abs(t, dlr_rf(l)); }
+      for (int l = 0; l < r; ++l) { kvec(l) = k_it_abs(t, dlr_rf(l)); }
     } else {
-      for (int l = 0; l < r; ++l) { kvec(l) = kfun_abs(-t, -dlr_rf(l)); }
+      for (int l = 0; l < r; ++l) { kvec(l) = k_it_abs(-t, -dlr_rf(l)); }
     }
 
     return kvec;

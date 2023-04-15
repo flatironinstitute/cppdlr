@@ -51,7 +51,7 @@ nda::matrix<dcomplex> gfun(int norb, double beta, int n, int xi) {
       // Evaluate Green's function
       for (int l = 0; l < npeak; ++l) {
         om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
-        g(i, j) += c(l) * kfun_if(2 * n + (1 - xi) / 2, beta * om);
+        g(i, j) += c(l) * k_if(2 * n + (1 - xi) / 2, beta * om);
       }
     }
   }

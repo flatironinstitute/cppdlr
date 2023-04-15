@@ -50,7 +50,7 @@ nda::matrix<double> gfun(int norb, double beta, double t) {
       // Evaluate Green's function
       for (int l = 0; l < npeak; ++l) {
         om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
-        g(i, j) += c(l) * kfun(t, beta * om);
+        g(i, j) += c(l) * k_it(t, beta * om);
       }
     }
   }

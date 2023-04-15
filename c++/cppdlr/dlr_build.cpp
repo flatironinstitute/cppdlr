@@ -93,7 +93,7 @@ namespace cppdlr {
 
     //for (int i = 0; i < nt / 2; ++i) {
     for (int i = 0; i < nt; ++i) {
-      for (int j = 0; j < nom; ++j) { kmat(i, j) = kfun(t(i), om(j)); }
+      for (int j = 0; j < nom; ++j) { kmat(i, j) = k_it(t(i), om(j)); }
     }
 
     // kmat(range(nt / 2, nt), _) = kmat(range(nt / 2 - 1, -1, -1), range(no - 1, -1, -1));
@@ -137,7 +137,7 @@ namespace cppdlr {
       for (int i = 0; i < npt; ++i) { // Only need to test first half of matrix
         for (int k = 0; k < p2; ++k) {
 
-          ktru = kfun(ttst(i * p2 + k), om(j));
+          ktru = k_it(ttst(i * p2 + k), om(j));
           ktst = bc.interp(xc(k), kmat(range(i * p, (i + 1) * p), j));
 
           errtmp = max(errtmp, abs(ktru - ktst));
@@ -154,7 +154,7 @@ namespace cppdlr {
       for (int j = 0; j < 2 * npom; ++j) {
         for (int k = 0; k < p2; ++k) {
 
-          ktru = kfun(t(i), omtst(j * p2 + k));
+          ktru = k_it(t(i), omtst(j * p2 + k));
           ktst = bc.interp(xc(k), kmat(i, range(j * p, (j + 1) * p)));
 
           errtmp = max(errtmp, abs(ktru - ktst));
@@ -175,7 +175,7 @@ namespace cppdlr {
     auto kmat = nda::matrix<dcomplex>(2 * nmax, nom);
 
     for (int n = -nmax; n < nmax; ++n) {
-      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = kfun_if(2 * n + (1 - xi) / 2, om(j)); }
+      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(2 * n + (1 - xi) / 2, om(j)); }
     }
 
     return kmat;

@@ -39,7 +39,7 @@ namespace cppdlr {
   nda::vector<dcomplex> imfreq_ops::build_evalvec(int n) const {
 
     auto kvec = nda::vector<dcomplex>(r);
-    for (int l = 0; l < r; ++l) { kvec(l) = kfun_if(2*n+(1-xi)/2, dlr_rf(l)); }
+    for (int l = 0; l < r; ++l) { kvec(l) = k_if(2*n+(1-xi)/2, dlr_rf(l)); }
 
     return kvec;
   }
