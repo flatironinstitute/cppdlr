@@ -9,7 +9,7 @@
 #include <nda/gtest_tools.hpp>
 
 #include <cppdlr/dlr_imtime.hpp>
-#include <cppdlr/dlr_basis.hpp>
+#include <cppdlr/dlr_build.hpp>
 #include <cppdlr/utils.hpp>
 #include <cppdlr/dlr_kernels.hpp>
 #include <nda/blas.hpp>

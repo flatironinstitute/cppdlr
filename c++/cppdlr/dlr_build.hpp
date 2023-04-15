@@ -56,4 +56,11 @@ namespace cppdlr {
   std::tuple<double, double> get_kfineerr(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
                                           nda::matrix_const_view<double> kmat);
 
+  /**
+   * Construct DLR basis for a given accuracy and cutoff parameter by getting DLR frequencies
+   */
+
+   nda::vector<double> dlr_freq(double lambda, double eps);
+
+
 } // namespace cppdlr
