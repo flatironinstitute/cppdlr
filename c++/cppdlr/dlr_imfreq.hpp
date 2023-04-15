@@ -148,10 +148,32 @@ namespace cppdlr {
     */
     nda::vector_const_view<int> get_ifnodes() const { return dlr_if; };
 
-    /** Accessors */
+    /**
+    * @brief Get DLR real frequency nodes
+    *
+    * @return DLR real frequency nodes
+    */
     nda::vector_const_view<double> get_rfnodes() const { return dlr_rf; };
+
+    /**
+    * @brief Get transformation matrix from DLR coefficients to values at DLR imaginary frequency nodes
+    *
+    * @return Transformation matrix
+    */
     nda::matrix_const_view<nda::dcomplex> get_cf2if() const { return cf2if; };
+
+    /**
+    * @brief Get LU factors of transformation matrix from DLR imaginary frequency values to coefficients
+    *
+    * @return LU factors
+    */
     nda::matrix_const_view<nda::dcomplex> get_if2cf_lu() const { return if2cf.lu; };
+
+    /**
+    * @brief Get LU pivots of transformation matrix from DLR imaginary frequency values to coefficients
+    *
+    * @return LU pivots
+    */
     nda::vector_const_view<int> get_if2cf_piv() const { return if2cf.piv; };
 
     /** 
@@ -172,7 +194,7 @@ namespace cppdlr {
     nda::matrix<nda::dcomplex> cf2if; /// Transformation matrix from DLR coefficients to values at DLR imaginary frequency nodes
 
     /**
-    * Struct for transformation from DLR imaginary frequency values to coefficients
+    * @brief Struct for transformation from DLR imaginary frequency values to coefficients
     */
     struct {
       nda::matrix<nda::dcomplex> lu; ///< LU factors (LAPACK format) of imaginary frequency vals -> coefs matrix

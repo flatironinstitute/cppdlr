@@ -161,11 +161,32 @@ namespace cppdlr {
     nda::vector_const_view<double> get_itnodes() const { return dlr_it; };
 
     /** Access DLR imaginary real frequency nodes*/
+    /**
+    * @brief Get DLR real frequency nodes
+    *
+    * @return DLR real frequency nodes
+    */
     nda::vector_const_view<double> get_rfnodes() const { return dlr_rf; };
 
-    /** Accessors */
+    /**
+    * @brief Get transformation matrix from DLR coefficients to values at DLR imaginary time nodes
+    *
+    * @return Transformation matrix
+    */
     nda::matrix_const_view<double> get_cf2it() const { return cf2it; };
+
+    /**
+    * @brief Get LU factors of transformation matrix from DLR imaginary time values to coefficients
+    *
+    * @return LU factors
+    */
     nda::matrix_const_view<double> get_it2cf_lu() const { return it2cf.lu; };
+
+    /**
+    * @brief Get LU pivots of transformation matrix from DLR imaginary time values to coefficients
+    *
+    * @return LU pivots
+    */
     nda::vector_const_view<int> get_it2cf_piv() const { return it2cf.piv; };
 
     /** 
@@ -184,7 +205,7 @@ namespace cppdlr {
     nda::matrix<double> cf2it;  ///< Transformation matrix from DLR coefficients to values at DLR imaginary time nodes
 
     /**
-    * Struct for transformation from DLR imaginary time values to coefficients
+    * @brief Struct for transformation from DLR imaginary time values to coefficients
     */
     struct {
       nda::matrix<double> lu; ///< LU factors (LAPACK format) of imaginary time vals -> coefs matrix
