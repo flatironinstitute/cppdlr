@@ -214,39 +214,33 @@ namespace cppdlr {
 
     // -------------------- hdf5 -------------------
 
+    public:
     static std::string hdf5_format() { return "cppdlr::imtime_ops"; }
 
     friend void h5_write(h5::group fg, std::string const &subgroup_name, imtime_ops const &m) {
 
       h5::group gr = fg.create_group(subgroup_name);
-      write_hdf5_format_as_string(gr, "cppdlr::imtime_ops");
+      write_hdf5_format(gr, m);
 
-      h5_write(gr, "lambda", m.lambda());
-      h5_write(gr, "rf", m.get_rfnodes());
-      h5_write(gr, "it", m.get_itnodes());
-      h5_write(gr, "cf2it", m.get_cf2it());
-      h5_write(gr, "it2cf_lu", m.get_it2cf_lu());
-      h5_write(gr, "it2cf_piv", m.get_it2cf_piv());
+      h5::write(gr, "lambda", m.lambda());
+      h5::write(gr, "rf", m.get_rfnodes());
+      h5::write(gr, "it", m.get_itnodes());
+      h5::write(gr, "cf2it", m.get_cf2it());
+      h5::write(gr, "it2cf_lu", m.get_it2cf_lu());
+      h5::write(gr, "it2cf_piv", m.get_it2cf_piv());
     }
 
     friend void h5_read(h5::group fg, std::string const &subgroup_name, imtime_ops &m) {
 
       h5::group gr = fg.open_group(subgroup_name);
-      assert_hdf5_format_as_string(gr, "cppdlr::imtime_ops", true);
+      assert_hdf5_format(gr, m);
 
-      double lambda;
-      nda::vector<double> rf;
-      nda::vector<double> it;
-      nda::matrix<double> cf2it;
-      nda::matrix<double> it2cf_lu;
-      nda::vector<int> it2cf_piv;
-
-      h5_read(gr, "lambda", lambda);
-      h5_read(gr, "rf", rf);
-      h5_read(gr, "it", it);
-      h5_read(gr, "cf2it", cf2it);
-      h5_read(gr, "it2cf_lu", it2cf_lu);
-      h5_read(gr, "it2cf_piv", it2cf_piv);
+      auto lambda    = h5::read<double>(gr, "lambda");
+      auto rf        = h5::read<nda::vector<double>>(gr, "rf");
+      auto it        = h5::read<nda::vector<double>>(gr, "it");
+      auto cf2it     = h5::read<nda::matrix<double>>(gr, "cf2it");
+      auto it2cf_lu  = h5::read<nda::matrix<double>>(gr, "it2cf_lu");
+      auto it2cf_piv = h5::read<nda::vector<int>>(gr, "it2cf_piv");
 
       m = imtime_ops(lambda, rf, it, cf2it, it2cf_lu, it2cf_piv);
     }

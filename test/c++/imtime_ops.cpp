@@ -226,13 +226,13 @@ TEST(dlr_imtime, h5_rw) {
 
   {
     h5::file file(filename, 'w');
-    h5_write(file, name, itops);
+    h5::write(file, name, itops);
   }
 
   imtime_ops itops_ref;
   {
     h5::file file(filename, 'r');
-    h5_read(file, name, itops_ref);
+    h5::read(file, name, itops_ref);
   }
 
   // Check equal

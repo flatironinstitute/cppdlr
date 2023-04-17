@@ -1,15 +1,11 @@
 #include "dlr_imfreq.hpp"
-#include "cppdlr/dlr_kernels.hpp"
-#include "dlr_build.hpp"
-#include "utils.hpp"
 
 using namespace nda;
 
 namespace cppdlr {
 
-  imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, int xi) : lambda_(lambda), xi(xi), r(dlr_rf.size()), dlr_rf(dlr_rf) {
-
-    if (xi != 1 && xi != -1) throw std::runtime_error("xi must be -1 (fermionic) or 1 (bosonic).");
+  imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic)
+     : lambda_(lambda), statistic(statistic), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     dlr_if    = nda::vector<int>(r);
     cf2if     = nda::matrix<dcomplex>(r, r);
@@ -19,7 +15,7 @@ namespace cppdlr {
     // Get analytic continuation kernel at DLR frequencies, up to imaginary
     // frequency cutoff
     auto nmax = fineparams(lambda).nmax;
-    auto kmat = build_k_if(nmax, dlr_rf, xi);
+    auto kmat = build_k_if(nmax, dlr_rf, statistic);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
     auto [q, norms, piv] = pivrgs(kmat, 1e-100);
@@ -39,7 +35,7 @@ namespace cppdlr {
   nda::vector<dcomplex> imfreq_ops::build_evalvec(int n) const {
 
     auto kvec = nda::vector<dcomplex>(r);
-    for (int l = 0; l < r; ++l) { kvec(l) = k_if(2*n+(1-xi)/2, dlr_rf(l)); }
+    for (int l = 0; l < r; ++l) { kvec(l) = k_if(2 * n + statistic, dlr_rf(l)); }
 
     return kvec;
   }

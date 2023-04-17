@@ -166,16 +166,14 @@ namespace cppdlr {
     return {errt, errom};
   }
 
-  nda::matrix<dcomplex> build_k_if(int nmax, nda::vector_const_view<double> om, int xi) {
-
-    if (xi != 1 && xi != -1) throw std::runtime_error("xi must be -1 (fermionic) or 1 (bosonic).");
+  nda::matrix<dcomplex> build_k_if(int nmax, nda::vector_const_view<double> om, statistic_t statistic) {
 
     int nom = om.size();
 
     auto kmat = nda::matrix<dcomplex>(2 * nmax, nom);
 
     for (int n = -nmax; n < nmax; ++n) {
-      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(2 * n + (1 - xi) / 2, om(j)); }
+      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(2 * n + statistic, om(j)); }
     }
 
     return kmat;
