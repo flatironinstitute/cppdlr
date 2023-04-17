@@ -61,15 +61,21 @@ namespace cppdlr {
   nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> om);
 
   /**
+   * The Particle Statistic: Boson or Fermion
+   */
+
+  enum statistic_t { Boson = 0, Fermion = 1 };
+
+  /**
   * @brief Get imaginary frequency discretization of analytic continuation kernel
   *
   * @param[in] nmax Imaginary frequency cutoff
   * @param[in] om Real frequency grid
-  * @param[in] xi Fermionic (xi = -1) or bosonic (xi = 1) imaginary frequency grid
+  * @param[in] statistic Particle Statistic: Boson or Fermion
   *
   * @return Discretization of analytic continuation kernel on given grid
   */
-  nda::matrix<dcomplex> build_k_if(int nmax, nda::vector_const_view<double> om, int xi);
+  nda::matrix<dcomplex> build_k_if(int nmax, nda::vector_const_view<double> om, statistic_t statistic);
 
   /**
   * @brief Get error of fine composite Chebyshev discretization of analytic

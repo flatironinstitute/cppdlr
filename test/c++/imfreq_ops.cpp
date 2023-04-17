@@ -24,14 +24,14 @@ static constexpr auto _ = nda::range::all;
 *
 * G_ij(iom_n) = sum_l c_ijl K(n,om_ijl) with random c_ijl, om_ijl
 *
-* @param[in] norb Number of orbital indices
-* @param[in] beta Inverse temperature
-* @param[in] n    Imaginary frequency evaluation point index
-* @param[in] xi   Fermionic (xi = -1) or bosonic (xi = 1) Matsubara frequencies
+* @param[in] norb      Number of orbital indices
+* @param[in] beta      Inverse temperature
+* @param[in] n         Imaginary frequency evaluation point index
+* @param[in] statistic Particle Statistic: Fermion or Boson
 *
 * @return Green's function evaluated at iom_n
 */
-nda::matrix<dcomplex> gfun(int norb, double beta, int n, int xi) {
+nda::matrix<dcomplex> gfun(int norb, double beta, int n, statistic_t statistic) {
 
   int npeak = 5;
 
@@ -51,7 +51,7 @@ nda::matrix<dcomplex> gfun(int norb, double beta, int n, int xi) {
       // Evaluate Green's function
       for (int l = 0; l < npeak; ++l) {
         om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
-        g(i, j) += c(l) * k_if(2 * n + (1 - xi) / 2, beta * om);
+        g(i, j) += c(l) * k_if(2 * n + statistic, beta * om);
       }
     }
   }
@@ -65,9 +65,9 @@ nda::matrix<dcomplex> gfun(int norb, double beta, int n, int xi) {
 */
 TEST(imfreq_ops, interp_matrix) {
 
-  double lambda = 1000;   // DLR cutoff
-  double eps    = 1e-10;  // DLR tolerance
-  int xi        = -1;     // Fermionic Green's function
+  double lambda  = 1000;    // DLR cutoff
+  double eps     = 1e-10;   // DLR tolerance
+  auto statistic = Fermion; // Fermionic Green's function
 
   double beta = 1000;     // Inverse temperature
   int nmaxtst = 5000;     // # imag time test points
@@ -78,14 +78,14 @@ TEST(imfreq_ops, interp_matrix) {
   auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary frequency object
-  auto ifops = imfreq_ops(lambda, dlr_rf, xi);
+  auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
 
   // Sample Green's function G at DLR imaginary frequency nodes
   int r = ifops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_if = ifops.get_ifnodes();
   auto g = nda::array<dcomplex, 3>(r, norb, norb);
-  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), xi); }
+  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
 
   // DLR coefficients of G
   auto gc = ifops.vals2coefs(g);
@@ -98,7 +98,7 @@ TEST(imfreq_ops, interp_matrix) {
   auto gtst  = nda::matrix<dcomplex>(norb, norb);
   double err = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
-    gtru = gfun(norb, beta, n, xi);
+    gtru = gfun(norb, beta, n, statistic);
     gtst = ifops.coefs2eval(gc, n);
     err = std::max(err, max_element(abs(gtru - gtst)));
   }
@@ -112,9 +112,9 @@ TEST(imfreq_ops, interp_matrix) {
 */
 TEST(imfreq_ops, interp_scalar) {
 
-  double lambda = 1000;   // DLR cutoff
-  double eps    = 1e-10;  // DLR tolerance
-  int xi        = -1;     // Fermionic Green's function
+  double lambda  = 1000;    // DLR cutoff
+  double eps     = 1e-10;   // DLR tolerance
+  auto statistic = Fermion; // Fermionic Green's function
 
   double beta = 1000;     // Inverse temperature
   int nmaxtst = 5000;     // # imag time test points
@@ -123,14 +123,14 @@ TEST(imfreq_ops, interp_scalar) {
   auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary frequency object
-  auto ifops = imfreq_ops(lambda, dlr_rf, xi);
+  auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
 
   // Sample Green's function G at DLR imaginary frequency nodes
   int r = ifops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_if = ifops.get_ifnodes();
   auto g = nda::vector<dcomplex>(r);
-  for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_if(i), xi)(0, 0); }
+  for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_if(i), statistic)(0, 0); }
 
   // DLR coefficients of G
   auto gc = ifops.vals2coefs(g);
@@ -142,7 +142,7 @@ TEST(imfreq_ops, interp_scalar) {
   std::complex<double> gtru  = 0, gtst = 0;
   double err = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
-    gtru = gfun(1, beta, n, xi)(0, 0);
+    gtru = gfun(1, beta, n, statistic)(0, 0);
     gtst = ifops.coefs2eval(gc, n);
     err = std::max(err, abs(gtru - gtst));
   }
@@ -160,28 +160,28 @@ TEST(imfreq_ops, interp_scalar) {
 
 TEST(dlr_imfreq, h5_rw) {
 
-  double lambda = 1000;  // DLR cutoff
-  double eps    = 1e-10; // DLR tolerance
-  int xi        = -1;    // Fermionic Green's function
+  double lambda  = 1000;    // DLR cutoff
+  double eps     = 1e-10;   // DLR tolerance
+  auto statistic = Fermion; // Fermionic Green's function
 
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps);
 
   // Get DLR imaginary frequency object
-  auto ifops = imfreq_ops(lambda, dlr_rf, xi);
+  auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
 
   auto filename = "data_imfreq_ops_h5_rw.h5";
   auto name = "ifops";
 
   {
     h5::file file(filename, 'w');
-    h5_write(file, name, ifops);
+    h5::write(file, name, ifops);
   }
 
   imfreq_ops ifops_ref;
   {
     h5::file file(filename, 'r');
-    h5_read(file, name, ifops_ref);
+    h5::read(file, name, ifops_ref);
   }
 
   // Check equal
