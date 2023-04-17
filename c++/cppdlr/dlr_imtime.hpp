@@ -51,7 +51,7 @@ namespace cppdlr {
 
       if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
-      // Reshape g to matrix w/ second dimension r
+      // Reshape g to matrix w/ first dimension r
       auto g_rs = nda::reshaped_view(g, std::array<long, 2>{r, g.size() / r});
       auto gct  = nda::matrix<S>(transpose(g_rs));
 
@@ -86,7 +86,7 @@ namespace cppdlr {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
-      // Reshape gc to a matrix w/ second dimension r
+      // Reshape gc to a matrix w/ first dimension r
       auto gc_rs = nda::reshaped_view(gc, std::array<long, 2>{r, gc.size() / r});
 
       // Apply coeffs -> vals matrix
@@ -128,7 +128,7 @@ namespace cppdlr {
         return g;
       } else {
 
-        // Reshape gc to matrix w/ second dimension r
+        // Reshape gc to matrix w/ first dimension r
         auto gc_rs = nda::reshaped_view(gc, std::array<long, 2>{r, gc.size() / r});
 
         // Get output shape
