@@ -2,6 +2,7 @@
 #include <vector>
 #include <nda/nda.hpp>
 #include <nda/blas.hpp>
+#include <type_traits>
 
 using namespace nda;
 
@@ -140,15 +141,15 @@ namespace cppdlr {
   * @brief Contract the last dimension of an array a with the first dimension of
   * an array b
   *
-  * @param a  An array or array view of rank at least 2
-  * @param b  An array or array view of rank at least 2
+  * @param a  An array/matrix/vector or array/matrix/vector view of rank at least 2
+  * @param b  An array/matrix/vector or array/matrix/vector view of rank at least 2
   *
   * @return Contraction of the inner dimensions of \p a and \p b
   */
-  template <nda::MemoryArray Ta, nda::MemoryArray Tb, typename Sa = nda::get_value_t<Ta>, typename Sb = nda::get_value_t<Tb>>
+  template <nda::MemoryArray Ta, nda::MemoryArray Tb, typename Sa = nda::get_value_t<Ta>, typename Sb = nda::get_value_t<Tb>,
+            typename S = typename std::common_type<Sa, Sb>::type>
     requires(nda::is_scalar_v<Sa> and nda::is_scalar_v<Sb>)
-  // TODO: handle situation Sa != Sb
-  nda::array<Sa, Ta::rank + Tb::rank - 2> arraymult(Ta const &a, Tb const &b) {
+  nda::array<S, Ta::rank + Tb::rank - 2> arraymult(Ta const &a, Tb const &b) {
 
     // Get ranks of input arrays
     constexpr int ra = Ta::rank;
@@ -176,8 +177,7 @@ namespace cppdlr {
     for (int i = ra - 1; i < ra + rb - 2; ++i) { c_shape[i] = b.shape(i - ra + 2); }
 
     // Allocate output array
-    // TODO: handle situation Sa != Sb
-    auto c = nda::array<Sa, ra + rb - 2>(c_shape);
+    auto c = nda::array<S, ra + rb - 2>(c_shape);
 
     // Compute the contraction and return
     reshaped_view(c, std::array<int, 2>({m, n})) = a_mat * b_mat;
