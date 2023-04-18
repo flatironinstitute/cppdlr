@@ -13,6 +13,9 @@ namespace cppdlr {
     cf2it     = nda::matrix<double>(r, r);
     it2cf.lu  = nda::matrix<double>(r, r);
     it2cf.piv = nda::vector<int>(r);
+    hilb = nda::matrix<double>(r, r);
+    hilb(0,0) = -1.0; // To indicate uninitialized; TODO: do this more cleanly and remove
+    convtmp = nda::matrix<double>(r,r);
 
     // Get discretization of analytic continuation kernel on fine grid in
     // imaginary time, at DLR frequencies

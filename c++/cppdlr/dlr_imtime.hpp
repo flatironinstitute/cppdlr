@@ -1,6 +1,8 @@
 #pragma once
 #include <nda/nda.hpp>
 #include "cppdlr/dlr_kernels.hpp"
+#include "cppdlr/dlr_build.hpp"
+#include "cppdlr/utils.hpp"
 
 #include <h5/h5.hpp>
 #include <nda/h5.hpp>
@@ -153,6 +155,100 @@ namespace cppdlr {
     **/
     nda::vector<double> build_evalvec(double t) const;
 
+    // TODO: this is only implemented for fermionic Green's functions so far
+    /** 
+    * @brief Compute convolution of two imaginary time Green's functions
+    *
+    * The convolution of f and g is defined as h(t) = (f * g)(t) int_0^beta
+    * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity
+    * are used to define the Green's functions on (-beta, 0).  This method takes
+    * the DLR coefficients of f and g as input and returns the values of h on
+    * the DLR imaginary time grid.
+    *
+    * The convolution is computed on-the-fly in O(r^2) operations using Eq. (to
+    * be added) in
+    *
+    * J. Kaye, H. U. R. Strand, D. Golez. Manuscript in preparation (2023).
+    *
+    * @param[in] beta Inverse temperature
+    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] fc DLR coefficients of f
+    * @param[in] gc DLR coefficients of g
+    *
+    * @return Values of h = f * g on DLR imaginary time grid
+    * */
+    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
+      requires(nda::is_scalar_v<S>)
+    typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc) const {
+
+      static constexpr auto _ = nda::range::all;
+
+      if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
+      if (fc.shape() != gc.shape()) throw std::runtime_error("Input arrays must have the same shape.");
+
+      // TODO: implement bosonic case and remove
+      if (statistic == 0) throw std::runtime_error("imtime_ops::convolve not yet implemented for bosonic Green's functions.");
+
+      // TODO: do this more cleanly
+      // If this is the first time method has been called, build some arrays
+      if (hilb(0, 0) == -1.0) {
+
+        // "Discrete Hilbert transform" matrix -(1-delta_jk)/(dlr_rf(j) -
+        // dlr_rf(k)), scaled by beta
+        for (int j = 0; j < r; ++j) {
+          for (int k = 0; k < r; ++k) {
+            if (j == k) {
+              hilb(j, k) = 0;
+            } else {
+              hilb(j, k) = beta / (dlr_rf(k) - dlr_rf(j));
+            }
+          }
+        }
+
+        // Other matrix needed for fast convolution
+        for (int j = 0; j < r; ++j) {
+          for (int k = 0; k < r; ++k) {
+            if (dlr_it(j) > 0) {
+              convtmp(j, k) = beta * (dlr_it(j) - k_it(1.0, dlr_rf(k))) * cf2it(j, k);
+            } else {
+              convtmp(j, k) = beta * (dlr_it(j) + k_it(0.0, dlr_rf(k))) * cf2it(j, k);
+            }
+          }
+        }
+      }
+
+      if constexpr (T::rank == 1) { // Scalar-valued Green's function
+
+        // Take array view of fc and gc
+        auto fca = nda::array_const_view<S, 1>(fc);
+        auto gca = nda::array_const_view<S, 1>(gc);
+
+        // Diagonal contribution
+        auto h = arraymult(convtmp, make_regular(fca * gca));
+
+        // Off-diagonal contribution
+        auto tmp = fca * arraymult(hilb, gca) + gca * arraymult(hilb, fca);
+        return h + arraymult(cf2it, make_regular(tmp));
+
+      } else if (T::rank == 3) { // Matrix-valued Green's function
+
+        // Diagonal contribution
+        auto fcgc = nda::array<S, 3>(fc.shape()); // Product of coefficients of f and g
+        for (int i = 0; i < r; ++i) { fcgc(i, _, _) = arraymult(fc(i, _, _), gc(i, _, _)); }
+        auto h = arraymult(convtmp, fcgc);
+
+        // Off-diagonal contribution
+        auto tmp1 = arraymult(hilb, fc);
+        auto tmp2 = arraymult(hilb, gc);
+        for (int i = 0; i < r; ++i) { tmp1(i, _, _) = arraymult(tmp1(i, _, _), gc(i, _, _)) + arraymult(fc(i, _, _), tmp2(i, _, _)); }
+
+        return h + arraymult(cf2it, tmp1);
+
+      } else {
+        throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
+      }
+    }
+
     /** 
     * @brief Get DLR imaginary time nodes
     *
@@ -211,6 +307,10 @@ namespace cppdlr {
       nda::matrix<double> lu; ///< LU factors (LAPACK format) of imaginary time vals -> coefs matrix
       nda::vector<int> piv;   ///< LU pivots (LAPACK format) of imaginary time vals -> coefs matrix
     } it2cf;
+
+    // Arrays used for dlr_imtime::convolve
+    nda::matrix<double> hilb;    ///< "Discrete Hilbert transform" matrix
+    nda::matrix<double> convtmp; ///< A matrix required for convolution
 
     // -------------------- hdf5 -------------------
 

@@ -82,7 +82,7 @@ TEST(imtime_ops, interp_matrix) {
   int r = itops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
-  auto g = nda::array<double, 3>(r, norb, norb);
+  auto g             = nda::array<double, 3>(r, norb, norb);
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
 
   // DLR coefficients of G
@@ -101,11 +101,10 @@ TEST(imtime_ops, interp_matrix) {
   for (int i = 0; i < ntst; ++i) {
     gtru = gfun(norb, beta, ttst(i));
     gtst = itops.coefs2eval(gc, ttst(i));
-    err = std::max(err, max_element(abs(gtru - gtst)));
+    err  = std::max(err, max_element(abs(gtru - gtst)));
   }
 
   EXPECT_LT(err, 10 * eps);
-
 }
 
 /**
@@ -132,7 +131,7 @@ TEST(imtime_ops, interp_matrix_complex) {
   int r = itops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
-  auto g = nda::array<std::complex<double>, 3>(r, norb, norb);
+  auto g             = nda::array<std::complex<double>, 3>(r, norb, norb);
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
 
   // DLR coefficients of G
@@ -151,13 +150,11 @@ TEST(imtime_ops, interp_matrix_complex) {
   for (int i = 0; i < ntst; ++i) {
     gtru = gfun(norb, beta, ttst(i));
     gtst = itops.coefs2eval(gc, ttst(i));
-    err = std::max(err, max_element(abs(gtru - gtst)));
+    err  = std::max(err, max_element(abs(gtru - gtst)));
   }
 
   EXPECT_LT(err, 10 * eps);
-
 }
-
 
 /**
 * @brief Test DLR interpolation and evaluation for scalar-valued Green's
@@ -181,7 +178,7 @@ TEST(imtime_ops, interp_scalar) {
   int r = itops.rank();
   // [Q] Is this correct or just auto?
   auto const &dlr_it = itops.get_itnodes();
-  auto g = nda::vector<double>(r);
+  auto g             = nda::vector<double>(r);
   for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_it(i))(0, 0); }
 
   // DLR coefficients of G
@@ -194,20 +191,133 @@ TEST(imtime_ops, interp_scalar) {
   auto ttst = eqptsrel(ntst);
 
   // Compute L infinity error
-  double gtru  = 0, gtst = 0, err = 0;
+  double gtru = 0, gtst = 0, err = 0;
   for (int i = 0; i < ntst; ++i) {
     gtru = gfun(1, beta, ttst(i))(0, 0);
     gtst = itops.coefs2eval(gc, ttst(i));
-    err = std::max(err, abs(gtru - gtst));
+    err  = std::max(err, abs(gtru - gtst));
   }
 
   EXPECT_LT(err, 10 * eps);
 
   // Test that constructing vector of evaluation at a point and then applying to
   // coefficients gives same result as direct evaluation method
-  auto kvec = itops.build_evalvec(ttst(ntst-1));
-  EXPECT_LT((abs(blas::dot(gc,kvec) - gtst)),1e-14);
+  auto kvec = itops.build_evalvec(ttst(ntst - 1));
+  EXPECT_LT((abs(blas::dot(gc, kvec) - gtst)), 1e-14);
+}
 
+/**
+* @brief Test convolution of two scalar-valued Green's functions
+*
+* We use Green's functions f and g given by a single exponential, so that the
+* result of the convolution is easy to compute analytically.
+*/
+TEST(imtime_ops, convolve_scalar) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-12; // DLR tolerance
+
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+
+  // Specify frequency of single exponentials to be used for f and g
+  double omf = 0.1234, omg = -0.5678;
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at DLR imaginary time nodes
+  int r = itops.rank();
+  // [Q] Is this correct or just auto?
+  auto const &dlr_it = itops.get_itnodes();
+  auto f             = nda::array<double, 1>(r);
+  auto g             = nda::array<double, 1>(r);
+  for (int i = 0; i < r; ++i) { f(i) = k_it(dlr_it(i), beta * omf); };
+  for (int i = 0; i < r; ++i) { g(i) = k_it(dlr_it(i), beta * omg); };
+
+  // Get DLR coefficients of f and g
+  auto fc = itops.vals2coefs(f);
+  auto gc = itops.vals2coefs(g);
+
+  // Get convolution of f and g and its DLR coefficients
+  // Time the following code
+  auto h  = itops.convolve(beta, Fermion, fc, gc);
+  auto hc = itops.vals2coefs(h);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  double gtru = 0, gtst = 0, err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru = (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtst = itops.coefs2eval(hc, ttst(i));
+    err  = std::max(err, abs(gtru - gtst));
+  }
+
+  EXPECT_LT(err, 10 * eps);
+}
+
+/**
+* @brief Test convolution of two matrix-valued Green's functions
+*
+* We use Green's functions f and g given by the product of a single exponential and a
+* matrix of ones, so that the result of the convolution is easy to compute
+* analytically
+*/
+TEST(imtime_ops, convolve_matrix) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-12; // DLR tolerance
+
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+
+  int norb = 2; // Orbital dimensions
+
+  // Specify frequency of single exponentials to be used for f and g
+  double omf = 0.1234, omg = -0.5678;
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at DLR imaginary time nodes
+  int r = itops.rank();
+  // [Q] Is this correct or just auto?
+  auto const &dlr_it = itops.get_itnodes();
+  auto f             = nda::array<double, 3>(r, norb, norb);
+  auto g             = nda::array<double, 3>(r, norb, norb);
+  for (int i = 0; i < r; ++i) { f(i, _, _) = k_it(dlr_it(i), beta * omf) / sqrt(1.0 * norb); };
+  for (int i = 0; i < r; ++i) { g(i, _, _) = k_it(dlr_it(i), beta * omg) / sqrt(1.0 * norb); };
+
+  // Get DLR coefficients of f and g
+  auto fc = itops.vals2coefs(f);
+  auto gc = itops.vals2coefs(g);
+
+  // Get convolution of f and g and its DLR coefficients
+  auto h  = itops.convolve(beta, Fermion, fc, gc);
+  auto hc = itops.vals2coefs(h);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  auto gtru  = nda::array<double,2>(norb, norb);
+  auto gtst  = nda::array<double,2>(norb, norb);
+  double err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru(_, _) = (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtst       = itops.coefs2eval(hc, ttst(i));
+    err        = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 10 * eps);
 }
 
 TEST(dlr_imtime, h5_rw) {
@@ -222,7 +332,7 @@ TEST(dlr_imtime, h5_rw) {
   auto itops = imtime_ops(lambda, dlr_rf);
 
   auto filename = "data_imtime_ops_h5_rw.h5";
-  auto name = "itops";
+  auto name     = "itops";
 
   {
     h5::file file(filename, 'w');
@@ -243,5 +353,4 @@ TEST(dlr_imtime, h5_rw) {
   EXPECT_EQ_ARRAY(itops.get_cf2it(), itops_ref.get_cf2it());
   EXPECT_EQ_ARRAY(itops.get_it2cf_lu(), itops_ref.get_it2cf_lu());
   EXPECT_EQ_ARRAY(itops.get_it2cf_piv(), itops_ref.get_it2cf_piv());
-  
 }
