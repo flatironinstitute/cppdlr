@@ -92,7 +92,7 @@ namespace cppdlr {
       }
 
       // Swap current row with chosen pivot row
-      tmp        = aa(j, _);
+      tmp         = aa(j, _);
       aa(j, _)    = aa(jpiv, _);
       aa(jpiv, _) = tmp;
 
@@ -122,7 +122,7 @@ namespace cppdlr {
       // Orthogonalize remaining rows against current row
       for (int k = j + 1; k < m; ++k) {
         if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
-        aa(k, _)  = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
+        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
         norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
       }
     }
@@ -132,10 +132,56 @@ namespace cppdlr {
 
   nda::vector<double> eqptsrel(int n);
 
-  template <nda::MemoryArray T>
-  using make_real_t = decltype(make_regular(real(std::declval<T>())));
+  template <nda::MemoryArray T> using make_real_t = decltype(make_regular(real(std::declval<T>())));
 
-  template <nda::MemoryArray T>
-  using make_cplx_t = decltype(make_regular(std::declval<T>()*1i));
+  template <nda::MemoryArray T> using make_cplx_t = decltype(make_regular(std::declval<T>() * 1i));
+
+  /**
+  * @brief Contract the last dimension of an array a with the first dimension of
+  * an array b
+  *
+  * @param a  An array or array view of rank at least 2
+  * @param b  An array or array view of rank at least 2
+  *
+  * @return Contraction of the inner dimensions of \p a and \p b
+  */
+  template <nda::MemoryArray Ta, nda::MemoryArray Tb, typename Sa = nda::get_value_t<Ta>, typename Sb = nda::get_value_t<Tb>>
+    requires(nda::is_scalar_v<Sa> and nda::is_scalar_v<Sb>)
+  // TODO: handle situation Sa != Sb
+  nda::array<Sa, Ta::rank + Tb::rank - 2> arraymult(Ta const &a, Tb const &b) {
+
+    // Get ranks of input arrays
+    constexpr int ra = Ta::rank;
+    constexpr int rb = Tb::rank;
+
+    // Get inner dimensions of input arrays
+    int p = a.shape(ra - 1);
+    if (b.shape(0) != p) throw std::runtime_error("last dim of a != first dim of b");
+
+    // Get product of outer dimensions of input arrays
+    int m = a.size() / p;
+    int n = b.size() / p;
+
+    // Reshape input arrays to 2D arrays
+    auto a_reshaped = nda::reshaped_view(a, std::array<int, 2>({m, p}));
+    auto b_reshaped = nda::reshaped_view(b, std::array<int, 2>({p, n}));
+
+    // Get matrix views of these 2D arrays
+    auto a_mat = nda::matrix_const_view<Sa>(a_reshaped);
+    auto b_mat = nda::matrix_const_view<Sb>(b_reshaped);
+
+    // Get shape of output array
+    auto c_shape = std::array<int, ra + rb - 2>();
+    for (int i = 0; i < ra - 1; ++i) { c_shape[i] = a.shape(i); }
+    for (int i = ra - 1; i < ra + rb - 2; ++i) { c_shape[i] = b.shape(i - ra + 2); }
+
+    // Allocate output array
+    // TODO: handle situation Sa != Sb
+    auto c = nda::array<Sa, ra + rb - 2>(c_shape);
+
+    // Compute the contraction and return
+    reshaped_view(c, std::array<int, 2>({m, n})) = a_mat * b_mat;
+    return c;
+  }
 
 } // namespace cppdlr
