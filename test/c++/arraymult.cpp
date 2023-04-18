@@ -40,12 +40,8 @@ TEST(arraymult, matrix_array) {
 
   // Get arraymult result and compare
   auto c = arraymult(a, b);
+  EXPECT_LT(max_element(abs(ctrue - c)), 1e-15);
 
-  for (int i = 0; i < m; ++i) {
-    for (int j = 0; j < p; ++j) {
-      for (int k = 0; k < q; ++k) { EXPECT_LT(abs(ctrue(i, j, k) - c(i, j, k)), 1e-15); }
-    }
-  }
 }
 
 /**
@@ -85,12 +81,7 @@ TEST(arraymult, array_array) {
 
   // Get arraymult result and compare
   auto c = arraymult(a, b);
-
-  for (int i = 0; i < m; ++i) {
-    for (int j = 0; j < n; ++j) {
-      for (int k = 0; k < q; ++k) { EXPECT_LT(abs(ctrue(i, j, k) - c(i, j, k)), 1e-15); }
-    }
-  }
+  EXPECT_LT(max_element(abs(ctrue - c)), 1e-15);
 }
 
 /**
@@ -120,8 +111,7 @@ TEST(arraymult, matrix_vector) {
 
   // Get arraymult result and compare
   auto c = arraymult(a, b);
-
-  for (int i = 0; i < m; ++i) { EXPECT_LT(abs(ctrue(i) - c(i)), 1e-15); }
+  EXPECT_LT(max_element(abs(ctrue - c)), 1e-15);
 }
 
 /**
@@ -156,8 +146,5 @@ TEST(arraymult, vector_array) {
 
   // Get arraymult result and compare
   auto c = arraymult(a, b);
-
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < p; ++j) { EXPECT_LT(abs(ctrue(i, j) - c(i, j)), 1e-15); }
-  }
+  EXPECT_LT(max_element(abs(ctrue - c)), 1e-15);
 }
