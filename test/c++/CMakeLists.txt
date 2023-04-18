@@ -11,6 +11,7 @@ set(all_tests
   dlr_build.cpp
   pivrgs.cpp
   eqptsrel.cpp
+  arraymult.cpp
   imtime_ops.cpp
   imfreq_ops.cpp
   )
