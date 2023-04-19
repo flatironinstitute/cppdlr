@@ -155,7 +155,6 @@ namespace cppdlr {
     **/
     nda::vector<double> build_evalvec(double t) const;
 
-    // TODO: this is only implemented for fermionic Green's functions so far
     /** 
     * @brief Compute convolution of two imaginary time Green's functions
     *
@@ -179,7 +178,7 @@ namespace cppdlr {
     * */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
       requires(nda::is_scalar_v<S>)
-    typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc) const {
+    typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc) {
 
       static constexpr auto _ = nda::range::all;
 
@@ -190,32 +189,8 @@ namespace cppdlr {
       if (statistic == 0) throw std::runtime_error("imtime_ops::convolve not yet implemented for bosonic Green's functions.");
 
       // TODO: do this more cleanly
-      // If this is the first time method has been called, build some arrays
-      if (hilb(0, 0) == -1.0) {
-
-        // "Discrete Hilbert transform" matrix -(1-delta_jk)/(dlr_rf(j) -
-        // dlr_rf(k)), scaled by beta
-        for (int j = 0; j < r; ++j) {
-          for (int k = 0; k < r; ++k) {
-            if (j == k) {
-              hilb(j, k) = 0;
-            } else {
-              hilb(j, k) = beta / (dlr_rf(k) - dlr_rf(j));
-            }
-          }
-        }
-
-        // Other matrix needed for fast convolution
-        for (int j = 0; j < r; ++j) {
-          for (int k = 0; k < r; ++k) {
-            if (dlr_it(j) > 0) {
-              convtmp(j, k) = beta * (dlr_it(j) - k_it(1.0, dlr_rf(k))) * cf2it(j, k);
-            } else {
-              convtmp(j, k) = beta * (dlr_it(j) + k_it(0.0, dlr_rf(k))) * cf2it(j, k);
-            }
-          }
-        }
-      }
+      // Initialize convolution, if it hasn't been done already
+      if (hilb(0, 0) == -1.0) { convolve_init(); }
 
       if constexpr (T::rank == 1) { // Scalar-valued Green's function
 
@@ -294,6 +269,39 @@ namespace cppdlr {
     double lambda() const { return lambda_; }
 
     private:
+    /**
+    * @brief Initialization for convolution methods
+    *
+    * This method pre-builds some matrices required for the convolution methods.
+    */
+    void convolve_init() {
+      // "Discrete Hilbert transform" matrix -(1-delta_jk)/(dlr_rf(j) -
+      // dlr_rf(k)), scaled by beta
+      for (int j = 0; j < r; ++j) {
+        for (int k = 0; k < r; ++k) {
+          if (j == k) {
+            hilb(j, k) = 0;
+          } else {
+            hilb(j, k) = 1.0 / (dlr_rf(k) - dlr_rf(j));
+          }
+        }
+      }
+
+      // Matrix which applies DLR coefficients to imaginary time grid values
+      // transformation matrix, and then multiplies the result by tau, the
+      // imaginary time variable
+      for (int j = 0; j < r; ++j) {
+        for (int k = 0; k < r; ++k) {
+          if (dlr_it(j) > 0) {
+            tcf2it(j, k) = (dlr_it(j) - k_it(1.0, dlr_rf(k))) * cf2it(j, k);
+          } else {
+            tcf2it(j, k) = (dlr_it(j) + k_it(0.0, dlr_rf(k))) * cf2it(j, k);
+          }
+        }
+      }
+    }
+
+    private:
     double lambda_;
     int r;                      ///< DLR rank
     nda::vector<double> dlr_rf; ///< DLR frequencies
@@ -309,8 +317,8 @@ namespace cppdlr {
     } it2cf;
 
     // Arrays used for dlr_imtime::convolve
-    nda::matrix<double> hilb;    ///< "Discrete Hilbert transform" matrix
-    nda::matrix<double> convtmp; ///< A matrix required for convolution
+    nda::matrix<double> hilb;   ///< "Discrete Hilbert transform" matrix
+    nda::matrix<double> tcf2it; ///< A matrix required for convolution
 
     // -------------------- hdf5 -------------------
 
