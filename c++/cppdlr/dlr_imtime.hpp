@@ -64,8 +64,7 @@ namespace cppdlr {
       if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
         nda::lapack::getrs(it2cf.lu, gct, it2cf.piv);
       } else {
-        // NOTE: getrs require the first and second matrix to have the same value type
-        // So if it2cf.lu does not have the same value type as gct we need a cast.
+        // getrs requires matrix and rhs to have same value type
         nda::lapack::getrs(nda::matrix<S>(it2cf.lu), gct, it2cf.piv);
       }
 
@@ -199,25 +198,225 @@ namespace cppdlr {
         auto gca = nda::array_const_view<S, 1>(gc);
 
         // Diagonal contribution
-        auto h = arraymult(convtmp, make_regular(fca * gca));
+        auto h = arraymult(tcf2it, make_regular(fca * gca));
 
         // Off-diagonal contribution
         auto tmp = fca * arraymult(hilb, gca) + gca * arraymult(hilb, fca);
-        return h + arraymult(cf2it, make_regular(tmp));
+        return beta * (h + arraymult(cf2it, make_regular(tmp)));
 
       } else if (T::rank == 3) { // Matrix-valued Green's function
 
         // Diagonal contribution
         auto fcgc = nda::array<S, 3>(fc.shape()); // Product of coefficients of f and g
         for (int i = 0; i < r; ++i) { fcgc(i, _, _) = arraymult(fc(i, _, _), gc(i, _, _)); }
-        auto h = arraymult(convtmp, fcgc);
+        auto h = arraymult(tcf2it, fcgc);
 
         // Off-diagonal contribution
         auto tmp1 = arraymult(hilb, fc);
         auto tmp2 = arraymult(hilb, gc);
         for (int i = 0; i < r; ++i) { tmp1(i, _, _) = arraymult(tmp1(i, _, _), gc(i, _, _)) + arraymult(fc(i, _, _), tmp2(i, _, _)); }
 
-        return h + arraymult(cf2it, tmp1);
+        return beta * (h + arraymult(cf2it, tmp1));
+
+      } else {
+        throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
+      }
+    }
+
+    /** 
+    * @brief Compute convolution of two imaginary time Green's functions,
+    * given matrix of convolution by one of them
+    *
+    * The convolution of f and g is defined as h(t) = (f * g)(t) int_0^beta
+    * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are
+    * used to define the Green's functions on (-beta, 0).  This method takes the
+    * matrix of convolution by f (computed by the convmat method) and the values
+    * of g on the DLR imaginary time grid, and returns the values of h on the
+    * DLR imaginary time grid
+    *
+    * @param[in] beta Inverse temperature
+    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] fconv Matrix of convolution by f
+    * @param[in] g Values of g on the DLR imaginary time grid
+    *
+    * @return Values of h = f * g on DLR imaginary time grid
+    * */
+    template <nda::MemoryMatrix Tf, nda::MemoryArray Tg> typename Tg::regular_type convolve(Tf const &fconv, Tg const &g) const {
+
+      if (r != g.shape(0)) throw std::runtime_error("First dim of input g must be equal to DLR rank r.");
+
+      if constexpr (Tg::rank == 1) { // Scalar-valued Green's function
+
+        if (fconv.shape(1) != g.shape(0)) throw std::runtime_error("Input array dimensions incompatible.");
+
+        return arraymult(fconv, g);
+
+      } else if (Tg::rank == 3) { // Matrix-valued Green's function
+
+        if (fconv.shape(1) != g.shape(0) * g.shape(1)) throw std::runtime_error("Input array dimensions incompatible.");
+
+        int norb1 = g.shape(1);
+        int norb2 = g.shape(2);
+
+        auto h                                                   = nda::array<double, 3>(r, norb1, norb2);
+        reshaped_view(h, std::array<int, 2>({r * norb1, norb2})) = arraymult(fconv, reshaped_view(g, std::array<int, 2>({r * norb1, norb2})));
+
+        return h;
+
+      } else {
+        throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
+      }
+    }
+
+    /** 
+    * @brief Compute matrix of convolution by an imaginary time Green's function
+    *
+    * The convolution of f and g is defined as h(t) = (f * g)(t) int_0^beta
+    * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are
+    * used to define the Green's functions on (-beta, 0).  This method takes the
+    * DLR coefficients of f as input and returns the matrix of convolution by f.
+    * This matrix can be applied to the values of g on the DLR imaginary time
+    * grid, to produce the values of h on the DLR imaginary time grid.
+    *
+    * The convolution matrix is constructed using Eq. (to be added) in
+    *
+    * J. Kaye, H. U. R. Strand, D. Golez. Manuscript in preparation (2023).
+    *
+    * @param[in] beta Inverse temperature
+    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] fc DLR coefficients of f
+    *
+    * @return Matrix of convolution by f
+    *
+    * \note Whereas the method imtime_ops::convolve takes the DLR coefficients
+    * of f and g as input and computes their convolution h directly, this method
+    * returns a matrix which should be applied to the DLR imaginary time grid values
+    * of g, rather than its DLR coefficients, in to order to obtain the
+    * convolution h. The purpose of this is to make the input and output
+    * representations of the convolution matrix equal, which is often convenient
+    * in practice.
+    *
+    * \note In the case of matrix-valued Green's functions, with think of the
+    * matrix of convolution by f as an r*norb x r*norb matrix, or a block r x r
+    * matrix of norb x norb blocks. Here r is the DLR rank and norb is the
+    * number of orbital indices. This matrix would then be applied to a Green's
+    * function g, represented as an r*norb x norb matrix, or a block r x 1
+    * matrix of norb x norb blocks.
+    * */
+    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
+      requires(nda::is_scalar_v<S>)
+    nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc) {
+
+      if (r != fc.shape(0)) throw std::runtime_error("First dim of input array must be equal to DLR rank r.");
+
+      // TODO: implement bosonic case and remove
+      if (statistic == 0) throw std::runtime_error("imtime_ops::convmat not yet implemented for bosonic Green's functions.");
+
+      // TODO: do this more cleanly
+      // Initialize convolution, if it hasn't been done already
+      if (hilb(0, 0) == -1.0) { convolve_init(); }
+
+      if constexpr (T::rank == 1) { // Scalar-valued Green's function
+
+        // First construct convolution matrix from DLR coefficients to DLR grid
+        // values
+        auto fconv = nda::matrix<S>(r, r); // Matrix of convolution by f
+
+        // Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))
+        for (int k = 0; k < r; ++k) {
+          for (int l = 0; l < r; ++l) { fconv(k, l) = tcf2it(k, l) * fc(l); }
+        }
+
+        // Off-diagonal contribution (given by K * (diag(hilb*fc) +
+        // (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))
+        auto tmp1 = arraymult(hilb, fc); // hilb * fc
+        auto tmp2 = nda::matrix<S>(r, r);
+        for (int k = 0; k < r; ++k) {
+          for (int l = 0; l < r; ++l) {
+            tmp2(k, l) = fc(k) * hilb(k, l); // diag(fc) * hilb
+          }
+          tmp2(k, k) += tmp1(k); // diag(fc)*hilb + diag(hilb*fc)
+        }
+        fconv += arraymult(cf2it, tmp2);
+
+        // Then precompose with DLR grid values to DLR coefficients matrix
+
+        // TODO: avoid factorizing tranpose of cf2it from scratch
+        // Prepare imaginary time values to coefficients transformation by computing
+        // LU factors of coefficient to imaginary time matrix
+        auto it2cft     = make_regular(transpose(cf2it));
+        auto it2cft_piv = nda::vector<int>(r);
+        nda::lapack::getrf(it2cft, it2cft_piv);
+
+        if constexpr (nda::have_same_value_type_v<T, decltype(it2cft)>) {
+          nda::lapack::getrs(it2cft, fconv, it2cft_piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        } else {
+          // getrs requires matrix and rhs to have same value type
+          nda::lapack::getrs(nda::matrix<S>(it2cft), fconv, it2cft_piv);
+        }
+
+        return beta * fconv;
+
+      } else if (T::rank == 3) { // Matrix-valued Green's function
+
+        static constexpr auto _ = nda::range::all;
+
+        int norb1 = fc.shape(1);
+        int norb2 = fc.shape(2);
+
+        // First construct convolution matrix from DLR coefficients to DLR grid
+        // values
+        auto fconv    = nda::matrix<S>(r * norb1, r * norb2);                                 // Matrix of convolution by f
+        auto fconv_rs = nda::reshaped_view(fconv, std::array<long, 4>({r, norb1, r, norb2})); // Array view to index into fconv for conevenience
+
+        // Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))
+        for (int k = 0; k < r; ++k) {
+          for (int l = 0; l < r; ++l) { fconv_rs(k, _, l, _) = tcf2it(k, l) * fc(l, _, _); }
+        }
+
+        // Off-diagonal contribution (given by K * (diag(hilb*fc) +
+        // (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))
+        auto tmp1 = arraymult(hilb, fc); // hilb * fc
+        auto tmp2 = nda::array<S, 4>(r, norb1, r, norb2);
+        for (int k = 0; k < r; ++k) {
+          for (int l = 0; l < r; ++l) {
+            tmp2(k, _, l, _) = fc(k, _, _) * hilb(k, l); // diag(fc) * hilb
+          }
+          tmp2(k, _, k, _) += tmp1(k, _, _); // diag(fc)*hilb + diag(hilb*fc)
+        }
+        fconv_rs += arraymult(cf2it, tmp2);
+
+        // Then precompose with DLR grid values to DLR coefficients matrix
+
+        // TODO: avoid factorizing tranpose of cf2it from scratch
+        // Prepare imaginary time values to coefficients transformation by computing
+        // LU factors of coefficient to imaginary time matrix
+        auto it2cft     = make_regular(transpose(cf2it));
+        auto it2cft_piv = nda::vector<int>(r);
+        nda::lapack::getrf(it2cft, it2cft_piv);
+
+        // Transpose last two indices to put make column DLR index the last
+        // index
+        auto fconvtmp    = nda::matrix<S>(r * norb1 * norb2, r);
+        auto fconvtmp_rs = nda::reshaped_view(fconvtmp, std::array<long, 4>({r, norb1, norb2, r}));
+        for (int i = 0; i < norb2; ++i) {
+          for (int k = 0; k < r; ++k) { fconvtmp_rs(_, _, i, k) = fconv_rs(_, _, k, i); }
+        }
+
+        // Do the solve
+        if constexpr (nda::have_same_value_type_v<T, decltype(it2cft)>) {
+          nda::lapack::getrs(it2cft, fconvtmp, it2cft_piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        } else {
+          // getrs requires matrix and rhs to have same value type
+          nda::lapack::getrs(nda::matrix<S>(it2cft), fconvtmp, it2cft_piv);
+        }
+
+        // Transpose back
+        for (int i = 0; i < norb2; ++i) {
+          for (int k = 0; k < r; ++k) { fconv_rs(_, _, k, i) = fconvtmp_rs(_, _, i, k); }
+        }
+
+        return beta * fconv;
 
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");

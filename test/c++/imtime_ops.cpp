@@ -242,10 +242,19 @@ TEST(imtime_ops, convolve_scalar) {
   auto fc = itops.vals2coefs(f);
   auto gc = itops.vals2coefs(g);
 
-  // Get convolution of f and g and its DLR coefficients
-  // Time the following code
-  auto h  = itops.convolve(beta, Fermion, fc, gc);
-  auto hc = itops.vals2coefs(h);
+  // Get convolution of f and g directly
+  auto h = itops.convolve(beta, Fermion, fc, gc);
+
+  // Get convolution of f and g by first forming matrix of convolution by f and
+  // then applying it to g
+  auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
+
+  // Check that the two methods give the same result
+  EXPECT_LT(max_element(abs(h - h2)), 1e-14);
+
+  // Check error of h
+
+  auto hc = itops.vals2coefs(h); // DLR coefficients of h
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
@@ -300,16 +309,26 @@ TEST(imtime_ops, convolve_matrix) {
   auto fc = itops.vals2coefs(f);
   auto gc = itops.vals2coefs(g);
 
-  // Get convolution of f and g and its DLR coefficients
-  auto h  = itops.convolve(beta, Fermion, fc, gc);
-  auto hc = itops.vals2coefs(h);
+  // Get convolution of f and g directly
+  auto h = itops.convolve(beta, Fermion, fc, gc);
+
+  // Get convolution of f and g by first forming matrix of convolution by f and
+  // then applying it to g
+  auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
+
+  // Check that the two methods give the same result
+  EXPECT_LT(max_element(abs(h - h2)), 1e-14);
+
+  // Check error of h
+
+  auto hc = itops.vals2coefs(h); // DLR coefficients of h
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
 
   // Compute L infinity error
-  auto gtru  = nda::array<double,2>(norb, norb);
-  auto gtst  = nda::array<double,2>(norb, norb);
+  auto gtru  = nda::array<double, 2>(norb, norb);
+  auto gtst  = nda::array<double, 2>(norb, norb);
   double err = 0;
   for (int i = 0; i < ntst; ++i) {
     gtru(_, _) = (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
