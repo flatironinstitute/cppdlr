@@ -167,21 +167,13 @@ namespace cppdlr {
     auto a_reshaped = nda::reshaped_view(a, std::array<int, 2>({m, p}));
     auto b_reshaped = nda::reshaped_view(b, std::array<int, 2>({p, n}));
 
-    // Get matrix views of these 2D arrays
-    auto a_mat = nda::matrix_const_view<Sa>(a_reshaped);
-    auto b_mat = nda::matrix_const_view<Sb>(b_reshaped);
-
     // Get shape of output array
     auto c_shape = std::array<int, ra + rb - 2>();
     for (int i = 0; i < ra - 1; ++i) { c_shape[i] = a.shape(i); }
     for (int i = ra - 1; i < ra + rb - 2; ++i) { c_shape[i] = b.shape(i - ra + 2); }
 
-    // Allocate output array
-    auto c = nda::array<S, ra + rb - 2>(c_shape);
-
-    // Compute the contraction and return
-    reshaped_view(c, std::array<int, 2>({m, n})) = a_mat * b_mat;
-    return c;
+    // Compute the contraction, reshape, and return
+    return reshape(matmul(a_reshaped, b_reshaped), c_shape);
   }
 
 } // namespace cppdlr
