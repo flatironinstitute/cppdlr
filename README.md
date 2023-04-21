@@ -1,3 +1,3 @@
-[![build](https://github.com/jasonkaye/cppdlr/workflows/build/badge.svg?branch=main)](https://github.com/TRIQS/cppdlr/actions?query=workflow%3Abuild)
+[![build](https://github.com/flatironinstitute/cppdlr/workflows/build/badge.svg?branch=main)](https://github.com/flatironinstitute/cppdlr/actions?query=workflow%3Abuild)
 
 # cppdlr
