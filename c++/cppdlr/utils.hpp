@@ -146,9 +146,8 @@ namespace cppdlr {
   *
   * @return Contraction of the inner dimensions of \p a and \p b
   */
-  template <nda::MemoryArray Ta, nda::MemoryArray Tb, typename Sa = nda::get_value_t<Ta>, typename Sb = nda::get_value_t<Tb>,
-            typename S = typename std::common_type<Sa, Sb>::type>
-    requires(nda::is_scalar_v<Sa> and nda::is_scalar_v<Sb>)
+  template <nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t<Ta>, nda::Scalar Sb = nda::get_value_t<Tb>,
+            nda::Scalar S = typename std::common_type<Sa, Sb>::type>
   nda::array<S, Ta::rank + Tb::rank - 2> arraymult(Ta const &a, Tb const &b) {
 
     // Get ranks of input arrays
