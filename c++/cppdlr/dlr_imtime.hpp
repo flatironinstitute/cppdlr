@@ -338,26 +338,16 @@ namespace cppdlr {
         fconv += arraymult(cf2it, tmp2);
 
         // Then precompose with DLR grid values to DLR coefficients matrix
-
-        // TODO: avoid factorizing tranpose of cf2it from scratch
-        // Prepare imaginary time values to coefficients transformation by computing
-        // LU factors of coefficient to imaginary time matrix
-        auto it2cft     = make_regular(transpose(cf2it));
-        auto it2cft_piv = nda::vector<int>(r);
-        nda::lapack::getrf(it2cft, it2cft_piv);
-
-        if constexpr (nda::have_same_value_type_v<T, decltype(it2cft)>) {
-          nda::lapack::getrs(it2cft, fconv, it2cft_piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
+          nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(nda::matrix<S>(it2cft), fconv, it2cft_piv);
+          nda::lapack::getrs(nda::matrix<S>(transpose(it2cf.lu)), fconv, it2cf.piv);
         }
 
         return beta * fconv;
 
       } else if (T::rank == 3) { // Matrix-valued Green's function
-
-        static constexpr auto _ = nda::range::all;
 
         int norb1 = fc.shape(1);
         int norb2 = fc.shape(2);
@@ -386,13 +376,6 @@ namespace cppdlr {
 
         // Then precompose with DLR grid values to DLR coefficients matrix
 
-        // TODO: avoid factorizing tranpose of cf2it from scratch
-        // Prepare imaginary time values to coefficients transformation by computing
-        // LU factors of coefficient to imaginary time matrix
-        auto it2cft     = make_regular(transpose(cf2it));
-        auto it2cft_piv = nda::vector<int>(r);
-        nda::lapack::getrf(it2cft, it2cft_piv);
-
         // Transpose last two indices to put make column DLR index the last
         // index
         auto fconvtmp    = nda::matrix<S>(r * norb1 * norb2, r);
@@ -402,11 +385,11 @@ namespace cppdlr {
         }
 
         // Do the solve
-        if constexpr (nda::have_same_value_type_v<T, decltype(it2cft)>) {
-          nda::lapack::getrs(it2cft, fconvtmp, it2cft_piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
+          nda::lapack::getrs(transpose(it2cf.lu), fconvtmp, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(nda::matrix<S>(it2cft), fconvtmp, it2cft_piv);
+          nda::lapack::getrs(nda::matrix<S>(transpose(it2cf.lu)), fconvtmp, it2cf.piv);
         }
 
         // Transpose back
