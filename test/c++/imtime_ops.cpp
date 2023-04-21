@@ -17,8 +17,6 @@
 using namespace cppdlr;
 using namespace nda;
 
-static constexpr auto _ = nda::range::all;
-
 /**
 * @brief Green's function which is a random sum of exponentials
 *

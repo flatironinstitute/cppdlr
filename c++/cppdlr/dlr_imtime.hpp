@@ -9,6 +9,8 @@
 
 namespace cppdlr {
 
+  static constexpr auto _ = nda::range::all;
+
   /**
   * @class imtime_ops
   * @brief Class responsible for all DLR imaginary time operations, including
@@ -179,17 +181,14 @@ namespace cppdlr {
       requires(nda::is_scalar_v<S>)
     typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc) {
 
-      static constexpr auto _ = nda::range::all;
-
       if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
       if (fc.shape() != gc.shape()) throw std::runtime_error("Input arrays must have the same shape.");
 
       // TODO: implement bosonic case and remove
       if (statistic == 0) throw std::runtime_error("imtime_ops::convolve not yet implemented for bosonic Green's functions.");
 
-      // TODO: do this more cleanly
       // Initialize convolution, if it hasn't been done already
-      if (hilb(0, 0) == -1.0) { convolve_init(); }
+      if (hilb.empty()) { convolve_init(); }
 
       if constexpr (T::rank == 1) { // Scalar-valued Green's function
 
@@ -312,9 +311,8 @@ namespace cppdlr {
       // TODO: implement bosonic case and remove
       if (statistic == 0) throw std::runtime_error("imtime_ops::convmat not yet implemented for bosonic Green's functions.");
 
-      // TODO: do this more cleanly
       // Initialize convolution, if it hasn't been done already
-      if (hilb(0, 0) == -1.0) { convolve_init(); }
+      if (hilb.empty()) { convolve_init(); }
 
       if constexpr (T::rank == 1) { // Scalar-valued Green's function
 
@@ -474,6 +472,10 @@ namespace cppdlr {
     * This method pre-builds some matrices required for the convolution methods.
     */
     void convolve_init() {
+
+      hilb   = nda::matrix<double>(r, r);
+      tcf2it = nda::matrix<double>(r, r);
+
       // "Discrete Hilbert transform" matrix -(1-delta_jk)/(dlr_rf(j) -
       // dlr_rf(k)), scaled by beta
       for (int j = 0; j < r; ++j) {
