@@ -240,7 +240,9 @@ namespace cppdlr {
     *
     * @return Values of h = f * g on DLR imaginary time grid
     * */
-    template <nda::MemoryMatrix Tf, nda::MemoryArray Tg> typename Tg::regular_type convolve(Tf const &fconv, Tg const &g) const {
+    template <nda::MemoryMatrix Tf, nda::MemoryArray Tg, nda::Scalar Sf = nda::get_value_t<Tf>, nda::Scalar Sg = nda::get_value_t<Tg>,
+              nda::Scalar S = typename std::common_type<Sf, Sg>::type>
+    typename Tg::regular_type convolve(Tf const &fconv, Tg const &g) const {
 
       if (r != g.shape(0)) throw std::runtime_error("First dim of input g must be equal to DLR rank r.");
 
@@ -257,7 +259,7 @@ namespace cppdlr {
         int norb1 = g.shape(1);
         int norb2 = g.shape(2);
 
-        auto h                                                   = nda::array<double, 3>(r, norb1, norb2);
+        auto h                                                   = nda::array<S, 3>(r, norb1, norb2);
         reshaped_view(h, std::array<int, 2>({r * norb1, norb2})) = arraymult(fconv, reshaped_view(g, std::array<int, 2>({r * norb1, norb2})));
 
         return h;
@@ -342,7 +344,7 @@ namespace cppdlr {
           nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(nda::matrix<S>(transpose(it2cf.lu)), fconv, it2cf.piv);
+          nda::lapack::getrs(transpose(nda::matrix<S>(it2cf.lu)), fconv, it2cf.piv);
         }
 
         return beta * fconv;
@@ -389,7 +391,7 @@ namespace cppdlr {
           nda::lapack::getrs(transpose(it2cf.lu), fconvtmp, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(nda::matrix<S>(transpose(it2cf.lu)), fconvtmp, it2cf.piv);
+          nda::lapack::getrs(transpose(nda::matrix<S>(it2cf.lu)), fconvtmp, it2cf.piv);
         }
 
         // Transpose back

@@ -205,12 +205,12 @@ TEST(imtime_ops, interp_scalar) {
 }
 
 /**
-* @brief Test convolution of two scalar-valued Green's functions
+* @brief Test convolution of two real-valued Green's functions
 *
 * We use Green's functions f and g given by a single exponential, so that the
 * result of the convolution is easy to compute analytically.
 */
-TEST(imtime_ops, convolve_scalar) {
+TEST(imtime_ops, convolve_scalar_real) {
 
   double lambda = 1000;  // DLR cutoff
   double eps    = 1e-12; // DLR tolerance
@@ -269,13 +269,79 @@ TEST(imtime_ops, convolve_scalar) {
 }
 
 /**
-* @brief Test convolution of two matrix-valued Green's functions
+* @brief Test convolution of two complex-valued Green's functions
 *
-* We use Green's functions f and g given by the product of a single exponential and a
+* We use Green's functions f and g given by a scalar multiple of a single exponential, so that the
+* result of the convolution is easy to compute analytically.
+*/
+TEST(imtime_ops, convolve_scalar_cmplx) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-12; // DLR tolerance
+
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+
+  // Specify frequency of single exponentials to be used for f and g
+  double omf = 0.1234, omg = -0.5678;
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at DLR imaginary time nodes
+  int r = itops.rank();
+  // [Q] Is this correct or just auto?
+  auto const &dlr_it      = itops.get_itnodes();
+  auto f                  = nda::array<dcomplex, 1>(r);
+  auto g                  = nda::array<dcomplex, 1>(r);
+  std::complex<double> c1 = (1.0 + 2.0i) / 3.0, c2 = (2.0 + 1.0i) / 3.0;
+  for (int i = 0; i < r; ++i) { f(i) = c1 * k_it(dlr_it(i), beta * omf); };
+  for (int i = 0; i < r; ++i) { g(i) = c2 * k_it(dlr_it(i), beta * omg); };
+
+  // Get DLR coefficients of f and g
+  auto fc = itops.vals2coefs(f);
+  auto gc = itops.vals2coefs(g);
+
+  // Get convolution of f and g directly
+  auto h = itops.convolve(beta, Fermion, fc, gc);
+
+  // Get convolution of f and g by first forming matrix of convolution by f and
+  // then applying it to g
+  auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
+
+  // Check that the two methods give the same result
+  EXPECT_LT(max_element(abs(h - h2)), 1e-14);
+
+  // Check error of h
+
+  auto hc = itops.vals2coefs(h); // DLR coefficients of h
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  double err                = 0;
+  std::complex<double> gtru = 0, gtst = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru = c1 * c2 * (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtst = itops.coefs2eval(hc, ttst(i));
+    err  = std::max(err, abs(gtru - gtst));
+  }
+
+  EXPECT_LT(err, 10 * eps);
+}
+
+/**
+* @brief Test convolution of two real matrix-valued Green's functions
+*
+* We use Green's functions f and g given by products of single exponentials and a
 * matrix of ones, so that the result of the convolution is easy to compute
 * analytically
 */
-TEST(imtime_ops, convolve_matrix) {
+TEST(imtime_ops, convolve_matrix_real) {
 
   double lambda = 1000;  // DLR cutoff
   double eps    = 1e-12; // DLR tolerance
@@ -336,6 +402,77 @@ TEST(imtime_ops, convolve_matrix) {
 
   EXPECT_LT(err, 10 * eps);
 }
+
+/**
+* @brief Test convolution of two real complex matrix-valued Green's functions
+*
+* We use Green's functions f and g given by scalar multiples of products of
+* single exponentials and a matrix of ones, so that the result of the convolution
+* is easy to compute analytically
+*/
+TEST(imtime_ops, convolve_matrix_cmplx) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-12; // DLR tolerance
+
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+
+  int norb = 2; // Orbital dimensions
+
+  // Specify frequency of single exponentials to be used for f and g
+  double omf = 0.1234, omg = -0.5678;
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at DLR imaginary time nodes
+  int r = itops.rank();
+  // [Q] Is this correct or just auto?
+  auto const &dlr_it = itops.get_itnodes();
+  auto f             = nda::array<dcomplex, 3>(r, norb, norb);
+  auto g             = nda::array<dcomplex, 3>(r, norb, norb);
+  std::complex<double> c1 = (1.0 + 2.0i) / 3.0, c2 = (2.0 + 1.0i) / 3.0;
+  for (int i = 0; i < r; ++i) { f(i, _, _) = c1 * k_it(dlr_it(i), beta * omf) / sqrt(1.0 * norb); };
+  for (int i = 0; i < r; ++i) { g(i, _, _) = c2 * k_it(dlr_it(i), beta * omg) / sqrt(1.0 * norb); };
+
+  // Get DLR coefficients of f and g
+  auto fc = itops.vals2coefs(f);
+  auto gc = itops.vals2coefs(g);
+
+  // Get convolution of f and g directly
+  auto h = itops.convolve(beta, Fermion, fc, gc);
+
+  // Get convolution of f and g by first forming matrix of convolution by f and
+  // then applying it to g
+  auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
+
+  // Check that the two methods give the same result
+  EXPECT_LT(max_element(abs(h - h2)), 1e-14);
+
+  // Check error of h
+
+  auto hc = itops.vals2coefs(h); // DLR coefficients of h
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  auto gtru  = nda::array<dcomplex, 2>(norb, norb);
+  auto gtst  = nda::array<dcomplex, 2>(norb, norb);
+  double err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru(_, _) = c1 * c2 * (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtst       = itops.coefs2eval(hc, ttst(i));
+    err        = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 10 * eps);
+}
+
 
 TEST(dlr_imtime, h5_rw) {
 
