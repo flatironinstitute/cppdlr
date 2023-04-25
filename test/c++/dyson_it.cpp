@@ -120,10 +120,10 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
   // --- Problem setup --- //
 
   // Set problem parameters
-  double beta = 100;  // Inverse temperature
-  double mu   = 0;    // Chemical potential
-  int n       = 3;    // Number of sites for original Hamiltonian
-  int norb    = 2;    // Number of sites for reduced Hamiltonian
+  double beta = 100; // Inverse temperature
+  double mu   = 0;   // Chemical potential
+  int n       = 3;   // Number of sites for original Hamiltonian
+  int norb    = 2;   // Number of sites for reduced Hamiltonian
   int ntst    = 100; // Number of imaginary time test points
 
   // Set DLR parameters

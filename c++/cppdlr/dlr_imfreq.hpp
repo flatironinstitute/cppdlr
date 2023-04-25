@@ -56,7 +56,7 @@ namespace cppdlr {
       if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
       // Reshape g to matrix w/ first dimension r
-      auto g_rs = nda::reshaped_view(g, std::array<long, 2>{r, g.size() / r});
+      auto g_rs = nda::reshape(g, r, g.size() / r);
       auto gct  = nda::matrix<nda::dcomplex>(transpose(g_rs));
 
       // Solve linear system (multiple right hand sides) to convert vals ->
@@ -66,7 +66,7 @@ namespace cppdlr {
 
       // Reshape to original dimensions and return
       auto gc = nda::matrix<nda::dcomplex>(transpose(gct));
-      return nda::reshaped_view(gc, g.shape());
+      return nda::reshape(gc, g.shape());
     }
 
     /** 
@@ -84,14 +84,13 @@ namespace cppdlr {
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
       // Reshape gc to a matrix w/ first dimension r
-      auto gc_rs = nda::reshaped_view(gc, std::array<long, 2>{r, gc.size() / r});
+      auto gc_rs = nda::reshape(gc, r, gc.size() / r);
 
       // Apply coeffs -> vals matrix
       auto g = cf2if * nda::matrix_const_view<S>(gc_rs);
 
-      // [Q] Why reshaped_view instead of reshape? But this works, and reshape doesn't compile.
       // Reshape to original dimensions and return
-      return nda::reshaped_view(g, gc.shape());
+      return nda::reshape(g, gc.shape());
     }
 
     /** 
@@ -121,7 +120,7 @@ namespace cppdlr {
       } else {
 
         // Reshape gc to matrix w/ first dimension r
-        auto gc_rs = nda::reshaped_view(gc, std::array<long, 2>{r, gc.size() / r});
+        auto gc_rs = nda::reshape(gc, r, gc.size() / r);
 
         // Get output shape
         std::array<long, T::rank - 1> shape_out;

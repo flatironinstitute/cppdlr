@@ -86,7 +86,7 @@ namespace cppdlr {
         nda::lapack::getrs(sysmat, g, ipiv);  // Back solve
         return g;
       } else { // Otherwise, g is matrix-valued, and need to transpose some indices after solve to undo LAPACK formatting
-        auto g_rs = nda::matrix_view<get_value_t<Tsig>>(nda::reshaped_view(g, std::array<int, 2>({norb, r * norb})));
+        auto g_rs = nda::matrix_view<get_value_t<Tsig>>(nda::reshape(g, norb, r * norb));
         nda::lapack::getrs(sysmat, g_rs, ipiv);
         auto g_return = nda::array<get_value_t<Tsig>, 3>(r, norb, norb);
         for (int i = 0; i < r; i++) {
@@ -111,7 +111,7 @@ namespace cppdlr {
        g0;                                  ///< Free Green's function at DLR nodes
     nda::matrix<nda::get_value_t<T>> g0mat; ///< Matrix of convolution by free Green's function
     typename std::conditional<std::floating_point<T>, nda::array<T, 1>, nda::array<get_value_t<T>, 3>>::type
-       rhs; ///< Right hand side of Dyson equation
+       rhs; ///< Right hand side of Dyson equation (in format compatible w/ LAPACK)
   };
 
   /**

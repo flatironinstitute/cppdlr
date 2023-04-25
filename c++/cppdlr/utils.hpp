@@ -163,8 +163,8 @@ namespace cppdlr {
     int n = b.size() / p;
 
     // Reshape input arrays to 2D arrays
-    auto a_reshaped = nda::reshaped_view(a, std::array<int, 2>({m, p}));
-    auto b_reshaped = nda::reshaped_view(b, std::array<int, 2>({p, n}));
+    auto a_reshaped = nda::reshape(a, m, p);
+    auto b_reshaped = nda::reshape(b, p, n);
 
     // Get shape of output array
     auto c_shape = std::array<int, ra + rb - 2>();
