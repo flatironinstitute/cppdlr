@@ -14,6 +14,7 @@ set(all_tests
   arraymult.cpp
   imtime_ops.cpp
   imfreq_ops.cpp
+  dyson_it.cpp
   )
 
 foreach(test ${all_tests})
