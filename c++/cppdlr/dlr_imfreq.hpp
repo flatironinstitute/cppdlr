@@ -151,6 +151,7 @@ namespace cppdlr {
     * @return DLR imaginary frequency nodes
     */
     nda::vector_const_view<int> get_ifnodes() const { return dlr_if; };
+    int get_ifnodes(int i) const { return dlr_if(i); };
 
     /**
     * @brief Get DLR real frequency nodes
@@ -158,6 +159,7 @@ namespace cppdlr {
     * @return DLR real frequency nodes
     */
     nda::vector_const_view<double> get_rfnodes() const { return dlr_rf; };
+    double get_rfnodes(int i) const { return dlr_rf(i); };
 
     /**
     * @brief Get transformation matrix from DLR coefficients to values at DLR imaginary frequency nodes

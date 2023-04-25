@@ -412,6 +412,7 @@ namespace cppdlr {
     * @return DLR imaginary time nodes
     */
     nda::vector_const_view<double> get_itnodes() const { return dlr_it; };
+    double get_itnodes(int i) const { return dlr_it(i); };
 
     /** Access DLR imaginary real frequency nodes*/
     /**
@@ -420,6 +421,7 @@ namespace cppdlr {
     * @return DLR real frequency nodes
     */
     nda::vector_const_view<double> get_rfnodes() const { return dlr_rf; };
+    double get_rfnodes(int i) const { return dlr_rf(i); };
 
     /**
     * @brief Get transformation matrix from DLR coefficients to values at DLR imaginary time nodes
