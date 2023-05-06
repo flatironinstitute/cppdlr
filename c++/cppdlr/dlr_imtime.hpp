@@ -232,8 +232,6 @@ namespace cppdlr {
     * of g on the DLR imaginary time grid, and returns the values of h on the
     * DLR imaginary time grid
     *
-    * @param[in] beta Inverse temperature
-    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
     * @param[in] fconv Matrix of convolution by f
     * @param[in] g Values of g on the DLR imaginary time grid
     *
@@ -305,7 +303,7 @@ namespace cppdlr {
     * */
     template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
       requires(nda::is_scalar_v<S>)
-    nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc) {
+    nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc) const {
 
       if (r != fc.shape(0)) throw std::runtime_error("First dim of input array must be equal to DLR rank r.");
 
@@ -457,7 +455,7 @@ namespace cppdlr {
     *
     * This method pre-builds some matrices required for the convolution methods.
     */
-    void convolve_init() {
+    void convolve_init() const{
 
       hilb   = nda::matrix<double>(r, r);
       tcf2it = nda::matrix<double>(r, r);
@@ -504,8 +502,8 @@ namespace cppdlr {
     } it2cf;
 
     // Arrays used for dlr_imtime::convolve
-    nda::matrix<double> hilb;   ///< "Discrete Hilbert transform" matrix
-    nda::matrix<double> tcf2it; ///< A matrix required for convolution
+    mutable nda::matrix<double> hilb;   ///< "Discrete Hilbert transform" matrix
+    mutable nda::matrix<double> tcf2it; ///< A matrix required for convolution
 
     // -------------------- hdf5 -------------------
 

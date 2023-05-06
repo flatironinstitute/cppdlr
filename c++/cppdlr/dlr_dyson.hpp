@@ -1,4 +1,5 @@
 #pragma once
+#include "nda/layout_transforms.hpp"
 #include <nda/nda.hpp>
 #include <cppdlr/dlr_imtime.hpp>
 #include <cppdlr/dlr_kernels.hpp>
@@ -12,8 +13,8 @@ namespace cppdlr {
   * @brief Class for solving Dyson equation in imaginary time
   */
 
-  template <typename T>
-    requires(std::floating_point<T> || nda::MemoryMatrix<T>)
+  template <typename Ht>
+    requires(std::floating_point<Ht> || nda::MemoryMatrix<Ht>)
   class dyson_it {
 
     public:
@@ -28,29 +29,22 @@ namespace cppdlr {
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
     */
-    dyson_it(double beta, imtime_ops &itops, double mu, T const &h) : beta(beta), itops(itops), mu(mu), h(h) {
+    dyson_it(double beta, imtime_ops itops, double mu, Ht const &h) : beta(beta), itops(itops), g0(free_gf(beta, itops, mu, h)) {
 
-      int r = itops.rank(); // DLR rank
-
-      // Get free Green's function
-      auto g0  = free_gf(beta, itops, mu, h);
-      auto g0c = itops.vals2coefs(g0); // DLR coefficients
+      int r    = itops.rank();         // DLR rank
+      auto g0c = itops.vals2coefs(g0); // DLR coefficients of free Green's function
 
       // Get matrix of convolution by free Green's function
       g0mat = itops.convmat(beta, Fermion, g0c);
 
       // Get right hand side of Dyson equation
-      if constexpr (std::floating_point<T>) { // If h is real scalar, rhs is a vector
+      if constexpr (std::floating_point<Ht>) { // If h is real scalar, rhs is a vector
         norb = 1;
         rhs  = g0;
       } else { // Otherwise, rhs is given by g0 w/ some indices transposed (for compatibility w/ LAPACK)
         norb = h.shape(0);
-        rhs  = nda::array<get_value_t<T>, 3>(norb, r, norb);
-        for (int i = 0; i < r; i++) {
-          for (int j = 0; j < norb; j++) {
-            for (int k = 0; k < norb; k++) { rhs(k, i, j) = g0(i, j, k); }
-          }
-        }
+        rhs.resize(norb, r, norb);
+        rhs = permuted_indices_view<nda::encode<3>({1, 2, 0})>(g0);
       }
     }
 
@@ -79,11 +73,13 @@ namespace cppdlr {
       auto ipiv = nda::vector<int>(r * norb);
       nda::lapack::getrf(sysmat, ipiv);
 
+      // TODO: clean this up, define scalar types of g, sig, g0 separately
       // Solve Dyson equation
-      auto g = Tsig(sig.shape());             // Could have complex self-energy w/ real G0; make g have type of sig
-      g      = rhs;                           // Get right hand side of Dyson equation
-      if constexpr (std::floating_point<T>) { // If h is scalar, g is scalar-valued
-        nda::lapack::getrs(sysmat, g, ipiv);  // Back solve
+      auto g = Tsig(sig.shape());                                               // Could have complex self-energy w/ real G0; make g have type of sig
+      g      = rhs;                                                             // Get right hand side of Dyson equation
+      if constexpr (std::floating_point<Ht>) {                                  // If h is scalar, g is scalar-valued
+        auto g_rs = nda::matrix_view<get_value_t<Tsig>>(nda::reshape(g, 1, r)); // Reshape g to be compatible w/ LAPACK
+        nda::lapack::getrs(sysmat, g_rs, ipiv);                                 // Back solve
         return g;
       } else { // Otherwise, g is matrix-valued, and need to transpose some indices after solve to undo LAPACK formatting
         auto g_rs = nda::matrix_view<get_value_t<Tsig>>(nda::reshape(g, norb, r * norb));
@@ -99,19 +95,15 @@ namespace cppdlr {
     }
 
     private:
-    double beta;       ///< Inverse temperature
-    imtime_ops &itops; ///< imtime_ops object
-    double mu;         ///< Chemical potential
-    T const &h;        ///< Hamiltonian (must be symmetric or Hermitian matrix, or real scalar)
+    double beta;      ///< Inverse temperature
+    imtime_ops itops; ///< imtime_ops object
 
-    int norb; ///< Number of orbital indices
-    // TODO: can these conditionals be cleaned up? Why doesn't auto work
-    // (shouldn't it be possible to deduce return type at compile time?)?
-    typename std::conditional<std::floating_point<T>, nda::array<T, 1>, nda::array<get_value_t<T>, 3>>::type
-       g0;                                  ///< Free Green's function at DLR nodes
-    nda::matrix<nda::get_value_t<T>> g0mat; ///< Matrix of convolution by free Green's function
-    typename std::conditional<std::floating_point<T>, nda::array<T, 1>, nda::array<get_value_t<T>, 3>>::type
-       rhs; ///< Right hand side of Dyson equation (in format compatible w/ LAPACK)
+    int norb;                                                                                              ///< Number of orbital indices
+    using Sh = typename std::conditional_t<std::floating_point<Ht>, Ht, get_value_t<Ht>>;                  // Scalar type of Hamiltonian
+    using Gt = typename std::conditional_t<std::floating_point<Ht>, nda::array<Sh, 1>, nda::array<Sh, 3>>; // Type of Green's function
+    Gt g0;                                                                                                 ///< Free Green's function at DLR nodes
+    nda::matrix<Sh> g0mat; ///< Matrix of convolution by free Green's function
+    Gt rhs;                ///< Right hand side of Dyson equation (in format compatible w/ LAPACK)
   };
 
   /**
@@ -131,16 +123,16 @@ namespace cppdlr {
   * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
   * or a real scalar.
   */
-  template <typename T>
-    requires(std::floating_point<T> || nda::MemoryMatrix<T>)
+  template <typename Ht>
+    requires(std::floating_point<Ht> || nda::MemoryMatrix<Ht>)
   // If h is scalar, return scalar-valued Green's function; if h is matrix,
   // return matrix-valued Green's function
-  auto free_gf(double beta, imtime_ops const &itops, double mu, T const &h) {
+  auto free_gf(double beta, imtime_ops const &itops, double mu, Ht const &h) {
 
     int r = itops.rank();
 
-    if constexpr (std::floating_point<T>) { // If h is scalar, return scalar-valued Green's function
-      auto g = nda::array<T, 1>(r);
+    if constexpr (std::floating_point<Ht>) { // If h is scalar, return scalar-valued Green's function
+      auto g = nda::array<Ht, 1>(r);
       for (int i = 0; i < r; i++) { g(i) = -k_it(itops.get_itnodes(i), beta * (h - mu)); }
       return g;
     } else { // Otherwise, return matrix-valued Green's function
@@ -151,7 +143,7 @@ namespace cppdlr {
       auto [eval, evec] = nda::linalg::eigenelements(h);
 
       // Get free Green's function
-      auto g = nda::array<nda::get_value_t<T>, 3>(r, norb, norb);
+      auto g = nda::array<nda::get_value_t<Ht>, 3>(r, norb, norb);
       g      = 0;
       for (int i = 0; i < r; i++) {
         for (int j = 0; j < norb; j++) { g(i, j, j) = -k_it(itops.get_itnodes(i), beta * (eval(j) - mu)); }
