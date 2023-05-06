@@ -1,8 +1,6 @@
 #pragma once
-#include <vector>
 #include <nda/nda.hpp>
 #include <nda/blas.hpp>
-#include <type_traits>
 
 using namespace nda;
 
@@ -133,9 +131,28 @@ namespace cppdlr {
 
   nda::vector<double> eqptsrel(int n);
 
+  /**
+  * @brief Get real-valued type corresponding to type of given nda MemoryArray
+  */
   template <nda::MemoryArray T> using make_real_t = decltype(make_regular(real(std::declval<T>())));
 
+  /**
+  * @brief Get complex-valued type corresponding to type of given nda MemoryArray
+  */
   template <nda::MemoryArray T> using make_cplx_t = decltype(make_regular(std::declval<T>() * 1i));
+
+  /**
+  * @brief Get type of given nda MemoryArray with scalar value type replaced by
+  * common type of two given types (real if both are real, complex otherwise)
+  */
+  template <nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2>
+  struct make_common_helper {
+    using S = std::common_type_t<S1, S2>;
+    static constexpr S x = 0;
+    using type = decltype(make_regular(std::declval<T>() * x));
+  };
+  template <nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2>
+  using make_common_t = typename make_common_helper<T, S1, S2>::type;
 
   /**
   * @brief Contract the last dimension of an array a with the first dimension of
@@ -198,7 +215,8 @@ namespace cppdlr {
 
   template <typename S>
   // TODO: require S is scalar
-  S adapgl(std::function<nda::array<S,1>(nda::array<double,1>)> f, double a, double b, double tol, nda::vector<double> xgl, nda::vector<double> wgl) {
+  S adapgl(std::function<nda::array<S, 1>(nda::array<double, 1>)> f, double a, double b, double tol, nda::vector<double> xgl,
+           nda::vector<double> wgl) {
 
     int maxnde = 100000; // Max nodes in integration tree
     int maxstk = 1000;   // Max stack size

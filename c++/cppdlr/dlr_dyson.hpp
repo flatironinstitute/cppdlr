@@ -5,22 +5,24 @@
 #include <cppdlr/dlr_kernels.hpp>
 
 #include <nda/linalg/eigenelements.hpp>
+#include <type_traits>
 
 namespace cppdlr {
 
   /**
   * @class dyson_it
   * @brief Class for solving Dyson equation in imaginary time
+  * @tparam Ht Type of Hamiltonian
   */
 
-  template <typename Ht>
+  // Type of Hamiltonian, and scalar type of Hamiltonian
+  template <typename Ht, nda::Scalar Sh = std::conditional_t<std::floating_point<Ht>, Ht, get_value_t<Ht>>>
     requires(std::floating_point<Ht> || nda::MemoryMatrix<Ht>)
   class dyson_it {
 
     public:
     /**
     * @brief Constructor for dyson_it
-    * @tparam T Scalar type of Hamiltonian
     * @param[in] beta Inverse temperature
     * @param[in] itops DLR imaginary time object
     * @param[in] mu Chemical potential
@@ -29,10 +31,11 @@ namespace cppdlr {
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
     */
-    dyson_it(double beta, imtime_ops itops, double mu, Ht const &h) : beta(beta), itops(itops), g0(free_gf(beta, itops, mu, h)) {
+    dyson_it(double beta, imtime_ops itops, double mu, Ht const &h) : beta(beta), itops(itops) {
 
-      int r    = itops.rank();         // DLR rank
-      auto g0c = itops.vals2coefs(g0); // DLR coefficients of free Green's function
+      int r    = itops.rank();                // DLR rank
+      auto g0  = free_gf(beta, itops, mu, h); // Free Green's function (right hand side of Dyson equation
+      auto g0c = itops.vals2coefs(g0);        // DLR coefficients of free Green's function
 
       // Get matrix of convolution by free Green's function
       g0mat = itops.convmat(beta, Fermion, g0c);
@@ -51,7 +54,7 @@ namespace cppdlr {
     /**
     * @brief Solve Dyson equation for given self-energy
     *
-    * @tparam Tsig Scalar type of self-energy
+    * @tparam Tsig Type of self-energy
     * @param[in] sig Self-energy at DLR imaginary time nodes
     *
     * @return Green's function at DLR imaginary time nodes
@@ -59,7 +62,11 @@ namespace cppdlr {
     * \note Free Green's function (right hand side of Dyson equation) specified
     * at construction of dyson_it object
     */
-    template <nda::MemoryArray Tsig> typename Tsig::regular_type solve(Tsig const &sig) const {
+    // Tsig is type of sig. Tg is type of Green's
+    // function, which is of type Tsig, with scalar type replaced by the common
+    // type of the Hamiltonian's scalar type, and the self-energy's scalar type
+    // (real if both are real, complex otherwise).
+    template <nda::MemoryArray Tsig, nda::MemoryArray Tg = make_common_t<Tsig, Sh, nda::get_value_t<Tsig>>> Tg solve(Tsig const &sig) const {
 
       int r     = itops.rank();          // DLR rank
       auto sigc = itops.vals2coefs(sig); // DLR coefficients of self-energy
@@ -73,37 +80,26 @@ namespace cppdlr {
       auto ipiv = nda::vector<int>(r * norb);
       nda::lapack::getrf(sysmat, ipiv);
 
-      // TODO: clean this up, define scalar types of g, sig, g0 separately
       // Solve Dyson equation
-      auto g = Tsig(sig.shape());                                               // Could have complex self-energy w/ real G0; make g have type of sig
-      g      = rhs;                                                             // Get right hand side of Dyson equation
-      if constexpr (std::floating_point<Ht>) {                                  // If h is scalar, g is scalar-valued
-        auto g_rs = nda::matrix_view<get_value_t<Tsig>>(nda::reshape(g, 1, r)); // Reshape g to be compatible w/ LAPACK
-        nda::lapack::getrs(sysmat, g_rs, ipiv);                                 // Back solve
+      auto g    = Tg(sig.shape());                                                    // Declare Green's function
+      g         = rhs;                                                                // Get right hand side of Dyson equation
+      auto g_rs = nda::matrix_view<get_value_t<Tg>>(nda::reshape(g, norb, r * norb)); // Reshape g to be compatible w/ LAPACK
+      nda::lapack::getrs(sysmat, g_rs, ipiv);                                         // Back solve
+      if constexpr (std::floating_point<Ht>) {                                        // If h is scalar, g is scalar-valued
         return g;
       } else { // Otherwise, g is matrix-valued, and need to transpose some indices after solve to undo LAPACK formatting
-        auto g_rs = nda::matrix_view<get_value_t<Tsig>>(nda::reshape(g, norb, r * norb));
-        nda::lapack::getrs(sysmat, g_rs, ipiv);
-        auto g_return = nda::array<get_value_t<Tsig>, 3>(r, norb, norb);
-        for (int i = 0; i < r; i++) {
-          for (int j = 0; j < norb; j++) {
-            for (int k = 0; k < norb; k++) { g_return(i, j, k) = g(k, i, j); }
-          }
-        }
-        return g_return;
+        return permuted_indices_view<nda::encode<3>({2, 0, 1})>(g);
       }
     }
 
     private:
     double beta;      ///< Inverse temperature
     imtime_ops itops; ///< imtime_ops object
+    int norb;         ///< Number of orbital indices
 
-    int norb;                                                                                              ///< Number of orbital indices
-    using Sh = typename std::conditional_t<std::floating_point<Ht>, Ht, get_value_t<Ht>>;                  // Scalar type of Hamiltonian
-    using Gt = typename std::conditional_t<std::floating_point<Ht>, nda::array<Sh, 1>, nda::array<Sh, 3>>; // Type of Green's function
-    Gt g0;                                                                                                 ///< Free Green's function at DLR nodes
+    typename std::conditional_t<std::floating_point<Ht>, nda::array<Sh, 1>, nda::array<Sh, 3>>
+       rhs; ///< Right hand side of Dyson equation (in format compatible w/ LAPACK); vector if Hamiltonian is scalar, rank-3 array otherwise
     nda::matrix<Sh> g0mat; ///< Matrix of convolution by free Green's function
-    Gt rhs;                ///< Right hand side of Dyson equation (in format compatible w/ LAPACK)
   };
 
   /**
