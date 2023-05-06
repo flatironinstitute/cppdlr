@@ -12,6 +12,7 @@ set(all_tests
   pivrgs.cpp
   eqptsrel.cpp
   arraymult.cpp
+  adapint.cpp
   imtime_ops.cpp
   imfreq_ops.cpp
   dyson_it.cpp

@@ -175,4 +175,113 @@ namespace cppdlr {
     return reshape(matmul(a_reshaped, b_reshaped), c_shape);
   }
 
+  /**
+  * @brief Quick and dirty adaptive Gauss quadrature
+  *
+  * This function implements adaptive Gauss-Legendre quadrature with local error
+  * estimation only, using a stack.
+  * 
+  * @param[in] f  Function to be integrated
+  * @param[in] a  Lower integration limit
+  * @param[in] b  Upper integration limit
+  * @param[in] tol  Absolute error tolerance
+  * @param[in] xgl Gauss-Legendre nodes
+  * @param[in] wgl Gauss-Legendre weights
+  *
+  * @return Integral of \p f from \p a to \p b
+  *
+  * \note This is a quick and dirty adaptive integration function, which tries
+  * to achieve an error tolerance \p tol but doesn't guarantee it. A more robust
+  * implementation would use global error estimation. Nevertheless, this works
+  * quite well most of the time.
+  */
+
+  template <typename S>
+  // TODO: require S is scalar
+  S adapgl(std::function<nda::array<S,1>(nda::array<double,1>)> f, double a, double b, double tol, nda::vector<double> xgl, nda::vector<double> wgl) {
+
+    int maxnde = 100000; // Max nodes in integration tree
+    int maxstk = 1000;   // Max stack size
+
+    S sum = 0; // Integral
+
+    // Initialize stack: there is a stack of interval endpoints associated w/
+    // each node in the integration tree, and a corresponding stack of values
+    // associated w/ each such interval
+
+    auto endpt = nda::array<double, 2>(maxstk, 2); // Stack of interval endpoints
+    auto sums  = nda::array<S, 1>(maxstk);         // Stack of sums associated w/ each interval
+
+    int istk = 0; // Stack pointer
+    int nnde = 1; // Number of nodes in integration tree
+
+    endpt(istk, 0) = a; // Root node interval is [a,b]
+    endpt(istk, 1) = b;
+
+    double h   = (b - a) / 2;                                        // Interval half-width
+    sums(istk) = h * nda::blas::dotc(wgl, f(xgl * h + (a + b) / 2)); // Integral of f on root node interval
+
+    double aa = 0, bb = 0, cc = 0; // Interval endpoints, midpoint
+    S sum1 = 0, sum2 = 0;          // Integrals on subintervals
+
+    // Main loop
+    while (true) {
+
+      aa = endpt(istk, 0); // Get interval endpoints
+      bb = endpt(istk, 1);
+      cc = (aa + bb) / 2; // Get midpoint
+
+      // Get integral on each subinterval
+      h    = (cc - aa) / 2;
+      sum1 = h * nda::blas::dotc(wgl, f(xgl * h + (aa + cc) / 2));
+      sum2 = h * nda::blas::dotc(wgl, f(xgl * h + (cc + bb) / 2));
+
+      // If error on subintervals is less than tolerance, add to integral and
+      // move to next node
+
+      if (std::abs(sum1 + sum2 - sums(istk)) < tol) {
+        sum += sum1 + sum2;           // Add to subintervals to integral
+        istk--;                       // Remove current interval from stack
+        if (istk < 0) { return sum; } // If stack is empty, return integral
+      } else {                        // Integral on current interval not converged
+
+        // Remove current interval from stack, and add subintervals
+        endpt(istk, 1)     = cc;
+        endpt(istk + 1, 0) = cc;
+        endpt(istk + 1, 1) = bb;
+        sums(istk)         = sum1;
+        sums(istk + 1)     = sum2;
+
+        istk++;
+        nnde += 2;
+
+        if (istk > maxstk) { throw std::runtime_error("integration stack too large"); }
+        if (nnde > maxnde) { throw std::runtime_error("integration tree too large"); }
+      }
+    }
+  }
+
+  /**
+  * @brief Gauss-Legendre nodes and weights
+  *
+  * Uses Newton iteration to obtain the Gauss-Legendre nodes and weights
+  *
+  * @param[in] n  Number of nodes
+  *
+  * @return Tuple of nodes and weights
+  */
+  std::tuple<nda::vector<double>, nda::vector<double>> gaussquad(int n);
+
+  /**
+  * @brief Evaluate Legendre polynomial of degree n and its derivative
+  *
+  * Uses Legendre three-term recurrence
+  *
+  * @param[in] n  Degree of polynomial Pn(x)
+  * @param[in] x  Point at which to evaluate polynomial
+  *
+  * @return Tuple of polynomial value Pn(x) and derivative Pn'(x)
+  */
+  std::tuple<double, double> leg_eval(int n, double x);
+
 } // namespace cppdlr
