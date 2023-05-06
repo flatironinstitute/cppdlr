@@ -10,6 +10,7 @@
 #include <cppdlr/cppdlr.hpp>
 
 #include <nda/linalg/eigenelements.hpp>
+#include <string>
 
 using namespace cppdlr;
 using namespace nda;
@@ -233,9 +234,8 @@ nda::vector<double> g_bethe(double c, double beta, nda::vector_const_view<double
 
 /**
 * @brief Compute Bethe lattice Green's function by solving Dyson equation with
-* known self-energy
+* known self-energy, and compare with known solution
 */
-
 TEST(dyson_it, dyson_bethe) {
 
   // --- Problem setup --- //
@@ -270,13 +270,84 @@ TEST(dyson_it, dyson_bethe) {
 
   // Solve Dyson equation
   double h = 0;                            // Zero Hamiltonian
-  auto dys = dyson_it(beta, itops, mu, h); // Dyson imaginary time object
+  auto dys = dyson_it(beta, itops, mu, h); // Imaginary time Dyson solver
   auto g   = dys.solve(sig);               // Solve Dyson equation w/ given self-energy
 
   // --- Compare with exact solution --- //
 
   auto gbethec = itops.vals2coefs(gbethe); // DLR coefficients
-  auto gc     = itops.vals2coefs(g);
+  auto gc      = itops.vals2coefs(g);
+
+  auto ittst = eqptsrel(ntst); // Equispaced test grid in relative format
+
+  // Compare on test grid
+  double t  = 0;
+  auto gtst = nda::vector<double>(ntst);
+  auto gtru = nda::vector<double>(ntst);
+
+  for (int i = 0; i < ntst; ++i) {
+    t       = ittst(i);
+    gtst(i) = itops.coefs2eval(gc, t);
+    gtru(i) = itops.coefs2eval(gbethec, t);
+  }
+
+  // Check error
+  std::cout << "Max error: " << max_element(abs((gtst - gtru))) << std::endl;
+  EXPECT_LT(max_element(abs((gtst - gtru))), 1.0e-13);
+}
+
+/**
+* @brief Compute Bethe lattice Green's function by solving Dyson equation
+* self-consistently by fixed point iteration, and compare with known solution
+*/
+TEST(dyson_it, dyson_bethe_fpi) {
+
+  // --- Problem setup --- //
+
+  // Set problem parameters
+  double beta = 100;     // Inverse temperature
+  double mu   = 0;       // Chemical potential
+  double c    = 1.0 / 2; // Quarter-bandwidth
+  int ntst    = 1000;    // Number of imaginary time test points
+  double fptol = 1.0e-14; // Fixed point iteration tolerance
+
+  // Set DLR parameters
+  double lambda = 100;
+  double eps    = 1.0e-14;
+
+  // --- Build DLR --- //
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // --- Solve Dyson equation self-consistently by fixed point iteration --- //
+
+  double h = 0;                            // Zero Hamiltonian
+  auto dys = dyson_it(beta, itops, mu, h); // Imaginary time Dyson solver
+  auto g = free_gf(beta, itops, mu, h); // Initial guess: free Green's function
+  auto sig = make_regular(c * c * g); // Self-energy
+  auto gnew = g;                 // New Green's function in fixed point iteration
+
+  // Fixed point iteration
+  for (int i = 0; i < 1000; ++i) {
+    gnew = dys.solve(sig);
+    if (max_element(abs((gnew - g))) < fptol) {
+      g = gnew;
+      std::cout << "Converged in " << i+1 << " iterations" << std::endl;
+      break;
+    }
+    g = gnew;
+    sig = make_regular(c * c * g);
+  }
+  
+  // --- Get true Green's function and compare with computed solution --- //
+
+  auto gbethe = g_bethe(c, beta, itops.get_itnodes());
+  auto gbethec = itops.vals2coefs(gbethe); // DLR coefficients
+  auto gc      = itops.vals2coefs(g);
 
   auto ittst = eqptsrel(ntst); // Equispaced test grid in relative format
 
