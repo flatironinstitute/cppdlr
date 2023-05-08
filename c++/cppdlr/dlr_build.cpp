@@ -102,7 +102,7 @@ namespace cppdlr {
   }
 
   std::tuple<double, double> geterr_k_it(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
-                                          nda::matrix_const_view<double> kmat) {
+                                         nda::matrix_const_view<double> kmat) {
 
     auto _ = range::all;
 
@@ -198,6 +198,7 @@ namespace cppdlr {
 
     auto [q, norms, piv] = pivrgs(transpose(kmat), eps);
     int r                = norms.size();
+    std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
 
     auto omega = nda::vector<double>(r);
     for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }

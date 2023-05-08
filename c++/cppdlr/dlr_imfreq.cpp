@@ -19,6 +19,7 @@ namespace cppdlr {
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
     auto [q, norms, piv] = pivrgs(kmat, 1e-100);
+    std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
     for (int i = 0; i < r; ++i) { dlr_if(i) = piv(i) - nmax; }
 
     // Obtain coefficients to imaginary frequency values transformation matrix
