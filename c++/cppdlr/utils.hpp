@@ -60,6 +60,7 @@ namespace cppdlr {
 
     // Get matrix dimensions
     auto [m, n] = aa.shape();
+    int maxrnk = std::min(m, n);
 
     // Compute norms of rows of input matrix, and rescale eps tolerance
     auto norms     = nda::vector<double>(m);
@@ -78,7 +79,7 @@ namespace cppdlr {
     auto piv   = nda::arange(0, m);
     auto tmp   = nda::vector<S>(n);
 
-    for (int j = 0; j < m; ++j) {
+    for (int j = 0; j < maxrnk; ++j) {
 
       // Find next pivot
       jpiv = j;
@@ -126,7 +127,7 @@ namespace cppdlr {
       }
     }
 
-    return {aa, norms, piv};
+    return {aa(range(maxrnk), _), norms(range(maxrnk)), piv(range(maxrnk))};
   }
 
   nda::vector<double> eqptsrel(int n);
