@@ -27,6 +27,7 @@
 #include <nda/gtest_tools.hpp>
 
 #include <cppdlr/utils.hpp>
+#include <numbers>
 
 using namespace cppdlr;
 using namespace nda;
