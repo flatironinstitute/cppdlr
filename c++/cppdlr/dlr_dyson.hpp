@@ -46,15 +46,18 @@ namespace cppdlr {
     *
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
+    *
+    * \note TODO: write explanation about why shared pointer to imtime_ops
+    * object is used
     */
-    dyson_it(double beta, imtime_ops itops, double mu, Ht const &h) : beta(beta), itops(itops) {
+    dyson_it(double beta, imtime_ops itops, double mu, Ht const &h) : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)) {
 
-      int r    = itops.rank();                // DLR rank
+      int r    = itops_ptr->rank();           // DLR rank
       auto g0  = free_gf(beta, itops, mu, h); // Free Green's function (right hand side of Dyson equation
-      auto g0c = itops.vals2coefs(g0);        // DLR coefficients of free Green's function
+      auto g0c = itops_ptr->vals2coefs(g0);   // DLR coefficients of free Green's function
 
       // Get matrix of convolution by free Green's function
-      g0mat = itops.convmat(beta, Fermion, g0c);
+      g0mat = itops_ptr->convmat(beta, Fermion, g0c);
 
       // Get right hand side of Dyson equation
       if constexpr (std::floating_point<Ht>) { // If h is real scalar, rhs is a vector
@@ -84,13 +87,13 @@ namespace cppdlr {
     // (real if both are real, complex otherwise).
     template <nda::MemoryArray Tsig, nda::MemoryArray Tg = make_common_t<Tsig, Sh, nda::get_value_t<Tsig>>> Tg solve(Tsig const &sig) const {
 
-      int r     = itops.rank();          // DLR rank
-      auto sigc = itops.vals2coefs(sig); // DLR coefficients of self-energy
+      int r     = itops_ptr->rank();          // DLR rank
+      auto sigc = itops_ptr->vals2coefs(sig); // DLR coefficients of self-energy
 
       // Obtain Dyson equation system matrix I - G0 * Sig, where G0 and Sig are the
       // matrices of convolution by the free Green's function and self-energy,
       // respectively.
-      auto sysmat = make_regular(nda::eye<double>(r * norb) - g0mat * itops.convmat(beta, Fermion, sigc));
+      auto sysmat = make_regular(nda::eye<double>(r * norb) - g0mat * itops_ptr->convmat(beta, Fermion, sigc));
 
       // Factorize system matrix
       auto ipiv = nda::vector<int>(r * norb);
@@ -109,9 +112,9 @@ namespace cppdlr {
     }
 
     private:
-    double beta;      ///< Inverse temperature
-    imtime_ops itops; ///< imtime_ops object
-    int norb;         ///< Number of orbital indices
+    double beta;                           ///< Inverse temperature
+    std::shared_ptr<imtime_ops> itops_ptr; ///< shared pointer to imtime_ops object
+    int norb;                              ///< Number of orbital indices
 
     typename std::conditional_t<std::floating_point<Ht>, nda::array<Sh, 1>, nda::array<Sh, 3>>
        rhs; ///< Right hand side of Dyson equation (in format compatible w/ LAPACK); vector if Hamiltonian is scalar, rank-3 array otherwise
@@ -159,7 +162,7 @@ namespace cppdlr {
       g      = 0;
       for (int i = 0; i < r; i++) {
         for (int j = 0; j < norb; j++) { g(i, j, j) = -k_it(itops.get_itnodes(i), beta * (eval(j) - mu)); }
-        g(i, _, _) = evec * matmul(g(i, _, _), transpose(conj(evec)));
+        g(i, _, _) = matmul(evec, matmul(g(i, _, _), transpose(conj(evec))));
       }
 
       return g;

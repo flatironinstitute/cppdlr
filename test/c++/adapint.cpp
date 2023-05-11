@@ -20,8 +20,6 @@
 *@brief Test adaptive integration. 
 */
 
-#include <numbers>
-
 #include <gtest/gtest.h>
 #include <nda/nda.hpp>
 #include <nda/gtest_tools.hpp>
