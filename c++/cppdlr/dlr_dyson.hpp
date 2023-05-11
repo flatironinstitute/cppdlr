@@ -46,11 +46,12 @@ namespace cppdlr {
     *
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
-    *
-    * \note TODO: write explanation about why shared pointer to imtime_ops
-    * object is used
     */
     dyson_it(double beta, imtime_ops itops, double mu, Ht const &h) : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)) {
+      // dyson_it object contains a shared pointer to the imtime_ops object
+      // itops. This is done to avoid making a copy of itops, which is meant to
+      // handle all imaginary time operations on the given DLR imaginary time
+      // grid.
 
       int r    = itops_ptr->rank();           // DLR rank
       auto g0  = free_gf(beta, itops, mu, h); // Free Green's function (right hand side of Dyson equation
