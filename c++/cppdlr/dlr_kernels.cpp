@@ -40,6 +40,6 @@ namespace cppdlr {
     }
   }
 
-  std::complex<double> k_if(int n, double om) { return 1.0 / (n * pi * 1i + om); }
+  std::complex<double> k_if(int n, double om) { return 1.0 / (om - n * pi * 1i); }
 
 } // namespace cppdlr
