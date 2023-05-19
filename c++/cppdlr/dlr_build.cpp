@@ -107,12 +107,9 @@ namespace cppdlr {
 
     auto kmat = nda::matrix<double>(nt, nom);
 
-    //for (int i = 0; i < nt / 2; ++i) {
     for (int i = 0; i < nt; ++i) {
       for (int j = 0; j < nom; ++j) { kmat(i, j) = k_it(t(i), om(j)); }
     }
-
-    // kmat(range(nt / 2, nt), _) = kmat(range(nt / 2 - 1, -1, -1), range(no - 1, -1, -1));
 
     return kmat;
   }

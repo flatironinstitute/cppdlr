@@ -222,6 +222,145 @@ TEST(imtime_ops, interp_scalar) {
 }
 
 /**
+* @brief Test DLR fitting for real matrix-valued Green's function
+*/
+TEST(imtime_ops, fit_matrix) {
+
+  double lambda = 1000; // DLR cutoff
+  double eps    = 1e-8; // DLR tolerance
+
+  double beta  = 1000;  // Inverse temperature
+  int nsample  = 5000;  // # imag time sampling points
+  double noise = 1e-6;  // Noise level
+  int ntst     = 10000; // # imag time test points
+
+  int norb = 2; // Orbital dimensions
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at equispaced imaginary time nodes and add
+  // uniform random noise
+  auto t = eqptsrel(nsample);
+  auto g = nda::array<double, 3>(nsample, norb, norb);
+  for (int i = 0; i < nsample; ++i) { g(i, _, _) = gfun(norb, beta, t(i)) + noise * (2 * nda::rand() - 1); }
+
+  // DLR coefficients of G
+  auto gc = itops.fitvals2coefs(t, g);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  auto gtru  = nda::matrix<double>(norb, norb);
+  auto gtst  = nda::matrix<double>(norb, norb);
+  double err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru = gfun(norb, beta, ttst(i));
+    gtst = itops.coefs2eval(gc, ttst(i));
+    err  = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 10 * noise);
+}
+
+/**
+* @brief Test DLR fitting for complex matrix-valued Green's function
+*/
+TEST(imtime_ops, fit_matrix_cmplx) {
+
+  double lambda = 1000; // DLR cutoff
+  double eps    = 1e-8; // DLR tolerance
+
+  double beta  = 1000;  // Inverse temperature
+  int nsample  = 5000;  // # imag time sampling points
+  double noise = 1e-6;  // Noise level
+  int ntst     = 10000; // # imag time test points
+
+  int norb = 2; // Orbital dimensions
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at equispaced imaginary time nodes and add
+  // uniform random noise
+  auto t = eqptsrel(nsample);
+  auto g = nda::array<std::complex<double>, 3>(nsample, norb, norb);
+  for (int i = 0; i < nsample; ++i) { g(i, _, _) = gfun(norb, beta, t(i)) + noise * (2 * (nda::rand() + 1i * nda::rand()) - 1); }
+
+  // DLR coefficients of G
+  auto gc = itops.fitvals2coefs(t, g);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  auto gtru  = nda::matrix<std::complex<double>>(norb, norb);
+  auto gtst  = nda::matrix<std::complex<double>>(norb, norb);
+  double err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru = gfun(norb, beta, ttst(i));
+    gtst = itops.coefs2eval(gc, ttst(i));
+    err  = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 10 * noise);
+}
+
+/**
+* @brief Test DLR fitting for scalar-valued Green's function
+*/
+TEST(imtime_ops, fit_scalar) {
+
+  double lambda = 1000; // DLR cutoff
+  double eps    = 1e-8; // DLR tolerance
+
+  double beta  = 1000;  // Inverse temperature
+  int nsample  = 5000;  // # imag time sampling points
+  double noise = 1e-6;  // Noise level
+  int ntst     = 10000; // # imag time test points
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at equispaced imaginary time nodes and add
+  // uniform random noise
+  auto t = eqptsrel(nsample);
+  auto g = nda::vector<double>(nsample);
+  for (int i = 0; i < nsample; ++i) { g(i) = gfun(1, beta, t(i))(0, 0) + noise * (2 * nda::rand() - 1); }
+
+  // DLR coefficients of G
+  auto gc = itops.fitvals2coefs(t, g);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  double gtru = 0, gtst = 0, err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru = gfun(1, beta, ttst(i))(0, 0);
+    gtst = itops.coefs2eval(gc, ttst(i));
+    err  = std::max(err, abs(gtru - gtst));
+  }
+
+  EXPECT_LT(err, 10 * noise);
+
+  // Test that constructing vector of evaluation at a point and then applying to
+  // coefficients gives same result as direct evaluation method
+  auto kvec = itops.build_evalvec(ttst(ntst - 1));
+  EXPECT_LT((abs(blas::dot(gc, kvec) - gtst)), 1e-14);
+}
+
+/**
 * @brief Test convolution of two real-valued Green's functions
 *
 * We use Green's functions f and g given by a single exponential, so that the
@@ -449,9 +588,9 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   // Sample Green's function G at DLR imaginary time nodes
   int r = itops.rank();
   // [Q] Is this correct or just auto?
-  auto const &dlr_it = itops.get_itnodes();
-  auto f             = nda::array<dcomplex, 3>(r, norb, norb);
-  auto g             = nda::array<dcomplex, 3>(r, norb, norb);
+  auto const &dlr_it      = itops.get_itnodes();
+  auto f                  = nda::array<dcomplex, 3>(r, norb, norb);
+  auto g                  = nda::array<dcomplex, 3>(r, norb, norb);
   std::complex<double> c1 = (1.0 + 2.0i) / 3.0, c2 = (2.0 + 1.0i) / 3.0;
   for (int i = 0; i < r; ++i) { f(i, _, _) = c1 * k_it(dlr_it(i), beta * omf) / sqrt(1.0 * norb); };
   for (int i = 0; i < r; ++i) { g(i, _, _) = c2 * k_it(dlr_it(i), beta * omg) / sqrt(1.0 * norb); };
@@ -489,7 +628,6 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
 
   EXPECT_LT(err, 10 * eps);
 }
-
 
 TEST(dlr_imtime, h5_rw) {
 
