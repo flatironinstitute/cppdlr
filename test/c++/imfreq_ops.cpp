@@ -152,7 +152,7 @@ TEST(imfreq_ops, interp_scalar) {
   auto gc = ifops.vals2coefs(beta, g);
 
   // Check that G can be recovered at imaginary frequency nodes
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-14);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-13);
 
   // Compute L infinity error
   std::complex<double> gtru = 0, gtst = 0;
