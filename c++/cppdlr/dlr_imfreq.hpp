@@ -60,10 +60,13 @@ namespace cppdlr {
     * @brief Transform values of Green's function G on DLR imaginary frequency grid to
     * DLR coefficients
     *
+    * @param[in] beta Inverse temperature
     * @param[in] g Values of G on DLR imaginary frequency grid
     *
     * @return DLR coefficients of G
     */
+    template <nda::MemoryArray T> typename T::regular_type vals2coefs(double beta, T const &g) const { return vals2coefs(make_regular(g / beta)); }
+
     template <nda::MemoryArray T> typename T::regular_type vals2coefs(T const &g) const {
 
       // MemoryArray type can be nda vector, matrix, array, or view of any of
@@ -90,13 +93,16 @@ namespace cppdlr {
     * @brief Transform DLR coefficients of Green's function G to values on DLR
     * imaginary frequency grid
     *
+    * @param[in] beta Inverse temperature
     * @param[in] gc DLR coefficients of G
     *
     * @return Values of G on DLR imaginary frequency grid
-    * */
-    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-      requires(nda::is_scalar_v<S>)
-    make_cplx_t<T> coefs2vals(T const &gc) const {
+    */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> make_cplx_t<T> coefs2vals(double beta, T const &gc) const {
+      return coefs2vals(make_regular(beta * gc));
+    }
+
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> make_cplx_t<T> coefs2vals(T const &gc) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -114,14 +120,17 @@ namespace cppdlr {
     * @brief Evaluate DLR expansion of G, given by its DLR coefficients, at imaginary
     * frequency point 
     *
+    * @param[in] beta Inverse temperature
     * @param[in] gc   DLR coefficients of G
     * @param[in] iom  Evaluation point
     *
     * @return Value of G at @p iom
     */
-    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-      requires(nda::is_scalar_v<S>)
-    auto coefs2eval(T const &gc, int n) const {
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> auto coefs2eval(double beta, T const &gc, int n) const {
+      return beta * coefs2eval(gc, n);
+    }
+
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> auto coefs2eval(T const &gc, int n) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -155,10 +164,12 @@ namespace cppdlr {
     /** 
     * @brief Get vector of evaluation of DLR expansion at an imaginary frequency point 
     *
+    * @param[in] beta Inverse temperature
     * @param[in] n  Evaluation point index
     *
     * @return Vector of evaluation at Matsubara frequency with index @p n
     **/
+    nda::vector<nda::dcomplex> build_evalvec(double beta, int n) const;
     nda::vector<nda::dcomplex> build_evalvec(int n) const;
 
     /** 

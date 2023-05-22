@@ -64,6 +64,7 @@ nda::matrix<dcomplex> gfun(int norb, double beta, int n, statistic_t statistic) 
         c(l) = (sin(1000.0 * (i + 2 * j + 3 * l + 7)) + 1) / 2; // Quick and dirty rand # gen on [0,1]
       }
       c = c / sum(c);
+      c = beta * c;
 
       // Evaluate Green's function
       for (int l = 0; l < npeak; ++l) {
@@ -86,8 +87,8 @@ TEST(imfreq_ops, interp_matrix) {
   double eps     = 1e-10;   // DLR tolerance
   auto statistic = Fermion; // Fermionic Green's function
 
-  double beta = 1000;     // Inverse temperature
-  int nmaxtst = 5000;     // # imag time test points
+  double beta = 1000; // Inverse temperature
+  int nmaxtst = 5000; // # imag time test points
 
   int norb = 2; // Orbital dimensions
 
@@ -98,17 +99,16 @@ TEST(imfreq_ops, interp_matrix) {
   auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
 
   // Sample Green's function G at DLR imaginary frequency nodes
-  int r = ifops.rank();
-  // [Q] Is this correct or just auto?
+  int r              = ifops.rank();
   auto const &dlr_if = ifops.get_ifnodes();
-  auto g = nda::array<dcomplex, 3>(r, norb, norb);
+  auto g             = nda::array<dcomplex, 3>(r, norb, norb);
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
 
   // DLR coefficients of G
-  auto gc = ifops.vals2coefs(g);
+  auto gc = ifops.vals2coefs(beta, g);
 
   // Check that G can be recovered at imaginary frequency nodes
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(gc) - g)), 1e-14);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-13);
 
   // Compute L infinity error
   auto gtru  = nda::matrix<dcomplex>(norb, norb);
@@ -116,11 +116,11 @@ TEST(imfreq_ops, interp_matrix) {
   double err = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
     gtru = gfun(norb, beta, n, statistic);
-    gtst = ifops.coefs2eval(gc, n);
-    err = std::max(err, max_element(abs(gtru - gtst)));
+    gtst = ifops.coefs2eval(beta, gc, n);
+    err  = std::max(err, max_element(abs(gtru - gtst)));
   }
 
-  EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(err, 100 * eps);
 }
 
 /**
@@ -133,8 +133,8 @@ TEST(imfreq_ops, interp_scalar) {
   double eps     = 1e-10;   // DLR tolerance
   auto statistic = Fermion; // Fermionic Green's function
 
-  double beta = 1000;     // Inverse temperature
-  int nmaxtst = 5000;     // # imag time test points
+  double beta = 1000; // Inverse temperature
+  int nmaxtst = 5000; // # imag time test points
 
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps);
@@ -143,36 +143,34 @@ TEST(imfreq_ops, interp_scalar) {
   auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
 
   // Sample Green's function G at DLR imaginary frequency nodes
-  int r = ifops.rank();
-  // [Q] Is this correct or just auto?
+  int r              = ifops.rank();
   auto const &dlr_if = ifops.get_ifnodes();
-  auto g = nda::vector<dcomplex>(r);
+  auto g             = nda::vector<dcomplex>(r);
   for (int i = 0; i < r; ++i) { g(i) = gfun(1, beta, dlr_if(i), statistic)(0, 0); }
 
   // DLR coefficients of G
-  auto gc = ifops.vals2coefs(g);
+  auto gc = ifops.vals2coefs(beta, g);
 
   // Check that G can be recovered at imaginary frequency nodes
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(gc) - g)), 1e-14);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-14);
 
   // Compute L infinity error
-  std::complex<double> gtru  = 0, gtst = 0;
+  std::complex<double> gtru = 0, gtst = 0;
   double err = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
     gtru = gfun(1, beta, n, statistic)(0, 0);
-    gtst = ifops.coefs2eval(gc, n);
-    err = std::max(err, abs(gtru - gtst));
+    gtst = ifops.coefs2eval(beta, gc, n);
+    err  = std::max(err, abs(gtru - gtst));
   }
 
-  EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(err, 100 * eps);
 
   // Test that constructing vector of evaluation at a point and then applying to
   // coefficients gives same result as direct evaluation method
-  gtst = ifops.coefs2eval(gc, 3);
-  auto kvec = ifops.build_evalvec(3);
-  auto zgc = nda::vector<dcomplex>(gc);
-  EXPECT_LT((abs(blas::dotc(zgc,kvec) - gtst)),1e-14);
-
+  gtst      = ifops.coefs2eval(beta, gc, 3);
+  auto kvec = ifops.build_evalvec(beta, 3);
+  auto zgc  = nda::vector<dcomplex>(gc);
+  EXPECT_LT((abs(blas::dotc(zgc, kvec) - gtst)), 1e-14);
 }
 
 TEST(dlr_imfreq, h5_rw) {
@@ -188,7 +186,7 @@ TEST(dlr_imfreq, h5_rw) {
   auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
 
   auto filename = "data_imfreq_ops_h5_rw.h5";
-  auto name = "ifops";
+  auto name     = "ifops";
 
   {
     h5::file file(filename, 'w');
@@ -209,5 +207,4 @@ TEST(dlr_imfreq, h5_rw) {
   EXPECT_EQ_ARRAY(ifops.get_cf2if(), ifops_ref.get_cf2if());
   EXPECT_EQ_ARRAY(ifops.get_if2cf_lu(), ifops_ref.get_if2cf_lu());
   EXPECT_EQ_ARRAY(ifops.get_if2cf_piv(), ifops_ref.get_if2cf_piv());
-  
 }

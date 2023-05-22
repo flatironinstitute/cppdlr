@@ -49,6 +49,14 @@ namespace cppdlr {
     lapack::getrf(if2cf.lu, if2cf.piv);
   }
 
+  nda::vector<dcomplex> imfreq_ops::build_evalvec(double beta, int n) const {
+
+    auto kvec = nda::vector<dcomplex>(r);
+    for (int l = 0; l < r; ++l) { kvec(l) = beta * k_if(2 * n + statistic, dlr_rf(l)); }
+
+    return kvec;
+  }
+
   nda::vector<dcomplex> imfreq_ops::build_evalvec(int n) const {
 
     auto kvec = nda::vector<dcomplex>(r);
