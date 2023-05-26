@@ -186,7 +186,7 @@ namespace cppdlr {
     auto kmat = nda::matrix<dcomplex>(2 * nmax, nom);
 
     for (int n = -nmax; n < nmax; ++n) {
-      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(2 * n + statistic, om(j)); }
+      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(n, om(j), statistic); }
     }
 
     return kmat;

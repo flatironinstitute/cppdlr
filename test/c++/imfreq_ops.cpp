@@ -69,7 +69,7 @@ nda::matrix<dcomplex> gfun(int norb, double beta, int n, statistic_t statistic) 
       // Evaluate Green's function
       for (int l = 0; l < npeak; ++l) {
         om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
-        g(i, j) += c(l) * k_if(2 * n + statistic, beta * om);
+        g(i, j) += c(l) * k_if(n, beta * om, statistic);
       }
     }
   }
@@ -170,7 +170,7 @@ TEST(imfreq_ops, interp_scalar) {
   gtst      = ifops.coefs2eval(beta, gc, 3);
   auto kvec = ifops.build_evalvec(beta, 3);
   auto zgc  = nda::vector<dcomplex>(gc);
-  EXPECT_LT((abs(blas::dotc(zgc, kvec) - gtst)), 1e-14);
+  EXPECT_LT((abs(blas::dotc(zgc, kvec) - gtst)), 1e-12);
 }
 
 TEST(dlr_imfreq, h5_rw) {

@@ -21,7 +21,7 @@ using namespace std;
 using namespace std::numbers;
 
 namespace cppdlr {
-
+  
   double k_it(double t, double om) {
 
     if (t >= 0) {
@@ -40,6 +40,19 @@ namespace cppdlr {
     }
   }
 
-  std::complex<double> k_if(int n, double om) { return 1.0 / (om - n * pi * 1i); }
+  std::complex<double> k_if_fermion(int n, double om) {
+    return 1.0 / (om - (2*n + 1) * pi * 1i);
+  }
 
+  std::complex<double> k_if_boson(int n, double om) {
+    return std::tanh(0.5 * om) / (om - 2*n * pi * 1i);
+  }
+
+  std::complex<double> k_if(int n, double om, statistic_t statistic) {
+    if( statistic == Fermion )
+      return k_if_fermion(n, om);
+    else
+      return k_if_boson(n, om);      
+  }
+    
 } // namespace cppdlr
