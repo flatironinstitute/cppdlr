@@ -52,7 +52,7 @@ namespace cppdlr {
   nda::vector<dcomplex> imfreq_ops::build_evalvec(double beta, int n) const {
 
     auto kvec = nda::vector<dcomplex>(r);
-    for (int l = 0; l < r; ++l) { kvec(l) = beta * k_if(2 * n + statistic, dlr_rf(l)); }
+    for (int l = 0; l < r; ++l) { kvec(l) = beta * k_if(n, dlr_rf(l), statistic); }
 
     return kvec;
   }
@@ -60,7 +60,7 @@ namespace cppdlr {
   nda::vector<dcomplex> imfreq_ops::build_evalvec(int n) const {
 
     auto kvec = nda::vector<dcomplex>(r);
-    for (int l = 0; l < r; ++l) { kvec(l) = k_if(2 * n + statistic, dlr_rf(l)); }
+    for (int l = 0; l < r; ++l) { kvec(l) = k_if(n, dlr_rf(l), statistic); }
 
     return kvec;
   }

@@ -16,6 +16,7 @@
 
 #pragma once
 #include <nda/nda.hpp>
+#include "dlr_kernels.hpp"
 
 using namespace nda;
 
@@ -75,12 +76,6 @@ namespace cppdlr {
   * @return Discretization of analytic continuation kernel on given grid
   */
   nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> om);
-
-  /**
-   * The Particle Statistic: Boson or Fermion
-   */
-
-  enum statistic_t { Boson = 0, Fermion = 1 };
 
   /**
   * @brief Get imaginary frequency discretization of analytic continuation kernel

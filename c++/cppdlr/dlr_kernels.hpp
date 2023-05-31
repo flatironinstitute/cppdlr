@@ -19,6 +19,12 @@
 
 namespace cppdlr {
 
+  /**
+   * The Particle Statistic: Boson or Fermion
+   */
+
+  enum statistic_t { Boson = 0, Fermion = 1 };
+
   /** Evaluate Lehmann kernel in imaginary time with relative format for time variable */
 
   /**
@@ -54,6 +60,7 @@ namespace cppdlr {
   *
   * @param[in] n Imaginary frequency index
   * @param[in] om Real frequency value
+  * @param[in] statistic Particle Statistic: Boson or Fermion
   *
   * @return Value K(n,om) of analytic continuation kernel
   *
@@ -61,6 +68,6 @@ namespace cppdlr {
   * fermionic or bosonic imaginary frequencies here, so K(n,om) = 1/(n*pi*i +
   * om)
   */
-  std::complex<double> k_if(int n, double om);
+  std::complex<double> k_if(int n, double om, statistic_t statistic);
 
 } // namespace cppdlr

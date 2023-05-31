@@ -140,7 +140,7 @@ namespace cppdlr {
 
         // Evaluate DLR expansion
         std::complex<double> g = 0;
-        for (int l = 0; l < r; ++l) { g += k_if(2 * n + statistic, dlr_rf(l)) * gc(l); }
+        for (int l = 0; l < r; ++l) { g += k_if(n, dlr_rf(l), statistic) * gc(l); }
 
         return g;
       } else {
