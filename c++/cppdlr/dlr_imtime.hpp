@@ -62,9 +62,7 @@ namespace cppdlr {
     *
     * @return DLR coefficients of G
     */
-    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-      requires(nda::is_scalar_v<S>)
-    typename T::regular_type vals2coefs(T const &g) const {
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> typename T::regular_type vals2coefs(T const &g) const {
 
       // MemoryArray type can be nda vector, matrix, array, or view of any of
       // these; taking a regular_type converts, for example, a matrix view to a
@@ -100,9 +98,7 @@ namespace cppdlr {
     *
     * @return Values of G on DLR imaginary time grid
     * */
-    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-      requires(nda::is_scalar_v<S>)
-    typename T::regular_type coefs2vals(T const &gc) const {
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> typename T::regular_type coefs2vals(T const &gc) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -125,9 +121,7 @@ namespace cppdlr {
     *
     * @return Value of G at @p t
     */
-    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-      requires(nda::is_scalar_v<S>)
-    auto coefs2eval(T const &gc, double t) const {
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> auto coefs2eval(T const &gc, double t) const {
 
       if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -173,6 +167,47 @@ namespace cppdlr {
     nda::vector<double> build_evalvec(double t) const;
 
     /** 
+    * @brief Obtain DLR coefficients of a Green's function G from scattered
+    * imaginary time grid by least squares fitting
+    *
+    * @param[in] t Imaginary time grid points at which G is sampled, in relative format
+    * @param[in] g Values of G on grid t
+    *
+    * @return DLR coefficients of G
+    */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
+    typename T::regular_type fitvals2coefs(nda::vector_const_view<double> t, T const &g) const {
+
+      // Check first dimension of g equal to length of t
+      int n = t.size();
+      if (n != g.shape(0)) throw std::runtime_error("First dim of g must be equal to length of t.");
+
+      // Get matrix for least squares fitting: columns are DLR basis functions
+      // evaluating at data points t. Must built in Fortran layout for
+      // compatibility with LAPACK.
+      auto kmat = nda::matrix<S, F_layout>(n, r); // Make sure matrix has same scalar type as g
+      for (int j = 0; j < r; ++j) {
+        for (int i = 0; i < n; ++i) { kmat(i, j) = k_it(t(i), dlr_rf(j)); }
+      }
+
+      // Reshape g to matrix w/ first dimension n, and put in Fortran layout for
+      // compatibility w/ LAPACK
+      auto g_rs = nda::matrix<S, F_layout>(nda::reshape(g, n, g.size() / n));
+
+      // Solve least squares problem to obtain DLR coefficients
+      auto s   = nda::vector<double>(r); // Singular values (not needed)
+      int rank = 0;                      // Rank of system matrix (not needed)
+      nda::lapack::gelss(kmat, g_rs, s, 0.0, rank);
+
+      auto gc_shape                = g.shape();                          // Output shape is same as g...
+      gc_shape[0]                  = r;                                  // ...with first dimension n replaced by r
+      auto gc                      = typename T::regular_type(gc_shape); // Output array: output type is same as g
+      reshape(gc, r, g.size() / n) = g_rs(range(r), _);                  // Place result in output array
+
+      return gc;
+    }
+
+    /** 
     * @brief Compute convolution of two imaginary time Green's functions
     *
     * The convolution of f and g is defined as h(t) = (f * g)(t) int_0^beta
@@ -193,8 +228,7 @@ namespace cppdlr {
     *
     * @return Values of h = f * g on DLR imaginary time grid
     * */
-    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-      requires(nda::is_scalar_v<S>)
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
     typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc) {
 
       if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
@@ -236,47 +270,6 @@ namespace cppdlr {
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
       }
-    }
-
-    /** 
-    * @brief Obtain DLR coefficients of a Green's function G from scattered
-    * imaginary time grid by least squares fitting
-    *
-    * @param[in] t Imaginary time grid points at which G is sampled, in relative format
-    * @param[in] g Values of G on grid t
-    *
-    * @return DLR coefficients of G
-    */
-    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
-    typename T::regular_type fitvals2coefs(nda::vector_const_view<double> t, T const &g) const {
-
-      // Check first dimension of g equal to length of t
-      int n = t.size();
-      if (n != g.shape(0)) throw std::runtime_error("First dim of g must be equal to length of t.");
-
-      // Get matrix for least squares fitting: columns are DLR basis functions
-      // evaluating at data points t. Must built in Fortran layout for
-      // compatibility with LAPACK.
-      auto kmat = nda::matrix<S, F_layout>(n, r); // Make sure matrix has same scalar type as g
-      for (int j = 0; j < r; ++j) {
-        for (int i = 0; i < n; ++i) { kmat(i, j) = k_it(t(i), dlr_rf(j)); }
-      }
-
-      // Reshape g to matrix w/ first dimension n, and put in Fortran layout for
-      // compatibility w/ LAPACK
-      auto g_rs = nda::matrix<S, F_layout>(nda::reshape(g, n, g.size() / n));
-
-      // Solve least squares problem to obtain DLR coefficients
-      auto s   = nda::vector<double>(r); // Singular values (not needed)
-      int rank = 0;                      // Rank of system matrix (not needed)
-      nda::lapack::gelss(kmat, g_rs, s, 0.0, rank);
-
-      auto gc_shape                = g.shape();                          // Output shape is same as g...
-      gc_shape[0]                  = r;                                  // ...with first dimension n replaced by r
-      auto gc                      = typename T::regular_type(gc_shape); // Output array: output type is same as g
-      reshape(gc, r, g.size() / n) = g_rs(range(r), _);                  // Place result in output array
-
-      return gc;
     }
 
     /** 
@@ -359,9 +352,7 @@ namespace cppdlr {
     * function g, represented as an r*norb x norb matrix, or a block r x 1
     * matrix of norb x norb blocks.
     * */
-    template <nda::MemoryArray T, typename S = nda::get_value_t<T>>
-      requires(nda::is_scalar_v<S>)
-    nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc) const {
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc) const {
 
       if (r != fc.shape(0)) throw std::runtime_error("First dim of input array must be equal to DLR rank r.");
 
