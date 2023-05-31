@@ -207,6 +207,33 @@ namespace cppdlr {
       return gc;
     }
 
+    /**
+    * @brief Compute reflection of imaginary time Green's function
+    *
+    * The reflection of g(t) is g(beta - t). This method takes the values of a
+    * Green's function g at the DLR imaginary time nodes to the values of its
+    * reflection at the DLR imaginary time nodes.
+    *
+    * @param[in] g Values of g at DLR imaginary time nodes
+    *
+    * @return Values of g(beta - t) at DLR imaginary time nodes
+    */
+    template <nda::MemoryArray T> typename T::regular_type reflect(T const &g) {
+
+      if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
+
+      // Initialize reflection matrix, if it hasn't been done already
+      if (refl.empty()) { reflect_init(); }
+
+      if constexpr (T::rank == 1) { // Scalar-valued Green's function
+        return matmul(refl, g);
+      } else {
+        auto gr                      = typename T::regular_type(g.shape());       // Output has same type/shape as g
+        reshape(gr, r, g.size() / r) = matmul(refl, reshape(g, r, g.size() / r)); // Reshape, matrix multiply, reshape back
+        return gr;
+      }
+    }
+
     /** 
     * @brief Compute convolution of two imaginary time Green's functions
     *
@@ -535,6 +562,26 @@ namespace cppdlr {
       }
     }
 
+    /**
+    * @brief Initialization for reflection method
+    *
+    * This method prebuilds the matrix of the reflection G(tau) -> G(beta - tau)
+    * acting on the values of the Green's function at the DLR imaginary time nodes
+    */
+    void reflect_init() const {
+
+      refl = nda::matrix<double>(r, r);
+
+      // Matrix of reflection acting on DLR coefficients and returning values at
+      // DLR nodes
+      for (int i = 0; i < r; ++i) {
+        for (int j = 0; j < r; ++j) { refl(i, j) = k_it(-dlr_it(i), dlr_rf(j)); }
+      }
+
+      // Precompose with DLR values to coefficients matrix
+      nda::lapack::getrs(transpose(it2cf.lu), refl, it2cf.piv); // Lapack effectively transposes refl by fortran reordering here
+    }
+
     private:
     double lambda_;
     int r;                      ///< DLR rank
@@ -553,6 +600,9 @@ namespace cppdlr {
     // Arrays used for dlr_imtime::convolve
     mutable nda::matrix<double> hilb;   ///< "Discrete Hilbert transform" matrix
     mutable nda::matrix<double> tcf2it; ///< A matrix required for convolution
+
+    // Arrays used for dlr_imtime::reflect
+    mutable nda::matrix<double> refl; ///< Matrix of reflection
 
     // -------------------- hdf5 -------------------
 

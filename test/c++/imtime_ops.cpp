@@ -629,6 +629,65 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   EXPECT_LT(err, 10 * eps);
 }
 
+/**
+* @brief Test reflection of matrix-valued Green's function
+*/
+TEST(dlr_imtime, refl_matrix) {
+
+  double lambda = 10;    // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  double beta = 10; // Inverse temperature
+  int ntst    = 10; // # imag time test points
+
+  int norb = 2; // Orbital dimensions
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  // Get DLR imaginary time object
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Sample Green's function G at DLR imaginary time nodes
+  int r              = itops.rank();
+  auto const &dlr_it = itops.get_itnodes();
+  auto g             = nda::array<double, 3>(r, norb, norb);
+  double om0 = 0.1234, om1 = -0.5678, om2 = 0.9012, om3 = -0.3456;
+  for (int i = 0; i < r; ++i) {
+    g(i, 0, 0) = k_it(dlr_it(i), beta * om0);
+    g(i, 1, 0) = k_it(dlr_it(i), beta * om1);
+    g(i, 0, 1) = k_it(dlr_it(i), beta * om2);
+    g(i, 1, 1) = k_it(dlr_it(i), beta * om3);
+  }
+
+  auto gr  = itops.reflect(g);     // Reflection
+  auto grc = itops.vals2coefs(gr); // DLR coefficients of reflection
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  auto gtru  = nda::matrix<double>(norb, norb);
+  auto gtst  = nda::matrix<double>(norb, norb);
+  double err = 0, t = 0;
+  for (int i = 0; i < ntst; ++i) { // Get evaluation point beta - t in relative format
+    if (ttst(i) == 0) {
+      t = 1;
+    } else {
+      t = -ttst(i);
+    }
+    gtru(0, 0) = k_it(t, beta * om0);
+    gtru(1, 0) = k_it(t, beta * om1);
+    gtru(0, 1) = k_it(t, beta * om2);
+    gtru(1, 1) = k_it(t, beta * om3);
+
+    gtst = itops.coefs2eval(grc, ttst(i));
+    err  = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 10 * eps);
+}
+
 TEST(dlr_imtime, h5_rw) {
 
   double lambda = 1000;  // DLR cutoff
