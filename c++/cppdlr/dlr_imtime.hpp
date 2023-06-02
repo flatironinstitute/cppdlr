@@ -218,7 +218,7 @@ namespace cppdlr {
     *
     * @return Values of g(beta - t) at DLR imaginary time nodes
     */
-    template <nda::MemoryArray T> typename T::regular_type reflect(T const &g) {
+    template <nda::MemoryArray T> typename T::regular_type reflect(T const &g) const {
 
       if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
@@ -256,7 +256,7 @@ namespace cppdlr {
     * @return Values of h = f * g on DLR imaginary time grid
     * */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
-    typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc) {
+    typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc) const {
 
       if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
       if (fc.shape() != gc.shape()) throw std::runtime_error("Input arrays must have the same shape.");
