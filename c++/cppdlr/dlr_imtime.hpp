@@ -51,8 +51,9 @@ namespace cppdlr {
     * 
     * @param[in] lambda DLR cutoff parameter
     * @param[in] dlr_rf DLR frequencies
+    * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
     */
-    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
+    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize = false);
 
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, nda::vector_const_view<double> dlr_it, nda::matrix_const_view<double> cf2it,
                nda::matrix_const_view<double> it2cf_lu, nda::vector_const_view<int> it2cf_piv)

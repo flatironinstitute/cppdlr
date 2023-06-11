@@ -111,17 +111,19 @@ namespace cppdlr {
                                          nda::matrix_const_view<double> kmat);
 
   /**
-   * Construct DLR basis for a given accuracy and cutoff parameter by getting DLR frequencies
-   */
+  * Unsymmetrized or symmetrized DLR
+  */
+  enum symmetrize { NONSYM = false, SYM = true };
 
   /**
   * @brief Construct DLR basis by obtaining DLR frequencies
   *
   * @param[in] lambda DLR cutoff parameter
   * @param[in] eps Accuracy of DLR basis
+  * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
   *
   * @return DLR frequencies
   */
-  nda::vector<double> build_dlr_rf(double lambda, double eps);
+  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize = false);
 
 } // namespace cppdlr

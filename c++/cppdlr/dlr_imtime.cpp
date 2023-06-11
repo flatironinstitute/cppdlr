@@ -24,7 +24,7 @@ using namespace nda;
 
 namespace cppdlr {
 
-  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf) {
+  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize) : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     dlr_it    = nda::vector<double>(r);
     cf2it     = nda::matrix<double>(r, r);
@@ -38,7 +38,15 @@ namespace cppdlr {
     auto kmat = build_k_it(t, dlr_rf);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
-    auto [q, norms, piv] = pivrgs(kmat, 1e-100);
+    nda::matrix<double> q;
+    nda::vector<double> norms;
+    nda::vector<int> piv;
+
+    if (!symmetrize) {
+      std::tie(q, norms, piv) = pivrgs(kmat, 1e-100);
+    } else {
+      std::tie(q, norms, piv) = pivrgs_sym(kmat, 1e-100);
+    }
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
     for (int i = 0; i < r; ++i) { dlr_it(i) = t(piv(i)); }
 

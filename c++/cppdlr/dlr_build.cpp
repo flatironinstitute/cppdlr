@@ -192,7 +192,7 @@ namespace cppdlr {
     return kmat;
   }
 
-  nda::vector<double> build_dlr_rf(double lambda, double eps) {
+  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize) {
 
     // Get fine grid parameters
 
@@ -209,8 +209,16 @@ namespace cppdlr {
 
     // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
 
-    auto [q, norms, piv] = pivrgs(transpose(kmat), eps);
-    int r                = norms.size();
+    nda::matrix<double> q;
+    nda::vector<double> norms;
+    nda::vector<int> piv;
+
+    if (!symmetrize) {
+      std::tie(q, norms, piv) = pivrgs(transpose(kmat), eps);
+    } else {
+      std::tie(q, norms, piv) = pivrgs_sym(transpose(kmat), eps);
+    }
+    int r = norms.size();
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
 
     auto omega = nda::vector<double>(r);

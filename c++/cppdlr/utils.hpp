@@ -65,8 +65,7 @@ namespace cppdlr {
    * pivots
    */
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
-  template <nda::MemoryArrayOfRank<2> T, typename S = get_value_t<T>>
-    requires(nda::is_scalar_v<S>)
+  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs(T const &a, double eps) {
 
     auto _ = nda::range::all;
@@ -76,7 +75,7 @@ namespace cppdlr {
 
     // Get matrix dimensions
     auto [m, n] = aa.shape();
-    int maxrnk = std::min(m, n);
+    int maxrnk  = std::min(m, n);
 
     // Compute norms of rows of input matrix, and rescale eps tolerance
     auto norms     = nda::vector<double>(m);
@@ -144,6 +143,143 @@ namespace cppdlr {
     }
 
     return {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};
+  }
+
+  /** 
+   * @brief Symmetrized rank-revealing pivoted reorthogonalized Gram-Schmidt
+   *
+   * Determine the epsilon-rank of a matrix and return an orthogonal basis of
+   * its epsilon-row space, with enforcing symmetrization of pivots.
+   *
+   * This is a translation of the Fortran subroutine "qrdgrm" by V.  Rokhlin,
+   * with symmetrization added.
+   *
+   * @param a   Matrix to be orthogonalized
+   * @param eps Rank cutoff tolerance
+   *
+   * @return Tuple of (1) matrix containing whose rows form orthogonal basis of
+   * row space of @p a to @p eps tolerance, (2) vector with entry n given by the
+   * squared l2 norm of the orthogonal complement of nth selected row with
+   * respect to subspace spanned by first n-1 selected rows, (3) vector of
+   * pivots
+   *
+   * \note The input matrix A must have an even number of rows. The symmetrization
+   * condition is that if A(i,:), the ith row of A, is selected as a pivot, then
+   * A(m-i-1,:) is also selected as a pivot. Here, m is the row dimension of
+   * A, and A is zero-indexed.
+   */
+  // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
+  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = get_value_t<T>>
+  std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, double eps) {
+
+    auto _ = nda::range::all;
+
+    // Get matrix dimensions
+    auto [m, n] = a.shape();
+    int maxrnk  = std::min(m, n);
+
+    if (m % 2 != 0) { throw std::runtime_error("Input matrix must have even number of rows."); }
+
+    // Copy input data, re-ordering rows to make symmetric rows adjacent
+    auto aa               = typename T::regular_type(m, n);
+    aa(range(0, m, 2), _) = a(range(0, m / 2), _);
+    aa(range(1, m, 2), _) = a(range(m - 1, m / 2 - 1, -1), _);
+
+    // Compute norms of rows of input matrix, and rescale eps tolerance
+    auto norms     = nda::vector<double>(m);
+    double epsscal = 0; // Scaled eps threshold parameter
+    for (int j = 0; j < m; ++j) {
+      norms(j) = real(blas::dotc(aa(j, _), aa(j, _)));
+      // TODO: Need to choose between these; this choice is consistent w/ libdlr
+      //epsscal += norms(j);
+      epsscal = std::max(epsscal, norms(j));
+    }
+    epsscal *= eps * eps;
+
+    // Begin pivoted double Gram-Schmidt procedure
+    int jpiv = 0, jj = 0;
+    double nrm          = 0;
+    auto piv            = nda::arange(0, m);
+    piv(range(0, m, 2)) = nda::arange(0, m / 2); // Re-order pivots to match re-ordered input matrix
+    piv(range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);
+    auto tmp = nda::vector<S>(n);
+
+    if (maxrnk % 2 != 0) { // If n < m and n is odd, decrease maxrnk to maintain symmetry
+      maxrnk -= 1;
+    }
+
+    for (int j = 0; j < maxrnk; j += 2) {
+
+      // Find next pair of pivots
+      jpiv = j;
+      nrm  = norms(j) + norms(j + 1);
+      for (int k = j + 2; k < m; k += 2) {
+        if (norms(k) + norms(k + 1) > nrm) {
+          jpiv = k;
+          nrm  = norms(k) + norms(k + 1);
+        }
+      }
+
+      // Swap current row pair with chosen pivot row pair
+      tmp             = aa(j, _);
+      aa(j, _)        = aa(jpiv, _);
+      aa(jpiv, _)     = tmp;
+      tmp             = aa(j + 1, _);
+      aa(j + 1, _)    = aa(jpiv + 1, _);
+      aa(jpiv + 1, _) = tmp;
+
+      nrm             = norms(j);
+      norms(j)        = norms(jpiv);
+      norms(jpiv)     = nrm;
+      nrm             = norms(j + 1);
+      norms(j + 1)    = norms(jpiv + 1);
+      norms(jpiv + 1) = nrm;
+
+      jj            = piv(j);
+      piv(j)        = piv(jpiv);
+      piv(jpiv)     = jj;
+      jj            = piv(j + 1);
+      piv(j + 1)    = piv(jpiv + 1);
+      piv(jpiv + 1) = jj;
+
+      // Orthogonalize current row (now the first chosen pivot row) against all
+      // previously chosen rows
+      for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }
+
+      // Get norm of current row
+      nrm = real(blas::dotc(aa(j, _), aa(j, _)));
+
+      // Terminate if sufficiently small, and return previously selected rows
+      // (not including current row)
+      if (nrm <= epsscal) { return {aa(range(0, j), _), norms(range(0, j)), piv(range(0, j))}; };
+
+      // Normalize current row
+      aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
+
+      // Orthogonalize remaining rows against current row
+      for (int k = j + 1; k < m; ++k) {
+        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
+        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+      }
+
+      // Orthogonalize current row (now the second chosen pivot row) against all
+      // previously chosen rows
+      for (int k = 0; k < j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j + 1, _)); }
+
+      // Normalize current row
+      nrm          = real(blas::dotc(aa(j + 1, _), aa(j + 1, _)));
+      aa(j + 1, _) = aa(j + 1, _) * (1 / sqrt(nrm));
+
+      // Orthogonalize remaining rows against current row
+      for (int k = j + 2; k < m; ++k) {
+        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+        aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));
+        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+      }
+    }
+
+    return {aa(range(maxrnk), _), norms(range(maxrnk)), piv(range(maxrnk))};
   }
 
   /**
@@ -217,14 +353,12 @@ namespace cppdlr {
   * @brief Get type of given nda MemoryArray with scalar value type replaced by
   * common type of two given types (real if both are real, complex otherwise)
   */
-  template <nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2>
-  struct make_common_helper {
-    using S = std::common_type_t<S1, S2>;
+  template <nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2> struct make_common_helper {
+    using S              = std::common_type_t<S1, S2>;
     static constexpr S x = 0;
-    using type = decltype(make_regular(std::declval<T>() * x));
+    using type           = decltype(make_regular(std::declval<T>() * x));
   };
-  template <nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2>
-  using make_common_t = typename make_common_helper<T, S1, S2>::type;
+  template <nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2> using make_common_t = typename make_common_helper<T, S1, S2>::type;
 
   /**
   * @brief Contract the last dimension of an array a with the first dimension of
