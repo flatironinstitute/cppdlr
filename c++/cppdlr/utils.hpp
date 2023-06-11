@@ -182,7 +182,6 @@ namespace cppdlr {
 
     // Copy input data, re-ordering rows to make symmetric rows adjacent
     auto aa               = typename T::regular_type(m, n);
-    //aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
     aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
     aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
 
