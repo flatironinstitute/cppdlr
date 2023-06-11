@@ -173,6 +173,61 @@ TEST(imfreq_ops, interp_scalar) {
   EXPECT_LT((abs(blas::dotc(zgc, kvec) - gtst)), 1e-12);
 }
 
+/**
+* @brief Test symmetrized DLR interpolation and evaluation for matrix-valued
+* Green's function
+*/
+TEST(imfreq_ops, interp_matrix_sym) {
+
+  double lambda  = 1000;    // DLR cutoff
+  double eps     = 1e-10;   // DLR tolerance
+  auto statistic = Fermion; // Fermionic Green's function
+
+  double beta = 1000; // Inverse temperature
+  int nmaxtst = 5000; // # imag time test points
+
+  int norb = 2; // Orbital dimensions
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
+  int r       = dlr_rf.size();
+
+  // Verify symmetry
+  EXPECT_EQ(max_element(abs(dlr_rf(range(r / 2)) + dlr_rf(range(r - 1, r / 2 - 1, -1)))), 0);
+
+  // Get DLR imaginary frequency object
+  auto ifops = imfreq_ops(lambda, dlr_rf, statistic, SYM);
+
+  // Sample Green's function G at DLR imaginary frequency nodes
+  auto const &dlr_if = ifops.get_ifnodes();
+
+  // Verify symmetry
+  EXPECT_EQ(max_element(abs(2 * dlr_if(range(r / 2)) + 1 + 2 * dlr_if(range(r - 1, r / 2 - 1, -1)) + 1)), 0);
+
+  auto g = nda::array<dcomplex, 3>(r, norb, norb);
+  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
+
+  // DLR coefficients of G
+  auto gc = ifops.vals2coefs(beta, g);
+
+  // Check that G can be recovered at imaginary frequency nodes
+  // TODO: this tolerance is a bit disturbingly high...why do we seem to lose a
+  // few digits?
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-12);
+
+  // Compute L infinity error
+  auto gtru  = nda::matrix<dcomplex>(norb, norb);
+  auto gtst  = nda::matrix<dcomplex>(norb, norb);
+  double err = 0;
+  for (int n = -nmaxtst; n < nmaxtst; ++n) {
+    gtru = gfun(norb, beta, n, statistic);
+    gtst = ifops.coefs2eval(beta, gc, n);
+    err  = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 100 * eps);
+}
+
 TEST(dlr_imfreq, h5_rw) {
 
   double lambda  = 1000;    // DLR cutoff

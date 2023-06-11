@@ -20,8 +20,10 @@ using namespace nda;
 
 namespace cppdlr {
 
-  imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic)
+  imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize)
      : lambda_(lambda), statistic(statistic), r(dlr_rf.size()), dlr_rf(dlr_rf) {
+
+    if (statistic == Boson && symmetrize) { throw std::runtime_error("Symmetrization not implemented for bosonic Green's functions"); }
 
     dlr_if    = nda::vector<int>(r);
     cf2if     = nda::matrix<dcomplex>(r, r);
@@ -33,8 +35,16 @@ namespace cppdlr {
     auto nmax = fineparams(lambda).nmax;
     auto kmat = build_k_if(nmax, dlr_rf, statistic);
 
-    // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
-    auto [q, norms, piv] = pivrgs(kmat, 1e-100);
+    // Pivoted Gram-Schmidt to obtain DLR imaginary frequency nodes
+    nda::matrix<dcomplex> q;
+    nda::vector<double> norms;
+    nda::vector<int> piv;
+
+    if (!symmetrize) {
+      std::tie(q, norms, piv) = pivrgs(kmat, 1e-100);
+    } else {
+      std::tie(q, norms, piv) = pivrgs_sym(kmat, 1e-100);
+    }
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
     for (int i = 0; i < r; ++i) { dlr_if(i) = piv(i) - nmax; }
 

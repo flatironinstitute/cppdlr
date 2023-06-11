@@ -44,8 +44,9 @@ namespace cppdlr {
     * @param[in] lambda DLR cutoff parameter
     * @param[in] dlr_rf DLR frequencies
     * @param[in] statistic Particle statistic: Fermion or Boson
+    * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
     */
-    imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic);
+    imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize = false);
 
     imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, //
                nda::vector_const_view<int> dlr_if,                                          //
