@@ -9,6 +9,7 @@ set(all_tests
   imtime_ops.cpp
   imfreq_ops.cpp
   dyson_it.cpp
+  symcompare.cpp
   )
 
 foreach(test ${all_tests})
