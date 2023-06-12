@@ -111,9 +111,9 @@ namespace cppdlr {
                                          nda::matrix_const_view<double> kmat);
 
   /**
-  * Unsymmetrized or symmetrized DLR
+  * Option for unsymmetrized or symmetrized DLR
   */
-  enum symmetrize { NONSYM = false, SYM = true };
+  enum { NONSYM = false, SYM = true };
 
   /**
   * @brief Construct DLR basis by obtaining DLR frequencies

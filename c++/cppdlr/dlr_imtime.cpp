@@ -38,15 +38,7 @@ namespace cppdlr {
     auto kmat = build_k_it(t, dlr_rf);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
-    nda::matrix<double> q;
-    nda::vector<double> norms;
-    nda::vector<int> piv;
-
-    if (!symmetrize) {
-      std::tie(q, norms, piv) = pivrgs(kmat, 1e-100);
-    } else {
-      std::tie(q, norms, piv) = pivrgs_sym(kmat, 1e-100);
-    }
+    auto [q, norms, piv] = (symmetrize ? pivrgs_sym(kmat, 1e-100) : pivrgs(kmat, 1e-100));
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
     for (int i = 0; i < r; ++i) { dlr_it(i) = t(piv(i)); }
 

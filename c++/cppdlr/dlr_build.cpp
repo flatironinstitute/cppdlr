@@ -209,16 +209,8 @@ namespace cppdlr {
 
     // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
 
-    nda::matrix<double> q;
-    nda::vector<double> norms;
-    nda::vector<int> piv;
-
-    if (!symmetrize) {
-      std::tie(q, norms, piv) = pivrgs(transpose(kmat), eps);
-    } else {
-      std::tie(q, norms, piv) = pivrgs_sym(transpose(kmat), eps);
-    }
-    int r = norms.size();
+    auto [q, norms, piv] = (symmetrize ? pivrgs_sym(transpose(kmat), eps) : pivrgs(transpose(kmat), eps));
+    long r               = norms.size();
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
 
     auto omega = nda::vector<double>(r);

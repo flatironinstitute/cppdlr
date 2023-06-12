@@ -36,15 +36,7 @@ namespace cppdlr {
     auto kmat = build_k_if(nmax, dlr_rf, statistic);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary frequency nodes
-    nda::matrix<dcomplex> q;
-    nda::vector<double> norms;
-    nda::vector<int> piv;
-
-    if (!symmetrize) {
-      std::tie(q, norms, piv) = pivrgs(kmat, 1e-100);
-    } else {
-      std::tie(q, norms, piv) = pivrgs_sym(kmat, 1e-100);
-    }
+    auto [q, norms, piv] = (symmetrize ? pivrgs_sym(kmat, 1e-100) : pivrgs(kmat, 1e-100));
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
     for (int i = 0; i < r; ++i) { dlr_if(i) = piv(i) - nmax; }
 
