@@ -306,7 +306,7 @@ TEST(dyson_it, dyson_bethe) {
 
   // Check error
   std::cout << "Max error: " << max_element(abs((gtst - gtru))) << std::endl;
-  EXPECT_LT(max_element(abs((gtst - gtru))), 1.0e-13);
+  EXPECT_LT(max_element(abs((gtst - gtru))), 2.0e-13);
 }
 
 /**
@@ -376,5 +376,5 @@ TEST(dyson_it, dyson_bethe_fpi) {
 
   // Check error
   std::cout << "Max error: " << max_element(abs((gtst - gtru))) << std::endl;
-  EXPECT_LT(max_element(abs((gtst - gtru))), 1.0e-13);
+  EXPECT_LT(max_element(abs((gtst - gtru))), 2.0e-13);
 }

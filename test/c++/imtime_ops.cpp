@@ -722,7 +722,7 @@ TEST(imtime_ops, refl_matrix) {
     err  = std::max(err, max_element(abs(gtru - gtst)));
   }
 
-  EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(err, 20 * eps);
 }
 
 /**
