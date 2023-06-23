@@ -129,7 +129,7 @@ namespace cppdlr {
 
       // Terminate if sufficiently small, and return previously selected rows
       // (not including current row)
-      if (nrm <= epsscal) { return {aa(nda::range(j), _), norms(nda::range(j)), piv(nda::range(j))}; };
+      if (nrm <= epsscal) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
 
       // Normalize current row
       aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
@@ -182,8 +182,9 @@ namespace cppdlr {
 
     // Copy input data, re-ordering rows to make symmetric rows adjacent
     auto aa               = typename T::regular_type(m, n);
-    aa(range(0, m, 2), _) = a(range(0, m / 2), _);
-    aa(range(1, m, 2), _) = a(range(m - 1, m / 2 - 1, -1), _);
+    //aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
+    aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
+    aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
 
     // Compute norms of rows of input matrix, and rescale eps tolerance
     auto norms     = nda::vector<double>(m);
@@ -200,8 +201,8 @@ namespace cppdlr {
     int jpiv = 0, jj = 0;
     double nrm          = 0;
     auto piv            = nda::arange(0, m);
-    piv(range(0, m, 2)) = nda::arange(0, m / 2); // Re-order pivots to match re-ordered input matrix
-    piv(range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);
+    piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); // Re-order pivots to match re-ordered input matrix
+    piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);
     auto tmp = nda::vector<S>(n);
 
     if (maxrnk % 2 != 0) { // If n < m and n is odd, decrease maxrnk to maintain symmetry
@@ -251,7 +252,7 @@ namespace cppdlr {
 
       // Terminate if sufficiently small, and return previously selected rows
       // (not including current row)
-      if (nrm <= epsscal) { return {aa(range(0, j), _), norms(range(0, j)), piv(range(0, j))}; };
+      if (nrm <= epsscal) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
 
       // Normalize current row
       aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
@@ -279,7 +280,7 @@ namespace cppdlr {
       }
     }
 
-    return {aa(range(maxrnk), _), norms(range(maxrnk)), piv(range(maxrnk))};
+    return {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};
   }
 
   /**
