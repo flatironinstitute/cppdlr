@@ -23,6 +23,9 @@ set(@PROJECT_NAME@_ROOT @CMAKE_INSTALL_PREFIX@ CACHE STRING "@PROJECT_NAME@ root
 #endfunction()
 #find_dep(depname 1.0)
 
+# Include nda targets
+include(@CMAKE_INSTALL_PREFIX@/lib/cmake/nda/nda-targets.cmake)
+
 # Include the exported targets of this project
 include(@CMAKE_INSTALL_PREFIX@/lib/cmake/@PROJECT_NAME@/@PROJECT_NAME@-targets.cmake)
 
