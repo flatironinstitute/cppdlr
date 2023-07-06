@@ -278,7 +278,7 @@ namespace cppdlr {
 
         // Off-diagonal contribution
         auto tmp = fca * arraymult(hilb, gca) + gca * arraymult(hilb, fca);
-        return beta * (h + arraymult(cf2it, make_regular(tmp)));
+        return beta * (h - arraymult(cf2it, make_regular(tmp)));
 
       } else if (T::rank == 3) { // Matrix-valued Green's function
 
@@ -292,7 +292,7 @@ namespace cppdlr {
         auto tmp2 = arraymult(hilb, gc);
         for (int i = 0; i < r; ++i) { tmp1(i, _, _) = arraymult(tmp1(i, _, _), gc(i, _, _)) + arraymult(fc(i, _, _), tmp2(i, _, _)); }
 
-        return beta * (h + arraymult(cf2it, tmp1));
+        return beta * (h - arraymult(cf2it, tmp1));
 
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
@@ -410,7 +410,7 @@ namespace cppdlr {
           }
           tmp2(k, k) += tmp1(k); // diag(fc)*hilb + diag(hilb*fc)
         }
-        fconv += arraymult(cf2it, tmp2);
+        fconv -= arraymult(cf2it, tmp2);
 
         // Then precompose with DLR grid values to DLR coefficients matrix
         if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
@@ -447,7 +447,7 @@ namespace cppdlr {
           }
           tmp2(k, _, k, _) += tmp1(k, _, _); // diag(fc)*hilb + diag(hilb*fc)
         }
-        fconv_rs += arraymult(cf2it, tmp2);
+        fconv_rs -= arraymult(cf2it, tmp2);
 
         // Then precompose with DLR grid values to DLR coefficients matrix
 
@@ -554,9 +554,9 @@ namespace cppdlr {
       for (int j = 0; j < r; ++j) {
         for (int k = 0; k < r; ++k) {
           if (dlr_it(j) > 0) {
-            tcf2it(j, k) = (dlr_it(j) - k_it(1.0, dlr_rf(k))) * cf2it(j, k);
+            tcf2it(j, k) = -(dlr_it(j) + k_it(1.0, dlr_rf(k))) * cf2it(j, k);
           } else {
-            tcf2it(j, k) = (dlr_it(j) + k_it(0.0, dlr_rf(k))) * cf2it(j, k);
+            tcf2it(j, k) = -(dlr_it(j) - k_it(0.0, dlr_rf(k))) * cf2it(j, k);
           }
         }
       }

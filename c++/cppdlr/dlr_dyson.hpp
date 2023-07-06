@@ -149,7 +149,7 @@ namespace cppdlr {
 
     if constexpr (std::floating_point<Ht>) { // If h is scalar, return scalar-valued Green's function
       auto g = nda::array<Ht, 1>(r);
-      for (int i = 0; i < r; i++) { g(i) = -k_it(itops.get_itnodes(i), beta * (h - mu)); }
+      for (int i = 0; i < r; i++) { g(i) = k_it(itops.get_itnodes(i), beta * (h - mu)); }
       return g;
     } else { // Otherwise, return matrix-valued Green's function
 
@@ -162,7 +162,7 @@ namespace cppdlr {
       auto g = nda::array<nda::get_value_t<Ht>, 3>(r, norb, norb);
       g      = 0;
       for (int i = 0; i < r; i++) {
-        for (int j = 0; j < norb; j++) { g(i, j, j) = -k_it(itops.get_itnodes(i), beta * (eval(j) - mu)); }
+        for (int j = 0; j < norb; j++) { g(i, j, j) = k_it(itops.get_itnodes(i), beta * (eval(j) - mu)); }
         g(i, _, _) = matmul(evec, matmul(g(i, _, _), transpose(conj(evec))));
       }
 

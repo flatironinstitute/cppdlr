@@ -34,18 +34,18 @@ namespace cppdlr {
   double k_it_abs(double t, double om) {
 
     if (om >= 0.0) {
-      return exp(-t * om) / (1.0 + exp(-om));
+      return -exp(-t * om) / (1.0 + exp(-om));
     } else {
-      return exp((1.0 - t) * om) / (1.0 + exp(om));
+      return -exp((1.0 - t) * om) / (1.0 + exp(om));
     }
   }
 
   std::complex<double> k_if_fermion(int n, double om) {
-    return 1.0 / (om - (2*n + 1) * pi * 1i);
+    return 1.0 / ((2*n + 1) * pi * 1i - om);
   }
 
   std::complex<double> k_if_boson(int n, double om) {
-    return std::tanh(0.5 * om) / (om - 2*n * pi * 1i);
+    return std::tanh(0.5 * om) / (2*n * pi * 1i - om);
   }
 
   std::complex<double> k_if(int n, double om, statistic_t statistic) {

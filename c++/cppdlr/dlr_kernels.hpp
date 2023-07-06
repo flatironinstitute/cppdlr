@@ -36,7 +36,7 @@ namespace cppdlr {
   * @return Value K(t,om) of analytic continuation kernel
   *
   * \note We use dimensionless variables, i.e. beta = 1, so K(t,om) =
-  * exp(-tau*om)/(1+exp(-om))
+  * -exp(-tau*om)/(1+exp(-om))
   */
   double k_it(double t, double om);
 
@@ -49,7 +49,7 @@ namespace cppdlr {
   * @return Value K(t,om) of analytic continuation kernel
   *
   * \note We use dimensionless variables, i.e. beta = 1, so K(t,om) =
-  * exp(-tau*om)/(1+exp(-om))
+  * -exp(-tau*om)/(1+exp(-om))
   */
   double k_it_abs(double t, double om);
 
@@ -65,7 +65,7 @@ namespace cppdlr {
   * @return Value K(n,om) of analytic continuation kernel
   *
   * \note We use dimensionless variables, i.e. beta = 1, and do not specify
-  * fermionic or bosonic imaginary frequencies here, so K(n,om) = 1/(n*pi*i +
+  * fermionic or bosonic imaginary frequencies here, so K(n,om) = 1/(n*pi*i -
   * om)
   */
   std::complex<double> k_if(int n, double om, statistic_t statistic);

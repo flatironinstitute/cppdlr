@@ -416,7 +416,7 @@ TEST(imtime_ops, convolve_scalar_real) {
   // Compute L infinity error
   double gtru = 0, gtst = 0, err = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru = (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtru = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
     gtst = itops.coefs2eval(hc, ttst(i));
     err  = std::max(err, abs(gtru - gtst));
   }
@@ -482,7 +482,7 @@ TEST(imtime_ops, convolve_scalar_cmplx) {
   double err                = 0;
   std::complex<double> gtru = 0, gtst = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru = c1 * c2 * (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtru = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
     gtst = itops.coefs2eval(hc, ttst(i));
     err  = std::max(err, abs(gtru - gtst));
   }
@@ -551,7 +551,7 @@ TEST(imtime_ops, convolve_matrix_real) {
   auto gtst  = nda::array<double, 2>(norb, norb);
   double err = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(_, _) = (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtru(_, _) = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
     gtst       = itops.coefs2eval(hc, ttst(i));
     err        = std::max(err, max_element(abs(gtru - gtst)));
   }
@@ -621,7 +621,7 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   auto gtst  = nda::array<dcomplex, 2>(norb, norb);
   double err = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(_, _) = c1 * c2 * (k_it(ttst(i), beta * omf) - k_it(ttst(i), beta * omg)) / (omg - omf); // Exact result
+    gtru(_, _) = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
     gtst       = itops.coefs2eval(hc, ttst(i));
     err        = std::max(err, max_element(abs(gtru - gtst)));
   }
