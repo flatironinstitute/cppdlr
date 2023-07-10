@@ -27,7 +27,7 @@ endif()
 
 # ############
 # Define Project
-project(cppdlr VERSION 3.1.0 LANGUAGES C CXX)
+project(cppdlr VERSION 0.0.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
 # Get the git hash & print status

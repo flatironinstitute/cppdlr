@@ -3,11 +3,10 @@
 Reporting issues
 ****************
 
-Please report all problems and bugs directly at the github issue page
-`<https://github.com/TRIQS/cppdlr/issues>`_.  In order to make it easier for us
-to solve the issue please follow these guidelines:
+Please report all problems and bugs on the GitHub issues page
+`<https://github.com/flatironinstitute/cppdlr/issues>`_, following these guidelines:
 
-#. In all cases specify which version of the application you are using. You can
+#. In all cases specify which version of ``cppdlr`` you are using. You can
    find the version number in the file :file:`CMakeLists.txt` at the root of the
    application sources.
 
@@ -18,6 +17,4 @@ to solve the issue please follow these guidelines:
    `gist <http://gist.github.com/>`_ file referenced in the issue.
 
 #. If you are experiencing a problem during the execution of the application, provide
-   a script which allows to quickly reproduce the problem.
-
-Thanks!
+   a script which allows us to quickly reproduce the problem.

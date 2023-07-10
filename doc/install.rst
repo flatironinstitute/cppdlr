@@ -2,11 +2,11 @@
 
 .. _install:
 
-Install cppdlr
-*******************
+Installation
+============
 
-Compiling cppdlr from source
-===============================
+Compiling from source
+---------------------
 
 .. note:: To guarantee reproducibility in scientific calculations we strongly recommend the use of a stable `release <https://github.com/TRIQS/triqs/releases>`_ of both TRIQS and its applications.
 
