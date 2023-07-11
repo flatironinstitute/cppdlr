@@ -361,7 +361,8 @@ TEST(imtime_ops, fit_scalar) {
 }
 
 /**
-* @brief Test convolution of two real-valued Green's functions
+* @brief Test convolution and time-ordered convolution of two real-valued
+* Green's functions
 *
 * We use Green's functions f and g given by a single exponential, so that the
 * result of the convolution is easy to compute analytically.
@@ -399,6 +400,9 @@ TEST(imtime_ops, convolve_scalar_real) {
   // Get convolution of f and g directly
   auto h = itops.convolve(beta, Fermion, fc, gc);
 
+  // Get time-ordered convolution of f and g directly
+  auto ht = itops.tconvolve(beta, Fermion, fc, gc);
+
   // Get convolution of f and g by first forming matrix of convolution by f and
   // then applying it to g
   auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
@@ -406,26 +410,32 @@ TEST(imtime_ops, convolve_scalar_real) {
   // Check that the two methods give the same result
   EXPECT_LT(max_element(abs(h - h2)), 1e-14);
 
-  // Check error of h
+  // Check error of convolution and time-ordered convolution
 
-  auto hc = itops.vals2coefs(h); // DLR coefficients of h
+  auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
+  auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
 
   // Compute L infinity error
-  double gtru = 0, gtst = 0, err = 0;
+  double gtru = 0, gtst = 0, gttru = 0, gttst = 0, err = 0, errt = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
-    gtst = itops.coefs2eval(hc, ttst(i));
-    err  = std::max(err, abs(gtru - gtst));
+    gtru  = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf);                                                 // Exact result
+    gttru = (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg)) / (omf - omg); // Exact result
+    gtst  = itops.coefs2eval(hc, ttst(i));
+    gttst = itops.coefs2eval(htc, ttst(i));
+    err   = std::max(err, abs(gtru - gtst));
+    errt  = std::max(errt, abs(gttru - gttst));
   }
 
   EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(errt, 10 * eps);
 }
 
 /**
-* @brief Test convolution of two complex-valued Green's functions
+* @brief Test convolution and time-ordered convolution of two complex-valued
+* Green's functions
 *
 * We use Green's functions f and g given by a scalar multiple of a single exponential, so that the
 * result of the convolution is easy to compute analytically.
@@ -464,6 +474,9 @@ TEST(imtime_ops, convolve_scalar_cmplx) {
   // Get convolution of f and g directly
   auto h = itops.convolve(beta, Fermion, fc, gc);
 
+  // Get time-ordered convolution of f and g directly
+  auto ht = itops.tconvolve(beta, Fermion, fc, gc);
+
   // Get convolution of f and g by first forming matrix of convolution by f and
   // then applying it to g
   auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
@@ -471,27 +484,34 @@ TEST(imtime_ops, convolve_scalar_cmplx) {
   // Check that the two methods give the same result
   EXPECT_LT(max_element(abs(h - h2)), 1e-14);
 
-  // Check error of h
+  // Check error of convolution and time-ordered convolution
 
-  auto hc = itops.vals2coefs(h); // DLR coefficients of h
+  auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
+  auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
 
   // Compute L infinity error
-  double err                = 0;
-  std::complex<double> gtru = 0, gtst = 0;
+  double err = 0, errt = 0;
+  std::complex<double> gtru = 0, gttru = 0, gtst = 0, gttst = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
-    gtst = itops.coefs2eval(hc, ttst(i));
-    err  = std::max(err, abs(gtru - gtst));
+    gtru  = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
+    gttru = c1 * c2 * (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg))
+       / (omf - omg); // Exact result
+    gtst  = itops.coefs2eval(hc, ttst(i));
+    gttst = itops.coefs2eval(htc, ttst(i));
+    err   = std::max(err, abs(gtru - gtst));
+    errt  = std::max(errt, abs(gttru - gttst));
   }
 
   EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(errt, 10 * eps);
 }
 
 /**
-* @brief Test convolution of two real matrix-valued Green's functions
+* @brief Test convolution and time-ordered convolution of two real matrix-valued
+* Green's functions
 *
 * We use Green's functions f and g given by products of single exponentials and a
 * matrix of ones, so that the result of the convolution is easy to compute
@@ -532,6 +552,9 @@ TEST(imtime_ops, convolve_matrix_real) {
   // Get convolution of f and g directly
   auto h = itops.convolve(beta, Fermion, fc, gc);
 
+  // Get time-ordered convolution of f and g directly
+  auto ht = itops.tconvolve(beta, Fermion, fc, gc);
+
   // Get convolution of f and g by first forming matrix of convolution by f and
   // then applying it to g
   auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
@@ -539,9 +562,10 @@ TEST(imtime_ops, convolve_matrix_real) {
   // Check that the two methods give the same result
   EXPECT_LT(max_element(abs(h - h2)), 1e-14);
 
-  // Check error of h
+  // Check error of convolution and time-ordered convolution
 
-  auto hc = itops.vals2coefs(h); // DLR coefficients of h
+  auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
+  auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
@@ -549,18 +573,25 @@ TEST(imtime_ops, convolve_matrix_real) {
   // Compute L infinity error
   auto gtru  = nda::array<double, 2>(norb, norb);
   auto gtst  = nda::array<double, 2>(norb, norb);
-  double err = 0;
+  auto gttru = nda::array<double, 2>(norb, norb);
+  auto gttst = nda::array<double, 2>(norb, norb);
+  double err = 0, errt = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(_, _) = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
-    gtst       = itops.coefs2eval(hc, ttst(i));
-    err        = std::max(err, max_element(abs(gtru - gtst)));
+    gtru  = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf);                                                 // Exact result
+    gttru = (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg)) / (omf - omg); // Exact result
+    gtst  = itops.coefs2eval(hc, ttst(i));
+    gttst = itops.coefs2eval(htc, ttst(i));
+    err   = std::max(err, max_element(abs(gtru - gtst)));
+    errt  = std::max(err, max_element(abs(gttru - gttst)));
   }
 
   EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(errt, 10 * eps);
 }
 
 /**
-* @brief Test convolution of two real complex matrix-valued Green's functions
+* @brief Test convolution and time-ordered convolution of two complex
+* matrix-valued Green's functions
 *
 * We use Green's functions f and g given by scalar multiples of products of
 * single exponentials and a matrix of ones, so that the result of the convolution
@@ -602,6 +633,9 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   // Get convolution of f and g directly
   auto h = itops.convolve(beta, Fermion, fc, gc);
 
+  // Get time-ordered convolution of f and g directly
+  auto ht = itops.tconvolve(beta, Fermion, fc, gc);
+
   // Get convolution of f and g by first forming matrix of convolution by f and
   // then applying it to g
   auto h2 = itops.convolve(itops.convmat(beta, Fermion, fc), g);
@@ -609,9 +643,10 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   // Check that the two methods give the same result
   EXPECT_LT(max_element(abs(h - h2)), 1e-14);
 
-  // Check error of h
+  // Check error of convolution and time-ordered convolution
 
-  auto hc = itops.vals2coefs(h); // DLR coefficients of h
+  auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
+  auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
 
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
@@ -619,14 +654,21 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   // Compute L infinity error
   auto gtru  = nda::array<dcomplex, 2>(norb, norb);
   auto gtst  = nda::array<dcomplex, 2>(norb, norb);
-  double err = 0;
+  auto gttru = nda::array<dcomplex, 2>(norb, norb);
+  auto gttst = nda::array<dcomplex, 2>(norb, norb);
+  double err = 0, errt = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru(_, _) = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
-    gtst       = itops.coefs2eval(hc, ttst(i));
-    err        = std::max(err, max_element(abs(gtru - gtst)));
+    gtru  = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
+    gttru = c1 * c2 * (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg))
+       / (omf - omg); // Exact result
+    gtst  = itops.coefs2eval(hc, ttst(i));
+    gttst = itops.coefs2eval(htc, ttst(i));
+    err   = std::max(err, max_element(abs(gtru - gtst)));
+    errt  = std::max(errt, max_element(abs(gttru - gttst)));
   }
 
   EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(errt, 10 * eps);
 }
 
 /**

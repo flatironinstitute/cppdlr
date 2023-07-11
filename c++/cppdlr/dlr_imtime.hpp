@@ -237,7 +237,7 @@ namespace cppdlr {
     /** 
     * @brief Compute convolution of two imaginary time Green's functions
     *
-    * The convolution of f and g is defined as h(t) = (f * g)(t) int_0^beta
+    * The convolution of f and g is defined as h(t) = (f * g)(t) = int_0^beta
     * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity
     * are used to define the Green's functions on (-beta, 0).  This method takes
     * the DLR coefficients of f and g as input and returns the values of h on
@@ -303,7 +303,7 @@ namespace cppdlr {
     * @brief Compute convolution of two imaginary time Green's functions,
     * given matrix of convolution by one of them
     *
-    * The convolution of f and g is defined as h(t) = (f * g)(t) int_0^beta
+    * The convolution of f and g is defined as h(t) = (f * g)(t) = int_0^beta
     * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are
     * used to define the Green's functions on (-beta, 0).  This method takes the
     * matrix of convolution by f (computed by the convmat method) and the values
@@ -347,7 +347,7 @@ namespace cppdlr {
     /** 
     * @brief Compute matrix of convolution by an imaginary time Green's function
     *
-    * The convolution of f and g is defined as h(t) = (f * g)(t) int_0^beta
+    * The convolution of f and g is defined as h(t) = (f * g)(t) = int_0^beta
     * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are
     * used to define the Green's functions on (-beta, 0).  This method takes the
     * DLR coefficients of f as input and returns the matrix of convolution by f.
@@ -480,6 +480,70 @@ namespace cppdlr {
     }
 
     /** 
+    * @brief Compute time-ordered convolution of two imaginary time Green's
+    * functions
+    *
+    * The time-ordered convolution of f and g is defined as h(t) = (f * g)(t) =
+    * int_0^tau f(t-t') g(t') dt'. This method takes the DLR coefficients of f
+    * and g as input and returns the values of h on the DLR imaginary time grid.
+    *
+    * The convolution is computed on-the-fly in O(r^2) operations using Eq. (A3)
+    * in
+    *
+    * J. Kaye, H. U. R. Strand, D. Golez. Manuscript in preparation (2023).
+    *
+    * @param[in] beta Inverse temperature
+    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] fc DLR coefficients of f
+    * @param[in] gc DLR coefficients of g
+    *
+    * @return Values of h = f * g on DLR imaginary time grid
+    * */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
+    typename T::regular_type tconvolve(double beta, statistic_t statistic, T const &fc, T const &gc) const {
+
+      if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
+      if (fc.shape() != gc.shape()) throw std::runtime_error("Input arrays must have the same shape.");
+
+      // TODO: implement bosonic case and remove
+      if (statistic == 0) throw std::runtime_error("imtime_ops::tconvolve not yet implemented for bosonic Green's functions.");
+
+      // Initialize convolution, if it hasn't been done already
+      if (thilb.empty()) { tconvolve_init(); }
+
+      if constexpr (T::rank == 1) { // Scalar-valued Green's function
+
+        // Take array view of fc and gc
+        auto fca = nda::array_const_view<S, 1>(fc);
+        auto gca = nda::array_const_view<S, 1>(gc);
+
+        // Diagonal contribution
+        auto h = arraymult(ttcf2it, make_regular(fca * gca));
+
+        // Off-diagonal contribution
+        auto tmp = fca * arraymult(thilb, gca) + gca * arraymult(thilb, fca);
+        return beta * (h + arraymult(cf2it, make_regular(tmp)));
+
+      } else if (T::rank == 3) { // Matrix-valued Green's function
+
+        // Diagonal contribution
+        auto fcgc = nda::array<S, 3>(fc.shape()); // Product of coefficients of f and g
+        for (int i = 0; i < r; ++i) { fcgc(i, _, _) = arraymult(fc(i, _, _), gc(i, _, _)); }
+        auto h = arraymult(ttcf2it, fcgc);
+
+        // Off-diagonal contribution
+        auto tmp1 = arraymult(thilb, fc);
+        auto tmp2 = arraymult(thilb, gc);
+        for (int i = 0; i < r; ++i) { tmp1(i, _, _) = arraymult(tmp1(i, _, _), gc(i, _, _)) + arraymult(fc(i, _, _), tmp2(i, _, _)); }
+
+        return beta * (h + arraymult(cf2it, tmp1));
+
+      } else {
+        throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
+      }
+    }
+
+    /** 
     * @brief Get DLR imaginary time nodes
     *
     * @return DLR imaginary time nodes
@@ -563,6 +627,44 @@ namespace cppdlr {
     }
 
     /**
+    * @brief Initialization for time-ordered convolution methods
+    *
+    * This method pre-builds some matrices required for the time-ordered
+    * convolution methods. 
+    */
+    void tconvolve_init() const {
+
+      thilb   = nda::matrix<double>(r, r);
+      ttcf2it = nda::matrix<double>(r, r);
+
+      // "Discrete Hilbert transform" matrix
+      // -(1-delta_jk)*K(0,dlr_rf(k))/(dlr_rf(j) - dlr_rf(k)) for time-ordered
+      // convolution, scaled by beta
+      for (int j = 0; j < r; ++j) {
+        for (int k = 0; k < r; ++k) {
+          if (j == k) {
+            thilb(j, k) = 0;
+          } else {
+            thilb(j, k) = k_it(0.0, dlr_rf(k)) / (dlr_rf(k) - dlr_rf(j));
+          }
+        }
+      }
+
+      // Matrix which applies K(0,dlr_rf(j)) multiplication, then DLR
+      // coefficients to imaginary time grid values transformation matrix, and
+      // then multiplies the result by tau, the imaginary time variable
+      for (int j = 0; j < r; ++j) {
+        for (int k = 0; k < r; ++k) {
+          if (dlr_it(j) > 0) {
+            ttcf2it(j, k) = dlr_it(j) * cf2it(j, k) * k_it(0.0, dlr_rf(k));
+          } else {
+            ttcf2it(j, k) = (1 + dlr_it(j)) * cf2it(j, k) * k_it(0.0, dlr_rf(k));
+          }
+        }
+      }
+    }
+
+    /**
     * @brief Initialization for reflection method
     *
     * This method prebuilds the matrix of the reflection G(tau) -> G(beta - tau)
@@ -600,6 +702,10 @@ namespace cppdlr {
     // Arrays used for dlr_imtime::convolve
     mutable nda::matrix<double> hilb;   ///< "Discrete Hilbert transform" matrix
     mutable nda::matrix<double> tcf2it; ///< A matrix required for convolution
+
+    // Arrays used for dlr_imtime::tconvolve
+    mutable nda::matrix<double> thilb;   ///< "Discrete Hilbert transform" matrix, modified for time-ordered convolution
+    mutable nda::matrix<double> ttcf2it; ///< A matrix required for time-ordered convolution
 
     // Arrays used for dlr_imtime::reflect
     mutable nda::matrix<double> refl; ///< Matrix of reflection
