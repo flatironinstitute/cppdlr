@@ -19,11 +19,8 @@
 #
 # ##############################################################################
 
-cmake_minimum_required(VERSION 3.12.4 FATAL_ERROR)
-cmake_policy(VERSION 3.12.4)
-if(POLICY CMP0077)
-  cmake_policy(SET CMP0077 NEW)
-endif()
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
+cmake_policy(VERSION 3.20)
 
 # ############
 # Define Project
@@ -88,6 +85,7 @@ target_compile_options(${PROJECT_NAME}_warnings
   INTERFACE
     -Wall
     -Wextra
+    -Wfloat-conversion
     -Wpedantic
     -Wno-sign-compare
     $<$<CXX_COMPILER_ID:GNU>:-Wno-comma-subscript>
