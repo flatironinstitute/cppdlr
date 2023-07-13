@@ -5,15 +5,45 @@
 Installation
 ============
 
-Compiling from source
----------------------
+.. note:: We recommend using a stable `release <https://github.com/flatironinstitute/cppdlr/releases>`_ of ``cppdlr``.
 
-.. note:: To guarantee reproducibility in scientific calculations we strongly recommend the use of a stable `release <https://github.com/TRIQS/triqs/releases>`_ of both TRIQS and its applications.
+.. note:: If you are a MacOS user, and are having trouble installing ``cppdlr``,
+   please look at the "Note for MacOS users" below.
+
+Dependencies
+------------
+
+The dependencies of ``cppdlr`` are as follows:
+
+* gcc version 12 or later OR clang version 15 or later
+* BLAS/LAPACK
+* hdf5
+* openmp
+* mpi
+
+``hdf5`` and ``mpi`` are required by the ``nda`` library, which is itself built
+automatically with ``cppdlr``.
+
+If you wish to build the documentation, the dependencies also include:
+
+* libclang
+* python
+
+and the Python packages
+
+* sphinx
+* nbsphinx
+* myst_parser
+* sphinx_rtd_theme
+* linkify-it-py
+* clang
+
+
 
 Installation steps
 ------------------
 
-#. Download the source code of the latest stable version by cloning the ``TRIQS/cppdlr`` repository from GitHub::
+#. Download the source code of the latest stable version by cloning the ``cppdlr`` repository from GitHub::
 
      $ git clone https://github.com/flatironinstitute/cppdlr cppdlr.src
 
@@ -63,29 +93,17 @@ The compilation of ``cppdlr`` can be configured using CMake-options::
 | Build the documentation                                         | -DBuild_Documentation=ON                      |
 +-----------------------------------------------------------------+-----------------------------------------------+
 
-Dependencies
---------------------------
+Note for MacOS users
+---------------------
 
-The dependencies of ``cppdlr`` are as follows:
+``cppdlr`` currently does not support the AppleClang compiler. Instead, we
+recommend installing the Clang compiler via `homebrew <https://brew.sh/>`_ using::
 
-* gcc version 12 or later OR clang version 15 or later
-* BLAS/LAPACK
-* hdf5
-* mpi
+    brew install llvm
 
-``hdf5`` and ``mpi`` are required by the ``nda`` library, which is itself built
-automatically with ``cppdlr``.
+and including the following flags in your cmake command (see step 3 above)::
 
-If you wish to build the documentation, the dependencies also include:
+    -DCMAKE_C_COMPILER=$(brew --prefix)/opt/llvm/bin/clang
+    -DCMAKE_CXX_COMPILER=$(brew --prefix)/opt/llvm/bin/clang++
 
-* libclang
-* python
-
-and the Python packages
-
-* sphinx
-* nbsphinx
-* myst_parser
-* sphinx_rtd_theme
-* linkify-it-py
-* clang
+If this does not work for you, please let us know via a `GitHub issue <https://github.com/flatironinstitute/cppdlr/issues>`_.
