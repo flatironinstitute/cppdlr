@@ -24,7 +24,7 @@ cmake_policy(VERSION 3.20)
 
 # ############
 # Define Project
-project(cppdlr VERSION 0.0.0 LANGUAGES C CXX)
+project(cppdlr VERSION 1.0.0 LANGUAGES C CXX)
 get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 
 # Get the git hash & print status
@@ -133,9 +133,10 @@ add_subdirectory(deps)
 # Build and install the library
 add_subdirectory(c++/${PROJECT_NAME})
 
-# Tests
+# Tests & Examples
 if(Build_Tests)
   add_subdirectory(test)
+  add_subdirectory(examples)
 endif()
 
 # Docs
