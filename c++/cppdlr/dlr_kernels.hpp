@@ -25,8 +25,6 @@ namespace cppdlr {
 
   enum statistic_t { Boson = 0, Fermion = 1 };
 
-  /** Evaluate Lehmann kernel in imaginary time with relative format for time variable */
-
   /**
   * @brief Evaluate analytic continuation kernel in imaginary time (relative time format)
   *
@@ -35,8 +33,11 @@ namespace cppdlr {
   *
   * @return Value K(t,om) of analytic continuation kernel
   *
-  * \note We use dimensionless variables, i.e. beta = 1, so K(t,om) =
-  * -exp(-tau*om)/(1+exp(-om))
+  * \note We use dimensionless variables, i.e. beta = 1, so k_it(t,om) = -exp(-t
+  * * om)/(1 + exp(-om)). Thus, to obtain the analytic continuation kernel
+  * K(t,om) = -exp(-t*om)/(1+exp(-beta * om)) for a given inverse temperature
+  * beta, multiply the frequency argument of k_it by beta. In other words, 
+  * K(t,om) = k_it(t, beta * om).
   */
   double k_it(double t, double om);
 
@@ -48,12 +49,13 @@ namespace cppdlr {
   *
   * @return Value K(t,om) of analytic continuation kernel
   *
-  * \note We use dimensionless variables, i.e. beta = 1, so K(t,om) =
-  * -exp(-tau*om)/(1+exp(-om))
+  * \note We use dimensionless variables, i.e. beta = 1, so k_it(t,om) = -exp(-t
+  * * om)/(1 + exp(-om)). Thus, to obtain the analytic continuation kernel
+  * K(t,om) = -exp(-t*om)/(1+exp(-beta * om)) for a given inverse temperature
+  * beta, multiply the frequency argument of k_it by beta. In other words, 
+  * K(t,om) = k_it(t, beta * om).
   */
   double k_it_abs(double t, double om);
-
-  /** Evaluate Lehmann kernel in imaginary frequency */
 
   /**
   * @brief Evaluate analytic continuation kernel in imaginary frequency
@@ -64,9 +66,15 @@ namespace cppdlr {
   *
   * @return Value K(n,om) of analytic continuation kernel
   *
-  * \note We use dimensionless variables, i.e. beta = 1, and do not specify
-  * fermionic or bosonic imaginary frequencies here, so K(n,om) = 1/(n*pi*i -
-  * om)
+  * \note We use dimensionless variables, i.e. beta = 1, so k_if(n,om,Fermion) =
+  * 1/((2*n+1)*pi*i - om), and k_if(n,om,Boson) = 1/(2*n*pi*i - om). Thus, to
+  * obtain the analytic continuation kernel K(i nu_n, om) = 1 / (i nu_n - om)
+  * with i nu_n = (2n+1) * i * pi / beta (fermionic case) or i nu_n = 2n * i *
+  * pi / beta (bosonic case) for a given inverse temperature beta, multiply the
+  * frequency argument of k_if by beta, and multiply the result by beta. In
+  * other words, K(i nu_n, om) = beta * k_if(n, beta * om, statistic). One can
+  * see this is correct by multiplying the numerator and denominator of K(i
+  * nu_n, om) by beta.
   */
   std::complex<double> k_if(int n, double om, statistic_t statistic);
 
