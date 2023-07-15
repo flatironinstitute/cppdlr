@@ -47,15 +47,12 @@ nda::matrix<double> gfun(double beta, double t) {
   auto g = nda::matrix<double>(2, 2); // Green's function represented by nda matrix
 
   // The kernel K(t, om) = -exp(-om * t) / (1 + exp(-beta * om)) is implemented
-  // here by the function k_it, which uses dimenionless variables
-  // (corresponding to beta = 1). Thus, to evaluate K(t, om), we scale the
-  // frequency argument of k_it by hand. See the documentation of k_it for
-  // more details.
+  // here by the function k_it.
 
-  g(0, 0) = 0.9 * k_it(t, beta * 0.8) + 0.1 * k_it(t, beta * 0.3);
-  g(0, 1) = 0.3 * k_it(t, beta * 0.4) + 0.3 * k_it(t, beta * 0.7);
+  g(0, 0) = 0.9 * k_it(t, 0.8, beta) + 0.1 * k_it(t, 0.3, beta);
+  g(0, 1) = 0.3 * k_it(t, 0.4, beta) + 0.3 * k_it(t, 0.7, beta);
   g(1, 0) = g(0, 1);
-  g(1, 1) = 0.7 * k_it(t, beta * 0.5);
+  g(1, 1) = 0.7 * k_it(t, 0.5, beta);
 
   return g;
 }
@@ -78,16 +75,12 @@ nda::matrix<dcomplex> gfun(double beta, int n) {
   auto g = nda::matrix<dcomplex>(2, 2); // Green's function represented by nda matrix
 
   // The fermionic kernel K(i nu_n, om) = 1 / (i nu_n - om), with i nu_n =
-  // (2n+1) * i * pi / beta, is implemented here by the function k_if,  which
-  // uses dimenionless variables (corresponding to beta = 1). Thus, to
-  // evaluate K(i nu_n, om), we scale the frequency argument of k_if by hand,
-  // and multiply the result by beta. Please see the documentation of k_if for
-  // more details.
+  // (2n+1) * i * pi / beta, is implemented here by the function k_if.
 
-  g(0, 0) = 0.9 * beta * k_if(n, beta * 0.8, Fermion) + 0.1 * beta * k_if(n, beta * 0.3, Fermion);
-  g(0, 1) = 0.3 * beta * k_if(n, beta * 0.4, Fermion) + 0.3 * beta * k_if(n, beta * 0.7, Fermion);
+  g(0, 0) = 0.9 * k_if(n, 0.8, Fermion, beta) + 0.1 * k_if(n, 0.3, Fermion, beta);
+  g(0, 1) = 0.3 * k_if(n, 0.4, Fermion, beta) + 0.3 * k_if(n, 0.7, Fermion, beta);
   g(1, 0) = g(0, 1);
-  g(1, 1) = 0.7 * beta * k_if(n, beta * 0.5, Fermion);
+  g(1, 1) = 0.7 * k_if(n, 0.5, Fermion, beta);
 
   return g;
 }

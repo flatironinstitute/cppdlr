@@ -31,6 +31,10 @@ namespace cppdlr {
     }
   }
 
+  double k_it(double t, double om, double beta) {
+    return k_it(t, beta * om);
+  }
+
   double k_it_abs(double t, double om) {
 
     if (om >= 0.0) {
@@ -53,6 +57,10 @@ namespace cppdlr {
       return k_if_fermion(n, om);
     else
       return k_if_boson(n, om);      
+  }
+
+  std::complex<double> k_if(int n, double om, statistic_t statistic, double beta) {
+    return beta * k_if(n, beta * om, statistic);
   }
     
 } // namespace cppdlr

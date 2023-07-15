@@ -65,7 +65,7 @@ nda::matrix<double> gfun(int norb, double beta, double t) {
       // Evaluate Green's function
       for (int l = 0; l < npeak; ++l) {
         om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
-        g(i, j) += c(l) * k_it(t, beta * om);
+        g(i, j) += c(l) * k_it(t, om, beta);
       }
     }
   }
@@ -390,8 +390,8 @@ TEST(imtime_ops, convolve_scalar_real) {
   auto const &dlr_it = itops.get_itnodes();
   auto f             = nda::array<double, 1>(r);
   auto g             = nda::array<double, 1>(r);
-  for (int i = 0; i < r; ++i) { f(i) = k_it(dlr_it(i), beta * omf); };
-  for (int i = 0; i < r; ++i) { g(i) = k_it(dlr_it(i), beta * omg); };
+  for (int i = 0; i < r; ++i) { f(i) = k_it(dlr_it(i), omf, beta); };
+  for (int i = 0; i < r; ++i) { g(i) = k_it(dlr_it(i), omg, beta); };
 
   // Get DLR coefficients of f and g
   auto fc = itops.vals2coefs(f);
@@ -421,8 +421,8 @@ TEST(imtime_ops, convolve_scalar_real) {
   // Compute L infinity error
   double gtru = 0, gtst = 0, gttru = 0, gttst = 0, err = 0, errt = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru  = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf);                                                 // Exact result
-    gttru = (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg)) / (omf - omg); // Exact result
+    gtru  = (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf);                                               // Exact result
+    gttru = (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta)) / (omf - omg); // Exact result
     gtst  = itops.coefs2eval(hc, ttst(i));
     gttst = itops.coefs2eval(htc, ttst(i));
     err   = std::max(err, abs(gtru - gtst));
@@ -464,8 +464,8 @@ TEST(imtime_ops, convolve_scalar_cmplx) {
   auto f                  = nda::array<dcomplex, 1>(r);
   auto g                  = nda::array<dcomplex, 1>(r);
   std::complex<double> c1 = (1.0 + 2.0i) / 3.0, c2 = (2.0 + 1.0i) / 3.0;
-  for (int i = 0; i < r; ++i) { f(i) = c1 * k_it(dlr_it(i), beta * omf); };
-  for (int i = 0; i < r; ++i) { g(i) = c2 * k_it(dlr_it(i), beta * omg); };
+  for (int i = 0; i < r; ++i) { f(i) = c1 * k_it(dlr_it(i), omf, beta); };
+  for (int i = 0; i < r; ++i) { g(i) = c2 * k_it(dlr_it(i), omg, beta); };
 
   // Get DLR coefficients of f and g
   auto fc = itops.vals2coefs(f);
@@ -496,9 +496,9 @@ TEST(imtime_ops, convolve_scalar_cmplx) {
   double err = 0, errt = 0;
   std::complex<double> gtru = 0, gttru = 0, gtst = 0, gttst = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru  = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
-    gttru = c1 * c2 * (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg))
-       / (omf - omg); // Exact result
+    gtru = c1 * c2 * (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf); // Exact result
+    gttru =
+       c1 * c2 * (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta)) / (omf - omg); // Exact result
     gtst  = itops.coefs2eval(hc, ttst(i));
     gttst = itops.coefs2eval(htc, ttst(i));
     err   = std::max(err, abs(gtru - gtst));
@@ -542,8 +542,8 @@ TEST(imtime_ops, convolve_matrix_real) {
   auto const &dlr_it = itops.get_itnodes();
   auto f             = nda::array<double, 3>(r, norb, norb);
   auto g             = nda::array<double, 3>(r, norb, norb);
-  for (int i = 0; i < r; ++i) { f(i, _, _) = k_it(dlr_it(i), beta * omf) / sqrt(1.0 * norb); };
-  for (int i = 0; i < r; ++i) { g(i, _, _) = k_it(dlr_it(i), beta * omg) / sqrt(1.0 * norb); };
+  for (int i = 0; i < r; ++i) { f(i, _, _) = k_it(dlr_it(i), omf, beta) / sqrt(1.0 * norb); };
+  for (int i = 0; i < r; ++i) { g(i, _, _) = k_it(dlr_it(i), omg, beta) / sqrt(1.0 * norb); };
 
   // Get DLR coefficients of f and g
   auto fc = itops.vals2coefs(f);
@@ -577,8 +577,8 @@ TEST(imtime_ops, convolve_matrix_real) {
   auto gttst = nda::array<double, 2>(norb, norb);
   double err = 0, errt = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru  = (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf);                                                 // Exact result
-    gttru = (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg)) / (omf - omg); // Exact result
+    gtru  = (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf);                                               // Exact result
+    gttru = (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta)) / (omf - omg); // Exact result
     gtst  = itops.coefs2eval(hc, ttst(i));
     gttst = itops.coefs2eval(htc, ttst(i));
     err   = std::max(err, max_element(abs(gtru - gtst)));
@@ -623,8 +623,8 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   auto f                  = nda::array<dcomplex, 3>(r, norb, norb);
   auto g                  = nda::array<dcomplex, 3>(r, norb, norb);
   std::complex<double> c1 = (1.0 + 2.0i) / 3.0, c2 = (2.0 + 1.0i) / 3.0;
-  for (int i = 0; i < r; ++i) { f(i, _, _) = c1 * k_it(dlr_it(i), beta * omf) / sqrt(1.0 * norb); };
-  for (int i = 0; i < r; ++i) { g(i, _, _) = c2 * k_it(dlr_it(i), beta * omg) / sqrt(1.0 * norb); };
+  for (int i = 0; i < r; ++i) { f(i, _, _) = c1 * k_it(dlr_it(i), omf, beta) / sqrt(1.0 * norb); };
+  for (int i = 0; i < r; ++i) { g(i, _, _) = c2 * k_it(dlr_it(i), omg, beta) / sqrt(1.0 * norb); };
 
   // Get DLR coefficients of f and g
   auto fc = itops.vals2coefs(f);
@@ -658,8 +658,8 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
   auto gttst = nda::array<dcomplex, 2>(norb, norb);
   double err = 0, errt = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru  = c1 * c2 * (k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf)) / (omg - omf); // Exact result
-    gttru = c1 * c2 * (k_it(0.0, beta * omf) * k_it(ttst(i), beta * omg) - k_it(ttst(i), beta * omf) * k_it(0.0, beta * omg))
+    gtru  = c1 * c2 * (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf); // Exact result
+    gttru = c1 * c2 * (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta))
        / (omf - omg); // Exact result
     gtst  = itops.coefs2eval(hc, ttst(i));
     gttst = itops.coefs2eval(htc, ttst(i));
@@ -696,10 +696,10 @@ TEST(dlr_imtime, refl_matrix) {
   auto g             = nda::array<double, 3>(r, norb, norb);
   double om0 = 0.1234, om1 = -0.5678, om2 = 0.9012, om3 = -0.3456;
   for (int i = 0; i < r; ++i) {
-    g(i, 0, 0) = k_it(dlr_it(i), beta * om0);
-    g(i, 1, 0) = k_it(dlr_it(i), beta * om1);
-    g(i, 0, 1) = k_it(dlr_it(i), beta * om2);
-    g(i, 1, 1) = k_it(dlr_it(i), beta * om3);
+    g(i, 0, 0) = k_it(dlr_it(i), om0, beta);
+    g(i, 1, 0) = k_it(dlr_it(i), om1, beta);
+    g(i, 0, 1) = k_it(dlr_it(i), om2, beta);
+    g(i, 1, 1) = k_it(dlr_it(i), om3, beta);
   }
 
   auto gr  = itops.reflect(g);     // Reflection
@@ -718,10 +718,10 @@ TEST(dlr_imtime, refl_matrix) {
     } else {
       t = -ttst(i);
     }
-    gtru(0, 0) = k_it(t, beta * om0);
-    gtru(1, 0) = k_it(t, beta * om1);
-    gtru(0, 1) = k_it(t, beta * om2);
-    gtru(1, 1) = k_it(t, beta * om3);
+    gtru(0, 0) = k_it(t, om0, beta);
+    gtru(1, 0) = k_it(t, om1, beta);
+    gtru(0, 1) = k_it(t, om2, beta);
+    gtru(1, 1) = k_it(t, om3, beta);
 
     gtst = itops.coefs2eval(grc, ttst(i));
     err  = std::max(err, max_element(abs(gtru - gtst)));
