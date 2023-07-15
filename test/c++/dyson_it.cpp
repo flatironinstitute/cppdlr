@@ -51,7 +51,6 @@ TEST(dyson_it, dyson_vs_ed_real) {
 
   // Set problem parameters
   double beta = 100;  // Inverse temperature
-  double mu   = 0;    // Chemical potential
   int n       = 3;    // Number of sites for original Hamiltonian
   int norb    = 2;    // Number of sites for reduced Hamiltonian
   int ntst    = 1000; // Number of imaginary time test points
@@ -80,7 +79,7 @@ TEST(dyson_it, dyson_vs_ed_real) {
 
   // Get self-energy
   auto sig = nda::array<dcomplex, 3>(r, norb, norb);
-  auto g33 = free_gf(beta, itops, mu, real(h(n - 1, n - 1)));
+  auto g33 = free_gf(beta, itops, real(h(n - 1, n - 1)));
   for (int i = 0; i < r; i++) {
     for (int j = 0; j < norb; j++) {
       for (int k = 0; k < norb; k++) { sig(i, j, k) = h(j, n - 1) * g33(i) * conj(h(k, n - 1)); }
@@ -89,14 +88,14 @@ TEST(dyson_it, dyson_vs_ed_real) {
   auto sigc = itops.vals2coefs(sig);
 
   // Solve Dyson equation
-  auto dys = dyson_it(beta, itops, mu, h(range(norb), range(norb))); // Dyson imaginary time solver object
+  auto dys = dyson_it(beta, itops, h(range(norb), range(norb))); // Dyson imaginary time solver object
   auto g   = dys.solve(sig);                                         // Solve Dyson equation w/ given self-energy
   auto gc  = itops.vals2coefs(g);                                    // Get DLR coefficients
 
   // --- Compare with exact solution --- //
 
   // Get upper-left 2x2 block of exact solution
-  auto gex  = make_regular(free_gf(beta, itops, mu, h)(_, range(norb), range(norb)));
+  auto gex  = make_regular(free_gf(beta, itops, h)(_, range(norb), range(norb)));
   auto gexc = itops.vals2coefs(gex); // Get DLR coefficients
 
   // Get equispaced test grid in relative format
@@ -138,7 +137,6 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
 
   // Set problem parameters
   double beta = 100; // Inverse temperature
-  double mu   = 0;   // Chemical potential
   int n       = 3;   // Number of sites for original Hamiltonian
   int norb    = 2;   // Number of sites for reduced Hamiltonian
   int ntst    = 100; // Number of imaginary time test points
@@ -167,7 +165,7 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
 
   // Get self-energy
   auto sig = nda::array<dcomplex, 3>(r, norb, norb);
-  auto g33 = free_gf(beta, itops, mu, real(h(n - 1, n - 1)));
+  auto g33 = free_gf(beta, itops, real(h(n - 1, n - 1)));
   for (int i = 0; i < r; i++) {
     for (int j = 0; j < norb; j++) {
       for (int k = 0; k < norb; k++) { sig(i, j, k) = h(j, n - 1) * g33(i) * conj(h(k, n - 1)); }
@@ -176,14 +174,14 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
   auto sigc = itops.vals2coefs(sig);
 
   // Solve Dyson equation
-  auto dys = dyson_it(beta, itops, mu, h(range(norb), range(norb))); // Dyson imaginary time object
+  auto dys = dyson_it(beta, itops, h(range(norb), range(norb))); // Dyson imaginary time object
   auto g   = dys.solve(sig);                                         // Solve Dyson equation w/ given self-energy
   auto gc  = itops.vals2coefs(g);                                    // Get DLR coefficients
 
   // --- Compare with exact solution --- //
 
   // Get upper-left 2x2 block of exact solution
-  auto gex  = make_regular(free_gf(beta, itops, mu, h)(_, range(norb), range(norb)));
+  auto gex  = make_regular(free_gf(beta, itops, h)(_, range(norb), range(norb)));
   auto gexc = itops.vals2coefs(gex); // Get DLR coefficients
 
   // Get equispaced test grid in relative format
@@ -258,7 +256,6 @@ TEST(dyson_it, dyson_bethe) {
 
   // Set problem parameters
   double beta = 100;     // Inverse temperature
-  double mu   = 0;       // Chemical potential
   double c    = 1.0 / 2; // Quarter-bandwidth
   int ntst    = 1000;    // Number of imaginary time test points
 
@@ -286,7 +283,7 @@ TEST(dyson_it, dyson_bethe) {
 
   // Solve Dyson equation
   double h = 0;                            // Zero Hamiltonian
-  auto dys = dyson_it(beta, itops, mu, h); // Imaginary time Dyson solver
+  auto dys = dyson_it(beta, itops, h); // Imaginary time Dyson solver
   auto g   = dys.solve(sig);               // Solve Dyson equation w/ given self-energy
 
   // --- Compare with exact solution --- //
@@ -322,7 +319,6 @@ TEST(dyson_it, dyson_bethe_fpi) {
 
   // Set problem parameters
   double beta = 100;     // Inverse temperature
-  double mu   = 0;       // Chemical potential
   double c    = 1.0 / 2; // Quarter-bandwidth
   int ntst    = 1000;    // Number of imaginary time test points
   double fptol = 1.0e-14; // Fixed point iteration tolerance
@@ -342,8 +338,8 @@ TEST(dyson_it, dyson_bethe_fpi) {
   // --- Solve Dyson equation self-consistently by fixed point iteration --- //
 
   double h = 0;                            // Zero Hamiltonian
-  auto dys = dyson_it(beta, itops, mu, h); // Imaginary time Dyson solver
-  auto g = free_gf(beta, itops, mu, h); // Initial guess: free Green's function
+  auto dys = dyson_it(beta, itops, h); // Imaginary time Dyson solver
+  auto g = free_gf(beta, itops, h); // Initial guess: free Green's function
   auto sig = make_regular(c * c * g); // Self-energy
   auto gnew = g;                 // New Green's function in fixed point iteration
 

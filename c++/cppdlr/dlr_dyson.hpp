@@ -41,20 +41,20 @@ namespace cppdlr {
     * @brief Constructor for dyson_it
     * @param[in] beta Inverse temperature
     * @param[in] itops DLR imaginary time object
-    * @param[in] mu Chemical potential
     * @param[in] h Hamiltonian
+    * @param[in] mu Chemical potential
     *
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
     */
-    dyson_it(double beta, imtime_ops itops, double mu, Ht const &h) : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)) {
+    dyson_it(double beta, imtime_ops itops, Ht const &h, double mu = 0) : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)) {
       // dyson_it object contains a shared pointer to the imtime_ops object
       // itops. This is done to avoid making a copy of itops, which is meant to
       // handle all imaginary time operations on the given DLR imaginary time
       // grid.
 
       int r    = itops_ptr->rank();           // DLR rank
-      auto g0  = free_gf(beta, itops, mu, h); // Free Green's function (right hand side of Dyson equation
+      auto g0  = free_gf(beta, itops, h, mu); // Free Green's function (right hand side of Dyson equation
       auto g0c = itops_ptr->vals2coefs(g0);   // DLR coefficients of free Green's function
 
       // Get matrix of convolution by free Green's function
@@ -131,8 +131,8 @@ namespace cppdlr {
   *
   * @param[in] beta Inverse temperature
   * @param[in] it imtime_ops object
-  * @param[in] mu Chemical potential
   * @param[in] h Hamiltonian
+  * @param[in] mu Chemical potential
   *
   * @return Green's function at DLR imaginary time nodes
   *
@@ -143,7 +143,7 @@ namespace cppdlr {
     requires(std::floating_point<Ht> || nda::MemoryMatrix<Ht>)
   // If h is scalar, return scalar-valued Green's function; if h is matrix,
   // return matrix-valued Green's function
-  auto free_gf(double beta, imtime_ops const &itops, double mu, Ht const &h) {
+  auto free_gf(double beta, imtime_ops const &itops, Ht const &h, double mu = 0) {
 
     int r = itops.rank();
 
