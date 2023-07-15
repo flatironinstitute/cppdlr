@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Hugo U. R. Strand, jasonkaye
+// Authors: Hugo U. R. Strand, Jason Kaye
 
 #include "dlr_imtime.hpp"
 #include "cppdlr/dlr_kernels.hpp"

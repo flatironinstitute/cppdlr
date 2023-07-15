@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Authors: Nils Wentzell, jasonkaye
+// Authors: Nils Wentzell, Jason Kaye
 
 /**
 * @file adapint.cpp 
