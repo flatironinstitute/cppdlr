@@ -170,12 +170,18 @@ should be requested on the `GitHub issues page
 <https://github.com/flatironinstitute/cppdlr/issues>`_.
 
 
-
 .. _relativeformat:
 
-``cppdlr`` imaginary time point format
---------------------------------------
+Imaginary time point format
+---------------------------
 
+First, in ``cppdlr`` imaginary time points are scaled from the interval
+:math:`[0,\beta]` to the interval :math:`[0,1]`. This is because ``cppdlr``
+works with dimensionless variables whenever possible, so in many functions it is
+unnecessary to specify the inverse temperature :math:`\beta` explicitly.
+
+Second, ``cppdlr`` stores imaginary time points in a peculiar manner, called the
+*relative* time format.
 **This is a subtle issue which ``cppdlr`` users should be aware of, in
 particular if one wants to supply imaginary time points at which to
 evaluate a DLR expansion.** For the TLDR, skip to the **guidelines** below. For an even
@@ -183,15 +189,12 @@ more detailed discussion of this issue than the one given here, see Appendix C
 of `this paper
 <https://www.sciencedirect.com/science/article/pii/S0010465522001771>`_.
 
-``cppdlr`` works with dimensionless coordinates,
-in which an imaginary time :math:`\tau` is rescaled to the interval :math:`\tau \in [0,1]`.
-Throughout the code, imaginary time grid points in :math:`(0.5,1)` are stored in
-a peculiar manner. Namely, suppose :math:`\tau \in (0.5,1)`. Then instead of
-storing :math:`\tau` directly, we store the number :math:`\tau^* = \tau-1`. In
-other words, we store the negative distance of :math:`\tau` to 1, rather than
-tau itself. We call this the *relative time format*. Recovering :math:`\tau` in
-the standard *absolute time format* is straightforward, and is implemented by
-the function ``rel2abs``.
+The relative time format works as follows. Points :math:`\tau \in [0, 0.5]` are
+represented normally. However, instead of representing points :math:`\tau \in
+(0.5,1)` directly, we instead store the number :math:`\tau^* = \tau-1`. In other
+words, we store the negative distance of :math:`\tau` to 1, rather than tau
+itself. Recovering :math:`\tau` in the standard *absolute time format* is
+straightforward, and is implemented by the function ``rel2abs``.
 
 The reason for this has to do with maintaining full relative accuracy in
 floating point arithmetic. To evaluate the kernel :math:`K(\tau,\omega)`, we
@@ -231,3 +234,13 @@ in your application, as will be the case for many users.
 3. If you happen to want to evaluate a Green's function on an
    equispaced grid on :math:`[0,1]` in imaginary time, use the function ``eqpts_rel``
    to generate this grid in the relative format.
+
+Matsubara frequency point format
+--------------------------------
+
+We define the Matsubara (or imaginary) frequency points as :math:`i \nu_n = (2 n
++ 1) \pi i/\beta` for fermionic Green's functions, and :math:`i \nu_n = 2 n \pi
+i/\beta` for bosonic Green's functions. In ``cppdlr``, Matsubara frequency
+points are represented by specifying the integer ``n``, the inverse temperature
+:math:`\beta`, and whether the point is a fermionic or bosonic Matsubara
+frequency using the ``statistic_t`` specifier.

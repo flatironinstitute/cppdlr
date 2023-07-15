@@ -120,6 +120,11 @@ namespace cppdlr {
     * @param[in] t  Evaluation point, in relative format
     *
     * @return Value of G at @p t
+    *
+    * @note The given evaluation point must be scaled to the interval [0, 1]
+    * (rather than [0, beta]) and then given in the relative time format. Please
+    * see the "Imaginary time point format" section in the Background page of
+    * the documentation for more information.
     */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> auto coefs2eval(T const &gc, double t) const {
 
@@ -163,6 +168,11 @@ namespace cppdlr {
     * @param[in] t  Evaluation point
     *
     * @return Vector of evaluation at @p t
+    *
+    * @note The given evaluation point must be scaled to the interval [0, 1]
+    * (rather than [0, beta]) and then given in the relative time format. Please
+    * see the "Imaginary time point format" section in the Background page of
+    * the documentation for more information.
     **/
     nda::vector<double> build_evalvec(double t) const;
 
