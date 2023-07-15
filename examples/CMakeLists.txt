@@ -1,6 +1,6 @@
 # List of all examples
 set(all_examples 
-  #  myexample.cpp
+  dlr_interpolation.cpp
   )
 
 foreach(example ${all_examples})
