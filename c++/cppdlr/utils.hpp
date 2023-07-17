@@ -92,7 +92,7 @@ namespace cppdlr {
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
     double nrm = 0;
-    auto piv   = nda::arange(0, m);
+    auto piv   = nda::arange(m);
     auto tmp   = nda::vector<S>(n);
 
     for (int j = 0; j < maxrnk; ++j) {
@@ -130,7 +130,7 @@ namespace cppdlr {
 
       // Terminate if sufficiently small, and return previously selected rows
       // (not including current row)
-      if (nrm <= epsscal) { return {aa(range(0, j), _), norms(range(0, j)), piv(range(0, j))}; };
+      if (nrm <= epsscal) { return {aa(nda::range(j), _), norms(nda::range(j)), piv(nda::range(j))}; };
 
       // Normalize current row
       aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
@@ -143,7 +143,7 @@ namespace cppdlr {
       }
     }
 
-    return {aa(range(maxrnk), _), norms(range(maxrnk)), piv(range(maxrnk))};
+    return {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};
   }
 
   nda::vector<double> eqptsrel(int n);

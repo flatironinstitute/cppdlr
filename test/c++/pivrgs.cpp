@@ -59,7 +59,7 @@ TEST(pivrgs, pivrgs_real) {
   for (int i = 0; i < n; ++i) { v(i, _) *= pow(2.0, -i); }
 
   // Matrix A = U*S*V has given singular values
-  auto a = u(_, range(0, n)) * v;
+  auto a = u(_, range(n)) * v;
 
   // Gram-Schmidt to obtain orthonormal basis Q of row space of A
   auto [q, norms, piv] = pivrgs(a, eps);
@@ -138,7 +138,7 @@ TEST(pivrgs, pivrgs_cplx) {
   for (int i = 0; i < n; ++i) { v(i, _) *= pow(2.0, -i); }
 
   // Matrix A = U*S*V has given singular values
-  auto a = u(_, range(0, n)) * v;
+  auto a = u(_, range(n)) * v;
 
   // Gram-Schmidt to obtain orthonormal basis Q of row space of A
   auto [q, norms, piv] = pivrgs(a, eps);
