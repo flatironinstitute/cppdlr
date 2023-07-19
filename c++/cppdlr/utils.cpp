@@ -69,6 +69,32 @@ namespace cppdlr {
     return t;
   }
 
+  nda::vector<double> rel2abs(nda::vector_const_view<double> t) {
+
+    auto t_abs = nda::vector<double>(t.size());
+    for (int i = 0; i < t.size(); ++i) {
+      if (t(i) < 0) {
+        t_abs(i) = t(i) + 1.0;
+      } else {
+        t_abs(i) = t(i);
+      }
+    }
+
+    return t_abs;
+  }
+
+  nda::vector<double> abs2rel(nda::vector_const_view<double> t_abs) {
+
+    auto t = nda::vector<double>(t_abs.size());
+    for (int i = 0; i < t_abs.size(); ++i) {
+      if (t_abs(i) > 0.5 && t_abs(i) < 1.0) {
+        t(i) = t_abs(i) - 1.0;
+      } else {
+        t(i) = t_abs(i);
+      }
+    }
+  }
+
   std::tuple<nda::vector<double>, nda::vector<double>> gaussquad(int n) {
 
     auto xgl = nda::vector<double>(n); // Gauss-Legendre nodes

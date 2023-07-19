@@ -146,7 +146,53 @@ namespace cppdlr {
     return {aa(range(maxrnk), _), norms(range(maxrnk)), piv(range(maxrnk))};
   }
 
+  /**
+  * @brief Get grid of equispaced points on [0,1] in relative time format
+  *
+  * @param n  Number of points
+  *
+  * @return Vector of equispaced points on [0,1] in relative time format
+  */
   nda::vector<double> eqptsrel(int n);
+
+  /**
+  * @brief Convert points on [0,1] from relative to absolute time format
+  *
+  * @param t  Vector of points on [0,1] in relative time format
+  *
+  * @return Vector of points on [0,1] in absolute time format
+  *
+  * @note Converting a point from relative to absolute time format will, in
+  * general, result in a loss of relative accuracy in the location of the point
+  * if the point is close to t = 1. For example, in three-digit arithmetic, the
+  * point t = 0.999111 could be stored in relative format as t^* = -0.889e-3,
+  * but only as t = 0.999 in absolute format. For more information on the
+  * relative time format used in cppdlr, please see the Background section of
+  * the cppdlr documentation.
+  */
+  nda::vector<double> rel2abs(nda::vector_const_view<double> t);
+
+  /**
+  * @brief Convert points on [0,1] from absolute to relative time format
+  *
+  * @param t_abs Vector of points on [0,1] in absolute time format
+  *
+  * @return Vector of points on [0,1] in relative time format
+  *
+  * @note cppdlr uses the relative time format to describe imaginary time
+  * points. Therefore, if you wish to specify an imaginary time point in the
+  * standard absolute time format, for example to specify a point at which to
+  * evaluate a DLR expansion, you must first convert the point to the relative
+  * time format using this function. However, in order to maintain full relative
+  * precision in all calculations, you must conform to the cppdlr standard and
+  * specify point in the relative time format from the beginning. On the other
+  * hand, in most cases only a mild loss of accuracy will result from beginning
+  * with the absolute format and then converting to the relative format. For
+  * more information on the relative time format used in cppdlr, please see the
+  * Background section of the cppdlr documentation. 
+  */
+  nda::vector<double> abs2rel(nda::vector_const_view<double> t_abs);
+
 
   /**
   * @brief Get real-valued type corresponding to type of given nda MemoryArray
