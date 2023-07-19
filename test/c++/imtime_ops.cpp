@@ -674,7 +674,7 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
 /**
 * @brief Test reflection of matrix-valued Green's function
 */
-TEST(dlr_imtime, refl_matrix) {
+TEST(imtime_ops, refl_matrix) {
 
   double lambda = 10;    // DLR cutoff
   double eps    = 1e-10; // DLR tolerance
