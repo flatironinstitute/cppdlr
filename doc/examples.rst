@@ -2,245 +2,203 @@
 .. _Examples:
 
 Examples
-==========
+========
 
-This page gives a brief review of the discrete Lehmann representation (DLR), and
-establishes the definitions and conventions used in ``cppdlr`` (which can vary
-from one reference to another). If you are already familiar with the DLR, you
-should probably still read :ref:`the section on the relative imaginary time
-format below<relativeformat>`. For a more detailed description of the DLR,
-please see the references listed on the :ref:`Main<main>` page. For examples of
-the implementation of these concepts in ``cppdlr``, please see the
-:ref:`Examples` page. 
+This page gives one step-by-step example of the most basic usage of the DLR
+within ``cppdlr``. For a basic overview of the DLR, definitions, and
+conventions, please see the :ref:`Background` page. 
 
-Imaginary time Green's functions and the Lehmann representation
----------------------------------------------------------------
+Further examples, containing thorough documentation of all steps, can be
+found in the ``examples`` directory of the repository. The :ref:`list of
+examples<listofexamples>` below gives a list of all examples, with brief
+descriptions. These examples should serve as a good starting point for writing
+your own code using ``cppdlr``.
 
-The single-particle imaginary time Green's function is defined in terms of the time-ordered expectation value as
+For the time being, not all use cases are covered by examples in the
+``examples`` directory. However, the ``test`` directory of the repository
+contains tests of all the components of ``cppdlr``, and these can also serve as
+useful examples (though they might not be as user-friendly as the examples in
+the ``examples`` directory). Therefore, in the :ref:`list of other
+capabilities<listofothercapabilities>` below, we list capabilities of ``cppdlr``
+which are not currently covered by examples, and point to the relevant tests in
+the ``test`` directory which can serve as examples of these capabilities. This
+is a temporary measure, until we have a more comprehensive set of examples.
 
-.. math::
 
-   G_{ab}(\tau) = - \langle \mathcal{T} c_a(\tau) c_b^\dagger(0) \rangle, 
+Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency
+------------------------------------------------------------------------------------------------
 
-where :math:`c^\dagger_b(0)` is the creation operator for a particle in state :math:`b` at time :math:`0` and :math:`c_a(\tau)` is the annihilation operator for a particle in state :math:`a` at time :math:`\tau`. The Green's function is defined on the interval :math:`\tau \in (0, \beta)`, where :math:`\beta` is the inverse temperature, but it can be extended to :math:`\tau \in (-\beta, 0)` using the periodicity and anti-periodicity properties
+This example follows the example program in the file
+``examples/dlr_interpolation.cpp``. You should follow the code in that file as
+you read this example. If you see a definition you do not know, or need to look
+up a convention, you can find this information on the :ref:`Background` page.
 
-.. math::
-   
-   G_{ab}(\tau) = \xi G_{ab}(\beta + \tau),
-
-of bosonic (:math:`\xi = 1`) and fermionic (:math:`\xi = -1`) particles, respectively.
-
-The spectral Lehmann representation of a Green's function is given by
-
-.. math::
-   
-   G(\tau) = \int_{-\infty}^\infty K(\tau,\omega) \rho(\omega) \, d\omega,
-
-where :math:`\rho(\omega)` is the spectral function corresponding to the Green's
-function :math:`G`, and :math:`K(\tau,\omega)` is the analytic continuation
-kernel, given by
-
-.. math::
-
-   K(\tau, \omega) = -\frac{e^{-\omega \tau}}{1 + e^{-\beta \omega}}.
-
-Taking the Fourier transform to the imaginary (or Matsubara) frequency domain
-gives
+We first include the header file ``cppdlr.hpp``, which is
+necessary to use ``cppdlr`` functionality, and use the ``cppdlr`` namespace. We
+then define an evaluator function, ``gfun``, for an imaginary time Green's
+function. In this case, we take a simple example: a Green's function
+corresponding to a spectral function which is a discrete sum of delta functions:
 
 .. math::
    
-   G(i \nu_n) = \int_{-\infty}^\infty K(i \nu_n,\omega) \rho(\omega) \, d\omega,
+   \rho(\omega) = \sum_{i=1}^N A_i \delta(\omega - a_i).
 
-with
-
-.. math::
-
-  K(i \nu_n, \omega) = \frac{1}{i\nu_n - \omega}
-
-for fermionic Green's functions, and
+In this case, we have taken each :math:`A_i` to be a :math:`2 \times 2`
+symmetric matrix. Using the Lehmann representation, defined on the
+:ref:`Background` page, we see that this yields the following imaginary time
+Green's function:
 
 .. math::
-  K(i \nu_n, \omega) = \frac{\tanh (\beta \omega/2)}{i\nu_n - \omega}
+   
+   G(\tau) = \sum_{i=1}^N A_i K(\tau, a_i) \equiv \sum_{i=1}^N A_i \frac{e^{-\tau a_i}}{1+e^{-\beta a_i}}.
 
-for bosonic Green's functions. Here, the Matsubara frequencies are defined as
-:math:`i \nu_n = 2 n \pi i/\beta` and :math:`i \nu_n = (2n+1) \pi i/\beta` for
-bosonic and fermionic Green's functions, respectively.
-
-Discrete Lehmann representation
--------------------------------
-
-The discrete Lehmann representation (DLR) is constructed by making a low-rank
-approximation of the analytic continuation kernel (using the `interpolative
-decomposition <https://epubs.siam.org/doi/10.1137/030602678>`_). Let us define
-the dimensionless cutoff paramter :math:`\Lambda \equiv \beta \omega_{\max}`,
-where :math:`\omega_{\max}` is defined such that :math:`\rho(\omega) = 0`
-outside of :math:`[-\omega_{\max},\omega_{\max}]`. In practice, :math:`\beta` is
-typically known, and :math:`\omega_{\max}` can be estimated. :math:`\Lambda` is
-a user-specified parameter, and in the typical case that :math:`\omega_{\max}`
-is not known exactly, results can be converged with respect to :math:`\Lambda`.
-Given :math:`\Lambda` and another user-specified error tolerance parameter
-:math:`\epsilon`, the DLR expansion of an imaginary time Green's function
-:math:`G(\tau)` is given by
+There is nothing special about this Green's function, except that it is
+convenient for this example because it has a simple analytical form. We also
+define an evaluator for the Green's function in fermionic Matsubara frequency
+space, which, by direct Fourier transform, is given by
 
 .. math::
-  \begin{equation}
-    G(\tau) \approx \sum_{l=1}^r K(\tau,\omega_l) \widehat{g}_l, \label{dlrexp} \tag{1}
-  \end{equation}
+   
+   G(i \nu_n) = \sum_{i=1}^N A_i K(i \nu_n, a_i) \equiv \sum_{i=1}^N \frac{A_i}{i \nu_n - a_i}.
 
-with equality to accuracy :math:`\epsilon`. Here, the :math:`r` *DLR frequencies*
-:math:`\omega_l` determining the *DLR basis functions* :math:`K(\tau,\omega_l)`
-are carefully chosen (by a pivoted Gram-Schmidt procedure) depending only on
-:math:`\Lambda` and :math:`\epsilon`, but *not* on :math:`G` itself. As for the
-closely related `intermediate representation
-<https://journals.aps.org/prb/abstract/10.1103/PhysRevB.96.035147>`_
-(implemented, for example, in `sparse-ir
-<https://github.com/SpM-lab/sparse-ir>`_), for which the basis functions are
-orthogonal but non-explicit, we have :math:`r = \mathcal{O}(\log(\Lambda)
-\log(\epsilon^{-1}))`. Thus the DLR enables a highly efficient and high-order
-accurate discretization of all imaginary time Green's functions, with a number
-of degrees of freedom independent of the specific structure of a given Green's
-function (beyond its cutoff parameter :math:`\Lambda`).
+Next we move to the main program. We first define the 
+the inverse temperature :math:`\beta`, the number of orbital indices, which in
+this case is 2 since :math:`G` is a :math:`2 \times 2` matrix-valued function,
+the DLR cutoff parameter :math:`\Lambda`, and the desired accuracy :math:`\epsilon` of our DLR
+expansion. We note that we took all the :math:`a_i` above to be less than 1, so
+the spectral width :math:`\omega_{\max}` of the Green's function is less than 1;
+therefore, the DLR cutoff parameter :math:`\Lambda = \beta \omega_{\max}` can be
+safely set to :math:`\beta`. If the spectral width is unknown, it is recommended
+to converge results with respect to :math:`\Lambda`. After this, we set the
+number of points at which we will test the accuracy of our DLR expansion, both
+in imaginary time and Matsubara frequency.
 
-Constructing a DLR expansion
-----------------------------
+We now begin to see some of the basic functionality of ``cppdlr``. We first
+obtain the DLR frequencies :math:`\omega_l` by calling the function
+``build_dlr_rf``, supplying the DLR cutoff parameter and tolerance as input
+parameters. We obtain a vector of :math:`r = 31` DLR frequencies, which are
+shown below for the given parameters. We note that although ``cppdlr`` works in
+non-dimensionalized variables (e.g., we consider :math:`\tau \in [0,1]` rather
+than :math:`\tau \in [0,\beta]`), we have converted back to the original
+physical variables in all figures on this page.
 
-In practice, the *DLR coefficients* :math:`\widehat{g}_l` must be determined
-from some samples of :math:`G(\tau)`. This can be done by fitting to data, e.g.
-via ordinary least squares, or by *interpolation* at the *DLR imaginary time
-nodes* :math:`\tau_k`. These are :math:`r` imaginary time points which, given
-the DLR frequencies :math:`\omega_l`, are also chosen by a pivoted Gram-Schmidt
-procedure. In particular, given the values :math:`G(\tau_k)`, we can solve the
-:math:`r \times r` linear system (or interpolation problem)
+.. image:: images/dlr_rf.png
+   :width: 500px
+   :align: center
+
+We next obtain an object of type ``imtime_ops``. This class is responsible for
+all imaginary time operations on Green's functions, such as interpolation,
+fitting, and convolution, and given a particular set of DLR frequencies,
+determined by :math:`\Lambda` and :math:`\epsilon`, you only need one of these.
+The vector of DLR imaginary time grid nodes :math:`\tau_k` can be extracted from
+this object using the ``get_itnodes`` method.
+
+We next evaluate the Green's function at the DLR imaginary time grid nodes by
+calling the evaluator function discussed above. In practice, you would supply
+your own Green's function evaluator, which could involve a complicated program.
+Below, we plot the Green's function, with the :math:`r = 31` DLR imaginary time
+nodes indicated.
+
+.. image:: images/gfun.png
+   :width: 500px
+   :align: center
+
+Now that we have the values of the Green's function on the DLR imaginary time
+grid, :math:`G(\tau_k)`, we can form its DLR expansion by obtaining its DLR
+coefficients :math:`\widehat{g}_l` via the ``vals2coefs`` method of the
+``imtime_ops`` object. We sometimes call this the interpolation step, since we
+are interpolating the Green's function at the DLR nodes using an expansion in
+the DLR basis functions :math:`K(\tau, \omega_l)`. In other words, we solve the
+linear system
 
 .. math::
-  G(\tau_k) = \sum_{l=1}^r K(\tau_k,\omega_l) \widehat{g}_l
+   
+   \sum_{l=1}^r K(\tau_k, \omega_l) \widehat{g}_l = G(\tau_k)
 
-to obtain the DLR coefficients. :math:`G(\tau)` can then be evaluated using its
-DLR expansion :math:`\eqref{dlrexp}`.
+which constitutes an interpolation problem.
+
+Having obtained the DLR expansion of :math:`G` (characterized by its DLR
+coefficients :math:`\widehat{g}_l`), we can now evaluate it at any imaginary
+time point :math:`\tau` by simply evaluating the DLR expansion:
+
+.. math::
+   
+   G(\tau) \approx \sum_{l=1}^r K(\tau, \omega_l) \widehat{g}_l.
+
+This is done using the ``coefs2eval`` method of the ``imtime_ops`` object. Here,
+we evaluate the DLR expansion on an equispaced grid of :math:`\tau` points
+generated by the function ``eqptsrel`` (this function generates the points in
+the *relative* time format used by ``cppdlr``; please see :ref:`the imaginary
+time point format section of the Background page<relativeformat>` for details). We also evaluate
+the true Green's function, and compare the two. The pointwise error for the
+top-left entry of the Green's function, :math:`G_00(\tau)`, is shown below.
+
+.. image:: images/gfun_err_it.png
+   :width: 500px
+   :align: center
+
+We see that the DLR expansion is correct to within the specified :math:`\epsilon
+= 10^{-10}` tolerance. 
+
+Since the Fourier transform of the DLR basis functions are known, we can
+directly evaluate the DLR expansion of :math:`G` in the fermionic Matsubara
+frequency space:
+
+.. math::
+   
+   G(i \nu_n) \approx \sum_{l=1}^r K(i \nu_n, \omega_l) \widehat{g}_l.
+
+To do this, we first construct an object of type ``imfreq_ops``. This class is
+analogous to the ``imtime_ops`` class, but is responsible for all Matsubara
+frequency operations. Here, we use its ``coefs2eval`` method to evaluate the DLR
+expansion of :math:`G` at a large set of Matsubara frequencies, which in ``cppdlr``
+are characterized by their index :math:`n`. Again comparing to the top-left
+entry :math:`G_00(i \nu_n)` of the true Green's
+function, we find agreement within the specified :math:`\epsilon = 10^{-10}`
+tolerance.
+
+.. image:: images/gfun_err_if.png
+   :width: 500px
+   :align: center
 
 
-DLR in the Matsubara frequency domain
+.. _listofexamples:
+
+List of examples
+-----------------
+
+The ``examples`` directory contains the following example programs, which are
+documented in detail in the files themselves.
+
+- ``examples/dlr_interpolation.cpp``: form a DLR expansion via interpolation,
+  and evaluate it in imaginary time and frequency. This example is described in
+  detail above.
+
+.. _listofothercapabilities:
+
+List of other ``cppdlr`` capabilities
 -------------------------------------
 
-Fourier transform of :math:`\eqref{dlrexp}` yields
+For ``cppdlr`` use cases which are not covered by examples in the ``examples`` directory,
+relevant unit tests in the ``test`` directory can serve as useful examples. We
+list several such use cases below.
 
-.. math::
-  \begin{equation}
-    G(i nu_n) \approx \sum_{l=1}^r K(i \nu_n,\omega_l) \widehat{g}_l, \label{dlrexp_imfreq} \tag{2}
-  \end{equation}
-
-so we see that the DLR expansion can be evaluated directly in imaginary time or
-imaginary frequency, i.e. the Fourier transform is performed analytically. As in
-imaginary time, the DLR coefficients can be obtained by solving the
-:math:`r \times r` interpolation problem
-
-.. math::
-  G(i \nu_{n_k}) = \sum_{l=1}^r K(i \nu_{n_k},\omega_l) \widehat{g}_l
-
-at the :math:`r` *DLR imaginary frequency nodes* :math:`i \nu_{n_k}`, whereupon
-:math:`G(i \nu_n)` can be evaluated using :math:`\eqref{dlrexp_imfreq}` (or
-:math:`G(\tau)` can be evaluated using :math:`\eqref{dlrexp}`).
-
-
-Operations in the DLR basis
----------------------------
-
-Since the DLR basis functions are known analytically, common linear
-operations can be straightforwardly performed by representing them in the DLR
-basis. These include
-
-- Fourier transform: as explained above, one can switch between imaginary time
-  and imaginary frequency representations via the DLR expansion, with no
-  additional Fourier transform operation
-- Products: in imaginary time or imaginary frequency, by simply multiplying the
-  functions on the DLR grid, i.e. :math:`H(\tau_k) = F(\tau_k) G(\tau_k)`,
-  whereupon the DLR expansion of the result can be recovered
-- Imaginary time convolution: this includes the full convolution
-  :math:`H(\tau) = \int_0^\beta F(\tau-\tau') G(\tau') \, d\tau'`, which requires using the
-  periodicity/anti-periodicity condition, or the time-ordered convolution
-  :math:`H(\tau) = \int_0^\tau F(\tau-\tau') G(\tau') \, d\tau`
-- Linear functionals: e.g. inner products with a given function, evaluation at a point, etc...
-
-All such operations take the form of vectors/matrices/tensors acting on :math:`r
-\times 1` vectors, which represent the DLR expansion of a Green's function
-:math:`G` (either the vector of DLR coefficients of :math:`G`, or the vector of
-values of :math:`G` at the DLR nodes). Common operations are implemented in
-``cppdlr`` in a user-friendly manner, and the implementation of new operations
-should be requested on the `GitHub issues page
-<https://github.com/flatironinstitute/cppdlr/issues>`_.
-
-
-.. _relativeformat:
-
-Imaginary time point format
----------------------------
-
-First, in ``cppdlr`` imaginary time points are scaled from the interval
-:math:`[0,\beta]` to the interval :math:`[0,1]`. This is because ``cppdlr``
-works with dimensionless variables whenever possible, so in many functions it is
-unnecessary to specify the inverse temperature :math:`\beta` explicitly.
-
-Second, ``cppdlr`` stores imaginary time points in a peculiar manner, called the
-*relative* time format.
-**This is a subtle issue which ``cppdlr`` users should be aware of, in
-particular if one wants to supply imaginary time points at which to
-evaluate a DLR expansion.** For the TLDR, skip to the **guidelines** below. For an even
-more detailed discussion of this issue than the one given here, see Appendix C
-of `this paper
-<https://www.sciencedirect.com/science/article/pii/S0010465522001771>`_.
-
-The relative time format works as follows. Points :math:`\tau \in [0, 0.5]` are
-represented normally. However, instead of representing points :math:`\tau \in
-(0.5,1)` directly, we instead store the number :math:`\tau^* = \tau-1`. In other
-words, we store the negative distance of :math:`\tau` to 1, rather than tau
-itself. Recovering :math:`\tau` in the standard *absolute time format* is
-straightforward, and is implemented by the function ``rel2abs``.
-
-The reason for this has to do with maintaining full relative accuracy in
-floating point arithmetic. To evaluate the kernel :math:`K(\tau,\omega)`, we
-sometimes need to compute the value :math:`1-\tau` for :math:`\tau` very close to 1. If we
-work with tau directly, there is a loss of accuracy due to catastrophic
-cancellation, which begins to appear in extreme physical regimes and at
-very high requested accuracies. If we instead compute :math:`\tau^*` to full relative accuracy and
-work with it directly rather than with :math:`\tau`, for example by exploiting
-symmetries of :math:`K(\tau,\omega)` to avoid ever evaluating :math:`1-\tau`, we can
-maintain full relative accuracy.
-
-This annoyance is the price of maintaining full accuracy in floating point
-arithmic. But it is largely ignoreable if the loss of accuracy is not noticeable
-in your application, as will be the case for many users.
-
-**Simply follow these guidelines**:
-
-1. Use functions provided by ``cppdlr`` to carry out all imaginary time
-   operations whenever possible. This will usually hide this technical
-   complication.
-
-2. In a situation in which you want to provide a point :math:`\tau`
-   at which to evaluate a DLR, there are two options:
-
-   - (The power user option) Compute :math:`\tau^*`, defined above, to full relative accuracy, and provide this according to
-     the instructions in the relevant functions, thereby maintaining full
-     relative accuracy in calculations, or
-   - (The typical user option) If you don't care about the (usually minor) digit
-     loss which comes from ignoring this subtlety, simply convert your point
-     :math:`\tau` in the standard, absolute format (a point :math:`\tau \in
-     [0,1]`) to the relative format
-     :math:`\tau^*` defined above using the ``abs2rel`` function. Since the point will have
-     started its life in the absolute format, converting it to relative format
-     cannot recover full relative accuracy, but it still needs to be converted
-     in order to be compatible with ``cppdlr`` subroutines.
-
-3. If you happen to want to evaluate a Green's function on an
-   equispaced grid on :math:`[0,1]` in imaginary time, use the function ``eqpts_rel``
-   to generate this grid in the relative format.
-
-Matsubara frequency point format
---------------------------------
-
-We define the Matsubara (or imaginary) frequency points as :math:`i \nu_n = (2 n
-+ 1) \pi i/\beta` for fermionic Green's functions, and :math:`i \nu_n = 2 n \pi
-i/\beta` for bosonic Green's functions. In ``cppdlr``, Matsubara frequency
-points are represented by specifying the integer ``n``, the inverse temperature
-:math:`\beta`, and whether the point is a fermionic or bosonic Matsubara
-frequency using the ``statistic_t`` specifier.
+- Obtain a DLR expansion by fitting to data in imaginary time: see the tests ``imtime_ops.fit_scalar``,
+  ``imtime_ops.fit_matrix``, and ``imtime_ops.fit_matrix_cmplx`` in the file ``test/imtime_ops.cpp``. 
+- Compute the convolution of two DLR expansions: see the tests 
+  ``imtime_ops.convolve_scalar_real``, ``imtime_ops.convolve_scalar_cmplx``,
+  ``imtime_ops.convolve_matrix_real``, and ``imtime_ops.convolve_matrix_cmplx``
+  in the file ``test/imtime_ops.cpp``.
+- Perform a "reflection" operation :math:`G(\tau) \mapsto G(\beta-\tau)` on a
+  Green's function: see the test ``imtime_ops.refl_matrix`` in the file
+  ``test/imtime_ops.cpp``.
+- Obtain a DLR expansion by interpolation on the DLR Matsubara frequency nodes:
+  see the tests ``imfreq_ops.interp_scalar`` and ``imfreq_ops.interp_matrix`` in
+  the file ``test/imfreq_ops.cpp``.
+- Given a fixed self-energy, solve the Dyson equation in imaginary time to
+  obtain the Green's function: see the tests ``dyson_it.dyson_vs_ed_real``,
+  ``dyson_it.dyson_vs_ed_cmplx``, and ``dyson_it.dyson_bethe`` in the file
+  ``test/dyson_it.cpp``.
+- Solve the Dyson equation self-consistently in imaginary time, given an
+  expression for the self-energy in terms of the Green's function: see the test
+  ``dyson_it.dyson_bethe_fpi`` in the file ``test/dyson_it.cpp``.
