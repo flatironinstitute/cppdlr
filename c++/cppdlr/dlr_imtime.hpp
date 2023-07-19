@@ -212,7 +212,7 @@ namespace cppdlr {
       auto gc_shape                = g.shape();                          // Output shape is same as g...
       gc_shape[0]                  = r;                                  // ...with first dimension n replaced by r
       auto gc                      = typename T::regular_type(gc_shape); // Output array: output type is same as g
-      reshape(gc, r, g.size() / n) = g_rs(range(r), _);                  // Place result in output array
+      reshape(gc, r, g.size() / n) = g_rs(nda::range(r), _);             // Place result in output array
 
       return gc;
     }
