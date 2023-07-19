@@ -25,8 +25,9 @@
 * in imaginary time and imaginary frequency.
 */
 
-#include <nda/nda.hpp>
 #include <cppdlr/cppdlr.hpp>
+#include <filesystem> // For outputting data
+#include <fstream>    // For outputting data
 
 using namespace cppdlr;
 
@@ -104,6 +105,9 @@ int main() {
   int ntst_t  = 1000; // In imaginary time
   int nmax_om = 1000; // In imaginary frequency
 
+  // Output data?
+  bool output = true;
+
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps);
   int r       = dlr_rf.size(); // # DLR basis functions
@@ -128,27 +132,84 @@ int main() {
   auto ttst = eqptsrel(ntst_t);
 
   // Compute maximum error of Green's function on test points in imaginary time
-  auto gtru_t = nda::matrix<double>(norb, norb);
-  auto gtst_t = nda::matrix<double>(norb, norb);
-  double err  = 0;
+  auto gtru_t = nda::array<double, 3>(ntst_t, norb, norb);
+  auto gtst_t = nda::array<double, 3>(ntst_t, norb, norb);
   for (int i = 0; i < ntst_t; ++i) {
-    gtru_t = gfun(beta, ttst(i));                              // Evaluate true Green's function
-    gtst_t = itops.coefs2eval(gc, ttst(i));                    // Evaluate DLR expansion
-    err    = std::max(err, max_element(abs(gtru_t - gtst_t))); // Measure error
+    gtru_t(i, _, _) = gfun(beta, ttst(i));           // Evaluate true Green's function
+    gtst_t(i, _, _) = itops.coefs2eval(gc, ttst(i)); // Evaluate DLR expansion
   }
-  std::cout << "Maximum error of DLR expansion in imaginary time: " << err << std::endl;
+  std::cout << "Maximum error of DLR expansion in imaginary time: " << max_element(abs(gtru_t - gtst_t)) << std::endl;
 
   // Get DLR imaginary frequency object
   auto ifops = imfreq_ops(lambda, dlr_rf, Fermion);
 
   // Compute maximum error of Green's function on test points in Matsubara frequency
-  auto gtru_om = nda::matrix<dcomplex>(norb, norb);
-  auto gtst_om = nda::matrix<dcomplex>(norb, norb);
-  err          = 0;
+  auto gtru_om = nda::array<dcomplex, 3>(nmax_om, norb, norb);
+  auto gtst_om = nda::array<dcomplex, 3>(nmax_om, norb, norb);
   for (int n = -nmax_om / 2; n < nmax_om / 2; ++n) {
-    gtru_om = gfun(beta, n);                                      // Evaluate true Green's function
-    gtst_om = ifops.coefs2eval(beta, gc, n);                      // Evaluate DLR expansion
-    err     = std::max(err, max_element(abs(gtru_om - gtst_om))); // Measure error
+    gtru_om(n + nmax_om / 2, _, _) = gfun(beta, n);                 // Evaluate true Green's function
+    gtst_om(n + nmax_om / 2, _, _) = ifops.coefs2eval(beta, gc, n); // Evaluate DLR expansion
   }
-  std::cout << "Maximum error of DLR expansion in imaginary frequency: " << err << std::endl;
+  std::cout << "Maximum error of DLR expansion in imaginary frequency: " << max_element(abs(gtru_om - gtst_om)) << std::endl;
+
+  // Output data
+  if (output) {
+
+    std::cout << "Writing results to `data` directory..." << std::endl;
+
+    std::filesystem::create_directory("data"); // Create directory for data
+
+    // DLR frequencies
+    std::ofstream dlr_rf_file("data/dlr_rf");
+    dlr_rf_file << std::setprecision(16);
+    for (int i = 0; i < r; ++i) { dlr_rf_file << dlr_rf(i) << std::endl; }
+    dlr_rf_file.close();
+
+    // DLR imaginary time nodes
+    auto dlr_it_abs = rel2abs(dlr_it); // Convert DLR imaginary time nodes from relative to absolute time format
+    std::ofstream dlr_it_file("data/dlr_it");
+    dlr_it_file << std::setprecision(16);
+    for (int i = 0; i < r; ++i) { dlr_it_file << dlr_it_abs(i) << std::endl; }
+    dlr_it_file.close();
+
+    // Imaginary time data
+    auto ttst_abs = rel2abs(ttst); // Convert test points from relative to absolute time format
+    std::ofstream ttst_file("data/ttst");
+    std::ofstream gtru_t_file("data/gtru_t");
+    std::ofstream gtst_t_file("data/gtst_t");
+    ttst_file << std::setprecision(16);
+    gtru_t_file << std::setprecision(16);
+    gtst_t_file << std::setprecision(16);
+    for (int i = 0; i < ntst_t; ++i) {
+      ttst_file << ttst_abs(i) << std::endl;
+      for (int j = 0; j < norb; ++j) {
+        for (int k = 0; k < norb; ++k) {
+          gtru_t_file << gtru_t(i, j, k) << std::endl;
+          gtst_t_file << gtst_t(i, j, k) << std::endl;
+        }
+      }
+    }
+    ttst_file.close();
+    gtru_t_file.close();
+    gtst_t_file.close();
+
+    // Matsubara frequency data
+    std::ofstream n_file("data/n");
+    std::ofstream gtru_om_file("data/gtru_om");
+    std::ofstream gtst_om_file("data/gtst_om");
+    gtru_om_file << std::setprecision(16);
+    gtst_om_file << std::setprecision(16);
+    for (int n = -nmax_om / 2; n < nmax_om / 2; ++n) {
+      n_file << n << std::endl;
+      for (int j = 0; j < norb; ++j) {
+        for (int k = 0; k < norb; ++k) {
+          gtru_om_file << real(gtru_om(n + nmax_om / 2, j, k)) << " " << imag(gtru_om(n + nmax_om / 2, j, k)) << std::endl;
+          gtst_om_file << real(gtst_om(n + nmax_om / 2, j, k)) << " " << imag(gtst_om(n + nmax_om / 2, j, k)) << std::endl;
+        }
+      }
+    }
+    n_file.close();
+    gtru_om_file.close();
+    gtst_om_file.close();
+  }
 }
