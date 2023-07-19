@@ -50,10 +50,10 @@ nda::matrix<double> gfun(double beta, double t) {
   // The kernel K(t, om) = -exp(-om * t) / (1 + exp(-beta * om)) is implemented
   // here by the function k_it.
 
-  g(0, 0) = 0.9 * k_it(t, 0.8, beta) + 0.1 * k_it(t, 0.3, beta);
+  g(0, 0) = 0.9 * k_it(t, 0.8, beta) + 0.7 * k_it(t, -0.3, beta);
   g(0, 1) = 0.3 * k_it(t, 0.4, beta) + 0.3 * k_it(t, 0.7, beta);
   g(1, 0) = g(0, 1);
-  g(1, 1) = 0.7 * k_it(t, 0.5, beta);
+  g(1, 1) = 0.7 * k_it(t, -0.5, beta);
 
   return g;
 }
@@ -78,10 +78,10 @@ nda::matrix<dcomplex> gfun(double beta, int n) {
   // The fermionic kernel K(i nu_n, om) = 1 / (i nu_n - om), with i nu_n =
   // (2n+1) * i * pi / beta, is implemented here by the function k_if.
 
-  g(0, 0) = 0.9 * k_if(n, 0.8, Fermion, beta) + 0.1 * k_if(n, 0.3, Fermion, beta);
+  g(0, 0) = 0.9 * k_if(n, 0.8, Fermion, beta) + 0.7 * k_if(n, -0.3, Fermion, beta);
   g(0, 1) = 0.3 * k_if(n, 0.4, Fermion, beta) + 0.3 * k_if(n, 0.7, Fermion, beta);
   g(1, 0) = g(0, 1);
-  g(1, 1) = 0.7 * k_if(n, 0.5, Fermion, beta);
+  g(1, 1) = 0.7 * k_if(n, -0.5, Fermion, beta);
 
   return g;
 }
@@ -165,12 +165,20 @@ int main() {
     for (int i = 0; i < r; ++i) { dlr_rf_file << dlr_rf(i) << std::endl; }
     dlr_rf_file.close();
 
-    // DLR imaginary time nodes
+    // DLR imaginary time nodes and Green's function values at DLR nodes
     auto dlr_it_abs = rel2abs(dlr_it); // Convert DLR imaginary time nodes from relative to absolute time format
     std::ofstream dlr_it_file("data/dlr_it");
+    std::ofstream g_dlr_it_file("data/g_dlr_it");
     dlr_it_file << std::setprecision(16);
-    for (int i = 0; i < r; ++i) { dlr_it_file << dlr_it_abs(i) << std::endl; }
+    g_dlr_it_file << std::setprecision(16);
+    for (int i = 0; i < r; ++i) {
+      dlr_it_file << dlr_it_abs(i) << std::endl;
+      for (int j = 0; j < norb; ++j) {
+        for (int k = 0; k < norb; ++k) { g_dlr_it_file << g(i, j, k) << std::endl; }
+      }
+    }
     dlr_it_file.close();
+    g_dlr_it_file.close();
 
     // Imaginary time data
     auto ttst_abs = rel2abs(ttst); // Convert test points from relative to absolute time format
