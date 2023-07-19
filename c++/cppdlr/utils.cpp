@@ -93,6 +93,8 @@ namespace cppdlr {
         t(i) = t_abs(i);
       }
     }
+
+    return t;
   }
 
   std::tuple<nda::vector<double>, nda::vector<double>> gaussquad(int n) {
