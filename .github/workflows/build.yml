@@ -13,9 +13,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu-22.04, cc: gcc-11, cxx: g++-11}
-          - {os: ubuntu-22.04, cc: clang-14, cxx: clang++-14}
-          #- {os: macos-12, cc: gcc-11, cxx: g++-11}
+          - {os: ubuntu-22.04, cc: gcc-12, cxx: g++-12}
+          - {os: ubuntu-22.04, cc: clang-15, cxx: clang++-15}
+          #- {os: macos-12, cc: gcc-12, cxx: g++-12}
           #- {os: macos-12, cc: /usr/local/opt/llvm/bin/clang, cxx: /usr/local/opt/llvm/bin/clang++}
 
     runs-on: ${{ matrix.os }}
@@ -28,21 +28,21 @@ jobs:
       run: >
         sudo apt-get update &&
         sudo apt-get install
-        clang-14
-        g++-11
+        clang-15
+        g++-12
         hdf5-tools
         libblas-dev
-        libclang-14-dev
-        libc++-14-dev
-        libc++abi-14-dev
-        libomp-14-dev
+        libclang-15-dev
+        libc++-15-dev
+        libc++abi-15-dev
+        libomp-15-dev
         libhdf5-dev
         liblapack-dev
         libopenmpi-dev
         openmpi-bin
         openmpi-common
         openmpi-doc
-        python3-clang-14
+        python3-clang-15
         python3-dev
         python3-mako
         python3-sphinx
@@ -51,7 +51,7 @@ jobs:
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-12'
       run: |
-        brew install gcc@11 llvm hdf5 open-mpi openblas
+        brew install gcc@12 llvm hdf5 open-mpi openblas
         pip3 install mako
 
     - name: Build cppdlr
