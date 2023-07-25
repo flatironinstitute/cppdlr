@@ -66,5 +66,5 @@ endif()
 # -- nda --
 external_dependency(nda
   GIT_REPO https://github.com/TRIQS/nda
-  GIT_TAG DEV_CUDA_LINALG_MIGUEL
+  GIT_TAG unstable
 )
