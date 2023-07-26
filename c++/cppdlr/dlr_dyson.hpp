@@ -42,12 +42,18 @@ namespace cppdlr {
     * @param[in] beta Inverse temperature
     * @param[in] itops DLR imaginary time object
     * @param[in] h Hamiltonian
-    * @param[in] mu Chemical potential
+    * @param[in] mu Chemical potential (default = 0)
+    * @param[in] time_order Flag for ordinary (false or ORDINARY, default) or
+    * time-ordered (true or TIME_ORDERED) Dyson equation
     *
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
     */
-    dyson_it(double beta, imtime_ops itops, Ht const &h, double mu = 0) : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)) {
+    dyson_it(double beta, imtime_ops itops, Ht const &h, double mu = 0, bool time_order = false)
+       : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)) {
+
+      time_order = time_order;
+
       // dyson_it object contains a shared pointer to the imtime_ops object
       // itops. This is done to avoid making a copy of itops, which is meant to
       // handle all imaginary time operations on the given DLR imaginary time
@@ -58,7 +64,7 @@ namespace cppdlr {
       auto g0c = itops_ptr->vals2coefs(g0);   // DLR coefficients of free Green's function
 
       // Get matrix of convolution by free Green's function
-      g0mat = itops_ptr->convmat(beta, Fermion, g0c);
+      g0mat = itops_ptr->convmat(beta, Fermion, g0c, time_order);
 
       // Get right hand side of Dyson equation
       if constexpr (std::floating_point<Ht>) { // If h is real scalar, rhs is a vector
@@ -70,6 +76,19 @@ namespace cppdlr {
         rhs = permuted_indices_view<nda::encode<3>({1, 2, 0})>(g0);
       }
     }
+
+    /**
+    * @brief Constructor for dyson_it
+    * @param[in] beta Inverse temperature
+    * @param[in] itops DLR imaginary time object
+    * @param[in] h Hamiltonian
+    * @param[in] time_order Flag for ordinary (false or ORDINARY) or
+    * time-ordered (true or TIME_ORDERED) Dyson equation
+    *
+    * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
+    * or a real scalar.
+    */
+    dyson_it(double beta, imtime_ops itops, Ht const &h, bool time_order) : dyson_it(beta, itops, h, 0, time_order){};
 
     /**
     * @brief Solve Dyson equation for given self-energy
@@ -94,7 +113,7 @@ namespace cppdlr {
       // Obtain Dyson equation system matrix I - G0 * Sig, where G0 and Sig are the
       // matrices of convolution by the free Green's function and self-energy,
       // respectively.
-      auto sysmat = make_regular(nda::eye<double>(r * norb) - g0mat * itops_ptr->convmat(beta, Fermion, sigc));
+      auto sysmat = make_regular(nda::eye<double>(r * norb) - g0mat * itops_ptr->convmat(beta, Fermion, sigc, time_order));
 
       // Factorize system matrix
       auto ipiv = nda::vector<int>(r * norb);
@@ -116,6 +135,7 @@ namespace cppdlr {
     double beta;                           ///< Inverse temperature
     std::shared_ptr<imtime_ops> itops_ptr; ///< shared pointer to imtime_ops object
     int norb;                              ///< Number of orbital indices
+    bool time_order;                  ///< Flag for ordinary (false) or time-ordered (true) Dyson equation
 
     typename std::conditional_t<std::floating_point<Ht>, nda::array<Sh, 1>, nda::array<Sh, 3>>
        rhs; ///< Right hand side of Dyson equation (in format compatible w/ LAPACK); vector if Hamiltonian is scalar, rank-3 array otherwise
