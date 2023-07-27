@@ -152,6 +152,8 @@ int main() {
   }
   std::cout << "Maximum error of DLR expansion in imaginary frequency: " << max_element(abs(gtru_om - gtst_om)) << std::endl;
 
+  // ---------------------------------------------------------------------------
+
   // Output data
   if (output) {
 
