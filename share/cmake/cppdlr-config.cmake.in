@@ -21,7 +21,7 @@ function(find_dep)
     find_package(${ARGN} REQUIRED HINTS @CMAKE_INSTALL_PREFIX@)
   endif()
 endfunction()
-find_dep(nda 1.1)
+find_dep(nda 1.2)
 
 # Include the exported targets of this project
 include(@CMAKE_INSTALL_PREFIX@/lib/cmake/@PROJECT_NAME@/@PROJECT_NAME@-targets.cmake)
