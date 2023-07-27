@@ -50,9 +50,7 @@ namespace cppdlr {
     * or a real scalar.
     */
     dyson_it(double beta, imtime_ops itops, Ht const &h, double mu = 0, bool time_order = false)
-       : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)) {
-
-      time_order = time_order;
+       : beta(beta), itops_ptr(std::make_shared<imtime_ops>(itops)), time_order(time_order) {
 
       // dyson_it object contains a shared pointer to the imtime_ops object
       // itops. This is done to avoid making a copy of itops, which is meant to
@@ -135,7 +133,7 @@ namespace cppdlr {
     double beta;                           ///< Inverse temperature
     std::shared_ptr<imtime_ops> itops_ptr; ///< shared pointer to imtime_ops object
     int norb;                              ///< Number of orbital indices
-    bool time_order;                  ///< Flag for ordinary (false) or time-ordered (true) Dyson equation
+    bool time_order;                       ///< Flag for ordinary (false) or time-ordered (true) Dyson equation
 
     typename std::conditional_t<std::floating_point<Ht>, nda::array<Sh, 1>, nda::array<Sh, 3>>
        rhs; ///< Right hand side of Dyson equation (in format compatible w/ LAPACK); vector if Hamiltonian is scalar, rank-3 array otherwise
