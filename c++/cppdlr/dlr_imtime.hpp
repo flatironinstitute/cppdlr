@@ -575,11 +575,13 @@ namespace cppdlr {
     int rank() const { return r; }
     double lambda() const { return lambda_; }
 
-    private:
     /**
     * @brief Initialization for convolution methods
     *
-    * This method pre-builds some matrices required for the convolution methods.
+    * Initialize matrices required for the convolution methods. This method is
+    * called automatically the first time one of the relevant convolution
+    * methods is called, but it may also be called manually to avoid the
+    * additional overhead in the first convolution call.
     */
     void convolve_init() const {
 
@@ -615,8 +617,11 @@ namespace cppdlr {
     /**
     * @brief Initialization for time-ordered convolution methods
     *
-    * This method pre-builds some matrices required for the time-ordered
-    * convolution methods. 
+    * Initialize matrices required for the time-ordered convolution methods.
+    * This method is called automatically the first time one of the relevant
+    * time-ordered convolution methods is called, but it may also be called
+    * manually to avoid the additional overhead in the first time-ordered
+    * convolution call. 
     */
     void tconvolve_init() const {
 
@@ -653,8 +658,11 @@ namespace cppdlr {
     /**
     * @brief Initialization for reflection method
     *
-    * This method prebuilds the matrix of the reflection G(tau) -> G(beta - tau)
-    * acting on the values of the Green's function at the DLR imaginary time nodes
+    * Initialize matrix of the reflection G(tau) -> G(beta - tau) acting on the
+    * values of the Green's function at the DLR imaginary time nodes.  This
+    * matrix is required for the reflect method. It is called automatically the
+    * first time the reflect method is called, but it may also be called
+    * manually to avoid the additional overhead of the first call to reflect.
     */
     void reflect_init() const {
 
