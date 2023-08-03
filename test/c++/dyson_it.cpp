@@ -89,8 +89,8 @@ TEST(dyson_it, dyson_vs_ed_real) {
 
   // Solve Dyson equation
   auto dys = dyson_it(beta, itops, h(range(norb), range(norb))); // Dyson imaginary time solver object
-  auto g   = dys.solve(sig);                                         // Solve Dyson equation w/ given self-energy
-  auto gc  = itops.vals2coefs(g);                                    // Get DLR coefficients
+  auto g   = dys.solve(sig);                                     // Solve Dyson equation w/ given self-energy
+  auto gc  = itops.vals2coefs(g);                                // Get DLR coefficients
 
   // --- Compare with exact solution --- //
 
@@ -175,8 +175,8 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
 
   // Solve Dyson equation
   auto dys = dyson_it(beta, itops, h(range(norb), range(norb))); // Dyson imaginary time object
-  auto g   = dys.solve(sig);                                         // Solve Dyson equation w/ given self-energy
-  auto gc  = itops.vals2coefs(g);                                    // Get DLR coefficients
+  auto g   = dys.solve(sig);                                     // Solve Dyson equation w/ given self-energy
+  auto gc  = itops.vals2coefs(g);                                // Get DLR coefficients
 
   // --- Compare with exact solution --- //
 
@@ -282,9 +282,9 @@ TEST(dyson_it, dyson_bethe) {
   auto sig = make_regular(c * c * gbethe);
 
   // Solve Dyson equation
-  double h = 0;                            // Zero Hamiltonian
+  double h = 0;                        // Zero Hamiltonian
   auto dys = dyson_it(beta, itops, h); // Imaginary time Dyson solver
-  auto g   = dys.solve(sig);               // Solve Dyson equation w/ given self-energy
+  auto g   = dys.solve(sig);           // Solve Dyson equation w/ given self-energy
 
   // --- Compare with exact solution --- //
 
@@ -318,9 +318,9 @@ TEST(dyson_it, dyson_bethe_fpi) {
   // --- Problem setup --- //
 
   // Set problem parameters
-  double beta = 100;     // Inverse temperature
-  double c    = 1.0 / 2; // Quarter-bandwidth
-  int ntst    = 1000;    // Number of imaginary time test points
+  double beta  = 100;     // Inverse temperature
+  double c     = 1.0 / 2; // Quarter-bandwidth
+  int ntst     = 1000;    // Number of imaginary time test points
   double fptol = 1.0e-14; // Fixed point iteration tolerance
 
   // Set DLR parameters
@@ -337,27 +337,27 @@ TEST(dyson_it, dyson_bethe_fpi) {
 
   // --- Solve Dyson equation self-consistently by fixed point iteration --- //
 
-  double h = 0;                            // Zero Hamiltonian
-  auto dys = dyson_it(beta, itops, h); // Imaginary time Dyson solver
-  auto g = free_gf(beta, itops, h); // Initial guess: free Green's function
-  auto sig = make_regular(c * c * g); // Self-energy
-  auto gnew = g;                 // New Green's function in fixed point iteration
+  double h  = 0;                        // Zero Hamiltonian
+  auto dys  = dyson_it(beta, itops, h); // Imaginary time Dyson solver
+  auto g    = free_gf(beta, itops, h);  // Initial guess: free Green's function
+  auto sig  = make_regular(c * c * g);  // Self-energy
+  auto gnew = g;                        // New Green's function in fixed point iteration
 
   // Fixed point iteration
   for (int i = 0; i < 1000; ++i) {
     gnew = dys.solve(sig);
     if (max_element(abs((gnew - g))) < fptol) {
       g = gnew;
-      std::cout << "Converged in " << i+1 << " iterations" << std::endl;
+      std::cout << "Converged in " << i + 1 << " iterations" << std::endl;
       break;
     }
-    g = gnew;
+    g   = gnew;
     sig = make_regular(c * c * g);
   }
-  
+
   // --- Get true Green's function and compare with computed solution --- //
 
-  auto gbethe = g_bethe(c, beta, itops.get_itnodes());
+  auto gbethe  = g_bethe(c, beta, itops.get_itnodes());
   auto gbethec = itops.vals2coefs(gbethe); // DLR coefficients
   auto gc      = itops.vals2coefs(g);
 
