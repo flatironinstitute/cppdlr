@@ -1,19 +1,8 @@
 .. _documentation:
 
-Documentation
-*************
+Reference documentation
+=======================
 
+.. raw:: html
 
-.. math::
-
-   (a + b)^2  &=  (a + b)(a + b) \\
-              &=  a^2 + 2ab + b^2
-
-
-C++ reference manual
-====================
-
-.. toctree::
-   :maxdepth: 5
-
-   cpp2rst_generated/contents
+    <meta http-equiv="refresh" content="0; url=doxygen/html/namespacecppdlr.html" />
