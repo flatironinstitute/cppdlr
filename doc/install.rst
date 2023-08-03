@@ -7,6 +7,8 @@ Installation
 
 .. note:: We recommend using a stable `release <https://github.com/flatironinstitute/cppdlr/releases>`_ of ``cppdlr``.
 
+.. note:: If you are compiling with clang, please look at the "Compiling with clang" section below.
+
 .. note:: If you are a MacOS user, and are having trouble installing ``cppdlr``,
    please look at the "Note for MacOS users" below.
 
@@ -92,6 +94,16 @@ The compilation of ``cppdlr`` can be configured using CMake-options::
 +-----------------------------------------------------------------+-----------------------------------------------+
 | Build the documentation                                         | -DBuild_Documentation=ON                      |
 +-----------------------------------------------------------------+-----------------------------------------------+
+
+Compiling with clang
+--------------------
+
+To compile with clang, use the following flags in your cmake command (see step 3 above)::
+
+    -DCMAKE_C_COMPILER=clang
+    -DCMAKE_CXX_COMPILER=clang++
+    -DCMAKE_CXX_FLAGS="-stdlib=libc++" 
+
 
 Note for MacOS users
 ---------------------
