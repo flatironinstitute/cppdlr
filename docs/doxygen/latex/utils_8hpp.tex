@@ -1,0 +1,45 @@
+\hypertarget{utils_8hpp}{}\doxysection{/mnt/home/jkaye/\+Documents/projects/cppdlr/c++/cppdlr/utils.hpp File Reference}
+\label{utils_8hpp}\index{/mnt/home/jkaye/Documents/projects/cppdlr/c++/cppdlr/utils.hpp@{/mnt/home/jkaye/Documents/projects/cppdlr/c++/cppdlr/utils.hpp}}
+{\ttfamily \#include $<$nda/nda.\+hpp$>$}\newline
+{\ttfamily \#include $<$nda/blas.\+hpp$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classcppdlr_1_1barycheb}{cppdlr\+::barycheb}}
+\item 
+struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{cppdlr\+::make\+\_\+common\+\_\+helper$<$ T, S1, S2 $>$}}
+\begin{DoxyCompactList}\small\item\em Get type of given nda Memory\+Array with scalar value type replaced by common type of two given types (real if both are real, complex otherwise) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array T$>$ }\\using \mbox{\hyperlink{namespacecppdlr_a85cd7bdb1fd649296322df16d329ca27}{cppdlr\+::make\+\_\+real\+\_\+t}} = decltype(make\+\_\+regular(real(std\+::declval$<$ T $>$())))
+\begin{DoxyCompactList}\small\item\em Get real-\/valued type corresponding to type of given nda Memory\+Array. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array T$>$ }\\using \mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{cppdlr\+::make\+\_\+cplx\+\_\+t}} = decltype(make\+\_\+regular(std\+::declval$<$ T $>$() $\ast$1i))
+\begin{DoxyCompactList}\small\item\em Get complex-\/valued type corresponding to type of given nda Memory\+Array. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S1, nda\+::\+Scalar S2$>$ }\\using \mbox{\hyperlink{namespacecppdlr_ac23dfec829ec6ed8deec469faeea3981}{cppdlr\+::make\+\_\+common\+\_\+t}} = typename make\+\_\+common\+\_\+helper$<$ T, S1, S2 $>$\+::type
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \newline
+requires (nda\+::is\+\_\+scalar\+\_\+v$<$S$>$)}\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a3d95a6e52d5747f0ea12b91160734e8d}{cppdlr\+::pivrgs}} (T const \&a, double eps)
+\begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b}{cppdlr\+::eqptsrel}} (int n)
+\begin{DoxyCompactList}\small\item\em Get grid of equispaced points on \mbox{[}0,1\mbox{]} in relative time format. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}{cppdlr\+::rel2abs}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t)
+\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a103a8aae4c8af512d2682d381a676561}{cppdlr\+::abs2rel}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t\+\_\+abs)
+\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from absolute to relative time format. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1}{cppdlr\+::arraymult}} (Ta const \&a, Tb const \&b)
+\begin{DoxyCompactList}\small\item\em Contract the last dimension of an array a with the first dimension of an array b. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename S $>$ }\\S \mbox{\hyperlink{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}{cppdlr\+::adapgl}} (std\+::function$<$ nda\+::array$<$ S, 1 $>$(nda\+::array$<$ double, 1 $>$)$>$ f, double a, double b, double tol, nda\+::vector$<$ double $>$ xgl, nda\+::vector$<$ double $>$ wgl)
+\begin{DoxyCompactList}\small\item\em Quick and dirty adaptive Gauss quadrature. \end{DoxyCompactList}\item 
+std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecppdlr_afbfcb627a6ab1115bb02670e7ce61219}{cppdlr\+::gaussquad}} (int n)
+\begin{DoxyCompactList}\small\item\em Gauss-\/\+Legendre nodes and weights. \end{DoxyCompactList}\item 
+std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}{cppdlr\+::leg\+\_\+eval}} (int n, double x)
+\begin{DoxyCompactList}\small\item\em Evaluate Legendre polynomial of degree n and its derivative. \end{DoxyCompactList}\end{DoxyCompactItemize}

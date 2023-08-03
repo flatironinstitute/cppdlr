@@ -1,0 +1,49 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__adapgl:
+
+cppdlr::adapgl
+==============
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | :green:`template<typename S>`
+       | S :red:`adapgl` (std::function<nda::array<S, 1> (nda::array<double, 1>)> :param:`f`,
+       |         double :param:`a`,
+       |         double :param:`b`,
+       |         double :param:`tol`,
+       |         nda::vector<double> :param:`xgl`,
+       |         nda::vector<double> :param:`wgl`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Integral of \p f from \p a to \p b
+
+ \note This is a quick and dirty adaptive integration function, which tries
+ to achieve an error tolerance \p tol but doesn't guarantee it. A more robust
+ implementation would use global error estimation. Nevertheless, this works
+ quite well most of the time.

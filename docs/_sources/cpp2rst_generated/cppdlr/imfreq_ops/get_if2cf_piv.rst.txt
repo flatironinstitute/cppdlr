@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__imfreq_ops__get_if2cf_piv:
+
+cppdlr::imfreq_ops::get_if2cf_piv
+=================================
+
+*#include <cppdlr/imfreq_ops.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::vector_const_view<int> :red:`get_if2cf_piv` () const
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+LU pivots

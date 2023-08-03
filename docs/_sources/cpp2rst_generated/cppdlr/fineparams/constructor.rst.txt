@@ -1,0 +1,23 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__fineparams__constructor:
+
+cppdlr::fineparams::constructor
+===============================
+
+*#include <cppdlr/fineparams.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | :red:`fineparams` (double :param:`lambda`, int :param:`p` = 24)

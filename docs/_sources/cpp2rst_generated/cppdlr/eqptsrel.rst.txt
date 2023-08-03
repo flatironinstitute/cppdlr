@@ -1,0 +1,44 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__eqptsrel:
+
+cppdlr::eqptsrel
+================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::vector<double> :red:`eqptsrel` (int :param:`n`)
+
+
+
+
+
+
+
+
+
+
+
+Parameters
+^^^^^^^^^^
+
+ * :param:`n`  Number of points
+
+
+Returns
+^^^^^^^
+
+Vector of equispaced points on [0,1] in relative time format

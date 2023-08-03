@@ -1,0 +1,40 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__build_it_fine:
+
+cppdlr::build_it_fine
+=====================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::vector<double> :red:`build_it_fine` (:ref:`fineparams <cppdlr__fineparams>` & :param:`fine`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Fine imaginary time grid
+
+ \note Fine imaginary time grid is given in relative format

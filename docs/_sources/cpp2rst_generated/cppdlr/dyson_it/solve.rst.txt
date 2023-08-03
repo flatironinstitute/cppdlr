@@ -1,0 +1,48 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__dyson_it__solve:
+
+cppdlr::dyson_it::solve
+=======================
+
+*#include <cppdlr/dyson_it.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | :green:`template<typename Tsig, typename Tg = make_common_t<Tsig,Sh,nda::get_value_t<Tsig>`
+       | Tg :red:`solve` (Tsig const & :param:`sig`) const
+
+
+
+
+
+
+
+
+
+
+
+Template parameters
+^^^^^^^^^^^^^^^^^^^
+
+ * :param:`Tsig` Type of self-energy
+
+
+Returns
+^^^^^^^
+
+Green's function at DLR imaginary time nodes
+
+ \note Free Green's function (right hand side of Dyson equation) specified
+ at construction of dyson_it object

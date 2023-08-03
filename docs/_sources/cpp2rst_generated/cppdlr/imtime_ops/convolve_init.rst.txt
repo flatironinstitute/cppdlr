@@ -1,0 +1,23 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__imtime_ops__convolve_init:
+
+cppdlr::imtime_ops::convolve_init
+=================================
+
+*#include <cppdlr/imtime_ops.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | void :red:`convolve_init` () const

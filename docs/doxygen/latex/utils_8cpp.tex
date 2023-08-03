@@ -1,0 +1,23 @@
+\hypertarget{utils_8cpp}{}\doxysection{/mnt/home/jkaye/\+Documents/projects/cppdlr/c++/cppdlr/utils.cpp File Reference}
+\label{utils_8cpp}\index{/mnt/home/jkaye/Documents/projects/cppdlr/c++/cppdlr/utils.cpp@{/mnt/home/jkaye/Documents/projects/cppdlr/c++/cppdlr/utils.cpp}}
+{\ttfamily \#include $<$numbers$>$}\newline
+{\ttfamily \#include \char`\"{}utils.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$nda/blas.\+hpp$>$}\newline
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b}{cppdlr\+::eqptsrel}} (int n)
+\begin{DoxyCompactList}\small\item\em Get grid of equispaced points on \mbox{[}0,1\mbox{]} in relative time format. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}{cppdlr\+::rel2abs}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t)
+\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a103a8aae4c8af512d2682d381a676561}{cppdlr\+::abs2rel}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t\+\_\+abs)
+\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from absolute to relative time format. \end{DoxyCompactList}\item 
+std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecppdlr_afbfcb627a6ab1115bb02670e7ce61219}{cppdlr\+::gaussquad}} (int n)
+\begin{DoxyCompactList}\small\item\em Gauss-\/\+Legendre nodes and weights. \end{DoxyCompactList}\item 
+std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}{cppdlr\+::leg\+\_\+eval}} (int n, double x)
+\begin{DoxyCompactList}\small\item\em Evaluate Legendre polynomial of degree n and its derivative. \end{DoxyCompactList}\end{DoxyCompactItemize}

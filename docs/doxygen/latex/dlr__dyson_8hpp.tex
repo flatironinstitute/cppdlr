@@ -1,0 +1,24 @@
+\hypertarget{dlr__dyson_8hpp}{}\doxysection{/mnt/home/jkaye/\+Documents/projects/cppdlr/c++/cppdlr/dlr\+\_\+dyson.hpp File Reference}
+\label{dlr__dyson_8hpp}\index{/mnt/home/jkaye/Documents/projects/cppdlr/c++/cppdlr/dlr\_dyson.hpp@{/mnt/home/jkaye/Documents/projects/cppdlr/c++/cppdlr/dlr\_dyson.hpp}}
+{\ttfamily \#include \char`\"{}nda/layout\+\_\+transforms.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$nda/nda.\+hpp$>$}\newline
+{\ttfamily \#include $<$cppdlr/dlr\+\_\+imtime.\+hpp$>$}\newline
+{\ttfamily \#include $<$cppdlr/dlr\+\_\+kernels.\+hpp$>$}\newline
+{\ttfamily \#include $<$nda/linalg/eigenelements.\+hpp$>$}\newline
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classcppdlr_1_1dyson__it}{cppdlr\+::dyson\+\_\+it$<$ Ht, Sh $>$}}
+\begin{DoxyCompactList}\small\item\em Class for solving Dyson equation in imaginary time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ $\vert$$\vert$ nda\+::\+Memory\+Matrix$<$Ht$>$)}\\auto \mbox{\hyperlink{namespacecppdlr_af52a76483a86cc380b2bfb324a6fdbcb}{cppdlr\+::free\+\_\+gf}} (double beta, imtime\+\_\+ops const \&itops, Ht const \&h, double mu=0)
+\begin{DoxyCompactList}\small\item\em Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. \end{DoxyCompactList}\end{DoxyCompactItemize}

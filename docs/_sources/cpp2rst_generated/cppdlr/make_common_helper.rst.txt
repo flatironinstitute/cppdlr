@@ -1,0 +1,35 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__make_common_helper:
+
+cppdlr::make_common_helper
+==========================
+
+*#include <cppdlr.hpp>*
+
+.. rst-class:: cppsynopsis
+
+     template<typename T, typename S1, typename S2> class  :red:`make_common_helper`
+
+
+
+
+Member types
+------------
+
+.. table::
+   :widths: 40 60
+
+
+   +------+-----------------------------------------------+--+
+   | S    | std::common_type_t<S1, S2>                    |  |
+   +------+-----------------------------------------------+--+
+   | type | decltype(make_regular(std::declval<T>() * x)) |  |
+   +------+-----------------------------------------------+--+

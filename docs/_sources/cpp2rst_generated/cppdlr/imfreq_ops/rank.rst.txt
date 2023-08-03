@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__imfreq_ops__rank:
+
+cppdlr::imfreq_ops::rank
+========================
+
+*#include <cppdlr/imfreq_ops.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | int :red:`rank` () const
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+DLR rank

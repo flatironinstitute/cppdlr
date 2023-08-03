@@ -1,0 +1,40 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__k_if:
+
+cppdlr::k_if
+============
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+    1. | std::complex<double> :red:`k_if` (int :param:`n`, double :param:`om`, statistic_t :param:`statistic`)
+
+    2. | std::complex<double> :red:`k_if` (int :param:`n`, double :param:`om`, statistic_t :param:`statistic`, double :param:`beta`)
+
+Documentation
+
+
+
+
+
+Returns
+^^^^^^^
+
+Value K(i nu_n,om) of analytic continuation kernel
+
+ \note The definition of the analytic continuation kernel using dimensionless
+ variables is K(i nu_n, om) = 1 / (i nu_n - om) with i nu_n = (2n+1) * i *
+ pi (fermionic case) or i nu_n = 2n * i * pi (bosonic case).

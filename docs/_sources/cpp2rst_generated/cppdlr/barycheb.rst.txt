@@ -1,0 +1,39 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__barycheb:
+
+cppdlr::barycheb
+================
+
+*#include <cppdlr.hpp>*
+
+.. rst-class:: cppsynopsis
+
+      class  :red:`barycheb`
+
+Initialize subroutine barycheb for barycentric Lagrange interpolation at
+Chebyshev nodes.
+
+
+Member functions
+----------------
+
+.. table::
+   :widths: 40 60
+
+
+   +------------------------------------------------------+--+
+   | :ref:`(constructor) <cppdlr__barycheb__constructor>` |  |
+   +------------------------------------------------------+--+
+
+.. toctree::
+    :hidden:
+
+    barycheb/constructor

@@ -1,0 +1,62 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__fineparams:
+
+cppdlr::fineparams
+==================
+
+*#include <cppdlr.hpp>*
+
+.. rst-class:: cppsynopsis
+
+      class  :red:`fineparams`
+
+
+
+
+Public members
+--------------
+
+.. table::
+   :widths: 40 60
+
+
+   +--------+--------------+-------------------------------------------+
+   | lambda | const double | < DLR cutoff parameter                    |
+   +--------+--------------+-------------------------------------------+
+   | p      | const int    | < Order of composite Chebyshev grid       |
+   +--------+--------------+-------------------------------------------+
+   | nmax   | const int    | < Imaginary frequency cutoff              |
+   +--------+--------------+-------------------------------------------+
+   | npom   | const int    | < # fine real frequency grid panels       |
+   +--------+--------------+-------------------------------------------+
+   | npt    | const int    | < # fine imaginary time grid panels       |
+   +--------+--------------+-------------------------------------------+
+   | nom    | const int    | < Total # fine real frequency grid points |
+   +--------+--------------+-------------------------------------------+
+   | nt     | const int    | < Total # fine imaginary time grid points |
+   +--------+--------------+-------------------------------------------+
+
+
+Member functions
+----------------
+
+.. table::
+   :widths: 40 60
+
+
+   +--------------------------------------------------------+--+
+   | :ref:`(constructor) <cppdlr__fineparams__constructor>` |  |
+   +--------------------------------------------------------+--+
+
+.. toctree::
+    :hidden:
+
+    fineparams/constructor

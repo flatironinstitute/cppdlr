@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__build_rf_fine:
+
+cppdlr::build_rf_fine
+=====================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::vector<double> :red:`build_rf_fine` (:ref:`fineparams <cppdlr__fineparams>` & :param:`fine`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Fine real frequency grid

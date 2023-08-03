@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__leg_eval:
+
+cppdlr::leg_eval
+================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | std::tuple<double, double> :red:`leg_eval` (int :param:`n`, double :param:`x`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Tuple of polynomial value Pn(x) and derivative Pn'(x)

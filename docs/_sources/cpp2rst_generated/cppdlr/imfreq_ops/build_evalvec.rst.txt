@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__imfreq_ops__build_evalvec:
+
+cppdlr::imfreq_ops::build_evalvec
+=================================
+
+*#include <cppdlr/imfreq_ops.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::vector<nda::dcomplex> :red:`build_evalvec` (double :param:`beta`, int :param:`n`) const
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Vector of evaluation at Matsubara frequency with index

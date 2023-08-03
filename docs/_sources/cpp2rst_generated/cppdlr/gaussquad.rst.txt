@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__gaussquad:
+
+cppdlr::gaussquad
+=================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | std::tuple<nda::vector<double>, nda::vector<double>> :red:`gaussquad` (int :param:`n`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Tuple of nodes and weights

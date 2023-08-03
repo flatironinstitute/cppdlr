@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cppdlr: Imaginary time calculations using the discrete Lehmann representation &mdash; cppdlr  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/plot_directive.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #7E588A" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            cppdlr
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installation-steps">Installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#versions">Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#custom-cmake-options">Custom CMake options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#compiling-with-clang">Compiling with clang</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#note-for-macos-users">Note for MacOS users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-green-s-functions-and-the-lehmann-representation">Imaginary time Green’s functions and the Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#discrete-lehmann-representation">Discrete Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#constructing-a-dlr-expansion">Constructing a DLR expansion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#dlr-in-the-matsubara-frequency-domain">DLR in the Matsubara frequency domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-point-format">Imaginary time point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency">Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-examples">List of examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-other-cppdlr-capabilities">List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Reporting issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #7E588A" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">cppdlr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>: Imaginary time calculations using the discrete Lehmann representation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="cppdlr-imaginary-time-calculations-using-the-discrete-lehmann-representation">
+<span id="main"></span><h1><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>: Imaginary time calculations using the discrete Lehmann representation<a class="headerlink" href="#cppdlr-imaginary-time-calculations-using-the-discrete-lehmann-representation" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> is a C++ library implementing the discrete Lehmann representation (DLR) of
+imaginary time single-particle Green’s functions and other imaginary time
+quantities. For more information on the DLR, see the <a class="reference internal" href="background.html#background"><span class="std std-ref">Background</span></a> page, or
+the references below. For examples of usage of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>, see the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Examples</span></a> page.</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> in your software or published research works, please cite
+our repository and one, or
+both, of these references. Citations help to encourage the development and
+maintainence of open-source scientific software.</p>
+<ul class="simple">
+<li>The original reference on the DLR: <a class="reference external" href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.105.235115" rel="noopener noreferrer" target="_blank">Discrete Lehmann representation of imaginary time Green’s functions, Jason Kaye, Kun Chen, and Olivier Parcollet, Phys. Rev. B 105, 235115, 2022.</a>
+[<a class="reference external" href="https://arxiv.org/abs/2107.13094" rel="noopener noreferrer" target="_blank">arXiv:2107.13094</a>]</li>
+<li>The companion paper to <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">libdlr</a>, which
+contains a briefer overview of the DLR: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0010465522001771" rel="noopener noreferrer" target="_blank">libdlr: Efficient imaginary time calculations using the discrete
+Lehmann representation, Jason Kaye, Kun Chen, and Hugo U.R. Strand, Comput.
+Phys. Commun. 280, 108458, 2022.</a>
+[<a class="reference external" href="https://arxiv.org/abs/2110.06765" rel="noopener noreferrer" target="_blank">arXiv:2110.06765</a>]</li>
+</ul>
+</div>
+<div class="section" id="related-libraries">
+<h2>Related libraries<a class="headerlink" href="#related-libraries" title="Permalink to this heading"></a></h2>
+<p>Libraries implementing the DLR are available in other languages:</p>
+<ul class="simple">
+<li>Python, via <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">pydlr</a></li>
+<li>Fortran, via <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">libdlr</a></li>
+<li>Julia, via <a class="reference external" href="https://github.com/numericaleft/Lehmann.jl" rel="noopener noreferrer" target="_blank">Lehmann.jl</a></li>
+</ul>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installation-steps">Installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#versions">Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#custom-cmake-options">Custom CMake options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#compiling-with-clang">Compiling with clang</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#note-for-macos-users">Note for MacOS users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-green-s-functions-and-the-lehmann-representation">Imaginary time Green’s functions and the Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#discrete-lehmann-representation">Discrete Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#constructing-a-dlr-expansion">Constructing a DLR expansion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#dlr-in-the-matsubara-frequency-domain">DLR in the Matsubara frequency domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-point-format">Imaginary time point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency">Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-examples">List of examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-other-cppdlr-capabilities">List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Reporting issues</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 The Simons Foundation, Hugo U.R. Strand. Authors: J. Kaye, N. Wentzell, H. U. R. Strand.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

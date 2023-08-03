@@ -1,0 +1,23 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__barycheb__constructor:
+
+cppdlr::barycheb::constructor
+=============================
+
+*#include <cppdlr/barycheb.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | :red:`barycheb` (int :param:`n`)

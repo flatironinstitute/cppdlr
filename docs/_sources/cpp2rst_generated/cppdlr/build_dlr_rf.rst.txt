@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__build_dlr_rf:
+
+cppdlr::build_dlr_rf
+====================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::vector<double> :red:`build_dlr_rf` (double :param:`lambda`, double :param:`eps`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+DLR frequencies

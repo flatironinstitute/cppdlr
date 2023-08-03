@@ -1,0 +1,38 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__build_k_it:
+
+cppdlr::build_k_it
+==================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::matrix<double> :red:`build_k_it` (nda::vector_const_view<double> :param:`t`, nda::vector_const_view<double> :param:`om`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Discretization of analytic continuation kernel on given grid

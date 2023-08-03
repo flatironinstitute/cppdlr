@@ -1,0 +1,40 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__build_k_if:
+
+cppdlr::build_k_if
+==================
+
+*#include <cppdlr.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | nda::matrix<dcomplex> :red:`build_k_if` (int :param:`nmax`,
+       |             nda::vector_const_view<double> :param:`om`,
+       |             statistic_t :param:`statistic`)
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Discretization of analytic continuation kernel on given grid

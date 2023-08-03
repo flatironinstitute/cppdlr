@@ -1,0 +1,39 @@
+..
+   Generated automatically by cpp2rst
+
+.. highlight:: c
+.. role:: red
+.. role:: green
+.. role:: param
+
+
+.. _cppdlr__imtime_ops__reflect:
+
+cppdlr::imtime_ops::reflect
+===========================
+
+*#include <cppdlr/imtime_ops.hpp>*
+
+
+
+**Synopsis**
+
+ .. rst-class:: cppsynopsis
+
+       | :green:`template<typename T>`
+       | typename T::regular_type :red:`reflect` (T const & :param:`g`) const
+
+
+
+
+
+
+
+
+
+
+
+Returns
+^^^^^^^
+
+Values of g(beta - t) at DLR imaginary time nodes
