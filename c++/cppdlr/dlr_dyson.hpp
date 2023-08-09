@@ -173,7 +173,7 @@ namespace cppdlr {
       if (!time_order) { // Free Green's function for ordinary Dyson equation
         for (int i = 0; i < r; i++) { g(i) = k_it(itops.get_itnodes(i), h - mu, beta); }
       } else { // Free Green's function for time-ordered Dyson equation
-        for (int i = 0; i < r; i++) { g(i) = exp(-beta * itops.get_itnodes(i) * (h - mu)); }
+        for (int i = 0; i < r; i++) { g(i) = -exp(-beta * itops.get_itnodes(i) * (h - mu)); }
       }
       return g;
     } else { // Otherwise, return matrix-valued Green's function
@@ -190,7 +190,7 @@ namespace cppdlr {
         if (!time_order) {
           for (int j = 0; j < norb; j++) { g(i, j, j) = k_it(itops.get_itnodes(i), eval(j) - mu, beta); }
         } else {
-          for (int j = 0; j < norb; j++) { g(i, j, j) = exp(-beta * itops.get_itnodes(i) * (eval(j) - mu)); }
+          for (int j = 0; j < norb; j++) { g(i, j, j) = -exp(-beta * itops.get_itnodes(i) * (eval(j) - mu)); }
         }
         g(i, _, _) = matmul(evec, matmul(g(i, _, _), transpose(conj(evec))));
       }
