@@ -57,9 +57,9 @@ namespace cppdlr {
       // handle all imaginary time operations on the given DLR imaginary time
       // grid.
 
-      int r    = itops_ptr->rank();           // DLR rank
-      auto g0  = free_gf(beta, itops, h, mu); // Free Green's function (right hand side of Dyson equation
-      auto g0c = itops_ptr->vals2coefs(g0);   // DLR coefficients of free Green's function
+      int r    = itops_ptr->rank();                       // DLR rank
+      auto g0  = free_gf(beta, itops, h, mu, time_order); // Free Green's function (right hand side of Dyson equation
+      auto g0c = itops_ptr->vals2coefs(g0);               // DLR coefficients of free Green's function
 
       // Get matrix of convolution by free Green's function
       g0mat = itops_ptr->convmat(beta, Fermion, g0c, time_order);
@@ -151,6 +151,9 @@ namespace cppdlr {
   * @param[in] it imtime_ops object
   * @param[in] h Hamiltonian
   * @param[in] mu Chemical potential
+  * @param[in] time_order Flag for ordinary (false or ORDINARY, default) or
+  * time-ordered (true or TIME_ORDERED) Dyson equation, which changes free
+  * Green's function
   *
   * @return Green's function at DLR imaginary time nodes
   *
@@ -161,13 +164,17 @@ namespace cppdlr {
     requires(std::floating_point<Ht> || nda::MemoryMatrix<Ht>)
   // If h is scalar, return scalar-valued Green's function; if h is matrix,
   // return matrix-valued Green's function
-  auto free_gf(double beta, imtime_ops const &itops, Ht const &h, double mu = 0) {
+  auto free_gf(double beta, imtime_ops const &itops, Ht const &h, double mu = 0, bool time_order = false) {
 
     int r = itops.rank();
 
     if constexpr (std::floating_point<Ht>) { // If h is scalar, return scalar-valued Green's function
       auto g = nda::array<Ht, 1>(r);
-      for (int i = 0; i < r; i++) { g(i) = k_it(itops.get_itnodes(i), h - mu, beta); }
+      if (!time_order) { // Free Green's function for ordinary Dyson equation
+        for (int i = 0; i < r; i++) { g(i) = k_it(itops.get_itnodes(i), h - mu, beta); }
+      } else { // Free Green's function for time-ordered Dyson equation
+        for (int i = 0; i < r; i++) { g(i) = exp(-beta * itops.get_itnodes(i) * (h - mu)); }
+      }
       return g;
     } else { // Otherwise, return matrix-valued Green's function
 
@@ -180,11 +187,43 @@ namespace cppdlr {
       auto g = nda::array<nda::get_value_t<Ht>, 3>(r, norb, norb);
       g      = 0;
       for (int i = 0; i < r; i++) {
-        for (int j = 0; j < norb; j++) { g(i, j, j) = k_it(itops.get_itnodes(i), eval(j) - mu, beta); }
+        if (!time_order) {
+          for (int j = 0; j < norb; j++) { g(i, j, j) = k_it(itops.get_itnodes(i), eval(j) - mu, beta); }
+        } else {
+          for (int j = 0; j < norb; j++) { g(i, j, j) = exp(-beta * itops.get_itnodes(i) * (eval(j) - mu)); }
+        }
         g(i, _, _) = matmul(evec, matmul(g(i, _, _), transpose(conj(evec))));
       }
 
       return g;
     }
   }
+
+  /**
+  * @brief Compute free-particle imaginary time Green's function for a given
+  * Hamiltonian
+  *
+  * The Green's function is computed by diagonalizing the Hamiltonian, and is
+  * returned by its values at the DLR imaginary time nodes.
+  *
+  * @param[in] beta Inverse temperature
+  * @param[in] it imtime_ops object
+  * @param[in] h Hamiltonian
+  * @param[in] time_order Flag for ordinary (false or ORDINARY) or
+  * time-ordered (true or TIME_ORDERED) Dyson equation, which changes free
+  * Green's function
+  *
+  * @return Green's function at DLR imaginary time nodes
+  *
+  * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
+  * or a real scalar.
+  */
+  template <typename Ht>
+    requires(std::floating_point<Ht> || nda::MemoryMatrix<Ht>)
+  // If h is scalar, return scalar-valued Green's function; if h is matrix,
+  // return matrix-valued Green's function
+  auto free_gf(double beta, imtime_ops const &itops, Ht const &h, bool time_order) {
+    return free_gf(beta, itops, h, 0, time_order);
+  };
+
 } // namespace cppdlr
