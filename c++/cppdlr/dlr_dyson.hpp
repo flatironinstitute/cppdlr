@@ -190,7 +190,7 @@ namespace cppdlr {
         if (!time_order) {
           for (int j = 0; j < norb; j++) { g(i, j, j) = k_it(itops.get_itnodes(i), eval(j) - mu, beta); }
         } else {
-          for (int j = 0; j < norb; j++) { g(i, j, j) = -exp(-beta * itops.get_itnodes(i) * (eval(j) - mu)); }
+          for (int j = 0; j < norb; j++) { g(i, j, j) = -exp(-beta * rel2abs(itops.get_itnodes(i)) * (eval(j) - mu)); }
         }
         g(i, _, _) = matmul(evec, matmul(g(i, _, _), transpose(conj(evec))));
       }
