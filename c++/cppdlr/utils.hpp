@@ -173,6 +173,11 @@ namespace cppdlr {
   nda::vector<double> rel2abs(nda::vector_const_view<double> t);
 
   /**
+  * @copydoc rel2abs(nda::vector_const_view<double>)
+  */
+  double rel2abs(double t);
+
+  /**
   * @brief Convert points on [0,1] from absolute to relative time format
   *
   * @param t_abs Vector of points on [0,1] in absolute time format
@@ -192,7 +197,11 @@ namespace cppdlr {
   * Background section of the cppdlr documentation. 
   */
   nda::vector<double> abs2rel(nda::vector_const_view<double> t_abs);
-
+  
+  /**
+  * @copydoc rel2abs(nda::vector_const_view<double>)
+  */
+  double abs2rel(double t_abs);
 
   /**
   * @brief Get real-valued type corresponding to type of given nda MemoryArray

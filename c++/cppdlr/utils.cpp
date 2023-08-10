@@ -83,6 +83,14 @@ namespace cppdlr {
     return t_abs;
   }
 
+  double rel2abs(double t) {
+    if (t < 0) {
+      return t + 1.0;
+    } else {
+      return t;
+    }
+  }
+
   nda::vector<double> abs2rel(nda::vector_const_view<double> t_abs) {
 
     auto t = nda::vector<double>(t_abs.size());
@@ -95,6 +103,14 @@ namespace cppdlr {
     }
 
     return t;
+  }
+
+  double abs2rel(double t_abs) {
+    if (t_abs > 0.5 && t_abs < 1.0) {
+      return t_abs - 1.0;
+    } else {
+      return t_abs;
+    }
   }
 
   std::tuple<nda::vector<double>, nda::vector<double>> gaussquad(int n) {
