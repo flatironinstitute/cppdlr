@@ -5,8 +5,21 @@
 
 ``cppdlr`` is a C++ library implementing the discrete Lehmann representation (DLR) of
 imaginary time single-particle Green's functions and other imaginary time
-quantities. For more information on the DLR, see the :ref:`Background` page, or
-the references below. For examples of usage of ``cppdlr``, see the :ref:`Examples` page.
+quantities. It can be downloaded `from GitHub <https://github.com/flatironinstitute/cppdlr>`_.
+
+Getting started
+---------------
+
+  - Install the library by following the instructions on the :ref:`Install`
+    page.
+  - If you are unfamiliar with the DLR, you can read the :ref:`Background` page for a
+  brief introduction, or the references below for more detail. If you are
+  familiar with the DLR, you should still take a brief look at the
+  :ref:`Background` page for important information about the library.
+  - To begin using `cppdlr` in your application, the :ref:`Examples` page provides a
+  good starting point.
+  - If you need more specific information about `cppdlr` classes and functions,
+  take a look at the :ref:`Documentation` page.
 
 References
 ----------
