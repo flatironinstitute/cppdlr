@@ -10,6 +10,8 @@ Strand](https://github.com/HugoStrand) (2023)
 imaginary time single-particle Green's functions and other imaginary time
 quantities. For more information on the DLR, see the references below.
 
+Please see [the documentation](https://flatironinstitute.github.io/cppdlr/) for more information about `cppdlr`.
+
 Libraries implementing the DLR are available in other languages:
 
 - Python, via [pydlr](https://github.com/jasonkaye/libdlr)
