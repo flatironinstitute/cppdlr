@@ -55,15 +55,8 @@ external_dependency(GTest
   EXCLUDE_FROM_ALL
 )
 
-# -- cpp2py --
-if (PythonSupport OR Build_Documentation)
-  external_dependency(Cpp2Py
-    GIT_REPO https://github.com/TRIQS/cpp2py
-    GIT_TAG master
-  )
-endif()
-
 # -- nda --
+set(PythonSupport OFF)
 external_dependency(nda
   GIT_REPO https://github.com/TRIQS/nda
   GIT_TAG unstable

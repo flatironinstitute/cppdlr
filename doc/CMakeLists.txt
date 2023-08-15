@@ -1,31 +1,6 @@
 # Generate the sphinx config file
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in ${CMAKE_CURRENT_BINARY_DIR}/conf.py @ONLY)
 
-# -----------------------------------------------------------------------------
-# Create an optional target that allows us to regenerate the C++ doc with c++2rst
-# -----------------------------------------------------------------------------
-add_custom_target(${PROJECT_NAME}_docs_cpp2rst)
-include(${PROJECT_SOURCE_DIR}/share/cmake/extract_flags.cmake)
-extract_flags(${PROJECT_NAME}_c BUILD_INTERFACE)
-separate_arguments(${PROJECT_NAME}_c_CXXFLAGS)
-macro(generate_docs header_file)
-  add_custom_command(
-    TARGET ${PROJECT_NAME}_docs_cpp2rst
-    COMMAND rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/cpp2rst_generated
-    COMMAND
-      PYTHONPATH=${CPP2PY_BINARY_DIR}:$ENV{PYTHONPATH}
-      PATH=${CPP2PY_BINARY_DIR}/bin:${CPP2PY_ROOT}/bin:$ENV{PATH}
-      c++2rst
-      ${header_file}
-      -N ${PROJECT_NAME}
-      --output_directory ${CMAKE_CURRENT_SOURCE_DIR}/cpp2rst_generated
-      -I${PROJECT_SOURCE_DIR}/c++
-      --cxxflags="${${PROJECT_NAME}_c_CXXFLAGS}"
-  )
-endmacro(generate_docs)
-
-generate_docs(${PROJECT_SOURCE_DIR}/c++/${PROJECT_NAME}/${PROJECT_NAME}.hpp)
-
 # --------------------------------------------------------
 # Build & Run the C++ doc examples and capture the output
 # --------------------------------------------------------
@@ -61,7 +36,7 @@ add_custom_command(
 option(Sphinx_Only "When building the documentation, skip the Python Modules and the generation of C++ Api and example outputs" OFF)
 if(NOT Sphinx_Only)
   # Generation of C++ Api and Example Outputs
-  add_dependencies(${PROJECT_NAME}_docs_sphinx ${PROJECT_NAME}_docs_cpp2rst ${PROJECT_NAME}_docs_example_output)
+  add_dependencies(${PROJECT_NAME}_docs_sphinx ${PROJECT_NAME}_docs_example_output)
 endif()
 
 
