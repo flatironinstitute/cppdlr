@@ -12,13 +12,13 @@ Getting started
 
   - Install the library by following the instructions on the :ref:`installation page<install>`.
   - If you are unfamiliar with the DLR, you can read the :ref:`background page<background>` for a
-  brief introduction, or the references below for more detail. If you are
-  familiar with the DLR, you should still take a brief look at the
-  :ref:`background page<background>` for important information about the library.
+    brief introduction, or the references below for more detail. If you are
+    familiar with the DLR, you should still take a brief look at the
+    :ref:`background page<background>` for important information about the library.
   - To begin using `cppdlr` in your application, the :ref:`examples page<examples>` provides a
-  good starting point.
+    good starting point.
   - If you need more specific information about `cppdlr` classes and functions,
-  take a look at the :ref:`reference documentation page<documentation>`.
+    take a look at the :ref:`reference documentation page<documentation>`.
 
 References
 ----------
@@ -46,6 +46,9 @@ Libraries implementing the DLR are available in other languages:
 - Python, via `pydlr <https://github.com/jasonkaye/libdlr>`_ 
 - Fortran, via `libdlr <https://github.com/jasonkaye/libdlr>`_
 - Julia, via `Lehmann.jl <https://github.com/numericaleft/Lehmann.jl>`_
+
+``cppdlr`` is also used to implement the DLR in the `Toolbox for Research on
+Interacting Quantum Systems (TRIQS) <https://triqs.github.io/triqs/latest/>`_.
  
 .. toctree::
    :maxdepth: 2
