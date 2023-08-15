@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['s_79',['S',['../structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4',1,'cppdlr::make_common_helper']]],
-  ['statistic_5ft_80',['statistic_t',['../namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435',1,'cppdlr']]]
+  ['tconvolve_5finit_80',['tconvolve_init',['../classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226',1,'cppdlr::imtime_ops']]],
+  ['time_5forder_81',['time_order',['../namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf',1,'cppdlr']]],
+  ['type_82',['type',['../structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9',1,'cppdlr::make_common_helper']]]
 ];
