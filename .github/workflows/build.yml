@@ -13,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu-22.04, cc: gcc-12, cxx: g++-12}
-          - {os: ubuntu-22.04, cc: clang-15, cxx: clang++-15}
-          - {os: macos-12, cc: gcc-12, cxx: g++-12}
-          - {os: macos-12, cc: /usr/local/opt/llvm/bin/clang, cxx: /usr/local/opt/llvm/bin/clang++}
+          - {os: ubuntu-22.04, cc: gcc-12, cxx: g++-12, doc: OFF}
+          - {os: ubuntu-22.04, cc: clang-15, cxx: clang++-15, doc: ON}
+          - {os: macos-12, cc: gcc-12, cxx: g++-12, doc: OFF}
+          - {os: macos-12, cc: /usr/local/opt/llvm/bin/clang, cxx: /usr/local/opt/llvm/bin/clang++, doc: OFF}
 
     runs-on: ${{ matrix.os }}
 
@@ -60,7 +60,7 @@ jobs:
         CXX: ${{ matrix.cxx }}
         LIBRARY_PATH: /usr/local/opt/llvm/lib
       run: |
-        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install
+        mkdir build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/install -DBuild_Documentation=${{ matrix.doc }}
         make -j2 || make -j1 VERBOSE=1
 
     - name: Test cppdlr
@@ -69,3 +69,15 @@ jobs:
       run: |
         cd build
         ctest -j2 --output-on-failure
+
+    - name: Deploy documentation to website
+      if: matrix.doc == ON
+      uses: JamesIves/github-pages-deploy-action@v4
+      on:
+        push:
+          branches:
+            - main
+      with:
+        folder: build/doc/html
+        branch: github.io
+        target-folder: docs
