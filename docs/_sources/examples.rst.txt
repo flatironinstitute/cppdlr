@@ -1,12 +1,12 @@
 
-.. _Examples:
+.. _examples:
 
 Examples
 ========
 
 This page gives one step-by-step example of the most basic usage of the DLR
 within ``cppdlr``. For a basic overview of the DLR, definitions, and
-conventions, please see the :ref:`Background` page. 
+conventions, please see the :ref:`background page<background>`. 
 
 Further examples, containing thorough documentation of all steps, can be
 found in the ``examples`` directory of the repository. The :ref:`list of
@@ -31,7 +31,7 @@ Example: form a DLR expansion via interpolation, and evaluate it in imaginary ti
 This example follows the example program in the file
 ``examples/dlr_interpolation.cpp``. You should follow the code in that file as
 you read this example. If you see a definition you do not know, or need to look
-up a convention, you can find this information on the :ref:`Background` page.
+up a convention, you can find this information on the :ref:`background page<background>`.
 
 We first include the header file ``cppdlr.hpp``, which is
 necessary to use ``cppdlr`` functionality, and use the ``cppdlr`` namespace. We
@@ -45,7 +45,7 @@ corresponding to a spectral function which is a discrete sum of delta functions:
 
 In this case, we have taken each :math:`A_i` to be a :math:`2 \times 2`
 symmetric matrix. Using the Lehmann representation, defined on the
-:ref:`Background` page, we see that this yields the following imaginary time
+:ref:`background page<background>`, we see that this yields the following imaginary time
 Green's function:
 
 .. math::

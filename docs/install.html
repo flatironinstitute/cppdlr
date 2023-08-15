@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -145,24 +148,24 @@ automatically with <code class="docutils literal notranslate"><span class="pre">
 <h2>Installation steps<a class="headerlink" href="#installation-steps" title="Permalink to this heading"></a></h2>
 <ol class="arabic">
 <li><p class="first">Download the source code of the latest stable version by cloning the <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> repository from GitHub:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/flatironinstitute/cppdlr cppdlr.src
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/flatironinstitute/cppdlr<span class="w"> </span>cppdlr.src
 </pre></div>
 </div>
 </li>
 <li><p class="first">Create and move to a new directory where you will compile the code:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mkdir cppdlr.build <span class="o">&amp;&amp;</span> <span class="nb">cd</span> cppdlr.build
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>cppdlr.build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>cppdlr.build
 </pre></div>
 </div>
 </li>
 <li><p class="first">In the build directory call cmake, including any additional custom CMake options, see below:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ cmake -DCMAKE_INSTALL_PREFIX<span class="o">=</span>path_to_install_dir ../cppdlr.src
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>path_to_install_dir<span class="w"> </span>../cppdlr.src
 </pre></div>
 </div>
 </li>
 <li><p class="first">Compile the code, run the tests and install the application:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ make
-$ make <span class="nb">test</span>
-$ make install
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>make<span class="w"> </span><span class="nb">test</span>
+$<span class="w"> </span>make<span class="w"> </span>install
 </pre></div>
 </div>
 </li>
@@ -171,11 +174,11 @@ $ make install
 <div class="section" id="versions">
 <h2>Versions<a class="headerlink" href="#versions" title="Permalink to this heading"></a></h2>
 <p>To use a particular version, go into the directory with the sources, and look at all available versions:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> cppdlr.src <span class="o">&amp;&amp;</span> git tag
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>cppdlr.src<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>tag
 </pre></div>
 </div>
 <p>Checkout the version of the code that you want:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git checkout <span class="m">2</span>.1.0
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span><span class="m">2</span>.1.0
 </pre></div>
 </div>
 <p>and follow steps 2 to 4 above to compile the code.</p>
@@ -183,7 +186,7 @@ $ make install
 <div class="section" id="custom-cmake-options">
 <h2>Custom CMake options<a class="headerlink" href="#custom-cmake-options" title="Permalink to this heading"></a></h2>
 <p>The compilation of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> can be configured using CMake-options:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake ../cppdlr.src -DOPTION1<span class="o">=</span>value1 -DOPTION2<span class="o">=</span>value2 ...
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../cppdlr.src<span class="w"> </span>-DOPTION1<span class="o">=</span>value1<span class="w"> </span>-DOPTION2<span class="o">=</span>value2<span class="w"> </span>...
 </pre></div>
 </div>
 <table border="1" class="docutils align-default">
@@ -225,12 +228,12 @@ $ make install
 <h2>Note for MacOS users<a class="headerlink" href="#note-for-macos-users" title="Permalink to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> currently does not support the AppleClang compiler. Instead, we
 recommend installing the Clang compiler via <a class="reference external" href="https://brew.sh/" rel="noopener noreferrer" target="_blank">homebrew</a> using:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install llvm
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>llvm
 </pre></div>
 </div>
 <p>and including the following flags in your cmake command (see step 3 above):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-DCMAKE_C_COMPILER<span class="o">=</span><span class="k">$(</span>brew --prefix<span class="k">)</span>/opt/llvm/bin/clang
--DCMAKE_CXX_COMPILER<span class="o">=</span><span class="k">$(</span>brew --prefix<span class="k">)</span>/opt/llvm/bin/clang++
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-DCMAKE_C_COMPILER<span class="o">=</span><span class="k">$(</span>brew<span class="w"> </span>--prefix<span class="k">)</span>/opt/llvm/bin/clang
+-DCMAKE_CXX_COMPILER<span class="o">=</span><span class="k">$(</span>brew<span class="w"> </span>--prefix<span class="k">)</span>/opt/llvm/bin/clang++
 </pre></div>
 </div>
 <p>If this does not work for you, please let us know via a <a class="reference external" href="https://github.com/flatironinstitute/cppdlr/issues" rel="noopener noreferrer" target="_blank">GitHub issue</a>.</p>

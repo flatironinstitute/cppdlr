@@ -12,6 +12,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -53,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="install.html#installation-steps">Installation steps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#versions">Versions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#custom-cmake-options">Custom CMake options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#compiling-with-clang">Compiling with clang</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#note-for-macos-users">Note for MacOS users</a></li>
 </ul>
 </li>
@@ -72,45 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-other-cppdlr-capabilities">List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="documentation.html#c-reference-manual">C++ reference manual</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cpp2rst_generated/cppdlr.html">cppdlr</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cpp2rst_generated/cppdlr.html#classes">Classes</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/fineparams.html">cppdlr::fineparams</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/barycheb.html">cppdlr::barycheb</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/make_common_helper.html">cppdlr::make_common_helper</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/imfreq_ops.html">cppdlr::imfreq_ops</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/imtime_ops.html">cppdlr::imtime_ops</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/dyson_it.html">cppdlr::dyson_it</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="cpp2rst_generated/cppdlr.html#functions">Functions</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/k_it.html">cppdlr::k_it</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/k_it_abs.html">cppdlr::k_it_abs</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/k_if.html">cppdlr::k_if</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/build_rf_fine.html">cppdlr::build_rf_fine</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/build_it_fine.html">cppdlr::build_it_fine</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/build_k_it.html">cppdlr::build_k_it</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/build_k_if.html">cppdlr::build_k_if</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/geterr_k_it.html">cppdlr::geterr_k_it</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/build_dlr_rf.html">cppdlr::build_dlr_rf</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/pivrgs.html">cppdlr::pivrgs</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/eqptsrel.html">cppdlr::eqptsrel</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/rel2abs.html">cppdlr::rel2abs</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/abs2rel.html">cppdlr::abs2rel</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/arraymult.html">cppdlr::arraymult</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/adapgl.html">cppdlr::adapgl</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/gaussquad.html">cppdlr::gaussquad</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/leg_eval.html">cppdlr::leg_eval</a></li>
-<li class="toctree-l5"><a class="reference internal" href="cpp2rst_generated/cppdlr/free_gf.html">cppdlr::free_gf</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="issues.html">Reporting issues</a></li>
 </ul>
 
@@ -145,9 +111,9 @@ establishes the definitions and conventions used in <code class="docutils litera
 from one reference to another). If you are already familiar with the DLR, you
 should probably still read <a class="reference internal" href="#relativeformat"><span class="std std-ref">the section on the relative imaginary time
 format below</span></a>. For a more detailed description of the DLR,
-please see the references listed on the <a class="reference internal" href="index.html#main"><span class="std std-ref">Main</span></a> page. For examples of
+please see the references listed on the <a class="reference internal" href="index.html#main"><span class="std std-ref">main page</span></a>. For examples of
 the implementation of these concepts in <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>, please see the
-<a class="reference internal" href="examples.html#examples"><span class="std std-ref">Examples</span></a> page.</p>
+<a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples page</span></a>.</p>
 <div class="section" id="imaginary-time-green-s-functions-and-the-lehmann-representation">
 <h2>Imaginary time Green’s functions and the Lehmann representation<a class="headerlink" href="#imaginary-time-green-s-functions-and-the-lehmann-representation" title="Permalink to this heading"></a></h2>
 <p>The single-particle imaginary time Green’s function is defined in terms of the time-ordered expectation value as</p>

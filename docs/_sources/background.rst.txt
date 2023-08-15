@@ -1,5 +1,5 @@
 
-.. _Background:
+.. _background:
 
 Background
 ==========
@@ -9,9 +9,9 @@ establishes the definitions and conventions used in ``cppdlr`` (which can vary
 from one reference to another). If you are already familiar with the DLR, you
 should probably still read :ref:`the section on the relative imaginary time
 format below<relativeformat>`. For a more detailed description of the DLR,
-please see the references listed on the :ref:`Main<main>` page. For examples of
+please see the references listed on the :ref:`main page<main>`. For examples of
 the implementation of these concepts in ``cppdlr``, please see the
-:ref:`Examples` page. 
+:ref:`examples page<examples>`. 
 
 Imaginary time Green's functions and the Lehmann representation
 ---------------------------------------------------------------
