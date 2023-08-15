@@ -47,6 +47,7 @@ jobs:
         python3-mako
         python3-sphinx
         python3-nbsphinx
+        doxygen
 
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-12'
