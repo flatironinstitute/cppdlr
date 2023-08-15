@@ -32,7 +32,7 @@ namespace cppdlr {
   /**
   * Option for ordinary or time-ordered convolution 
   */
-  enum { ORDINARY = false, TIME_ORDERED = true };
+   static constexpr bool ORDINARY = false, TIME_ORDERED = true;
 
   /**
   * @class imtime_ops
