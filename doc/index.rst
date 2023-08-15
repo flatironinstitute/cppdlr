@@ -1,4 +1,4 @@
-.. _Main:
+.. _main:
 
 ``cppdlr``: Imaginary time calculations using the discrete Lehmann representation
 =================================================================================
@@ -10,16 +10,15 @@ quantities. It can be downloaded `from GitHub <https://github.com/flatironinstit
 Getting started
 ---------------
 
-  - Install the library by following the instructions on the :ref:`Install`
-    page.
-  - If you are unfamiliar with the DLR, you can read the :ref:`Background` page for a
+  - Install the library by following the instructions on the :ref:`installation page<install>`.
+  - If you are unfamiliar with the DLR, you can read the :ref:`background page<background>` for a
   brief introduction, or the references below for more detail. If you are
   familiar with the DLR, you should still take a brief look at the
-  :ref:`Background` page for important information about the library.
-  - To begin using `cppdlr` in your application, the :ref:`Examples` page provides a
+  :ref:`background page<background>` for important information about the library.
+  - To begin using `cppdlr` in your application, the :ref:`examples page<examples>` provides a
   good starting point.
   - If you need more specific information about `cppdlr` classes and functions,
-  take a look at the :ref:`Documentation` page.
+  take a look at the :ref:`reference documentation page<documentation>`.
 
 References
 ----------
