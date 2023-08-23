@@ -31,7 +31,7 @@ namespace cppdlr {
 
        lambda(lambda),
        p(p),
-       nmax((int)ceil(lambda)), // TODO: is this a good choice?
+       nmax(max((int)ceil(lambda), 20)), // TODO: is this a good choice?
        npom(max(ceil(log(lambda) / log(2.0)), 1.0)),
        npt(max(ceil(log(lambda) / log(2.0)) - 2, 1.0)),
        nom(2 * p * npom),
