@@ -259,22 +259,22 @@ namespace cppdlr {
       assert_hdf5_format_as_string(gr, "cppdlr::imfreq_ops", true);
 
       double lambda;
-      statistic_t statistic;
+      statistic_t statistic_;
       nda::vector<double> rf;
       nda::vector<int> if_;
-      nda::matrix<nda::dcomplex> cf2if;
+      nda::matrix<nda::dcomplex> cf2if_;
       nda::matrix<nda::dcomplex> if2cf_lu;
       nda::vector<int> if2cf_piv;
 
       h5::read(gr, "lambda", lambda);
-      statistic = statistic_t(h5::read<int>(gr, "statistic"));
+      statistic_ = statistic_t(h5::read<int>(gr, "statistic"));
       h5::read(gr, "rf", rf);
       h5::read(gr, "if", if_);
-      h5::read(gr, "cf2if", cf2if);
+      h5::read(gr, "cf2if", cf2if_);
       h5::read(gr, "if2cf_lu", if2cf_lu);
       h5::read(gr, "if2cf_piv", if2cf_piv);
 
-      m = imfreq_ops(lambda, rf, statistic, if_, cf2if, if2cf_lu, if2cf_piv);
+      m = imfreq_ops(lambda, rf, statistic_, if_, cf2if_, if2cf_lu, if2cf_piv);
     }
   };
 

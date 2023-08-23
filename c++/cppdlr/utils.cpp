@@ -21,8 +21,6 @@
 using namespace nda;
 using std::numbers::pi;
 
-static constexpr auto _ = range::all;
-
 namespace cppdlr {
 
   barycheb::barycheb(int n) : xc(n), wc(n), n(n) {

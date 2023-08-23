@@ -730,11 +730,11 @@ namespace cppdlr {
       auto lambda    = h5::read<double>(gr, "lambda");
       auto rf        = h5::read<nda::vector<double>>(gr, "rf");
       auto it        = h5::read<nda::vector<double>>(gr, "it");
-      auto cf2it     = h5::read<nda::matrix<double>>(gr, "cf2it");
+      auto cf2it_     = h5::read<nda::matrix<double>>(gr, "cf2it");
       auto it2cf_lu  = h5::read<nda::matrix<double>>(gr, "it2cf_lu");
       auto it2cf_piv = h5::read<nda::vector<int>>(gr, "it2cf_piv");
 
-      m = imtime_ops(lambda, rf, it, cf2it, it2cf_lu, it2cf_piv);
+      m = imtime_ops(lambda, rf, it, cf2it_, it2cf_lu, it2cf_piv);
     }
   };
 

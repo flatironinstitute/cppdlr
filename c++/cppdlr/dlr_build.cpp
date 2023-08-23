@@ -32,8 +32,8 @@ namespace cppdlr {
        lambda(lambda),
        p(p),
        nmax(max((int)ceil(lambda), 20)), // TODO: is this a good choice?
-       npom(max(ceil(log(lambda) / log(2.0)), 1.0)),
-       npt(max(ceil(log(lambda) / log(2.0)) - 2, 1.0)),
+       npom(static_cast<int>(max(ceil(log(lambda) / log(2.0)), 1.0))),
+       npt(static_cast<int>(max(ceil(log(lambda) / log(2.0)) - 2, 1.0))),
        nom(2 * p * npom),
        nt(2 * p * npt) {
 
