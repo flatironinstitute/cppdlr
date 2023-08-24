@@ -247,22 +247,22 @@ $(function() {
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      assert_hdf5_format_as_string(gr, <span class="stringliteral">&quot;cppdlr::imfreq_ops&quot;</span>, <span class="keyword">true</span>);</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      <span class="keywordtype">double</span> <a class="code" href="classcppdlr_1_1imfreq__ops.html#a0b95a2d9da812c7f894c16d9ab0de27c">lambda</a>;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic_;</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      nda::vector&lt;double&gt; rf;</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      nda::vector&lt;int&gt; if_;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      nda::matrix&lt;nda::dcomplex&gt; cf2if;</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      nda::matrix&lt;nda::dcomplex&gt; cf2if_;</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      nda::matrix&lt;nda::dcomplex&gt; if2cf_lu;</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      nda::vector&lt;int&gt; if2cf_piv;</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;      h5::read(gr, <span class="stringliteral">&quot;lambda&quot;</span>, <a class="code" href="classcppdlr_1_1imfreq__ops.html#a0b95a2d9da812c7f894c16d9ab0de27c">lambda</a>);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      statistic = <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>(h5::read&lt;int&gt;(gr, <span class="stringliteral">&quot;statistic&quot;</span>));</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      statistic_ = <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>(h5::read&lt;int&gt;(gr, <span class="stringliteral">&quot;statistic&quot;</span>));</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;      h5::read(gr, <span class="stringliteral">&quot;rf&quot;</span>, rf);</div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;      h5::read(gr, <span class="stringliteral">&quot;if&quot;</span>, if_);</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;      h5::read(gr, <span class="stringliteral">&quot;cf2if&quot;</span>, cf2if);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;      h5::read(gr, <span class="stringliteral">&quot;cf2if&quot;</span>, cf2if_);</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      h5::read(gr, <span class="stringliteral">&quot;if2cf_lu&quot;</span>, if2cf_lu);</div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;      h5::read(gr, <span class="stringliteral">&quot;if2cf_piv&quot;</span>, if2cf_piv);</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;      m = <a class="code" href="classcppdlr_1_1imfreq__ops.html#aec1f430ef8442851ca0003bc89620feb">imfreq_ops</a>(<a class="code" href="classcppdlr_1_1imfreq__ops.html#a0b95a2d9da812c7f894c16d9ab0de27c">lambda</a>, rf, statistic, if_, cf2if, if2cf_lu, if2cf_piv);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;      m = <a class="code" href="classcppdlr_1_1imfreq__ops.html#aec1f430ef8442851ca0003bc89620feb">imfreq_ops</a>(<a class="code" href="classcppdlr_1_1imfreq__ops.html#a0b95a2d9da812c7f894c16d9ab0de27c">lambda</a>, rf, statistic_, if_, cf2if_, if2cf_lu, if2cf_piv);</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    }</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  };</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
