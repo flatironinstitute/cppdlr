@@ -1,0 +1,130 @@
+\hypertarget{classcppdlr_1_1fineparams}{}\doxysection{cppdlr\+::fineparams Class Reference}
+\label{classcppdlr_1_1fineparams}\index{cppdlr::fineparams@{cppdlr::fineparams}}
+
+
+Class containing parameters for fine composite Chebyshev grid discretizations of imaginary time and frequency.  
+
+
+
+
+{\ttfamily \#include $<$dlr\+\_\+build.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classcppdlr_1_1fineparams_a1e82a79933c91abe609a6e5c04e9bca9}{fineparams}} (double \mbox{\hyperlink{classcppdlr_1_1fineparams_a7bc467b8180e0b3980debe9700026b4c}{lambda}}, int \mbox{\hyperlink{classcppdlr_1_1fineparams_a232cba7c7f76e2aa385980da3850ae25}{p}}=24)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const double \mbox{\hyperlink{classcppdlr_1_1fineparams_a7bc467b8180e0b3980debe9700026b4c}{lambda}}
+\begin{DoxyCompactList}\small\item\em DLR cutoff parameter. \end{DoxyCompactList}\item 
+const int \mbox{\hyperlink{classcppdlr_1_1fineparams_a232cba7c7f76e2aa385980da3850ae25}{p}}
+\begin{DoxyCompactList}\small\item\em Order of composite Chebyshev grid. \end{DoxyCompactList}\item 
+const int \mbox{\hyperlink{classcppdlr_1_1fineparams_a619b3c58649fcaa1914b31a80c5b2263}{nmax}}
+\begin{DoxyCompactList}\small\item\em Imaginary frequency cutoff. \end{DoxyCompactList}\item 
+const int \mbox{\hyperlink{classcppdlr_1_1fineparams_ac0f50ae7582fa29d3810f1db5461772b}{npom}}
+\item 
+const int \mbox{\hyperlink{classcppdlr_1_1fineparams_af1cda9f262b1e8b7316a4577d391d5de}{npt}}
+\item 
+const int \mbox{\hyperlink{classcppdlr_1_1fineparams_a7d45c880ad388622d31945ef1f932b43}{nom}}
+\begin{DoxyCompactList}\small\item\em Total \# fine real frequency grid points. \end{DoxyCompactList}\item 
+const int \mbox{\hyperlink{classcppdlr_1_1fineparams_af8eb17a1299f17a0adb564c152880eb1}{nt}}
+\begin{DoxyCompactList}\small\item\em Total \# fine imaginary time grid points. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class containing parameters for fine composite Chebyshev grid discretizations of imaginary time and frequency. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em lambda} & DLR cutoff parameter \\
+\hline
+\mbox{\texttt{ in}}  & {\em p} & Order of composite Chebyshev grid discretization\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+Values have been chosen empirically to give fine discretization of Lehmann kernel accurate to double machine precision 
+\end{DoxyNote}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_a1e82a79933c91abe609a6e5c04e9bca9}\label{classcppdlr_1_1fineparams_a1e82a79933c91abe609a6e5c04e9bca9}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!fineparams@{fineparams}}
+\index{fineparams@{fineparams}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{fineparams()}{fineparams()}}
+{\footnotesize\ttfamily cppdlr\+::fineparams\+::fineparams (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{int}]{p = {\ttfamily 24} }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_a7bc467b8180e0b3980debe9700026b4c}\label{classcppdlr_1_1fineparams_a7bc467b8180e0b3980debe9700026b4c}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!lambda@{lambda}}
+\index{lambda@{lambda}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{lambda}{lambda}}
+{\footnotesize\ttfamily const double cppdlr\+::fineparams\+::lambda}
+
+
+
+DLR cutoff parameter. 
+
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_a619b3c58649fcaa1914b31a80c5b2263}\label{classcppdlr_1_1fineparams_a619b3c58649fcaa1914b31a80c5b2263}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!nmax@{nmax}}
+\index{nmax@{nmax}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{nmax}{nmax}}
+{\footnotesize\ttfamily const int cppdlr\+::fineparams\+::nmax}
+
+
+
+Imaginary frequency cutoff. 
+
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_a7d45c880ad388622d31945ef1f932b43}\label{classcppdlr_1_1fineparams_a7d45c880ad388622d31945ef1f932b43}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!nom@{nom}}
+\index{nom@{nom}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{nom}{nom}}
+{\footnotesize\ttfamily const int cppdlr\+::fineparams\+::nom}
+
+
+
+Total \# fine real frequency grid points. 
+
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_ac0f50ae7582fa29d3810f1db5461772b}\label{classcppdlr_1_1fineparams_ac0f50ae7582fa29d3810f1db5461772b}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!npom@{npom}}
+\index{npom@{npom}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{npom}{npom}}
+{\footnotesize\ttfamily const int cppdlr\+::fineparams\+::npom}
+
+\hypertarget{classcppdlr_1_1fineparams_autotoc_md0}{}\doxysubsection{fine real frequency grid panels}\label{classcppdlr_1_1fineparams_autotoc_md0}
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_af1cda9f262b1e8b7316a4577d391d5de}\label{classcppdlr_1_1fineparams_af1cda9f262b1e8b7316a4577d391d5de}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!npt@{npt}}
+\index{npt@{npt}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{npt}{npt}}
+{\footnotesize\ttfamily const int cppdlr\+::fineparams\+::npt}
+
+\hypertarget{classcppdlr_1_1fineparams_autotoc_md1}{}\doxysubsection{fine imaginary time grid panels}\label{classcppdlr_1_1fineparams_autotoc_md1}
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_af8eb17a1299f17a0adb564c152880eb1}\label{classcppdlr_1_1fineparams_af8eb17a1299f17a0adb564c152880eb1}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!nt@{nt}}
+\index{nt@{nt}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{nt}{nt}}
+{\footnotesize\ttfamily const int cppdlr\+::fineparams\+::nt}
+
+
+
+Total \# fine imaginary time grid points. 
+
+\mbox{\Hypertarget{classcppdlr_1_1fineparams_a232cba7c7f76e2aa385980da3850ae25}\label{classcppdlr_1_1fineparams_a232cba7c7f76e2aa385980da3850ae25}} 
+\index{cppdlr::fineparams@{cppdlr::fineparams}!p@{p}}
+\index{p@{p}!cppdlr::fineparams@{cppdlr::fineparams}}
+\doxysubsubsection{\texorpdfstring{p}{p}}
+{\footnotesize\ttfamily const int cppdlr\+::fineparams\+::p}
+
+
+
+Order of composite Chebyshev grid. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/runner/work/cppdlr/cppdlr/c++/cppdlr/\mbox{\hyperlink{dlr__build_8hpp}{dlr\+\_\+build.\+hpp}}\item 
+/home/runner/work/cppdlr/cppdlr/c++/cppdlr/\mbox{\hyperlink{dlr__build_8cpp}{dlr\+\_\+build.\+cpp}}\end{DoxyCompactItemize}
