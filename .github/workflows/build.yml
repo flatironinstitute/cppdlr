@@ -75,4 +75,4 @@ jobs:
       with:
         folder: build/doc/html
         branch: github.io
-        target-folder: docs
+        target-folder: docs/main
