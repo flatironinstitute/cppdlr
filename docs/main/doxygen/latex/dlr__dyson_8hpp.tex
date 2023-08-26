@@ -1,31 +1,27 @@
-\hypertarget{dlr__dyson_8hpp}{}\doxysection{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/dlr\+\_\+dyson.hpp File Reference}
-\label{dlr__dyson_8hpp}\index{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/dlr\_dyson.hpp@{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/dlr\_dyson.hpp}}
-{\ttfamily \#include \char`\"{}nda/layout\+\_\+transforms.\+hpp\char`\"{}}\newline
+\doxysection{/\+Users/nwentzell/\+Dropbox/\+Coding/cppdlr/c++/cppdlr/dlr\+\_\+dyson.hpp File Reference}
+\hypertarget{dlr__dyson_8hpp}{}\label{dlr__dyson_8hpp}\index{/Users/nwentzell/Dropbox/Coding/cppdlr/c++/cppdlr/dlr\_dyson.hpp@{/Users/nwentzell/Dropbox/Coding/cppdlr/c++/cppdlr/dlr\_dyson.hpp}}
+{\ttfamily \#include \"{}nda/layout\+\_\+transforms.\+hpp\"{}}\newline
 {\ttfamily \#include $<$nda/nda.\+hpp$>$}\newline
 {\ttfamily \#include $<$cppdlr/dlr\+\_\+imtime.\+hpp$>$}\newline
 {\ttfamily \#include $<$cppdlr/dlr\+\_\+kernels.\+hpp$>$}\newline
 {\ttfamily \#include $<$nda/linalg/eigenelements.\+hpp$>$}\newline
 {\ttfamily \#include $<$type\+\_\+traits$>$}\newline
-\doxysubsection*{Namespaces}
+\doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
- \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
+class \mbox{\hyperlink{classcppdlr_1_1dyson__it}{cppdlr\+::dyson\+\_\+it$<$ Ht, Sh $>$}}
+\begin{DoxyCompactList}\small\item\em Class for solving Dyson equation in imaginary time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-{\footnotesize template$<$typename Ht , nda\+::\+Scalar Sh = std\+::conditional\+\_\+t$<$std\+::floating\+\_\+point$<$\+Ht$>$, Ht, get\+\_\+value\+\_\+t$<$\+Ht$>$$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_acd50fc5abb306456b4b2710bea369c1a}{cppdlr\+::requires}} (std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$) class \mbox{\hyperlink{classdyson__it}{dyson\+\_\+it}}
-\item 
-{\footnotesize template$<$typename Ht $>$ }\\\mbox{\hyperlink{namespacecppdlr_a59a73f63b1734b37ef26f7edf1ca0034}{cppdlr\+::requires}} (std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$) auto free\+\_\+gf(double beta
+{\footnotesize template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)}\\auto \mbox{\hyperlink{namespacecppdlr_a02424caf43ace0c3330b2fa03f706400}{cppdlr\+::free\+\_\+gf}} (double beta, \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&itops, Ht const \&h, double mu=0, bool time\+\_\+order=false)
+\begin{DoxyCompactList}\small\item\em Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)}\\auto \mbox{\hyperlink{namespacecppdlr_a4b753b1a7de53aff215a230206908e6d}{cppdlr\+::free\+\_\+gf}} (double beta, \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&itops, Ht const \&h, bool time\+\_\+order)
 \begin{DoxyCompactList}\small\item\em Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
-\begin{DoxyCompactItemize}
-\item 
-imtime\+\_\+ops const  \& \mbox{\hyperlink{namespacecppdlr_ad6845f613df7f7b14c43c1776464dc55}{cppdlr\+::itops}}
-\item 
-imtime\+\_\+ops const Ht const  \& \mbox{\hyperlink{namespacecppdlr_a78129915b4883af7ef355b517eb130f3}{cppdlr\+::h}}
-\item 
-imtime\+\_\+ops const Ht const double \mbox{\hyperlink{namespacecppdlr_ab7cfde70e959b26df44918ee98d29bab}{cppdlr\+::mu}} = 0
-\item 
-imtime\+\_\+ops const Ht const double bool \mbox{\hyperlink{namespacecppdlr_afef0a162a809071b83fd09f578db52bf}{cppdlr\+::time\+\_\+order}}
-\end{DoxyCompactItemize}

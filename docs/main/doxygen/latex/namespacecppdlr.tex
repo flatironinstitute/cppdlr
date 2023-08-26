@@ -1,19 +1,21 @@
-\hypertarget{namespacecppdlr}{}\doxysection{cppdlr Namespace Reference}
-\label{namespacecppdlr}\index{cppdlr@{cppdlr}}
-\doxysubsection*{Classes}
+\doxysection{cppdlr Namespace Reference}
+\hypertarget{namespacecppdlr}{}\label{namespacecppdlr}\index{cppdlr@{cppdlr}}
+\doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
+class \mbox{\hyperlink{classcppdlr_1_1barycheb}{barycheb}}
+\item 
+class \mbox{\hyperlink{classcppdlr_1_1dyson__it}{dyson\+\_\+it}}
+\begin{DoxyCompactList}\small\item\em Class for solving Dyson equation in imaginary time. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}}
 \begin{DoxyCompactList}\small\item\em Class containing parameters for fine composite Chebyshev grid discretizations of imaginary time and frequency. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}}
 \begin{DoxyCompactList}\small\item\em Class responsible for all DLR imaginary frequency operations, including building imaginary frequency grid and transformations. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}
 \begin{DoxyCompactList}\small\item\em Class responsible for all DLR imaginary time operations, including building imaginary time grid and transformations. \end{DoxyCompactList}\item 
-class \mbox{\hyperlink{classcppdlr_1_1barycheb}{barycheb}}
-\item 
 struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{make\+\_\+common\+\_\+helper}}
 \begin{DoxyCompactList}\small\item\em Get type of given nda Memory\+Array with scalar value type replaced by common type of two given types (real if both are real, complex otherwise) \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}{build\+\_\+rf\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine)
@@ -28,9 +30,11 @@ nda\+::matrix$<$ dcomplex $>$ \mbox{\hyperlink{namespacecppdlr_a988f80420d11cd80
 \begin{DoxyCompactList}\small\item\em Get imaginary frequency discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}{build\+\_\+dlr\+\_\+rf}} (double lambda, double eps)
 \begin{DoxyCompactList}\small\item\em Construct DLR basis by obtaining DLR frequencies. \end{DoxyCompactList}\item 
-{\footnotesize template$<$typename Ht , nda\+::\+Scalar Sh = std\+::conditional\+\_\+t$<$std\+::floating\+\_\+point$<$\+Ht$>$, Ht, get\+\_\+value\+\_\+t$<$\+Ht$>$$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_acd50fc5abb306456b4b2710bea369c1a}{requires}} (std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$) class \mbox{\hyperlink{classdyson__it}{dyson\+\_\+it}}
-\item 
-{\footnotesize template$<$typename Ht $>$ }\\\mbox{\hyperlink{namespacecppdlr_a59a73f63b1734b37ef26f7edf1ca0034}{requires}} (std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$) auto free\+\_\+gf(double beta
+{\footnotesize template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)}\\auto \mbox{\hyperlink{namespacecppdlr_a02424caf43ace0c3330b2fa03f706400}{free\+\_\+gf}} (double beta, \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&itops, Ht const \&h, double mu=0, bool time\+\_\+order=false)
+\begin{DoxyCompactList}\small\item\em Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)}\\auto \mbox{\hyperlink{namespacecppdlr_a4b753b1a7de53aff215a230206908e6d}{free\+\_\+gf}} (double beta, \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&itops, Ht const \&h, bool time\+\_\+order)
 \begin{DoxyCompactList}\small\item\em Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{namespacecppdlr_afc9726e02898098dfff8448f02f5b3c6}{k\+\_\+it}} (double t, double om)
 \begin{DoxyCompactList}\small\item\em Evaluate analytic continuation kernel in imaginary time (relative time format) using dimensionless variables (beta = 1) \end{DoxyCompactList}\item 
@@ -38,9 +42,9 @@ double \mbox{\hyperlink{namespacecppdlr_a3cfc4afda9cacac00e93425fe9d45a93}{k\+\_
 \begin{DoxyCompactList}\small\item\em Evaluate analytic continuation kernel in imaginary time (relative time format) for a given inverse temperature. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{namespacecppdlr_a7dfaf907221eb1768418258421af703f}{k\+\_\+it\+\_\+abs}} (double t, double om)
 \begin{DoxyCompactList}\small\item\em Evaluate analytic continuation kernel in imaginary time (absolute time format) using dimensionless variables (beta = 1) \end{DoxyCompactList}\item 
-std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_abbfc2f4ecdd39b95d4419a4be35909a4}{k\+\_\+if\+\_\+fermion}} (int n, double om)
+std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a66270b210c46b39737f361467f645be7}{k\+\_\+if\+\_\+fermion}} (int n, double om)
 \item 
-std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a003438d56c2ca900d2f08af9f2ab424d}{k\+\_\+if\+\_\+boson}} (int n, double om)
+std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ab73f52d9e0209e584d1210d419f39f8c}{k\+\_\+if\+\_\+boson}} (int n, double om)
 \item 
 std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_af8f77e12b089b5ddb5b5b3cda18cf623}{k\+\_\+if}} (int n, double om, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic)
 \begin{DoxyCompactList}\small\item\em Evaluate analytic continuation kernel in imaginary frequency using dimensionless variables (beta = 1) \end{DoxyCompactList}\item 
@@ -51,70 +55,60 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a2d46bf12944fe36c90
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}{rel2abs}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t)
 \begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}{rel2abs}} (double t)
-\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.   \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a103a8aae4c8af512d2682d381a676561}{abs2rel}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t\+\_\+abs)
 \begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from absolute to relative time format. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{namespacecppdlr_a791b659aaebe1e52cf12edb3b089b224}{abs2rel}} (double t\+\_\+abs)
-\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.   \end{DoxyCompactList}\item 
 std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecppdlr_afbfcb627a6ab1115bb02670e7ce61219}{gaussquad}} (int n)
 \begin{DoxyCompactList}\small\item\em Gauss-\/\+Legendre nodes and weights. \end{DoxyCompactList}\item 
 std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}{leg\+\_\+eval}} (int n, double x)
 \begin{DoxyCompactList}\small\item\em Evaluate Legendre polynomial of degree n and its derivative. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_a236adeec4584da8f22e01e5d8b37f4b9}{requires}} (nda\+::is\+\_\+scalar\+\_\+v$<$ S $>$) std
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \newline
+requires (nda\+::is\+\_\+scalar\+\_\+v$<$S$>$)}\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a3d95a6e52d5747f0ea12b91160734e8d}{pivrgs}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a240eb87e88ef0bdc5994d57fe9b7d3a1}{arraymult}} (Ta const \&a, Tb const \&b)
+{\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1}{arraymult}} (Ta const \&a, Tb const \&b)
 \begin{DoxyCompactList}\small\item\em Contract the last dimension of an array a with the first dimension of an array b. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename S $>$ }\\S \mbox{\hyperlink{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}{adapgl}} (std\+::function$<$ nda\+::array$<$ S, 1 $>$(nda\+::array$<$ double, 1 $>$)$>$ f, double a, double b, double tol, nda\+::vector$<$ double $>$ xgl, nda\+::vector$<$ double $>$ wgl)
 \begin{DoxyCompactList}\small\item\em Quick and dirty adaptive Gauss quadrature. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Enumerations}
+\doxysubsubsection*{Enumerations}
 \begin{DoxyCompactItemize}
 \item 
 enum \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} \{ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435a6a57173d6b5be36c6815ab715152716d}{Boson}} = 0
 , \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee}{Fermion}} = 1
  \}
 \end{DoxyCompactItemize}
-\doxysubsection*{Typedefs}
+\doxysubsubsection*{Typedefs}
 \begin{DoxyCompactItemize}
 \item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T$>$ }\\using \mbox{\hyperlink{namespacecppdlr_a85cd7bdb1fd649296322df16d329ca27}{make\+\_\+real\+\_\+t}} = decltype(make\+\_\+regular(real(std\+::declval$<$ T $>$())))
 \begin{DoxyCompactList}\small\item\em Get real-\/valued type corresponding to type of given nda Memory\+Array. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array T$>$ }\\using \mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}} = decltype(make\+\_\+regular(std\+::declval$<$ T $>$() $\ast$1i))
+{\footnotesize template$<$nda\+::\+Memory\+Array T$>$ }\\using \mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}} = decltype(make\+\_\+regular(std\+::declval$<$ T $>$() \texorpdfstring{$\ast$}{*}1i))
 \begin{DoxyCompactList}\small\item\em Get complex-\/valued type corresponding to type of given nda Memory\+Array. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S1, nda\+::\+Scalar S2$>$ }\\using \mbox{\hyperlink{namespacecppdlr_ac23dfec829ec6ed8deec469faeea3981}{make\+\_\+common\+\_\+t}} = typename \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{make\+\_\+common\+\_\+helper}}$<$ T, S1, S2 $>$\+::type
-\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const  \& \mbox{\hyperlink{namespacecppdlr_ad6845f613df7f7b14c43c1776464dc55}{itops}}
-\item 
-\mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const Ht const  \& \mbox{\hyperlink{namespacecppdlr_a78129915b4883af7ef355b517eb130f3}{h}}
-\item 
-\mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const Ht const double \mbox{\hyperlink{namespacecppdlr_ab7cfde70e959b26df44918ee98d29bab}{mu}} = 0
-\item 
-\mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const Ht const double bool \mbox{\hyperlink{namespacecppdlr_afef0a162a809071b83fd09f578db52bf}{time\+\_\+order}}
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Typedef Documentation}
-\mbox{\Hypertarget{namespacecppdlr_ac23dfec829ec6ed8deec469faeea3981}\label{namespacecppdlr_ac23dfec829ec6ed8deec469faeea3981}} 
+\Hypertarget{namespacecppdlr_ac23dfec829ec6ed8deec469faeea3981}\label{namespacecppdlr_ac23dfec829ec6ed8deec469faeea3981} 
 \index{cppdlr@{cppdlr}!make\_common\_t@{make\_common\_t}}
 \index{make\_common\_t@{make\_common\_t}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{make\_common\_t}{make\_common\_t}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S1, nda\+::\+Scalar S2$>$ \\
 using \mbox{\hyperlink{namespacecppdlr_ac23dfec829ec6ed8deec469faeea3981}{cppdlr\+::make\+\_\+common\+\_\+t}} = typedef typename \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{make\+\_\+common\+\_\+helper}}$<$T, S1, S2$>$\+::type}
 
-\mbox{\Hypertarget{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}\label{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}} 
+\Hypertarget{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}\label{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad} 
 \index{cppdlr@{cppdlr}!make\_cplx\_t@{make\_cplx\_t}}
 \index{make\_cplx\_t@{make\_cplx\_t}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{make\_cplx\_t}{make\_cplx\_t}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T$>$ \\
-using \mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{cppdlr\+::make\+\_\+cplx\+\_\+t}} = typedef decltype(make\+\_\+regular(std\+::declval$<$T$>$() $\ast$ 1i))}
+using \mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{cppdlr\+::make\+\_\+cplx\+\_\+t}} = typedef decltype(make\+\_\+regular(std\+::declval$<$T$>$() \texorpdfstring{$\ast$}{*} 1i))}
 
 
 
 Get complex-\/valued type corresponding to type of given nda Memory\+Array. 
 
-\mbox{\Hypertarget{namespacecppdlr_a85cd7bdb1fd649296322df16d329ca27}\label{namespacecppdlr_a85cd7bdb1fd649296322df16d329ca27}} 
+\Hypertarget{namespacecppdlr_a85cd7bdb1fd649296322df16d329ca27}\label{namespacecppdlr_a85cd7bdb1fd649296322df16d329ca27} 
 \index{cppdlr@{cppdlr}!make\_real\_t@{make\_real\_t}}
 \index{make\_real\_t@{make\_real\_t}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{make\_real\_t}{make\_real\_t}}
@@ -128,18 +122,18 @@ Get real-\/valued type corresponding to type of given nda Memory\+Array.
 
 
 \doxysubsection{Enumeration Type Documentation}
-\mbox{\Hypertarget{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}\label{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}} 
+\Hypertarget{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}\label{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435} 
 \index{cppdlr@{cppdlr}!statistic\_t@{statistic\_t}}
 \index{statistic\_t@{statistic\_t}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{statistic\_t}{statistic\_t}}
 {\footnotesize\ttfamily enum \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{cppdlr\+::statistic\+\_\+t}}}
 
 The Particle Statistic\+: Boson or Fermion \begin{DoxyEnumFields}{Enumerator}
-\raisebox{\heightof{T}}[0pt][0pt]{\index{Boson@{Boson}!cppdlr@{cppdlr}}\index{cppdlr@{cppdlr}!Boson@{Boson}}}\mbox{\Hypertarget{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435a6a57173d6b5be36c6815ab715152716d}\label{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435a6a57173d6b5be36c6815ab715152716d}} 
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Boson@{Boson}!cppdlr@{cppdlr}}\index{cppdlr@{cppdlr}!Boson@{Boson}}}\Hypertarget{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435a6a57173d6b5be36c6815ab715152716d}\label{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435a6a57173d6b5be36c6815ab715152716d} 
 Boson&\\
 \hline
 
-\raisebox{\heightof{T}}[0pt][0pt]{\index{Fermion@{Fermion}!cppdlr@{cppdlr}}\index{cppdlr@{cppdlr}!Fermion@{Fermion}}}\mbox{\Hypertarget{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee}\label{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee}} 
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Fermion@{Fermion}!cppdlr@{cppdlr}}\index{cppdlr@{cppdlr}!Fermion@{Fermion}}}\Hypertarget{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee}\label{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee} 
 Fermion&\\
 \hline
 
@@ -147,7 +141,7 @@ Fermion&\\
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{namespacecppdlr_a791b659aaebe1e52cf12edb3b089b224}\label{namespacecppdlr_a791b659aaebe1e52cf12edb3b089b224}} 
+\Hypertarget{namespacecppdlr_a791b659aaebe1e52cf12edb3b089b224}\label{namespacecppdlr_a791b659aaebe1e52cf12edb3b089b224} 
 \index{cppdlr@{cppdlr}!abs2rel@{abs2rel}}
 \index{abs2rel@{abs2rel}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{abs2rel()}{abs2rel()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
@@ -155,7 +149,7 @@ Fermion&\\
 
 
 
-Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format. 
+Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.   
 
 
 \begin{DoxyParams}{Parameters}
@@ -166,9 +160,9 @@ Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.
 Vector of points on \mbox{[}0,1\mbox{]} in absolute time format
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-Converting a point from relative to absolute time format will, in general, result in a loss of relative accuracy in the location of the point if the point is close to t = 1. For example, in three-\/digit arithmetic, the point t = 0.\+999111 could be stored in relative format as t$^\wedge$$\ast$ = -\/0.\+889e-\/3, but only as t = 0.\+999 in absolute format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation. 
+Converting a point from relative to absolute time format will, in general, result in a loss of relative accuracy in the location of the point if the point is close to t = 1. For example, in three-\/digit arithmetic, the point t = 0.\+999111 could be stored in relative format as t\texorpdfstring{$^\wedge$}{\string^}\texorpdfstring{$\ast$}{*} = -\/0.\+889e-\/3, but only as t = 0.\+999 in absolute format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation.   
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a103a8aae4c8af512d2682d381a676561}\label{namespacecppdlr_a103a8aae4c8af512d2682d381a676561}} 
+\Hypertarget{namespacecppdlr_a103a8aae4c8af512d2682d381a676561}\label{namespacecppdlr_a103a8aae4c8af512d2682d381a676561} 
 \index{cppdlr@{cppdlr}!abs2rel@{abs2rel}}
 \index{abs2rel@{abs2rel}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{abs2rel()}{abs2rel()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
@@ -189,7 +183,7 @@ Vector of points on \mbox{[}0,1\mbox{]} in relative time format
 \begin{DoxyNote}{Note}
 cppdlr uses the relative time format to describe imaginary time points. Therefore, if you wish to specify an imaginary time point in the standard absolute time format, for example to specify a point at which to evaluate a DLR expansion, you must first convert the point to the relative time format using this function. However, in order to maintain full relative precision in all calculations, you must conform to the cppdlr standard and specify point in the relative time format from the beginning. On the other hand, in most cases only a mild loss of accuracy will result from beginning with the absolute format and then converting to the relative format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation. 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}\label{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}} 
+\Hypertarget{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}\label{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c} 
 \index{cppdlr@{cppdlr}!adapgl@{adapgl}}
 \index{adapgl@{adapgl}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{adapgl()}{adapgl()}}
@@ -223,12 +217,12 @@ Integral of {\ttfamily f} from {\ttfamily a} to {\ttfamily b}
 \begin{DoxyNote}{Note}
 This is a quick and dirty adaptive integration function, which tries to achieve an error tolerance {\ttfamily tol} but doesn\textquotesingle{}t guarantee it. A more robust implementation would use global error estimation. Nevertheless, this works quite well most of the time. 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a240eb87e88ef0bdc5994d57fe9b7d3a1}\label{namespacecppdlr_a240eb87e88ef0bdc5994d57fe9b7d3a1}} 
+\Hypertarget{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1}\label{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1} 
 \index{cppdlr@{cppdlr}!arraymult@{arraymult}}
 \index{arraymult@{arraymult}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{arraymult()}{arraymult()}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ \\
-nda\+::array$<$S, Ta\+::rank + Tb\+::rank -\/ 2$>$ cppdlr\+::arraymult (\begin{DoxyParamCaption}\item[{Ta const \&}]{a,  }\item[{Tb const \&}]{b }\end{DoxyParamCaption})}
+nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ cppdlr\+::arraymult (\begin{DoxyParamCaption}\item[{Ta const \&}]{a,  }\item[{Tb const \&}]{b }\end{DoxyParamCaption})}
 
 
 
@@ -244,7 +238,7 @@ Contract the last dimension of an array a with the first dimension of an array b
 \begin{DoxyReturn}{Returns}
 Contraction of the inner dimensions of {\ttfamily a} and {\ttfamily b} 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}\label{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}} 
+\Hypertarget{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}\label{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0} 
 \index{cppdlr@{cppdlr}!build\_dlr\_rf@{build\_dlr\_rf}}
 \index{build\_dlr\_rf@{build\_dlr\_rf}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_dlr\_rf()}{build\_dlr\_rf()}}
@@ -254,7 +248,7 @@ Contraction of the inner dimensions of {\ttfamily a} and {\ttfamily b}
 
 Construct DLR basis by obtaining DLR frequencies. 
 
-Construct DLR basis for a given accuracy and cutoff parameter by getting DLR frequencies
+Construct DLR basis for a given accuracy and cutoff parameter by getting DLR frequencies 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -266,7 +260,7 @@ Construct DLR basis for a given accuracy and cutoff parameter by getting DLR fre
 \begin{DoxyReturn}{Returns}
 DLR frequencies 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}\label{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}} 
+\Hypertarget{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}\label{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0} 
 \index{cppdlr@{cppdlr}!build\_it\_fine@{build\_it\_fine}}
 \index{build\_it\_fine@{build\_it\_fine}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_it\_fine()}{build\_it\_fine()}}
@@ -287,7 +281,7 @@ Fine imaginary time grid
 \begin{DoxyNote}{Note}
 Fine imaginary time grid is given in relative format 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}\label{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}} 
+\Hypertarget{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}\label{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0} 
 \index{cppdlr@{cppdlr}!build\_k\_if@{build\_k\_if}}
 \index{build\_k\_if@{build\_k\_if}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_k\_if()}{build\_k\_if()}}
@@ -309,7 +303,7 @@ Get imaginary frequency discretization of analytic continuation kernel.
 \begin{DoxyReturn}{Returns}
 Discretization of analytic continuation kernel on given grid 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}\label{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}} 
+\Hypertarget{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}\label{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6} 
 \index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
 \index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}}
@@ -329,7 +323,7 @@ Get imaginary time discretization of analytic continuation kernel.
 \begin{DoxyReturn}{Returns}
 Discretization of analytic continuation kernel on given grid 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}\label{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}} 
+\Hypertarget{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}\label{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e} 
 \index{cppdlr@{cppdlr}!build\_rf\_fine@{build\_rf\_fine}}
 \index{build\_rf\_fine@{build\_rf\_fine}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_rf\_fine()}{build\_rf\_fine()}}
@@ -347,7 +341,7 @@ Build fine composite Chebyshev grid in real frequency.
 \begin{DoxyReturn}{Returns}
 Fine real frequency grid 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b}\label{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b}} 
+\Hypertarget{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b}\label{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b} 
 \index{cppdlr@{cppdlr}!eqptsrel@{eqptsrel}}
 \index{eqptsrel@{eqptsrel}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{eqptsrel()}{eqptsrel()}}
@@ -365,7 +359,71 @@ Get grid of equispaced points on \mbox{[}0,1\mbox{]} in relative time format.
 \begin{DoxyReturn}{Returns}
 Vector of equispaced points on \mbox{[}0,1\mbox{]} in relative time format 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_afbfcb627a6ab1115bb02670e7ce61219}\label{namespacecppdlr_afbfcb627a6ab1115bb02670e7ce61219}} 
+\Hypertarget{namespacecppdlr_a4b753b1a7de53aff215a230206908e6d}\label{namespacecppdlr_a4b753b1a7de53aff215a230206908e6d} 
+\index{cppdlr@{cppdlr}!free\_gf@{free\_gf}}
+\index{free\_gf@{free\_gf}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{free\_gf()}{free\_gf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)\\
+auto cppdlr\+::free\+\_\+gf (\begin{DoxyParamCaption}\item[{double}]{beta,  }\item[{\mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&}]{itops,  }\item[{Ht const \&}]{h,  }\item[{bool}]{time\+\_\+order }\end{DoxyParamCaption})}
+
+
+
+Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. 
+
+The Green\textquotesingle{}s function is computed by diagonalizing the Hamiltonian, and is returned by its values at the DLR imaginary time nodes.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em beta} & Inverse temperature \\
+\hline
+\mbox{\texttt{ in}}  & {\em it} & \doxylink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops} object \\
+\hline
+\mbox{\texttt{ in}}  & {\em h} & Hamiltonian \\
+\hline
+\mbox{\texttt{ in}}  & {\em time\+\_\+order} & Flag for ordinary (false or ORDINARY) or time-\/ordered (true or TIME\+\_\+\+ORDERED) Dyson equation, which changes free Green\textquotesingle{}s function\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Green\textquotesingle{}s function at DLR imaginary time nodes
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Hamiltonian must either be a symmetric matrix, a Hermitian matrix, or a real scalar. 
+\end{DoxyNote}
+\Hypertarget{namespacecppdlr_a02424caf43ace0c3330b2fa03f706400}\label{namespacecppdlr_a02424caf43ace0c3330b2fa03f706400} 
+\index{cppdlr@{cppdlr}!free\_gf@{free\_gf}}
+\index{free\_gf@{free\_gf}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{free\_gf()}{free\_gf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)\\
+auto cppdlr\+::free\+\_\+gf (\begin{DoxyParamCaption}\item[{double}]{beta,  }\item[{\mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&}]{itops,  }\item[{Ht const \&}]{h,  }\item[{double}]{mu = {\ttfamily 0},  }\item[{bool}]{time\+\_\+order = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. 
+
+The Green\textquotesingle{}s function is computed by diagonalizing the Hamiltonian, and is returned by its values at the DLR imaginary time nodes.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em beta} & Inverse temperature \\
+\hline
+\mbox{\texttt{ in}}  & {\em it} & \doxylink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops} object \\
+\hline
+\mbox{\texttt{ in}}  & {\em h} & Hamiltonian \\
+\hline
+\mbox{\texttt{ in}}  & {\em mu} & Chemical potential \\
+\hline
+\mbox{\texttt{ in}}  & {\em time\+\_\+order} & Flag for ordinary (false or ORDINARY, default) or time-\/ordered (true or TIME\+\_\+\+ORDERED) Dyson equation, which changes free Green\textquotesingle{}s function\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Green\textquotesingle{}s function at DLR imaginary time nodes
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+Hamiltonian must either be a symmetric matrix, a Hermitian matrix, or a real scalar. 
+\end{DoxyNote}
+\Hypertarget{namespacecppdlr_afbfcb627a6ab1115bb02670e7ce61219}\label{namespacecppdlr_afbfcb627a6ab1115bb02670e7ce61219} 
 \index{cppdlr@{cppdlr}!gaussquad@{gaussquad}}
 \index{gaussquad@{gaussquad}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{gaussquad()}{gaussquad()}}
@@ -385,7 +443,7 @@ Uses Newton iteration to obtain the Gauss-\/\+Legendre nodes and weights
 \begin{DoxyReturn}{Returns}
 Tuple of nodes and weights 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}\label{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}} 
+\Hypertarget{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}\label{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9} 
 \index{cppdlr@{cppdlr}!geterr\_k\_it@{geterr\_k\_it}}
 \index{geterr\_k\_it@{geterr\_k\_it}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{geterr\_k\_it()}{geterr\_k\_it()}}
@@ -414,7 +472,7 @@ Error is given as an estimate of the maximum absolute value of the difference be
 
 {\ttfamily kmat} should be computed using the function get\+\_\+kfine with composite Chebyshev grids produced by get\+\_\+omfine and get\+\_\+tfine 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_af8f77e12b089b5ddb5b5b3cda18cf623}\label{namespacecppdlr_af8f77e12b089b5ddb5b5b3cda18cf623}} 
+\Hypertarget{namespacecppdlr_af8f77e12b089b5ddb5b5b3cda18cf623}\label{namespacecppdlr_af8f77e12b089b5ddb5b5b3cda18cf623} 
 \index{cppdlr@{cppdlr}!k\_if@{k\_if}}
 \index{k\_if@{k\_if}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{k\_if()}{k\_if()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
@@ -437,9 +495,9 @@ Evaluate analytic continuation kernel in imaginary frequency using dimensionless
 Value K(i nu\+\_\+n,om) of analytic continuation kernel
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The definition of the analytic continuation kernel using dimensionless variables is K(i nu\+\_\+n, om) = 1 / (i nu\+\_\+n -\/ om) with i nu\+\_\+n = (2n+1) $\ast$ i $\ast$ pi (fermionic case) or i nu\+\_\+n = 2n $\ast$ i $\ast$ pi (bosonic case). 
+The definition of the analytic continuation kernel using dimensionless variables is K(i nu\+\_\+n, om) = 1 / (i nu\+\_\+n -\/ om) with i nu\+\_\+n = (2n+1) \texorpdfstring{$\ast$}{*} i \texorpdfstring{$\ast$}{*} pi (fermionic case) or i nu\+\_\+n = 2n \texorpdfstring{$\ast$}{*} i \texorpdfstring{$\ast$}{*} pi (bosonic case). 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a672098c598c55c8f9da60cd194a741ea}\label{namespacecppdlr_a672098c598c55c8f9da60cd194a741ea}} 
+\Hypertarget{namespacecppdlr_a672098c598c55c8f9da60cd194a741ea}\label{namespacecppdlr_a672098c598c55c8f9da60cd194a741ea} 
 \index{cppdlr@{cppdlr}!k\_if@{k\_if}}
 \index{k\_if@{k\_if}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{k\_if()}{k\_if()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
@@ -464,21 +522,21 @@ Evaluate analytic continuation kernel in imaginary frequency for a given inverse
 Value K(i nu\+\_\+n,om) of analytic continuation kernel
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The definition of the analytic continuation kernel at a given inverse temperature beta is K(i nu\+\_\+n, om) = 1 / (i nu\+\_\+n -\/ om) with i nu\+\_\+n = (2n+1) $\ast$ i $\ast$ pi / beta (fermionic case) or i nu\+\_\+n = 2n $\ast$ i $\ast$ pi / beta (bosonic case). 
+The definition of the analytic continuation kernel at a given inverse temperature beta is K(i nu\+\_\+n, om) = 1 / (i nu\+\_\+n -\/ om) with i nu\+\_\+n = (2n+1) \texorpdfstring{$\ast$}{*} i \texorpdfstring{$\ast$}{*} pi / beta (fermionic case) or i nu\+\_\+n = 2n \texorpdfstring{$\ast$}{*} i \texorpdfstring{$\ast$}{*} pi / beta (bosonic case). 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a003438d56c2ca900d2f08af9f2ab424d}\label{namespacecppdlr_a003438d56c2ca900d2f08af9f2ab424d}} 
+\Hypertarget{namespacecppdlr_ab73f52d9e0209e584d1210d419f39f8c}\label{namespacecppdlr_ab73f52d9e0209e584d1210d419f39f8c} 
 \index{cppdlr@{cppdlr}!k\_if\_boson@{k\_if\_boson}}
 \index{k\_if\_boson@{k\_if\_boson}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{k\_if\_boson()}{k\_if\_boson()}}
-{\footnotesize\ttfamily std\+::complex$<$double$>$ cppdlr\+::k\+\_\+if\+\_\+boson (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{om }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily std\+::complex$<$ double $>$ cppdlr\+::k\+\_\+if\+\_\+boson (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{om }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{namespacecppdlr_abbfc2f4ecdd39b95d4419a4be35909a4}\label{namespacecppdlr_abbfc2f4ecdd39b95d4419a4be35909a4}} 
+\Hypertarget{namespacecppdlr_a66270b210c46b39737f361467f645be7}\label{namespacecppdlr_a66270b210c46b39737f361467f645be7} 
 \index{cppdlr@{cppdlr}!k\_if\_fermion@{k\_if\_fermion}}
 \index{k\_if\_fermion@{k\_if\_fermion}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{k\_if\_fermion()}{k\_if\_fermion()}}
-{\footnotesize\ttfamily std\+::complex$<$double$>$ cppdlr\+::k\+\_\+if\+\_\+fermion (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{om }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily std\+::complex$<$ double $>$ cppdlr\+::k\+\_\+if\+\_\+fermion (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{om }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{namespacecppdlr_afc9726e02898098dfff8448f02f5b3c6}\label{namespacecppdlr_afc9726e02898098dfff8448f02f5b3c6}} 
+\Hypertarget{namespacecppdlr_afc9726e02898098dfff8448f02f5b3c6}\label{namespacecppdlr_afc9726e02898098dfff8448f02f5b3c6} 
 \index{cppdlr@{cppdlr}!k\_it@{k\_it}}
 \index{k\_it@{k\_it}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{k\_it()}{k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
@@ -499,9 +557,9 @@ Evaluate analytic continuation kernel in imaginary time (relative time format) u
 Value K(t,om) of analytic continuation kernel
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The definition of the analytic continuation kernel using dimensionless variables is K(t,om) = -\/exp(-\/t $\ast$ om)/(1 + exp(-\/om)). 
+The definition of the analytic continuation kernel using dimensionless variables is K(t,om) = -\/exp(-\/t \texorpdfstring{$\ast$}{*} om)/(1 + exp(-\/om)). 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a3cfc4afda9cacac00e93425fe9d45a93}\label{namespacecppdlr_a3cfc4afda9cacac00e93425fe9d45a93}} 
+\Hypertarget{namespacecppdlr_a3cfc4afda9cacac00e93425fe9d45a93}\label{namespacecppdlr_a3cfc4afda9cacac00e93425fe9d45a93} 
 \index{cppdlr@{cppdlr}!k\_it@{k\_it}}
 \index{k\_it@{k\_it}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{k\_it()}{k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
@@ -524,9 +582,9 @@ Evaluate analytic continuation kernel in imaginary time (relative time format) f
 Value K(t,om) of analytic continuation kernel
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The definition of the analytic continuation kernel at a given inverse temperature beta is K(t,om) = -\/exp(-\/t$\ast$om)/(1+exp(-\/beta $\ast$ om)). 
+The definition of the analytic continuation kernel at a given inverse temperature beta is K(t,om) = -\/exp(-\/t\texorpdfstring{$\ast$}{*}om)/(1+exp(-\/beta \texorpdfstring{$\ast$}{*} om)). 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a7dfaf907221eb1768418258421af703f}\label{namespacecppdlr_a7dfaf907221eb1768418258421af703f}} 
+\Hypertarget{namespacecppdlr_a7dfaf907221eb1768418258421af703f}\label{namespacecppdlr_a7dfaf907221eb1768418258421af703f} 
 \index{cppdlr@{cppdlr}!k\_it\_abs@{k\_it\_abs}}
 \index{k\_it\_abs@{k\_it\_abs}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{k\_it\_abs()}{k\_it\_abs()}}
@@ -547,9 +605,9 @@ Evaluate analytic continuation kernel in imaginary time (absolute time format) u
 Value K(t,om) of analytic continuation kernel
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The definition of the analytic continuation kernel using dimensionless variables is K(t,om) = -\/exp(-\/t $\ast$ om)/(1 + exp(-\/om)). 
+The definition of the analytic continuation kernel using dimensionless variables is K(t,om) = -\/exp(-\/t \texorpdfstring{$\ast$}{*} om)/(1 + exp(-\/om)). 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}\label{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}} 
+\Hypertarget{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}\label{namespacecppdlr_adcede29d3876b4a265f09a56db33085d} 
 \index{cppdlr@{cppdlr}!leg\_eval@{leg\_eval}}
 \index{leg\_eval@{leg\_eval}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{leg\_eval()}{leg\_eval()}}
@@ -571,7 +629,33 @@ Uses Legendre three-\/term recurrence
 \begin{DoxyReturn}{Returns}
 Tuple of polynomial value Pn(x) and derivative Pn\textquotesingle{}(x) 
 \end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}\label{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}} 
+\Hypertarget{namespacecppdlr_a3d95a6e52d5747f0ea12b91160734e8d}\label{namespacecppdlr_a3d95a6e52d5747f0ea12b91160734e8d} 
+\index{cppdlr@{cppdlr}!pivrgs@{pivrgs}}
+\index{pivrgs@{pivrgs}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{pivrgs()}{pivrgs()}}
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \newline
+requires (nda\+::is\+\_\+scalar\+\_\+v$<$S$>$)\\
+std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ cppdlr\+::pivrgs (\begin{DoxyParamCaption}\item[{T const \&}]{a,  }\item[{double}]{eps }\end{DoxyParamCaption})}
+
+
+
+Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. 
+
+Determine the epsilon-\/rank of a matrix and return an orthogonal basis of its epsilon-\/row space.
+
+This is a translation of the Fortran subroutine \"{}qrdgrm\"{} by V. Rokhlin.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Matrix to be orthogonalized \\
+\hline
+{\em eps} & Rank cutoff tolerance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Tuple of (1) matrix containing whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots 
+\end{DoxyReturn}
+\Hypertarget{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}\label{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229} 
 \index{cppdlr@{cppdlr}!rel2abs@{rel2abs}}
 \index{rel2abs@{rel2abs}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{rel2abs()}{rel2abs()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
@@ -579,7 +663,7 @@ Tuple of polynomial value Pn(x) and derivative Pn\textquotesingle{}(x)
 
 
 
-Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format. 
+Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.   
 
 
 \begin{DoxyParams}{Parameters}
@@ -590,9 +674,9 @@ Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.
 Vector of points on \mbox{[}0,1\mbox{]} in absolute time format
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-Converting a point from relative to absolute time format will, in general, result in a loss of relative accuracy in the location of the point if the point is close to t = 1. For example, in three-\/digit arithmetic, the point t = 0.\+999111 could be stored in relative format as t$^\wedge$$\ast$ = -\/0.\+889e-\/3, but only as t = 0.\+999 in absolute format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation. 
+Converting a point from relative to absolute time format will, in general, result in a loss of relative accuracy in the location of the point if the point is close to t = 1. For example, in three-\/digit arithmetic, the point t = 0.\+999111 could be stored in relative format as t\texorpdfstring{$^\wedge$}{\string^}\texorpdfstring{$\ast$}{*} = -\/0.\+889e-\/3, but only as t = 0.\+999 in absolute format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation.   
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}\label{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}} 
+\Hypertarget{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}\label{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553} 
 \index{cppdlr@{cppdlr}!rel2abs@{rel2abs}}
 \index{rel2abs@{rel2abs}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{rel2abs()}{rel2abs()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
@@ -611,154 +695,5 @@ Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.
 Vector of points on \mbox{[}0,1\mbox{]} in absolute time format
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-Converting a point from relative to absolute time format will, in general, result in a loss of relative accuracy in the location of the point if the point is close to t = 1. For example, in three-\/digit arithmetic, the point t = 0.\+999111 could be stored in relative format as t$^\wedge$$\ast$ = -\/0.\+889e-\/3, but only as t = 0.\+999 in absolute format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation. 
+Converting a point from relative to absolute time format will, in general, result in a loss of relative accuracy in the location of the point if the point is close to t = 1. For example, in three-\/digit arithmetic, the point t = 0.\+999111 could be stored in relative format as t\texorpdfstring{$^\wedge$}{\string^}\texorpdfstring{$\ast$}{*} = -\/0.\+889e-\/3, but only as t = 0.\+999 in absolute format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation. 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a236adeec4584da8f22e01e5d8b37f4b9}\label{namespacecppdlr_a236adeec4584da8f22e01e5d8b37f4b9}} 
-\index{cppdlr@{cppdlr}!requires@{requires}}
-\index{requires@{requires}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
-{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-cppdlr\+::requires (\begin{DoxyParamCaption}\item[{nda\+::is\+\_\+scalar\+\_\+v$<$ S $>$}]{ }\end{DoxyParamCaption})}
-
-
-
-Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. 
-
-Determine the epsilon-\/rank of a matrix and return an orthogonal basis of its epsilon-\/row space.
-
-This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V. Rokhlin.
-
-
-\begin{DoxyParams}{Parameters}
-{\em a} & Matrix to be orthogonalized \\
-\hline
-{\em eps} & Rank cutoff tolerance\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Tuple of (1) matrix containing whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots 
-\end{DoxyReturn}
-\mbox{\Hypertarget{namespacecppdlr_a59a73f63b1734b37ef26f7edf1ca0034}\label{namespacecppdlr_a59a73f63b1734b37ef26f7edf1ca0034}} 
-\index{cppdlr@{cppdlr}!requires@{requires}}
-\index{requires@{requires}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
-{\footnotesize\ttfamily template$<$typename Ht $>$ \\
-cppdlr\+::requires (\begin{DoxyParamCaption}\item[{std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$}]{ }\end{DoxyParamCaption})}
-
-
-
-Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. 
-
-The Green\textquotesingle{}s function is computed by diagonalizing the Hamiltonian, and is returned by its values at the DLR imaginary time nodes.
-
-
-\begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em beta} & Inverse temperature \\
-\hline
-\mbox{\texttt{ in}}  & {\em it} & \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} object \\
-\hline
-\mbox{\texttt{ in}}  & {\em h} & Hamiltonian \\
-\hline
-\mbox{\texttt{ in}}  & {\em mu} & Chemical potential \\
-\hline
-\mbox{\texttt{ in}}  & {\em time\+\_\+order} & Flag for ordinary (false or ORDINARY, default) or time-\/ordered (true or TIME\+\_\+\+ORDERED) Dyson equation, which changes free Green\textquotesingle{}s function\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Green\textquotesingle{}s function at DLR imaginary time nodes
-\end{DoxyReturn}
-\begin{DoxyNote}{Note}
-Hamiltonian must either be a symmetric matrix, a Hermitian matrix, or a real scalar. 
-\end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_acd50fc5abb306456b4b2710bea369c1a}\label{namespacecppdlr_acd50fc5abb306456b4b2710bea369c1a}} 
-\index{cppdlr@{cppdlr}!requires@{requires}}
-\index{requires@{requires}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
-{\footnotesize\ttfamily template$<$typename Ht , nda\+::\+Scalar Sh = std\+::conditional\+\_\+t$<$std\+::floating\+\_\+point$<$\+Ht$>$, Ht, get\+\_\+value\+\_\+t$<$\+Ht$>$$>$$>$ \\
-cppdlr\+::requires (\begin{DoxyParamCaption}\item[{std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$}]{ }\end{DoxyParamCaption})}
-
-Constructor for \mbox{\hyperlink{classdyson__it}{dyson\+\_\+it}} 
-\begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em beta} & Inverse temperature \\
-\hline
-\mbox{\texttt{ in}}  & {\em itops} & DLR imaginary time object \\
-\hline
-\mbox{\texttt{ in}}  & {\em h} & Hamiltonian \\
-\hline
-\mbox{\texttt{ in}}  & {\em mu} & Chemical potential (default = 0) \\
-\hline
-\mbox{\texttt{ in}}  & {\em time\+\_\+order} & Flag for ordinary (false or ORDINARY, default) or time-\/ordered (true or TIME\+\_\+\+ORDERED) Dyson equation\\
-\hline
-\end{DoxyParams}
-\begin{DoxyNote}{Note}
-Hamiltonian must either be a symmetric matrix, a Hermitian matrix, or a real scalar.
-\end{DoxyNote}
-Constructor for \mbox{\hyperlink{classdyson__it}{dyson\+\_\+it}} 
-\begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em beta} & Inverse temperature \\
-\hline
-\mbox{\texttt{ in}}  & {\em itops} & DLR imaginary time object \\
-\hline
-\mbox{\texttt{ in}}  & {\em h} & Hamiltonian \\
-\hline
-\mbox{\texttt{ in}}  & {\em time\+\_\+order} & Flag for ordinary (false or ORDINARY) or time-\/ordered (true or TIME\+\_\+\+ORDERED) Dyson equation\\
-\hline
-\end{DoxyParams}
-\begin{DoxyNote}{Note}
-Hamiltonian must either be a symmetric matrix, a Hermitian matrix, or a real scalar.
-\end{DoxyNote}
-Solve Dyson equation for given self-\/energy
-
-
-\begin{DoxyTemplParams}{Template Parameters}
-{\em Tsig} & Type of self-\/energy \\
-\hline
-\end{DoxyTemplParams}
-
-\begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em sig} & Self-\/energy at DLR imaginary time nodes\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Green\textquotesingle{}s function at DLR imaginary time nodes
-\end{DoxyReturn}
-\begin{DoxyNote}{Note}
-Free Green\textquotesingle{}s function (right hand side of Dyson equation) specified at construction of \mbox{\hyperlink{classdyson__it}{dyson\+\_\+it}} object
-\end{DoxyNote}
-$<$ Inverse temperature
-
-$<$ shared pointer to \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} object
-
-$<$ Number of orbital indices
-
-$<$ Flag for ordinary (false) or time-\/ordered (true) Dyson equation
-
-$<$ Right hand side of Dyson equation (in format compatible w/ LAPACK); vector if Hamiltonian is scalar, rank-\/3 array otherwise
-
-$<$ Matrix of convolution by free Green\textquotesingle{}s function
-
-\doxysubsection{Variable Documentation}
-\mbox{\Hypertarget{namespacecppdlr_a78129915b4883af7ef355b517eb130f3}\label{namespacecppdlr_a78129915b4883af7ef355b517eb130f3}} 
-\index{cppdlr@{cppdlr}!h@{h}}
-\index{h@{h}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{h}{h}}
-{\footnotesize\ttfamily \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const Ht const\& cppdlr\+::h}
-
-\mbox{\Hypertarget{namespacecppdlr_ad6845f613df7f7b14c43c1776464dc55}\label{namespacecppdlr_ad6845f613df7f7b14c43c1776464dc55}} 
-\index{cppdlr@{cppdlr}!itops@{itops}}
-\index{itops@{itops}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{itops}{itops}}
-{\footnotesize\ttfamily \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const\& cppdlr\+::itops}
-
-\mbox{\Hypertarget{namespacecppdlr_ab7cfde70e959b26df44918ee98d29bab}\label{namespacecppdlr_ab7cfde70e959b26df44918ee98d29bab}} 
-\index{cppdlr@{cppdlr}!mu@{mu}}
-\index{mu@{mu}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{mu}{mu}}
-{\footnotesize\ttfamily \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const Ht const double cppdlr\+::mu = 0}
-
-\mbox{\Hypertarget{namespacecppdlr_afef0a162a809071b83fd09f578db52bf}\label{namespacecppdlr_afef0a162a809071b83fd09f578db52bf}} 
-\index{cppdlr@{cppdlr}!time\_order@{time\_order}}
-\index{time\_order@{time\_order}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{time\_order}{time\_order}}
-{\footnotesize\ttfamily \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const Ht const double bool cppdlr\+::time\+\_\+order}
-
