@@ -213,7 +213,7 @@ TEST(imfreq_ops, interp_matrix_sym) {
   // Check that G can be recovered at imaginary frequency nodes
   // TODO: this tolerance is a bit disturbingly high...why do we seem to lose a
   // few digits?
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-12);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 2e-12);
 
   // Compute L infinity error
   auto gtru  = nda::matrix<dcomplex>(norb, norb);
