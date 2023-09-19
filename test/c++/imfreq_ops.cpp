@@ -189,7 +189,7 @@ TEST(imfreq_ops, interp_matrix_sym) {
   int norb = 2; // Orbital dimensions
 
   // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
+  auto dlr_rf = build_dlr_rf(lambda, eps, SYM, Fermion);
   int r       = dlr_rf.size();
 
   // Verify symmetry

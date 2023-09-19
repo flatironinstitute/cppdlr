@@ -77,6 +77,11 @@ namespace cppdlr {
   */
   nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> om);
 
+  /** 
+  * @copydoc build_k_it(nda::vector_const_view<double>, nda::vector_const_view<double>)
+  */ 
+  nda::vector<double> build_k_it(nda::vector_const_view<double> t, double om);
+
   /**
   * @brief Get imaginary frequency discretization of analytic continuation kernel
   *
@@ -120,10 +125,24 @@ namespace cppdlr {
   *
   * @param[in] lambda DLR cutoff parameter
   * @param[in] eps Accuracy of DLR basis
-  * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
+  * @param[in] symmetrize NONSYM or false for non-symmetrized DLR frequencies,
+  * SYM or true for symmetrized
+  * @param[in] statistic Particle statistics: Boson or Fermion
   *
   * @return DLR frequencies
   */
-  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize = false);
+  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize, statistic_t statistic);
+
+  /**
+  * @brief Construct DLR basis by obtaining DLR frequencies
+  *
+  * @param[in] lambda DLR cutoff parameter
+  * @param[in] eps Accuracy of DLR basis
+  *
+  * @return DLR frequencies
+  *
+  * @note With this signature, the DLR frequencies are unsymmetrized.
+  */
+  nda::vector<double> build_dlr_rf(double lambda, double eps);
 
 } // namespace cppdlr

@@ -114,6 +114,16 @@ namespace cppdlr {
     return kmat;
   }
 
+  nda::vector<double> build_k_it(nda::vector_const_view<double> t, double om) {
+
+    int nt = t.size();
+
+    auto kvec = nda::vector<double>(nt);
+    for (int i = 0; i < nt; ++i) { kvec(i) = k_it(t(i), om); }
+
+    return kvec;
+  }
+
   std::tuple<double, double> geterr_k_it(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
                                          nda::matrix_const_view<double> kmat) {
 
@@ -192,7 +202,8 @@ namespace cppdlr {
     return kmat;
   }
 
-  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize) {
+  // TODO: Fix this to account for both fermionic and bosonic cases symmetrized cases
+  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize, statistic_t statistic) {
 
     // Get fine grid parameters
 
@@ -207,16 +218,38 @@ namespace cppdlr {
 
     auto kmat = build_k_it(t, om);
 
-    // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
+    if (!(symmetrize && statistic == Boson)) { // Treat symmetrized bosonic case separately
 
-    auto [q, norms, piv] = (symmetrize ? pivrgs_sym(transpose(kmat), eps) : pivrgs(transpose(kmat), eps));
-    long r               = norms.size();
-    std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
+      // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
 
-    auto omega = nda::vector<double>(r);
-    for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
+      auto [q, norms, piv] = (symmetrize ? pivrgs_sym(transpose(kmat), eps) : pivrgs(transpose(kmat), eps));
+      long r               = norms.size();
+      std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
 
-    return omega;
+      auto omega = nda::vector<double>(r);
+      for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
+
+      return omega;
+
+    } else { // Symmetrized bosonic case
+
+      auto kvec0 = build_k_it(t, 0.0); // K at zero frequency: K(tau, 0)
+
+      // Pivoted Gram-Schmidt on columns of K matrix, augmented by vector K(tau, 0), to obtain DLR frequencies
+      auto [q, norms, piv] = pivrgs_sym(transpose(kmat), kvec0, eps);
+      long r               = norms.size();
+
+      auto omega = nda::vector<double>(r);
+      omega(0)   = 0.0; // Zero frequency is always chosen
+      for (int i = 1; i < r; ++i) {
+        omega(i) = om(piv(i) - 1);
+      } // Remaining frequencies are chosen from pivots (shift by 1 to obtain pivots of original matrix, not augmented matrix)
+      std::sort(omega.begin(), omega.end()); // Sort frequencies in ascending order
+
+      return omega;
+    }
   }
+
+  nda::vector<double> build_dlr_rf(double lambda, double eps) { return build_dlr_rf(lambda, eps, NONSYM, statistic_t::Fermion); }
 
 } // namespace cppdlr
