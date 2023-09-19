@@ -15,6 +15,7 @@
 // Authors: Jason Kaye
 
 #pragma once
+#include "nda/concepts.hpp"
 #include <nda/nda.hpp>
 #include <nda/blas.hpp>
 
@@ -318,8 +319,8 @@ namespace cppdlr {
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
-  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = get_value_t<T>>
-  std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, nda::vector_const_view<S> v, double eps) {
+  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = get_value_t<T>, nda::MemoryVector V>
+  std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, V const &v, double eps) {
 
     auto _ = nda::range::all;
 
@@ -362,6 +363,7 @@ namespace cppdlr {
     // First, choose provided vector as first pivot
 
     // Normalize
+    nrm = real(blas::dotc(aa(0, _), aa(0, _)));
     aa(0, _) = aa(0, _) * (1 / sqrt(nrm));
 
     // Orthogonalize remaining rows against current row
