@@ -114,6 +114,16 @@ namespace cppdlr {
     return kmat;
   }
 
+  nda::vector<double> build_k_it(double t, nda::vector_const_view<double> om) {
+
+    int nom = om.size();
+
+    auto kvec = nda::vector<double>(nom);
+    for (int j = 0; j < nom; ++j) { kvec(j) = k_it(t, om(j)); }
+
+    return kvec;
+  }
+
   nda::vector<double> build_k_it(nda::vector_const_view<double> t, double om) {
 
     int nt = t.size();
@@ -231,20 +241,23 @@ namespace cppdlr {
 
       return omega;
 
-    } else { // Symmetrized bosonic case
+    } else { // Symmetrized bosonic case: enforce omega = 0 chosen as DLR frequency
 
       auto kvec0 = build_k_it(t, 0.0); // K at zero frequency: K(tau, 0)
 
       // Pivoted Gram-Schmidt on columns of K matrix, augmented by vector K(tau, 0), to obtain DLR frequencies
       auto [q, norms, piv] = pivrgs_sym(transpose(kmat), kvec0, eps);
       long r               = norms.size();
+      std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
 
       auto omega = nda::vector<double>(r);
-      omega(0)   = 0.0; // Zero frequency is always chosen
-      for (int i = 1; i < r; ++i) {
+      for (int i = 0; i < (r - 1) / 2; ++i) { // Fill in negative frequencies
+        omega(i) = om(piv(i + 1) - 1);        // Shift by 1 to obtain pivots of original matrix, not augmented matrix
+      }
+      omega((r - 1) / 2) = 0.0;                   // Zero frequency is always chosen
+      for (int i = (r - 1) / 2 + 1; i < r; ++i) { // Fill in positive frequencies
         omega(i) = om(piv(i) - 1);
-      } // Remaining frequencies are chosen from pivots (shift by 1 to obtain pivots of original matrix, not augmented matrix)
-      std::sort(omega.begin(), omega.end()); // Sort frequencies in ascending order
+      }
 
       return omega;
     }

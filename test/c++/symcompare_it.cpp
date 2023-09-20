@@ -66,7 +66,7 @@ int main() {
 
   // Get DLR imaginary time object
   auto itops     = imtime_ops(lambda, dlr_rf);
-  auto itops_sym = imtime_ops(lambda, dlr_rf_sym, SYM);
+  auto itops_sym = imtime_ops(lambda, dlr_rf_sym, SYM, Fermion);
 
   // Sample Green's function G at DLR imaginary time nodes
   auto const &dlr_it     = itops.get_itnodes();

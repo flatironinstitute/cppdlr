@@ -52,8 +52,28 @@ namespace cppdlr {
     * @param[in] lambda DLR cutoff parameter
     * @param[in] dlr_rf DLR frequencies
     * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
+    * @param[in] statistic Particle statistics: Boson or Fermion
+    *
+    * @note In case symmetrize and Boson options are selected, we enforce that
+    * tau = 0 is chosen as a DLR frequency. The reasoning is as follows: to
+    * maintain symmetry of the bosonic DLR imaginary frequency nodes, we must
+    * either forbid the zero imaginary frequency from being chosen, or always
+    * choose it. We decide to always choose it, which means the number of
+    * symmetrized imaginary frequency nodes will be odd. To maintain the same
+    * number r of DLR imaginary time and imaginary frequency nodes, we must
+    * therefore have an odd number of DLR imaginary time nodes. To obtain a
+    * symmetric DLR imaginary time grid with an odd number of points, we must
+    * choose tau = 1/2 as a DLR frequency.
     */
-    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize = false);
+    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize, statistic_t statistic);
+
+    /** 
+    * @brief Constructor for imtime_ops
+    * 
+    * @param[in] lambda DLR cutoff parameter
+    * @param[in] dlr_rf DLR frequencies
+    */
+    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
 
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, nda::vector_const_view<double> dlr_it, nda::matrix_const_view<double> cf2it,
                nda::matrix_const_view<double> it2cf_lu, nda::vector_const_view<int> it2cf_piv)
