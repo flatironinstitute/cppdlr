@@ -12,7 +12,7 @@ Class responsible for all DLR imaginary frequency operations, including building
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a61e3bba01e838bd7a0328d43caabe16a}{imfreq\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic)
+\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065}{imfreq\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, bool symmetrize=false)
 \begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}}. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573}{imfreq\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ dlr\+\_\+if, nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ cf2if, nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ if2cf\+\_\+lu, nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ if2cf\+\_\+piv)
 \item 
@@ -77,11 +77,11 @@ First dimension of all Green\textquotesingle{}s function and coefficient arrays 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a61e3bba01e838bd7a0328d43caabe16a}\label{classcppdlr_1_1imfreq__ops_a61e3bba01e838bd7a0328d43caabe16a}} 
+\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065}\label{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065}} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!imfreq\_ops@{imfreq\_ops}}
 \index{imfreq\_ops@{imfreq\_ops}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{imfreq\_ops()}{imfreq\_ops()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
-{\footnotesize\ttfamily cppdlr\+::imfreq\+\_\+ops\+::imfreq\+\_\+ops (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+rf,  }\item[{\mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}}}]{statistic }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily cppdlr\+::imfreq\+\_\+ops\+::imfreq\+\_\+ops (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+rf,  }\item[{\mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}}}]{statistic,  }\item[{bool}]{symmetrize = {\ttfamily false} }\end{DoxyParamCaption})}
 
 
 
@@ -95,7 +95,12 @@ Constructor for \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}}.
 \hline
 \mbox{\texttt{ in}}  & {\em statistic} & Particle statistic\+: Fermion or Boson \\
 \hline
+\mbox{\texttt{ in}}  & {\em symmetrize} & NONSYM or false for non-\/symmetrized DLR frequencies, SYM or true for symmetrized\\
+\hline
 \end{DoxyParams}
+\begin{DoxyNote}{Note}
+In case Boson and SYM options are selected, we enforce that i$\ast$nu\+\_\+n=0 is chosen as a DLR imaginary frequency node. For an explanation, please see the \char`\"{}\+Symmetrized DLR grids\char`\"{} subsection in the \char`\"{}\+Background\char`\"{} section of the documentation. 
+\end{DoxyNote}
 \mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573}\label{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573}} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!imfreq\_ops@{imfreq\_ops}}
 \index{imfreq\_ops@{imfreq\_ops}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}

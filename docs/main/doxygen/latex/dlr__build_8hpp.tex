@@ -12,6 +12,13 @@ class \mbox{\hyperlink{classcppdlr_1_1fineparams}{cppdlr\+::fineparams}}
 \item 
  \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
 \end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \mbox{\hyperlink{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da320d20930f8ff7ba461e55e30ea405c7}{cppdlr\+::\+NONSYM}} = false
+, \mbox{\hyperlink{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da2926e3338e8cc759a75b8c9fac6f7d61}{cppdlr\+::\+SYM}} = true
+ \}
+\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -21,9 +28,15 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a04d66881c7086a1f6f
 \begin{DoxyCompactList}\small\item\em Get fine composite Chebyshev grid in imaginary time. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}{cppdlr\+::build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}{cppdlr\+::build\+\_\+k\+\_\+it}} (double t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}{cppdlr\+::build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, double om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ dcomplex $>$ \mbox{\hyperlink{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}{cppdlr\+::build\+\_\+k\+\_\+if}} (int nmax, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, statistic\+\_\+t statistic)
 \begin{DoxyCompactList}\small\item\em Get imaginary frequency discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
 std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}{cppdlr\+::geterr\+\_\+k\+\_\+it}} (fineparams \&fine, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ kmat)
 \begin{DoxyCompactList}\small\item\em Get error of fine composite Chebyshev discretization of analytic continuation kernel in imaginary time. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a134a65b6f951a80cb99e41d52d89f0ed}{cppdlr\+::build\+\_\+dlr\+\_\+rf}} (double lambda, double eps, statistic\+\_\+t statistic, bool symmetrize)
+\begin{DoxyCompactList}\small\item\em Construct DLR basis by obtaining DLR frequencies. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}{cppdlr\+::build\+\_\+dlr\+\_\+rf}} (double lambda, double eps)
 \begin{DoxyCompactList}\small\item\em Construct DLR basis by obtaining DLR frequencies. \end{DoxyCompactList}\end{DoxyCompactItemize}

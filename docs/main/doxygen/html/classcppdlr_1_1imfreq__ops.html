@@ -84,9 +84,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a61e3bba01e838bd7a0328d43caabe16a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imfreq__ops.html#a61e3bba01e838bd7a0328d43caabe16a">imfreq_ops</a> (double <a class="el" href="classcppdlr_1_1imfreq__ops.html#a0b95a2d9da812c7f894c16d9ab0de27c">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic)</td></tr>
-<tr class="memdesc:a61e3bba01e838bd7a0328d43caabe16a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classcppdlr_1_1imfreq__ops.html" title="Class responsible for all DLR imaginary frequency operations, including building imaginary frequency ...">imfreq_ops</a>.  <a href="classcppdlr_1_1imfreq__ops.html#a61e3bba01e838bd7a0328d43caabe16a">More...</a><br /></td></tr>
-<tr class="separator:a61e3bba01e838bd7a0328d43caabe16a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2296d91d2652b85462653f6147d95065"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imfreq__ops.html#a2296d91d2652b85462653f6147d95065">imfreq_ops</a> (double <a class="el" href="classcppdlr_1_1imfreq__ops.html#a0b95a2d9da812c7f894c16d9ab0de27c">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, bool symmetrize=false)</td></tr>
+<tr class="memdesc:a2296d91d2652b85462653f6147d95065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classcppdlr_1_1imfreq__ops.html" title="Class responsible for all DLR imaginary frequency operations, including building imaginary frequency ...">imfreq_ops</a>.  <a href="classcppdlr_1_1imfreq__ops.html#a2296d91d2652b85462653f6147d95065">More...</a><br /></td></tr>
+<tr class="separator:a2296d91d2652b85462653f6147d95065"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc68ce6e34ea9a23e763f9b1919ea573"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imfreq__ops.html#afc68ce6e34ea9a23e763f9b1919ea573">imfreq_ops</a> (double <a class="el" href="classcppdlr_1_1imfreq__ops.html#a0b95a2d9da812c7f894c16d9ab0de27c">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, nda::vector_const_view&lt; int &gt; dlr_if, nda::matrix_const_view&lt; nda::dcomplex &gt; cf2if, nda::matrix_const_view&lt; nda::dcomplex &gt; if2cf_lu, nda::vector_const_view&lt; int &gt; if2cf_piv)</td></tr>
 <tr class="separator:afc68ce6e34ea9a23e763f9b1919ea573"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec1f430ef8442851ca0003bc89620feb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imfreq__ops.html#aec1f430ef8442851ca0003bc89620feb">imfreq_ops</a> ()=default</td></tr>
@@ -160,8 +160,8 @@ Friends</h2></td></tr>
 <div class="textblock"><p>Class responsible for all DLR imaginary frequency operations, including building imaginary frequency grid and transformations. </p>
 <dl class="section note"><dt>Note</dt><dd>First dimension of all Green's function and coefficient arrays must be DLR rank r. </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a61e3bba01e838bd7a0328d43caabe16a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61e3bba01e838bd7a0328d43caabe16a">&#9670;&nbsp;</a></span>imfreq_ops() <span class="overload">[1/3]</span></h2>
+<a id="a2296d91d2652b85462653f6147d95065"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2296d91d2652b85462653f6147d95065">&#9670;&nbsp;</a></span>imfreq_ops() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +182,13 @@ Friends</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>&#160;</td>
-          <td class="paramname"><em>statistic</em>&#160;</td>
+          <td class="paramname"><em>statistic</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>symmetrize</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -198,9 +204,11 @@ Friends</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">lambda</td><td>DLR cutoff parameter </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dlr_rf</td><td>DLR frequencies </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">statistic</td><td>Particle statistic: Fermion or Boson </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symmetrize</td><td>NONSYM or false for non-symmetrized DLR frequencies, SYM or true for symmetrized</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>In case Boson and SYM options are selected, we enforce that i*nu_n=0 is chosen as a DLR imaginary frequency node. For an explanation, please see the "Symmetrized DLR grids" subsection in the "Background" section of the documentation. </dd></dl>
 
 </div>
 </div>

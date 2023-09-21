@@ -1,5 +1,6 @@
 \hypertarget{utils_8hpp}{}\doxysection{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/utils.hpp File Reference}
 \label{utils_8hpp}\index{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/utils.hpp@{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/utils.hpp}}
+{\ttfamily \#include \char`\"{}nda/concepts.\+hpp\char`\"{}}\newline
 {\ttfamily \#include $<$nda/nda.\+hpp$>$}\newline
 {\ttfamily \#include $<$nda/blas.\+hpp$>$}\newline
 \doxysubsection*{Classes}
@@ -26,8 +27,12 @@ struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{cppdlr\+::make\+\_
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_a236adeec4584da8f22e01e5d8b37f4b9}{cppdlr\+::requires}} (nda\+::is\+\_\+scalar\+\_\+v$<$ S $>$) std
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_ac02cc711894b431452f59f40e6f17dac}{cppdlr\+::pivrgs}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a65790598f458616dbc7fc84ab3cfe02c}{cppdlr\+::pivrgs\+\_\+sym}} (T const \&a, double eps)
+\begin{DoxyCompactList}\small\item\em Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$, nda\+::\+Memory\+Vector V$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a87cd86b43bae8fd0272a4f764bcd163f}{cppdlr\+::pivrgs\+\_\+sym}} (T const \&a, V const \&v, double eps)
+\begin{DoxyCompactList}\small\item\em Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt, with matrix augmented by a vector. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b}{cppdlr\+::eqptsrel}} (int n)
 \begin{DoxyCompactList}\small\item\em Get grid of equispaced points on \mbox{[}0,1\mbox{]} in relative time format. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}{cppdlr\+::rel2abs}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t)

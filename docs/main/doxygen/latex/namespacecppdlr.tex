@@ -22,10 +22,16 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a04d66881c7086a1f6f
 \begin{DoxyCompactList}\small\item\em Get fine composite Chebyshev grid in imaginary time. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}{build\+\_\+k\+\_\+it}} (double t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, double om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
 std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}{geterr\+\_\+k\+\_\+it}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ kmat)
 \begin{DoxyCompactList}\small\item\em Get error of fine composite Chebyshev discretization of analytic continuation kernel in imaginary time. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ dcomplex $>$ \mbox{\hyperlink{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}{build\+\_\+k\+\_\+if}} (int nmax, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic)
 \begin{DoxyCompactList}\small\item\em Get imaginary frequency discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a134a65b6f951a80cb99e41d52d89f0ed}{build\+\_\+dlr\+\_\+rf}} (double lambda, double eps, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, bool symmetrize)
+\begin{DoxyCompactList}\small\item\em Construct DLR basis by obtaining DLR frequencies. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}{build\+\_\+dlr\+\_\+rf}} (double lambda, double eps)
 \begin{DoxyCompactList}\small\item\em Construct DLR basis by obtaining DLR frequencies. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Ht , nda\+::\+Scalar Sh = std\+::conditional\+\_\+t$<$std\+::floating\+\_\+point$<$\+Ht$>$, Ht, get\+\_\+value\+\_\+t$<$\+Ht$>$$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_acd50fc5abb306456b4b2710bea369c1a}{requires}} (std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$) class \mbox{\hyperlink{classdyson__it}{dyson\+\_\+it}}
@@ -60,14 +66,22 @@ std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mb
 \begin{DoxyCompactList}\small\item\em Gauss-\/\+Legendre nodes and weights. \end{DoxyCompactList}\item 
 std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}{leg\+\_\+eval}} (int n, double x)
 \begin{DoxyCompactList}\small\item\em Evaluate Legendre polynomial of degree n and its derivative. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_a236adeec4584da8f22e01e5d8b37f4b9}{requires}} (nda\+::is\+\_\+scalar\+\_\+v$<$ S $>$) std
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_ac02cc711894b431452f59f40e6f17dac}{pivrgs}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a65790598f458616dbc7fc84ab3cfe02c}{pivrgs\+\_\+sym}} (T const \&a, double eps)
+\begin{DoxyCompactList}\small\item\em Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$, nda\+::\+Memory\+Vector V$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a87cd86b43bae8fd0272a4f764bcd163f}{pivrgs\+\_\+sym}} (T const \&a, V const \&v, double eps)
+\begin{DoxyCompactList}\small\item\em Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt, with matrix augmented by a vector. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a240eb87e88ef0bdc5994d57fe9b7d3a1}{arraymult}} (Ta const \&a, Tb const \&b)
 \begin{DoxyCompactList}\small\item\em Contract the last dimension of an array a with the first dimension of an array b. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename S $>$ }\\S \mbox{\hyperlink{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}{adapgl}} (std\+::function$<$ nda\+::array$<$ S, 1 $>$(nda\+::array$<$ double, 1 $>$)$>$ f, double a, double b, double tol, nda\+::vector$<$ double $>$ xgl, nda\+::vector$<$ double $>$ wgl)
 \begin{DoxyCompactList}\small\item\em Quick and dirty adaptive Gauss quadrature. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Enumerations}
 \begin{DoxyCompactItemize}
+\item 
+enum \{ \mbox{\hyperlink{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da320d20930f8ff7ba461e55e30ea405c7}{NONSYM}} = false
+, \mbox{\hyperlink{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da2926e3338e8cc759a75b8c9fac6f7d61}{SYM}} = true
+ \}
 \item 
 enum \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} \{ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435a6a57173d6b5be36c6815ab715152716d}{Boson}} = 0
 , \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee}{Fermion}} = 1
@@ -128,6 +142,20 @@ Get real-\/valued type corresponding to type of given nda Memory\+Array.
 
 
 \doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6d}\label{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6d}} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+Option for unsymmetrized or symmetrized DLR \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NONSYM@{NONSYM}!cppdlr@{cppdlr}}\index{cppdlr@{cppdlr}!NONSYM@{NONSYM}}}\mbox{\Hypertarget{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da320d20930f8ff7ba461e55e30ea405c7}\label{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da320d20930f8ff7ba461e55e30ea405c7}} 
+NONSYM&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SYM@{SYM}!cppdlr@{cppdlr}}\index{cppdlr@{cppdlr}!SYM@{SYM}}}\mbox{\Hypertarget{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da2926e3338e8cc759a75b8c9fac6f7d61}\label{namespacecppdlr_afa13d278b5eff503e3399f445f84ab6da2926e3338e8cc759a75b8c9fac6f7d61}} 
+SYM&\\
+\hline
+
+\end{DoxyEnumFields}
 \mbox{\Hypertarget{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}\label{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}} 
 \index{cppdlr@{cppdlr}!statistic\_t@{statistic\_t}}
 \index{statistic\_t@{statistic\_t}!cppdlr@{cppdlr}}
@@ -247,14 +275,12 @@ Contraction of the inner dimensions of {\ttfamily a} and {\ttfamily b}
 \mbox{\Hypertarget{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}\label{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}} 
 \index{cppdlr@{cppdlr}!build\_dlr\_rf@{build\_dlr\_rf}}
 \index{build\_dlr\_rf@{build\_dlr\_rf}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{build\_dlr\_rf()}{build\_dlr\_rf()}}
+\doxysubsubsection{\texorpdfstring{build\_dlr\_rf()}{build\_dlr\_rf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+dlr\+\_\+rf (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{double}]{eps }\end{DoxyParamCaption})}
 
 
 
 Construct DLR basis by obtaining DLR frequencies. 
-
-Construct DLR basis for a given accuracy and cutoff parameter by getting DLR frequencies
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -264,8 +290,38 @@ Construct DLR basis for a given accuracy and cutoff parameter by getting DLR fre
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-DLR frequencies 
+DLR frequencies
 \end{DoxyReturn}
+\begin{DoxyNote}{Note}
+With this signature, the DLR frequencies are unsymmetrized. 
+\end{DoxyNote}
+\mbox{\Hypertarget{namespacecppdlr_a134a65b6f951a80cb99e41d52d89f0ed}\label{namespacecppdlr_a134a65b6f951a80cb99e41d52d89f0ed}} 
+\index{cppdlr@{cppdlr}!build\_dlr\_rf@{build\_dlr\_rf}}
+\index{build\_dlr\_rf@{build\_dlr\_rf}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{build\_dlr\_rf()}{build\_dlr\_rf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+dlr\+\_\+rf (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{double}]{eps,  }\item[{\mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}}}]{statistic,  }\item[{bool}]{symmetrize }\end{DoxyParamCaption})}
+
+
+
+Construct DLR basis by obtaining DLR frequencies. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em lambda} & DLR cutoff parameter \\
+\hline
+\mbox{\texttt{ in}}  & {\em eps} & Accuracy of DLR basis \\
+\hline
+\mbox{\texttt{ in}}  & {\em statistic} & Particle statistics\+: Boson or Fermion \\
+\hline
+\mbox{\texttt{ in}}  & {\em symmetrize} & NONSYM or false for non-\/symmetrized DLR frequencies, SYM or true for symmetrized\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+DLR frequencies
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+In case Boson and SYM options are selected, we enforce that omega = 0 is chosen as a DLR frequency. For an explanation, please see the \char`\"{}\+Symmetrized DLR grids\char`\"{} subsection in the \char`\"{}\+Background\char`\"{} section of the documentation. 
+\end{DoxyNote}
 \mbox{\Hypertarget{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}\label{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}} 
 \index{cppdlr@{cppdlr}!build\_it\_fine@{build\_it\_fine}}
 \index{build\_it\_fine@{build\_it\_fine}!cppdlr@{cppdlr}}
@@ -309,10 +365,50 @@ Get imaginary frequency discretization of analytic continuation kernel.
 \begin{DoxyReturn}{Returns}
 Discretization of analytic continuation kernel on given grid 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}\label{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}} 
+\index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
+\index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{double}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{om }\end{DoxyParamCaption})}
+
+
+
+Get imaginary time discretization of analytic continuation kernel. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em t} & Imaginary time grid in relative format \\
+\hline
+\mbox{\texttt{ in}}  & {\em om} & Frequency real grid\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Discretization of analytic continuation kernel on given grid 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}\label{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}} 
+\index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
+\index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{double}]{om }\end{DoxyParamCaption})}
+
+
+
+Get imaginary time discretization of analytic continuation kernel. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em t} & Imaginary time grid in relative format \\
+\hline
+\mbox{\texttt{ in}}  & {\em om} & Frequency real grid\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Discretization of analytic continuation kernel on given grid 
+\end{DoxyReturn}
 \mbox{\Hypertarget{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}\label{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}} 
 \index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
 \index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
 {\footnotesize\ttfamily nda\+::matrix$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{om }\end{DoxyParamCaption})}
 
 
@@ -571,6 +667,89 @@ Uses Legendre three-\/term recurrence
 \begin{DoxyReturn}{Returns}
 Tuple of polynomial value Pn(x) and derivative Pn\textquotesingle{}(x) 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespacecppdlr_ac02cc711894b431452f59f40e6f17dac}\label{namespacecppdlr_ac02cc711894b431452f59f40e6f17dac}} 
+\index{cppdlr@{cppdlr}!pivrgs@{pivrgs}}
+\index{pivrgs@{pivrgs}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{pivrgs()}{pivrgs()}}
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
+std\+::tuple$<$typename T\+::regular\+\_\+type, nda\+::vector$<$double$>$, nda\+::vector$<$int$>$ $>$ cppdlr\+::pivrgs (\begin{DoxyParamCaption}\item[{T const \&}]{a,  }\item[{double}]{eps }\end{DoxyParamCaption})}
+
+
+
+Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. 
+
+Determine the epsilon-\/rank of a matrix and return an orthogonal basis of its epsilon-\/row space.
+
+This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V. Rokhlin.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Matrix to be orthogonalized \\
+\hline
+{\em eps} & Rank cutoff tolerance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecppdlr_a65790598f458616dbc7fc84ab3cfe02c}\label{namespacecppdlr_a65790598f458616dbc7fc84ab3cfe02c}} 
+\index{cppdlr@{cppdlr}!pivrgs\_sym@{pivrgs\_sym}}
+\index{pivrgs\_sym@{pivrgs\_sym}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{pivrgs\_sym()}{pivrgs\_sym()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
+std\+::tuple$<$typename T\+::regular\+\_\+type, nda\+::vector$<$double$>$, nda\+::vector$<$int$>$ $>$ cppdlr\+::pivrgs\+\_\+sym (\begin{DoxyParamCaption}\item[{T const \&}]{a,  }\item[{double}]{eps }\end{DoxyParamCaption})}
+
+
+
+Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. 
+
+Determine the epsilon-\/rank of a matrix and return an orthogonal basis of its epsilon-\/row space, enforcing symmetrization of pivots.
+
+This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V. Rokhlin, with symmetrization added.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Matrix to be orthogonalized \\
+\hline
+{\em eps} & Rank cutoff tolerance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+The input matrix A must have an even number of rows. The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. 
+\end{DoxyNote}
+\mbox{\Hypertarget{namespacecppdlr_a87cd86b43bae8fd0272a4f764bcd163f}\label{namespacecppdlr_a87cd86b43bae8fd0272a4f764bcd163f}} 
+\index{cppdlr@{cppdlr}!pivrgs\_sym@{pivrgs\_sym}}
+\index{pivrgs\_sym@{pivrgs\_sym}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{pivrgs\_sym()}{pivrgs\_sym()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$, nda\+::\+Memory\+Vector V$>$ \\
+std\+::tuple$<$typename T\+::regular\+\_\+type, nda\+::vector$<$double$>$, nda\+::vector$<$int$>$ $>$ cppdlr\+::pivrgs\+\_\+sym (\begin{DoxyParamCaption}\item[{T const \&}]{a,  }\item[{V const \&}]{v,  }\item[{double}]{eps }\end{DoxyParamCaption})}
+
+
+
+Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt, with matrix augmented by a vector. 
+
+Determine the epsilon-\/rank of a matrix, augmented with a row vector, and return an orthogonal basis of the epsilon-\/row space of the augmented matrix, enforcing symmetrization of pivots and the selection of the provided vector.
+
+This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V. Rokhlin, with symmetrization added.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Matrix to be orthogonalized \\
+\hline
+{\em v} & Row vector to append to matrix \\
+\hline
+{\em eps} & Rank cutoff tolerance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} appended by {\ttfamily v}, to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots. Note that the provided vector is always selected as the first pivot before the main pivoting procedure begins; the first row of the return matrix is always the normalization of the provided vector, and the first entry of the vector of pivots is always zero, corresponding to the provided vector.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+The (un-\/augmented) input matrix A must have an even number of rows. The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. This does not include the provided row vector, which is always selected as a pivot. 
+\end{DoxyNote}
 \mbox{\Hypertarget{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}\label{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}} 
 \index{cppdlr@{cppdlr}!rel2abs@{rel2abs}}
 \index{rel2abs@{rel2abs}!cppdlr@{cppdlr}}
@@ -613,35 +792,10 @@ Vector of points on \mbox{[}0,1\mbox{]} in absolute time format
 \begin{DoxyNote}{Note}
 Converting a point from relative to absolute time format will, in general, result in a loss of relative accuracy in the location of the point if the point is close to t = 1. For example, in three-\/digit arithmetic, the point t = 0.\+999111 could be stored in relative format as t$^\wedge$$\ast$ = -\/0.\+889e-\/3, but only as t = 0.\+999 in absolute format. For more information on the relative time format used in cppdlr, please see the Background section of the cppdlr documentation. 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a236adeec4584da8f22e01e5d8b37f4b9}\label{namespacecppdlr_a236adeec4584da8f22e01e5d8b37f4b9}} 
-\index{cppdlr@{cppdlr}!requires@{requires}}
-\index{requires@{requires}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
-{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, typename S  = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-cppdlr\+::requires (\begin{DoxyParamCaption}\item[{nda\+::is\+\_\+scalar\+\_\+v$<$ S $>$}]{ }\end{DoxyParamCaption})}
-
-
-
-Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. 
-
-Determine the epsilon-\/rank of a matrix and return an orthogonal basis of its epsilon-\/row space.
-
-This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V. Rokhlin.
-
-
-\begin{DoxyParams}{Parameters}
-{\em a} & Matrix to be orthogonalized \\
-\hline
-{\em eps} & Rank cutoff tolerance\\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-Tuple of (1) matrix containing whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots 
-\end{DoxyReturn}
 \mbox{\Hypertarget{namespacecppdlr_a59a73f63b1734b37ef26f7edf1ca0034}\label{namespacecppdlr_a59a73f63b1734b37ef26f7edf1ca0034}} 
 \index{cppdlr@{cppdlr}!requires@{requires}}
 \index{requires@{requires}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily template$<$typename Ht $>$ \\
 cppdlr\+::requires (\begin{DoxyParamCaption}\item[{std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$}]{ }\end{DoxyParamCaption})}
 
@@ -673,7 +827,7 @@ Hamiltonian must either be a symmetric matrix, a Hermitian matrix, or a real sca
 \mbox{\Hypertarget{namespacecppdlr_acd50fc5abb306456b4b2710bea369c1a}\label{namespacecppdlr_acd50fc5abb306456b4b2710bea369c1a}} 
 \index{cppdlr@{cppdlr}!requires@{requires}}
 \index{requires@{requires}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+\doxysubsubsection{\texorpdfstring{requires()}{requires()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$typename Ht , nda\+::\+Scalar Sh = std\+::conditional\+\_\+t$<$std\+::floating\+\_\+point$<$\+Ht$>$, Ht, get\+\_\+value\+\_\+t$<$\+Ht$>$$>$$>$ \\
 cppdlr\+::requires (\begin{DoxyParamCaption}\item[{std\+::floating\+\_\+point$<$ Ht $>$$\vert$$\vert$nda\+::\+Memory\+Matrix$<$ Ht $>$}]{ }\end{DoxyParamCaption})}
 
