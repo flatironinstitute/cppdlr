@@ -203,7 +203,7 @@ namespace cppdlr {
 
     int nom = om.size();
 
-    if (statistic==Fermion){
+    if (statistic == Fermion) {
 
       // 2*n+1 should go from -2*nmax+1 to 2*nmax-1, so n goes from -nmax to nmax-1
       auto kmat = nda::matrix<dcomplex>(2 * nmax, nom);

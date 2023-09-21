@@ -45,15 +45,14 @@ nda::matrix<dcomplex> gfun(int norb, double beta, int n, statistic_t statistic) 
   return g;
 }
 
-
 /**
 * @brief Compare symmetrized and unsymmetrized DLR for interpolation and
 * evaluation of matrix-valued Green's function in imaginary time
 */
 int main() {
 
-  double lambda = 1000;  // DLR cutoff
-  double eps    = 1e-10; // DLR tolerance
+  double lambda  = 1000;  // DLR cutoff
+  double eps     = 1e-10; // DLR tolerance
   auto statistic = Boson; // Fermionic Green's statistics
 
   double beta = 1000;  // Inverse temperature
@@ -69,15 +68,14 @@ int main() {
   int rsym = dlr_rf_sym.size();
 
   // Get DLR imaginary frequency object
-  auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
+  auto ifops     = imfreq_ops(lambda, dlr_rf, statistic);
   auto ifops_sym = imfreq_ops(lambda, dlr_rf_sym, statistic, SYM);
 
   // Sample Green's function G at DLR imaginary frequency nodes
-  auto const &dlr_if = ifops.get_ifnodes();
+  auto const &dlr_if     = ifops.get_ifnodes();
   auto const &dlr_if_sym = ifops_sym.get_ifnodes();
 
-
-  auto g = nda::array<dcomplex, 3>(r, norb, norb);
+  auto g     = nda::array<dcomplex, 3>(r, norb, norb);
   auto g_sym = nda::array<dcomplex, 3>(rsym, norb, norb);
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
   for (int i = 0; i < rsym; ++i) { g_sym(i, _, _) = gfun(norb, beta, dlr_if_sym(i), statistic); }
@@ -87,18 +85,18 @@ int main() {
   auto gc_sym = ifops_sym.vals2coefs(beta, g_sym);
 
   // Compute L infinity error
-  auto gtru  = nda::matrix<dcomplex>(norb, norb);
-  auto gtst  = nda::matrix<dcomplex>(norb, norb);
-  auto gtst_sym  = nda::matrix<dcomplex>(norb, norb);
+  auto gtru     = nda::matrix<dcomplex>(norb, norb);
+  auto gtst     = nda::matrix<dcomplex>(norb, norb);
+  auto gtst_sym = nda::matrix<dcomplex>(norb, norb);
   double err = 0, err_sym = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
     gtru = gfun(norb, beta, n, statistic);
-    
-    gtst = ifops.coefs2eval(beta, gc, n);
+
+    gtst     = ifops.coefs2eval(beta, gc, n);
     gtst_sym = ifops_sym.coefs2eval(beta, gc_sym, n);
-    
-    err  = std::max(err, max_element(abs(gtru - gtst)));
-    err_sym  = std::max(err_sym, max_element(abs(gtru - gtst_sym)));
+
+    err     = std::max(err, max_element(abs(gtru - gtst)));
+    err_sym = std::max(err_sym, max_element(abs(gtru - gtst_sym)));
   }
 
   // Print results

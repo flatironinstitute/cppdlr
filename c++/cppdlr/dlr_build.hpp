@@ -79,12 +79,12 @@ namespace cppdlr {
 
   /** 
   * @copydoc build_k_it(nda::vector_const_view<double>, nda::vector_const_view<double>)
-  */ 
+  */
   nda::vector<double> build_k_it(double t, nda::vector_const_view<double> om);
 
   /** 
   * @copydoc build_k_it(nda::vector_const_view<double>, nda::vector_const_view<double>)
-  */ 
+  */
   nda::vector<double> build_k_it(nda::vector_const_view<double> t, double om);
 
   /**

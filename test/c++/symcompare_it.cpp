@@ -49,8 +49,8 @@ nda::matrix<double> gfun(int norb, double beta, double t) {
 */
 int main() {
 
-  double lambda = 1000;  // DLR cutoff
-  double eps    = 1e-10; // DLR tolerance
+  double lambda  = 1000;  // DLR cutoff
+  double eps     = 1e-10; // DLR tolerance
   auto statistic = Boson; // Green's function statistics
 
   double beta = 1000;  // Inverse temperature

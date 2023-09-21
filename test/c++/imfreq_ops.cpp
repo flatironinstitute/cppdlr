@@ -234,7 +234,7 @@ TEST(imfreq_ops, interp_matrix_sym) {
 */
 TEST(imfreq_ops, interp_matrix_sym_bos) {
 
-  double lambda  = 1000;   // DLR cutoff
+  double lambda  = 1000;  // DLR cutoff
   double eps     = 1e-10; // DLR tolerance
   auto statistic = Boson; // Bosonic Green's function
 
