@@ -50,12 +50,12 @@ namespace cppdlr {
         for (int j = 0; j < r; ++j) { cf2it(i, j) = kmat(piv(i), j); }
       }
 
-    } else { // Symmetrized bosonic case: enforce tau = 1/2 as DLR frequency
+    } else { // Symmetrized bosonic case: enforce tau = 1/2 as DLR imaginary time node
 
       auto kvec12 = build_k_it(0.5, dlr_rf); // K at tau = 1/2: K(1/2, om)
 
-      // Pivoted Gram-Schmidt on rows of K matrix, augmented by vector K(tau,
-      // 0), to obtain DLR imaginary ime nodes
+      // Pivoted Gram-Schmidt on rows of K matrix, augmented by vector K(tau, om),
+      // to obtain DLR imaginary time nodes
       auto [q, norms, piv] = pivrgs_sym(kmat, kvec12, 1e-100);
 
       std::sort(piv.begin(), piv.end());      // Sort pivots in ascending order

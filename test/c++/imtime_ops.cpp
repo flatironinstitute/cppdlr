@@ -810,7 +810,7 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf, Boson, SYM);
 
-  // Sample Green's function G at DLR imaginary time nodes
+  // Obtain DLR imaginary time nodes
   auto const &dlr_it = itops.get_itnodes();
 
   // Verify symmetry
@@ -819,6 +819,7 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   // Verify tau = 1/2 was selected
   EXPECT_EQ(dlr_it((r - 1) / 2), 0.5);
 
+  // Sample Green's function at DLR nodes
   auto g = nda::array<double, 3>(r, norb, norb);
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
 

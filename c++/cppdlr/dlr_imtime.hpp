@@ -52,11 +52,12 @@ namespace cppdlr {
     * @param[in] lambda DLR cutoff parameter
     * @param[in] dlr_rf DLR frequencies
     * @param[in] statistic Particle statistics: Boson or Fermion
-    * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
+    * @param[in] symmetrize NONSYM or false for non-symmetrized DLR frequencies,
+    * SYM or true for symmetrized
     *
     * @note In case Boson and SYM options are selected, we enforce that tau =
-    * 1/2 is chosen as a DLR frequency. For an explanation, please see the
-    * "Symmetrized DLR grids" subsection in the "Background" section of the
+    * 1/2 is chosen as a DLR imaginary time node. For an explanation, please see
+    * the "Symmetrized DLR grids" subsection in the "Background" section of the
     * documentation.
     */
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize);
