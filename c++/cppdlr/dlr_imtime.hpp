@@ -54,16 +54,10 @@ namespace cppdlr {
     * @param[in] statistic Particle statistics: Boson or Fermion
     * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
     *
-    * @note In case symmetrize and Boson options are selected, we enforce that
-    * tau = 0 is chosen as a DLR frequency. The reasoning is as follows: to
-    * maintain symmetry of the bosonic DLR imaginary frequency nodes, we must
-    * either forbid the zero imaginary frequency from being chosen, or always
-    * choose it. We decide to always choose it, which means the number of
-    * symmetrized imaginary frequency nodes will be odd. To maintain the same
-    * number r of DLR imaginary time and imaginary frequency nodes, we must
-    * therefore have an odd number of DLR imaginary time nodes. To obtain a
-    * symmetric DLR imaginary time grid with an odd number of points, we must
-    * choose tau = 1/2 as a DLR frequency.
+    * @note In case Boson and SYM options are selected, we enforce that tau =
+    * 1/2 is chosen as a DLR frequency. For an explanation, please see the
+    * "Symmetrized DLR grids" subsection in the "Background" section of the
+    * documentation.
     */
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize);
 

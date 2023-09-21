@@ -136,16 +136,10 @@ namespace cppdlr {
   *
   * @return DLR frequencies
   *
-  * @note In case symmetrize and Boson options are selected, we enforce that
-  * omega = 0 is chosen as a DLR frequency. The reasoning is as follows: to
-  * maintain symmetry of the bosonic DLR imaginary frequency nodes, we must
-  * either forbid the zero imaginary frequency from being chosen, or always
-  * choose it. We decide to always choose it, which means the number of
-  * symmetrized imaginary frequency nodes will be odd. To maintain the same
-  * number r of DLR frequencies and DLR imaginary frequency nodes, we must
-  * therefore have an odd number of DLR frequencies. To obtain a symmetric DLR
-  * frequency grid with an odd number of frequencies, we must choose omega = 0
-  * as a DLR frequency.
+  * @note In case Boson and SYM options are selected, we enforce that omega = 0
+  * is chosen as a DLR frequency. For an explanation, please see the
+  * "Symmetrized DLR grids" subsection in the "Background" section of the
+  * documentation.
   */
   nda::vector<double> build_dlr_rf(double lambda, double eps, statistic_t statistic, bool symmetrize);
 
