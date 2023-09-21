@@ -49,6 +49,7 @@ namespace cppdlr {
       for (int i = 0; i < r; ++i) {
         for (int j = 0; j < r; ++j) { cf2it(i, j) = kmat(piv(i), j); }
       }
+
     } else { // Symmetrized bosonic case: enforce tau = 1/2 as DLR frequency
 
       auto kvec12 = build_k_it(0.5, dlr_rf); // K at tau = 1/2: K(1/2, om)

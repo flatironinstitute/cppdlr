@@ -786,10 +786,10 @@ TEST(imtime_ops, interp_matrix_sym) {
 */
 TEST(imtime_ops, interp_matrix_sym_bos) {
 
-  double lambda = 100;   // DLR cutoff
+  double lambda = 1000;  // DLR cutoff
   double eps    = 1e-10; // DLR tolerance
 
-  double beta = 100;   // Inverse temperature
+  double beta = 1000;  // Inverse temperature
   int ntst    = 10000; // # imag time test points
 
   int norb = 2; // Orbital dimensions
@@ -797,8 +797,6 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps, SYM, Boson);
   int r       = dlr_rf.size();
-
-  PRINT(dlr_rf);
 
   // Verify DLR rank is odd
   EXPECT_EQ(r % 2, 1);
@@ -815,37 +813,35 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   // Sample Green's function G at DLR imaginary time nodes
   auto const &dlr_it = itops.get_itnodes();
 
-  PRINT(dlr_it);
-
   // Verify symmetry
   EXPECT_EQ(max_element(abs(dlr_it(range((r - 1) / 2)) + dlr_it(range(r - 1, (r - 1) / 2, -1)))), 0);
 
   // Verify tau = 1/2 was selected
   EXPECT_EQ(dlr_it((r - 1) / 2), 0.5);
 
-  //  auto g             = nda::array<double, 3>(r, norb, norb);
-  //  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
-  //
-  //  // DLR coefficients of G
-  //  auto gc = itops.vals2coefs(g);
-  //
-  //  // Check that G can be recovered at imaginary time nodes
-  //  EXPECT_LT(max_element(abs(itops.coefs2vals(gc) - g)), 1e-14);
-  //
-  //  // Get test points in relative format
-  //  auto ttst = eqptsrel(ntst);
-  //
-  //  // Compute L infinity error
-  //  auto gtru  = nda::matrix<double>(norb, norb);
-  //  auto gtst  = nda::matrix<double>(norb, norb);
-  //  double err = 0;
-  //  for (int i = 0; i < ntst; ++i) {
-  //    gtru = gfun(norb, beta, ttst(i));
-  //    gtst = itops.coefs2eval(gc, ttst(i));
-  //    err  = std::max(err, max_element(abs(gtru - gtst)));
-  //  }
-  //
-  //  EXPECT_LT(err, 10 * eps);
+  auto g = nda::array<double, 3>(r, norb, norb);
+  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
+
+  // DLR coefficients of G
+  auto gc = itops.vals2coefs(g);
+
+  // Check that G can be recovered at imaginary time nodes
+  EXPECT_LT(max_element(abs(itops.coefs2vals(gc) - g)), 1e-14);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  // Compute L infinity error
+  auto gtru  = nda::matrix<double>(norb, norb);
+  auto gtst  = nda::matrix<double>(norb, norb);
+  double err = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru = gfun(norb, beta, ttst(i));
+    gtst = itops.coefs2eval(gc, ttst(i));
+    err  = std::max(err, max_element(abs(gtru - gtst)));
+  }
+
+  EXPECT_LT(err, 10 * eps);
 }
 
 TEST(dlr_imtime, h5_rw) {
