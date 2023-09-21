@@ -66,6 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#imaginary-time-point-format">Imaginary time point format</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#symmetrized-dlr-grids">Symmetrized DLR grids</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
@@ -293,6 +294,28 @@ i/\beta\)</span> for bosonic Green’s functions. In <code class="docutils liter
 points are represented by specifying the integer <code class="docutils literal notranslate"><span class="pre">n</span></code>, the inverse temperature
 <span class="math notranslate nohighlight">\(\beta\)</span>, and whether the point is a fermionic or bosonic Matsubara
 frequency using the <code class="docutils literal notranslate"><span class="pre">statistic_t</span></code> specifier.</p>
+</div>
+<div class="section" id="symmetrized-dlr-grids">
+<h2>Symmetrized DLR grids<a class="headerlink" href="#symmetrized-dlr-grids" title="Permalink to this heading"></a></h2>
+<p>By default, the DLR frequencies <span class="math notranslate nohighlight">\(\omega_l\)</span> are not chosen to be symmetrized
+about <span class="math notranslate nohighlight">\(\omega = 0\)</span>, nor are the DLR imaginary time nodes <span class="math notranslate nohighlight">\(\tau_k\)</span>
+chosen to be symmetrized about <span class="math notranslate nohighlight">\(\tau = \beta/2\)</span> or the imaginary frequency
+nodes about <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span>. Indeed, this would represent an additional
+constraint in the pivoted Gram-Schmidt procedure used to select the points, and
+is not necessary in most applications. However, in some cases, it might be
+desirable to have symmetric frequencies and grids, and <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> provides this
+functionality via symmetrization flags. Please see the section <a class="reference internal" href="examples.html#listofothercapabilities"><span class="std std-ref">List of
+other cppdlr capabilities</span></a> on the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples
+page</span></a> for a list of <cite>cppdlr</cite> tests which showcase this functionality.</p>
+<p>We make a small note about symmetrization for bosonic Green’s functions. In this
+case, we always select the DLR frequency <span class="math notranslate nohighlight">\(\omega = 0\)</span>, the DLR imaginary
+time node <span class="math notranslate nohighlight">\(\tau = \beta/2\)</span>, and the DLR imaginary frequency node
+<span class="math notranslate nohighlight">\(i \nu_n = 0\)</span>. The reason is as follows. A symmetric DLR imaginary frequency grid
+containing the point <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span> must have an odd number of points.
+Since it is undesirable to disallow this point, and to make sure all grids have
+the same number <span class="math notranslate nohighlight">\(r\)</span> of points, we force <span class="math notranslate nohighlight">\(r\)</span> to be odd. This requires
+including in each grid, by hand, a single point of high symmetry, and then allowing the
+pivoted Gram-Schmidt procedure to select the rest of the points symmetrically.</p>
 </div>
 </div>
 

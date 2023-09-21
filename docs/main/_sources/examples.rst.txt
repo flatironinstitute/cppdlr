@@ -195,6 +195,15 @@ list several such use cases below.
 - Obtain a DLR expansion by interpolation on the DLR Matsubara frequency nodes:
   see the tests ``imfreq_ops.interp_scalar`` and ``imfreq_ops.interp_matrix`` in
   the file ``test/imfreq_ops.cpp``.
+- Obtain symmetrized DLR grids, and obtain a DLR expansion by interpolation on
+  these grids: see the tests ``imtime_ops.interp_matrix_sym_fer`` and 
+  ``imtime_ops.interp_matrix_sym_bos`` in the file ``test/imtime_ops.cpp`` for
+  fermionic and bosonic Green's functions, respectively, on a symmetric
+  imaginary time grid. See the tests ``imfreq_ops.interp_matrix_sym_fer`` and
+   ``imfreq_ops.interp_matrix_sym_bos`` in the file ``test/imfreq_ops.cpp`` for
+   fermionic and bosonic Green's functions, respectively, on a symmetric
+   Matsubara frequency grid. All of these tests show how to obtain a symmetric
+   set of DLR frequencies.
 - Given a fixed self-energy, solve the Dyson equation in imaginary time to
   obtain the Green's function: see the tests ``dyson_it.dyson_vs_ed_real``,
   ``dyson_it.dyson_vs_ed_cmplx``, and ``dyson_it.dyson_bethe`` in the file

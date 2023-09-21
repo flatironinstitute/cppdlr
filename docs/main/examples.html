@@ -66,6 +66,7 @@
 <li class="toctree-l2"><a class="reference internal" href="background.html#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-point-format">Imaginary time point format</a></li>
 <li class="toctree-l2"><a class="reference internal" href="background.html#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#symmetrized-dlr-grids">Symmetrized DLR grids</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
@@ -233,26 +234,44 @@ detail above.</li>
 <p>For <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> use cases which are not covered by examples in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory,
 relevant unit tests in the <code class="docutils literal notranslate"><span class="pre">test</span></code> directory can serve as useful examples. We
 list several such use cases below.</p>
-<ul class="simple">
-<li>Obtain a DLR expansion by fitting to data in imaginary time: see the tests <code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_scalar</span></code>,
-<code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_matrix</span></code>, and <code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_matrix_cmplx</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</li>
-<li>Compute the convolution of two DLR expansions: see the tests
+<ul>
+<li><p class="first">Obtain a DLR expansion by fitting to data in imaginary time: see the tests <code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_scalar</span></code>,
+<code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_matrix</span></code>, and <code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_matrix_cmplx</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</p>
+</li>
+<li><p class="first">Compute the convolution of two DLR expansions: see the tests
 <code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_scalar_real</span></code>, <code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_scalar_cmplx</span></code>,
 <code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_matrix_real</span></code>, and <code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_matrix_cmplx</span></code>
-in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</li>
-<li>Perform a “reflection” operation <span class="math notranslate nohighlight">\(G(\tau) \mapsto G(\beta-\tau)\)</span> on a
+in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</p>
+</li>
+<li><p class="first">Perform a “reflection” operation <span class="math notranslate nohighlight">\(G(\tau) \mapsto G(\beta-\tau)\)</span> on a
 Green’s function: see the test <code class="docutils literal notranslate"><span class="pre">imtime_ops.refl_matrix</span></code> in the file
-<code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</li>
-<li>Obtain a DLR expansion by interpolation on the DLR Matsubara frequency nodes:
+<code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</p>
+</li>
+<li><p class="first">Obtain a DLR expansion by interpolation on the DLR Matsubara frequency nodes:
 see the tests <code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_scalar</span></code> and <code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_matrix</span></code> in
-the file <code class="docutils literal notranslate"><span class="pre">test/imfreq_ops.cpp</span></code>.</li>
-<li>Given a fixed self-energy, solve the Dyson equation in imaginary time to
+the file <code class="docutils literal notranslate"><span class="pre">test/imfreq_ops.cpp</span></code>.</p>
+</li>
+<li><p class="first">Obtain symmetrized DLR grids, and obtain a DLR expansion by interpolation on
+these grids: see the tests <code class="docutils literal notranslate"><span class="pre">imtime_ops.interp_matrix_sym_fer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">imtime_ops.interp_matrix_sym_bos</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code> for
+fermionic and bosonic Green’s functions, respectively, on a symmetric
+imaginary time grid. See the tests <code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_matrix_sym_fer</span></code> and</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_matrix_sym_bos</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imfreq_ops.cpp</span></code> for
+fermionic and bosonic Green’s functions, respectively, on a symmetric
+Matsubara frequency grid. All of these tests show how to obtain a symmetric
+set of DLR frequencies.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Given a fixed self-energy, solve the Dyson equation in imaginary time to
 obtain the Green’s function: see the tests <code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_vs_ed_real</span></code>,
 <code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_vs_ed_cmplx</span></code>, and <code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_bethe</span></code> in the file
-<code class="docutils literal notranslate"><span class="pre">test/dyson_it.cpp</span></code>.</li>
-<li>Solve the Dyson equation self-consistently in imaginary time, given an
+<code class="docutils literal notranslate"><span class="pre">test/dyson_it.cpp</span></code>.</p>
+</li>
+<li><p class="first">Solve the Dyson equation self-consistently in imaginary time, given an
 expression for the self-energy in terms of the Green’s function: see the test
-<code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_bethe_fpi</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/dyson_it.cpp</span></code>.</li>
+<code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_bethe_fpi</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/dyson_it.cpp</span></code>.</p>
+</li>
 </ul>
 </div>
 </div>
