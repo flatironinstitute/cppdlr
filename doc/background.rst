@@ -255,8 +255,8 @@ nodes about :math:`i \nu_n = 0`. Indeed, this would represent an additional
 constraint in the pivoted Gram-Schmidt procedure used to select the points, and
 is not necessary in most applications. However, in some cases, it might be
 desirable to have symmetric frequencies and grids, and ``cppdlr`` provides this
-functionality via symmetrization flags. Please see the section :ref:`List of
-other cppdlr capabilities<listofothercapabilities>` on the :ref:`examples
+functionality via symmetrization flags. Please see the :ref:`list of
+other cppdlr capabilities<listofothercapabilities>` section on the :ref:`examples
 page<examples>` for a list of `cppdlr` tests which showcase this functionality.
 
 We make a small note about symmetrization for bosonic Green's functions. In this
