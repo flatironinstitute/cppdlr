@@ -729,7 +729,7 @@ TEST(imtime_ops, refl_matrix) {
 * @brief Test symmetrized DLR interpolation and evaluation for fermionic
 * matrix-valued Green's function
 */
-TEST(imtime_ops, interp_matrix_sym) {
+TEST(imtime_ops, interp_matrix_sym_fer) {
 
   double lambda = 1000;  // DLR cutoff
   double eps    = 1e-10; // DLR tolerance

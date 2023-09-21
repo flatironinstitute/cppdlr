@@ -244,3 +244,27 @@ i/\beta` for bosonic Green's functions. In ``cppdlr``, Matsubara frequency
 points are represented by specifying the integer ``n``, the inverse temperature
 :math:`\beta`, and whether the point is a fermionic or bosonic Matsubara
 frequency using the ``statistic_t`` specifier.
+
+Symmetrized DLR grids
+---------------------
+
+By default, the DLR frequencies :math:`\omega_l` are not chosen to be symmetrized
+about :math:`\omega = 0`, nor are the DLR imaginary time nodes :math:`\tau_k`
+chosen to be symmetrized about :math:`\tau = \beta/2` or the imaginary frequency
+nodes about :math:`i \nu_n = 0`. Indeed, this would represent an additional
+constraint in the pivoted Gram-Schmidt procedure used to select the points, and
+is not necessary in most applications. However, in some cases, it might be
+desirable to have symmetric frequencies and grids, and ``cppdlr`` provides this
+functionality via symmetrization flags. Please see the section :ref:`List of
+other cppdlr capabilities<listofothercapabilities>` on the :ref:`examples
+page<examples>` for a list of `cppdlr` tests which showcase this functionality.
+
+We make a small note about symmetrization for bosonic Green's functions. In this
+case, we always select the DLR frequency :math:`\omega = 0`, the DLR imaginary
+time node :math:`\tau = \beta/2`, and the DLR imaginary frequency node 
+:math:`i \nu_n = 0`. The reason is as follows. A symmetric DLR imaginary frequency grid
+containing the point :math:`i \nu_n = 0` must have an odd number of points.
+Since it is undesirable to disallow this point, and to make sure all grids have
+the same number :math:`r` of points, we force :math:`r` to be odd. This requires
+including in each grid, by hand, a single point of high symmetry, and then allowing the
+pivoted Gram-Schmidt procedure to select the rest of the points symmetrically.

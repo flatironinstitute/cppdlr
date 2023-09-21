@@ -177,7 +177,7 @@ TEST(imfreq_ops, interp_scalar) {
 * @brief Test symmetrized DLR interpolation and evaluation for matrix-valued
 * Green's function
 */
-TEST(imfreq_ops, interp_matrix_sym) {
+TEST(imfreq_ops, interp_matrix_sym_fer) {
 
   double lambda  = 1000;    // DLR cutoff
   double eps     = 1e-10;   // DLR tolerance
