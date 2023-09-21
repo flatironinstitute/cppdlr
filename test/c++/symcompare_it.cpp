@@ -51,6 +51,7 @@ int main() {
 
   double lambda = 1000;  // DLR cutoff
   double eps    = 1e-10; // DLR tolerance
+  auto statistic = Boson; // Green's function statistics
 
   double beta = 1000;  // Inverse temperature
   int ntst    = 10000; // # imag time test points
@@ -59,14 +60,14 @@ int main() {
 
   // Get DLR frequencies
   auto dlr_rf     = build_dlr_rf(lambda, eps);
-  auto dlr_rf_sym = build_dlr_rf(lambda, eps, Fermion, SYM);
+  auto dlr_rf_sym = build_dlr_rf(lambda, eps, statistic, SYM);
 
   int r    = dlr_rf.size();
   int rsym = dlr_rf_sym.size();
 
   // Get DLR imaginary time object
   auto itops     = imtime_ops(lambda, dlr_rf);
-  auto itops_sym = imtime_ops(lambda, dlr_rf_sym, Fermion, SYM);
+  auto itops_sym = imtime_ops(lambda, dlr_rf_sym, statistic, SYM);
 
   // Sample Green's function G at DLR imaginary time nodes
   auto const &dlr_it     = itops.get_itnodes();

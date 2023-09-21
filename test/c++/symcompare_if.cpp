@@ -54,7 +54,7 @@ int main() {
 
   double lambda = 1000;  // DLR cutoff
   double eps    = 1e-10; // DLR tolerance
-  auto statistic = Fermion; // Fermionic Green's function
+  auto statistic = Boson; // Fermionic Green's statistics
 
   double beta = 1000;  // Inverse temperature
   int nmaxtst = 10000; // # imag time test points
@@ -63,7 +63,7 @@ int main() {
 
   // Get DLR frequencies
   auto dlr_rf     = build_dlr_rf(lambda, eps);
-  auto dlr_rf_sym = build_dlr_rf(lambda, eps, Fermion, SYM);
+  auto dlr_rf_sym = build_dlr_rf(lambda, eps, statistic, SYM);
 
   int r    = dlr_rf.size();
   int rsym = dlr_rf_sym.size();
