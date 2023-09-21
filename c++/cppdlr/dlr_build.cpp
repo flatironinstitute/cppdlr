@@ -203,13 +203,25 @@ namespace cppdlr {
 
     int nom = om.size();
 
-    auto kmat = nda::matrix<dcomplex>(2 * nmax, nom);
+    if (statistic==Fermion){
 
-    for (int n = -nmax; n < nmax; ++n) {
-      for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(n, om(j), statistic); }
+      // 2*n+1 should go from -2*nmax+1 to 2*nmax-1, so n goes from -nmax to nmax-1
+      auto kmat = nda::matrix<dcomplex>(2 * nmax, nom);
+
+      for (int n = -nmax; n < nmax; ++n) {
+        for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(n, om(j), statistic); }
+      }
+      return kmat;
+    } else {
+
+      // 2*n+1 should go from -2*nmax to 2*nmax, so n goes from -nmax to nmax
+      auto kmat = nda::matrix<dcomplex>(2 * nmax + 1, nom);
+
+      for (int n = -nmax; n <= nmax; ++n) {
+        for (int j = 0; j < nom; ++j) { kmat(nmax + n, j) = k_if(n, om(j), statistic); }
+      }
+      return kmat;
     }
-
-    return kmat;
   }
 
   // TODO: Fix this to account for both fermionic and bosonic cases symmetrized cases
