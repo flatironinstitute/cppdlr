@@ -126,7 +126,7 @@ Fourier transform of :math:`\eqref{dlrexp}` yields
 
 .. math::
   \begin{equation}
-    G(i nu_n) \approx \sum_{l=1}^r K(i \nu_n,\omega_l) \widehat{g}_l, \label{dlrexp_imfreq} \tag{2}
+    G(i \nu_n) \approx \sum_{l=1}^r K(i \nu_n,\omega_l) \widehat{g}_l, \label{dlrexp_imfreq} \tag{2}
   \end{equation}
 
 so we see that the DLR expansion can be evaluated directly in imaginary time or
