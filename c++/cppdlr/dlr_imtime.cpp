@@ -24,7 +24,7 @@ using namespace nda;
 
 namespace cppdlr {
 
-  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize, statistic_t statistic)
+  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize)
      : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     dlr_it    = nda::vector<double>(r);
@@ -83,7 +83,7 @@ namespace cppdlr {
     lapack::getrf(it2cf.lu, it2cf.piv);
   }
 
-  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : imtime_ops(lambda, dlr_rf, NONSYM, Fermion) {}
+  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : imtime_ops(lambda, dlr_rf, Fermion, NONSYM) {}
 
   nda::vector<double> imtime_ops::build_evalvec(double t) const {
 

@@ -51,8 +51,8 @@ namespace cppdlr {
     * 
     * @param[in] lambda DLR cutoff parameter
     * @param[in] dlr_rf DLR frequencies
-    * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
     * @param[in] statistic Particle statistics: Boson or Fermion
+    * @param[in] symmetrize Non-symmetrized (false, default) or symmetrized DLR (true)
     *
     * @note In case symmetrize and Boson options are selected, we enforce that
     * tau = 0 is chosen as a DLR frequency. The reasoning is as follows: to
@@ -65,7 +65,7 @@ namespace cppdlr {
     * symmetric DLR imaginary time grid with an odd number of points, we must
     * choose tau = 1/2 as a DLR frequency.
     */
-    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize, statistic_t statistic);
+    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize);
 
     /** 
     * @brief Constructor for imtime_ops

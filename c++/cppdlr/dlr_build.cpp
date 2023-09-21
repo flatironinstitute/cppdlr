@@ -213,7 +213,7 @@ namespace cppdlr {
   }
 
   // TODO: Fix this to account for both fermionic and bosonic cases symmetrized cases
-  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize, statistic_t statistic) {
+  nda::vector<double> build_dlr_rf(double lambda, double eps, statistic_t statistic, bool symmetrize) {
 
     // Get fine grid parameters
 
@@ -263,6 +263,6 @@ namespace cppdlr {
     }
   }
 
-  nda::vector<double> build_dlr_rf(double lambda, double eps) { return build_dlr_rf(lambda, eps, NONSYM, statistic_t::Fermion); }
+  nda::vector<double> build_dlr_rf(double lambda, double eps) { return build_dlr_rf(lambda, eps, statistic_t::Fermion, NONSYM); }
 
 } // namespace cppdlr

@@ -740,14 +740,14 @@ TEST(imtime_ops, interp_matrix_sym) {
   int norb = 2; // Orbital dimensions
 
   // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps, SYM, Fermion);
+  auto dlr_rf = build_dlr_rf(lambda, eps, Fermion, SYM);
   int r       = dlr_rf.size();
 
   // Verify symmetry
   EXPECT_EQ(max_element(abs(dlr_rf(range(r / 2)) + dlr_rf(range(r - 1, r / 2 - 1, -1)))), 0);
 
   // Get DLR imaginary time object
-  auto itops = imtime_ops(lambda, dlr_rf, SYM, Fermion);
+  auto itops = imtime_ops(lambda, dlr_rf, Fermion, SYM);
 
   // Sample Green's function G at DLR imaginary time nodes
   auto const &dlr_it = itops.get_itnodes();
@@ -795,7 +795,7 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   int norb = 2; // Orbital dimensions
 
   // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps, SYM, Boson);
+  auto dlr_rf = build_dlr_rf(lambda, eps, Boson, SYM);
   int r       = dlr_rf.size();
 
   // Verify DLR rank is odd
@@ -808,7 +808,7 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   EXPECT_EQ(dlr_rf((r - 1) / 2), 0.0);
 
   // Get DLR imaginary time object
-  auto itops = imtime_ops(lambda, dlr_rf, SYM, Boson);
+  auto itops = imtime_ops(lambda, dlr_rf, Boson, SYM);
 
   // Sample Green's function G at DLR imaginary time nodes
   auto const &dlr_it = itops.get_itnodes();
