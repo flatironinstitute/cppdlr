@@ -56,7 +56,7 @@ intermediate representation (IR) was introduced first, and used the singular val
 decomposition to obtain an orthogonal but non-explicit basis of imaginary time
 Green's functions [@shinaoka17; @chikano18]. The recently-introduced discrete Lehmann representation (DLR) uses the
 interpolative decomposition to obtain a non-orthogonal basis consisting of known
-exponential functions [@kaye22_dlr]. The number of basis functions required in both representations is similar, and typically significantly less than the previous state-of-the art methods based on orthogonal polynomials [@bohenke11; @gull18; @dong20].
+exponential functions [@kaye22_dlr]. The number of basis functions required in both representations is similar, and typically significantly less than the previous state-of-the art methods based on orthogonal polynomials [@boehnke11; @gull18; @dong20].
 
 The DLR's use of an explicit basis of simple functions makes many common operations,
 including interpolation, integration, Fourier transform, and convolution, simple and
