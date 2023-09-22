@@ -36,7 +36,7 @@ bibliography: paper.bib
 
 # Summary
 
-Imaginary time Green's functions encode the static and dynamical response of quantum systems at thermal equilibrium to external perturbations, such as applied electromagnetic fields. They therefore represent a direct point of connection between theoretical calculations and experimental measurements. As a consequence, they appear routinely in quantum many-body calculations at finite temperature, both for model systems like the Hubbard model `[@hubbard63]`, and in ab-initio electronic structure calculations beyond density functional theory, e.g., using Hedin's GW method `[@hedin65,@golze19]`.
+Imaginary time Green's functions encode the static and dynamical response of quantum systems at thermal equilibrium to external perturbations, such as applied electromagnetic fields. They therefore represent a direct point of connection between theoretical calculations and experimental measurements. As a consequence, they appear routinely in quantum many-body calculations at finite temperature, both for model systems like the Hubbard model [@hubbard63], and in ab-initio electronic structure calculations beyond density functional theory, e.g., using Hedin's GW method [@hedin65; @golze19].
 Highly compact and accurate representations of imaginary time Green's functions and related imaginary time-dependent response functions are therefore an important ingredient in the development of robust and efficient codes for quantum many-body calculations.
  However, obtaining such representations has traditionally been challenging, particularly for low temperature calculations, in which the functions develop steep gradients. 
 
@@ -54,20 +54,20 @@ to lie within the image of the integral operator, which is numerically low-rank,
 enabling the construction of highly compact basis representations. The
 intermediate representation (IR) was introduced first, and used the singular value
 decomposition to obtain an orthogonal but non-explicit basis of imaginary time
-Green's functions `[@shinaoka17,@chikano18]`. The recently-introduced discrete Lehmann representation (DLR) uses the
+Green's functions [@shinaoka17; @chikano18]. The recently-introduced discrete Lehmann representation (DLR) uses the
 interpolative decomposition to obtain a non-orthogonal basis consisting of known
-exponential functions `[@kaye22_dlr]`. The number of basis functions required in both representations is similar, and typically significantly less than the previous state-of-the art methods based on orthogonal polynomials `[@bohenke11,@gull18,@dong20]`.
+exponential functions [@kaye22_dlr]. The number of basis functions required in both representations is similar, and typically significantly less than the previous state-of-the art methods based on orthogonal polynomials [@bohenke11; @gull18; @dong20].
 
 The DLR's use of an explicit basis of simple functions makes many common operations,
 including interpolation, integration, Fourier transform, and convolution, simple and
 highly efficient. This has led to a variety of recent algorithmic advances, including in
 reducing the size of the Matsubara frequency mesh in dynamical mean-field theory
-calculations `[@sheng23]`, stabilizing the calculation of the single-particle self-energy via the Dyson
-equation `[@labollita23]`, improving the efficiency of the imaginary time discretization in the
-mixing Green's function of the Keldysh formalism `[@kaye23_eqdyson]`, and accelerating the
-evaluation of imaginary time Feynman diagrams `[@kaye23_diagrams]`. It has also
+calculations [@sheng23], stabilizing the calculation of the single-particle self-energy via the Dyson
+equation [@labollita23], improving the efficiency of the imaginary time discretization in the
+mixing Green's function of the Keldysh formalism [@kaye23_eqdyson], and accelerating the
+evaluation of imaginary time Feynman diagrams [@kaye23_diagrams]. It has also
 yielded immediate applications in computational physics, for example in low-temperature
-studies of superconductivity `[@cai22,@hou23,@johnston23]`. The DLR can be straightforwardly
+studies of superconductivity [@cai22; @hou23; @johnston23]. The DLR can be straightforwardly
 integrated into existing algorithms and codes, often yielding significant
 improvements in efficiency, accuracy, and algorithmic simplicity.
 
@@ -79,16 +79,16 @@ in small-scale applications and in
 existing large-scale software projects.
 The DLR has previously been implemented in other programming languages,
 specifically in Python via `pydlr`, in Fortran via `libdlr`, and in Julia via
-`Lehmann.jl` `[@kaye22_libdlr,@pydlr,@libdlr,@Lehmann.jl]`, as well as in the `sparse-ir` library implementing the IR `[@wallerberger23]`. `cppdlr` nevertheless provides a needed platform for
+`Lehmann.jl` [@kaye22_libdlr; @pydlr; @libdlr; @Lehmann.jl], as well as in the `sparse-ir` library implementing the IR [@wallerberger23]. `cppdlr` nevertheless provides a needed platform for
 future developments. First, `cppdlr` is written in C++, a common language used
 by many large projects in the quantum many-body physics community. Second, it
 offers a high-level user interface simpler than that of `libdlr`, enabled by
-the use of C++ templating and the `nda` library `[@nda]` for array types and BLAS/LAPACK
+the use of C++ templating and the `nda` library [@nda] for array types and BLAS/LAPACK
 compatibility. These features have, for example, enabled the
-implementation of the DLR in the TRIQS library `[@parcollet15]`
+implementation of the DLR in the TRIQS library [@parcollet15]
 for quantum many-body calculations.
 
-`cppdlr` is distributed under the Apache License Version 2.0 through a public Git repository `[@cppdlr_git]`. The project documentation `[@cppdlr_doc]` is extensive, containing background on the DLR, a user guide describing example programs packaged with the library, and application interface (API) reference documentation for all classes and functions. We envision `cppdlr` as a platform for future algorithmic developments involving the DLR, and as a go-to tool for applications employing the DLR.
+`cppdlr` is distributed under the Apache License Version 2.0 through a public Git repository [@cppdlr_git]. The project documentation [@cppdlr_doc] is extensive, containing background on the DLR, a user guide describing example programs packaged with the library, and application interface (API) reference documentation for all classes and functions. We envision `cppdlr` as a platform for future algorithmic developments involving the DLR, and as a go-to tool for applications employing the DLR.
 
 # Acknowledgements
 
