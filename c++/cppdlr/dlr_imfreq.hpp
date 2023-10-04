@@ -82,18 +82,16 @@ namespace cppdlr {
 
       if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
-      // Reshape g to matrix w/ first dimension r
-      auto g_rs = nda::reshape(g, r, g.size() / r);
-      auto gct  = nda::matrix<nda::dcomplex>(transpose(g_rs));
+      // Make a copy of the data in Fortran Layout as required by getrs
+      auto gf = nda::array<get_value_t<T>, get_rank<T>, F_layout>(g);
 
-      // Solve linear system (multiple right hand sides) to convert vals ->
-      // coeffs (we transpose because LAPACK requires index into RHS # to be
-      // slowest)
-      nda::lapack::getrs(if2cf.lu, gct, if2cf.piv);
+      // Reshape as matrix_view with r rows
+      auto gfv = nda::reshape(gf, r, g.size() / r);
 
-      // Reshape to original dimensions and return
-      auto gc = nda::matrix<nda::dcomplex>(transpose(gct));
-      return nda::reshape(gc, g.shape());
+      // Solve linear system (multiple right hand sides) to convert vals -> coeffs
+      nda::lapack::getrs(if2cf.lu, gfv, if2cf.piv);
+
+      return gf;
     }
 
     /** 
