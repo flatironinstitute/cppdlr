@@ -125,490 +125,487 @@ $(function() {
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      <span class="keywordflow">if</span> (r != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g != DLR rank r.&quot;</span>);</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="comment">// Reshape g to matrix w/ first dimension r</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <span class="keyword">auto</span> g_rs = nda::reshape(g, r, g.size() / r);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <span class="keyword">auto</span> gct  = nda::matrix&lt;S&gt;(transpose(g_rs));</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="comment">// Solve linear system (multiple right hand sides) to convert vals -&gt;</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      <span class="comment">// coeffs (we transpose because LAPACK requires index into RHS # to be</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      <span class="comment">// slowest)</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      <span class="keywordflow">if</span> constexpr (nda::have_same_value_type_v&lt;T, decltype(it2cf.lu)&gt;) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        nda::lapack::getrs(it2cf.lu, gct, it2cf.piv);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="comment">// getrs requires matrix and rhs to have same value type</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        nda::lapack::getrs(nda::matrix&lt;S&gt;(it2cf.lu), gct, it2cf.piv);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      <span class="comment">// Reshape to original dimensions and return</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;      <span class="keyword">auto</span> gc = nda::matrix&lt;S&gt;(transpose(gct));</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;      <span class="keywordflow">return</span> nda::reshape(gc, g.shape());</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">  123</a></span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">coefs2vals</a>(T <span class="keyword">const</span> &amp;gc)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keywordflow">if</span> (r != gc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g != DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      <span class="comment">// Make a copy of the data in Fortran Layout as required by getrs</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      <span class="keyword">auto</span> gf = nda::array&lt;get_value_t&lt;T&gt;, get_rank&lt;T&gt;, F_layout&gt;(g);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      <span class="comment">// Reshape as matrix_view with r rows</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keyword">auto</span> gfv = nda::reshape(gf, r, g.size() / r);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      <span class="comment">// Solve linear system (multiple right hand sides) to convert vals -&gt; coeffs</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      <span class="keywordflow">if</span> constexpr (nda::have_same_value_type_v&lt;T, decltype(it2cf.lu)&gt;) {</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        nda::lapack::getrs(it2cf.lu, gfv, it2cf.piv);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="comment">// getrs requires matrix and rhs to have same value type</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        nda::lapack::getrs(nda::matrix&lt;S&gt;(it2cf.lu), gfv, it2cf.piv);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="keywordflow">return</span> gf;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">  120</a></span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">coefs2vals</a>(T <span class="keyword">const</span> &amp;gc)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;      <span class="keywordflow">if</span> (r != gc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g != DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;      <span class="comment">// Reshape gc to a matrix w/ first dimension r</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keyword">auto</span> gc_rs = nda::reshape(gc, r, gc.size() / r);</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      <span class="comment">// Reshape gc to a matrix w/ first dimension r</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;      <span class="keyword">auto</span> gc_rs = nda::reshape(gc, r, gc.size() / r);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      <span class="comment">// Apply coeffs -&gt; vals matrix</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;      <span class="keyword">auto</span> g = cf2it * nda::matrix_const_view&lt;S&gt;(gc_rs);</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      <span class="comment">// Apply coeffs -&gt; vals matrix</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      <span class="keyword">auto</span> g = cf2it * nda::matrix_const_view&lt;S&gt;(gc_rs);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;      <span class="comment">// Reshape to original dimensions and return</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      <span class="keywordflow">return</span> nda::reshape(g, gc.shape());</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
-<div class="line"><a name="l00151"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a12761a877407fc347dc695da4b2d7f3d">  151</a></span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; <span class="keyword">auto</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a12761a877407fc347dc695da4b2d7f3d">coefs2eval</a>(T <span class="keyword">const</span> &amp;gc, <span class="keywordtype">double</span> t)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;      <span class="keywordflow">if</span> (r != gc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g != DLR rank r.&quot;</span>);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="comment">// Scalar-valued Green&#39;s functions are handled differently than matrix-valued Green&#39;s functions</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) {</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="comment">// TODO: can be further optimized to reduce # exponential evals.</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <span class="comment">// Evaluate DLR expansion</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        S g = 0;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="keywordflow">if</span> (t &gt;= 0) {</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { g += <a class="code" href="namespacecppdlr.html#a7dfaf907221eb1768418258421af703f">k_it_abs</a>(t, dlr_rf(l)) * gc(l); }</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { g += <a class="code" href="namespacecppdlr.html#a7dfaf907221eb1768418258421af703f">k_it_abs</a>(-t, -dlr_rf(l)) * gc(l); }</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        }</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      <span class="comment">// Reshape to original dimensions and return</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      <span class="keywordflow">return</span> nda::reshape(g, gc.shape());</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a12761a877407fc347dc695da4b2d7f3d">  148</a></span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; <span class="keyword">auto</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a12761a877407fc347dc695da4b2d7f3d">coefs2eval</a>(T <span class="keyword">const</span> &amp;gc, <span class="keywordtype">double</span> t)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      <span class="keywordflow">if</span> (r != gc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g != DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      <span class="comment">// Scalar-valued Green&#39;s functions are handled differently than matrix-valued Green&#39;s functions</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="comment">// TODO: can be further optimized to reduce # exponential evals.</span></div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="comment">// Evaluate DLR expansion</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        S g = 0;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="keywordflow">if</span> (t &gt;= 0) {</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { g += <a class="code" href="namespacecppdlr.html#a7dfaf907221eb1768418258421af703f">k_it_abs</a>(t, dlr_rf(l)) * gc(l); }</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { g += <a class="code" href="namespacecppdlr.html#a7dfaf907221eb1768418258421af703f">k_it_abs</a>(-t, -dlr_rf(l)) * gc(l); }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        }</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> g;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;      } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">return</span> g;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="comment">// Reshape gc to matrix w/ first dimension r</span></div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="keyword">auto</span> gc_rs = nda::reshape(gc, r, gc.size() / r);</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="comment">// Reshape gc to matrix w/ first dimension r</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        <span class="keyword">auto</span> gc_rs = nda::reshape(gc, r, gc.size() / r);</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;        <span class="comment">// Get output shape</span></div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        std::array&lt;long, T::rank - 1&gt; shape_out;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; T::rank - 1; ++i) { shape_out[i] = gc.shape(i + 1); }</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="comment">// Get output shape</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        std::array&lt;long, T::rank - 1&gt; shape_out;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; T::rank - 1; ++i) { shape_out[i] = gc.shape(i + 1); }</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        <span class="comment">// Get vector of evaluation of DLR expansion at a point</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="keyword">auto</span> kvec = <a class="code" href="classcppdlr_1_1imtime__ops.html#a318b0b4409d0488814bb8db12c8b0611">build_evalvec</a>(t);</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="comment">// Get vector of evaluation of DLR expansion at a point</span></div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="keyword">auto</span> kvec = <a class="code" href="classcppdlr_1_1imtime__ops.html#a318b0b4409d0488814bb8db12c8b0611">build_evalvec</a>(t);</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="comment">// Evaluate DLR expansion, reshape to original dimensions (with first</span></div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="comment">// dimension summed out), and return</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keywordflow">return</span> nda::reshape(transpose(nda::matrix_const_view&lt;S&gt;(gc_rs)) * kvec, shape_out);</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;      }</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    }</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    nda::vector&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a318b0b4409d0488814bb8db12c8b0611">build_evalvec</a>(<span class="keywordtype">double</span> t) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt;</div>
-<div class="line"><a name="l00211"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a6a81a99b2858defa9513a395bd35e2bf">  211</a></span>&#160;    <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a6a81a99b2858defa9513a395bd35e2bf">fitvals2coefs</a>(nda::vector_const_view&lt;double&gt; t, T <span class="keyword">const</span> &amp;g)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;      <span class="comment">// Check first dimension of g equal to length of t</span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;      <span class="keywordtype">int</span> n = t.size();</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;      <span class="keywordflow">if</span> (n != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g must be equal to length of t.&quot;</span>);</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160; </div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      <span class="comment">// Get matrix for least squares fitting: columns are DLR basis functions</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      <span class="comment">// evaluating at data points t. Must built in Fortran layout for</span></div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;      <span class="comment">// compatibility with LAPACK.</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;      <span class="keyword">auto</span> kmat = nda::matrix&lt;S, F_layout&gt;(n, r); <span class="comment">// Make sure matrix has same scalar type as g</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; n; ++i) { kmat(i, j) = <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(t(i), dlr_rf(j)); }</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;      }</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;      <span class="comment">// Reshape g to matrix w/ first dimension n, and put in Fortran layout for</span></div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;      <span class="comment">// compatibility w/ LAPACK</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;      <span class="keyword">auto</span> g_rs = nda::matrix&lt;S, F_layout&gt;(nda::reshape(g, n, g.size() / n));</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;      <span class="comment">// Solve least squares problem to obtain DLR coefficients</span></div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;      <span class="keyword">auto</span> s   = nda::vector&lt;double&gt;(r); <span class="comment">// Singular values (not needed)</span></div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;      <span class="keywordtype">int</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">rank</a> = 0;                      <span class="comment">// Rank of system matrix (not needed)</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      nda::lapack::gelss(kmat, g_rs, s, 0.0, <a class="code" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">rank</a>);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      <span class="keyword">auto</span> gc_shape                = g.shape();                          <span class="comment">// Output shape is same as g...</span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      gc_shape[0]                  = r;                                  <span class="comment">// ...with first dimension n replaced by r</span></div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      <span class="keyword">auto</span> gc                      = <span class="keyword">typename</span> T::regular_type(gc_shape); <span class="comment">// Output array: output type is same as g</span></div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      reshape(gc, r, g.size() / n) = g_rs(nda::range(r), _);             <span class="comment">// Place result in output array</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        <span class="comment">// Evaluate DLR expansion, reshape to original dimensions (with first</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;        <span class="comment">// dimension summed out), and return</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <span class="keywordflow">return</span> nda::reshape(transpose(nda::matrix_const_view&lt;S&gt;(gc_rs)) * kvec, shape_out);</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;      }</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    }</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    nda::vector&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a318b0b4409d0488814bb8db12c8b0611">build_evalvec</a>(<span class="keywordtype">double</span> t) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt;</div>
+<div class="line"><a name="l00208"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a6a81a99b2858defa9513a395bd35e2bf">  208</a></span>&#160;    <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a6a81a99b2858defa9513a395bd35e2bf">fitvals2coefs</a>(nda::vector_const_view&lt;double&gt; t, T <span class="keyword">const</span> &amp;g)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;      <span class="comment">// Check first dimension of g equal to length of t</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;      <span class="keywordtype">int</span> n = t.size();</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;      <span class="keywordflow">if</span> (n != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g must be equal to length of t.&quot;</span>);</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;      <span class="comment">// Get matrix for least squares fitting: columns are DLR basis functions</span></div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;      <span class="comment">// evaluating at data points t. Must built in Fortran layout for</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;      <span class="comment">// compatibility with LAPACK.</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;      <span class="keyword">auto</span> kmat = nda::matrix&lt;S, F_layout&gt;(n, r); <span class="comment">// Make sure matrix has same scalar type as g</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; n; ++i) { kmat(i, j) = <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(t(i), dlr_rf(j)); }</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;      }</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;      <span class="comment">// Reshape g to matrix w/ first dimension n, and put in Fortran layout for</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;      <span class="comment">// compatibility w/ LAPACK</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;      <span class="keyword">auto</span> g_rs = nda::matrix&lt;S, F_layout&gt;(nda::reshape(g, n, g.size() / n));</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;      <span class="comment">// Solve least squares problem to obtain DLR coefficients</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;      <span class="keyword">auto</span> s   = nda::vector&lt;double&gt;(r); <span class="comment">// Singular values (not needed)</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;      <span class="keywordtype">int</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">rank</a> = 0;                      <span class="comment">// Rank of system matrix (not needed)</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;      nda::lapack::gelss(kmat, g_rs, s, 0.0, <a class="code" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">rank</a>);</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;      <span class="keyword">auto</span> gc_shape                = g.shape();                          <span class="comment">// Output shape is same as g...</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      gc_shape[0]                  = r;                                  <span class="comment">// ...with first dimension n replaced by r</span></div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      <span class="keyword">auto</span> gc                      = <span class="keyword">typename</span> T::regular_type(gc_shape); <span class="comment">// Output array: output type is same as g</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      reshape(gc, r, g.size() / n) = g_rs(nda::range(r), _);             <span class="comment">// Place result in output array</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      <span class="keywordflow">return</span> gc;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    }</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      <span class="keywordflow">return</span> gc;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    }</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
-<div class="line"><a name="l00253"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6">  253</a></span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T&gt; <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6">reflect</a>(T <span class="keyword">const</span> &amp;g)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;      <span class="keywordflow">if</span> (r != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g != DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00250"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6">  250</a></span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T&gt; <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6">reflect</a>(T <span class="keyword">const</span> &amp;g)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;      <span class="keywordflow">if</span> (r != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of g != DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160; </div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;      <span class="comment">// Initialize reflection matrix, if it hasn&#39;t been done already</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;      <span class="keywordflow">if</span> (refl.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">reflect_init</a>(); }</div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      <span class="comment">// Initialize reflection matrix, if it hasn&#39;t been done already</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      <span class="keywordflow">if</span> (refl.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">reflect_init</a>(); }</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        <span class="keywordflow">return</span> matmul(refl, g);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        <span class="keyword">auto</span> gr                      = <span class="keyword">typename</span> T::regular_type(g.shape());       <span class="comment">// Output has same type/shape as g</span></div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;        reshape(gr, r, g.size() / r) = matmul(refl, reshape(g, r, g.size() / r)); <span class="comment">// Reshape, matrix multiply, reshape back</span></div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        <span class="keywordflow">return</span> gr;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      }</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    }</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt;</div>
-<div class="line"><a name="l00300"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c">  300</a></span>&#160;    <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c">convolve</a>(<span class="keywordtype">double</span> beta, <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T <span class="keyword">const</span> &amp;fc, T <span class="keyword">const</span> &amp;gc, <span class="keywordtype">bool</span> <a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> = <span class="keyword">false</span>)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        <span class="keywordflow">return</span> matmul(refl, g);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        <span class="keyword">auto</span> gr                      = <span class="keyword">typename</span> T::regular_type(g.shape());       <span class="comment">// Output has same type/shape as g</span></div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        reshape(gr, r, g.size() / r) = matmul(refl, reshape(g, r, g.size() / r)); <span class="comment">// Reshape, matrix multiply, reshape back</span></div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        <span class="keywordflow">return</span> gr;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      }</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    }</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160; </div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt;</div>
+<div class="line"><a name="l00297"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c">  297</a></span>&#160;    <span class="keyword">typename</span> T::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c">convolve</a>(<span class="keywordtype">double</span> beta, <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T <span class="keyword">const</span> &amp;fc, T <span class="keyword">const</span> &amp;gc, <span class="keywordtype">bool</span> <a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> = <span class="keyword">false</span>)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;      <span class="keywordflow">if</span> (r != fc.shape(0) || r != gc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of input arrays must be equal to DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;      <span class="keywordflow">if</span> (fc.shape() != gc.shape()) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must have the same shape.&quot;</span>);</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      <span class="keywordflow">if</span> (r != fc.shape(0) || r != gc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of input arrays must be equal to DLR rank r.&quot;</span>);</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;      <span class="keywordflow">if</span> (fc.shape() != gc.shape()) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must have the same shape.&quot;</span>);</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      <span class="comment">// TODO: implement bosonic case and remove</span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;      <span class="keywordflow">if</span> (statistic == 0) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;imtime_ops::convolve not yet implemented for bosonic Green&#39;s functions.&quot;</span>);</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;      <span class="comment">// TODO: implement bosonic case and remove</span></div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      <span class="keywordflow">if</span> (statistic == 0) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;imtime_ops::convolve not yet implemented for bosonic Green&#39;s functions.&quot;</span>);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;      <span class="comment">// Initialize convolution, if it hasn&#39;t been done already</span></div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      <span class="keywordflow">if</span> (!<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; hilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">convolve_init</a>(); }</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; thilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">tconvolve_init</a>(); }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;      <span class="comment">// Get view of helper matrices based on time_order flag</span></div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      <span class="keyword">auto</span> hilb_v   = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(thilb) : nda::matrix_const_view&lt;double&gt;(hilb));</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;      <span class="keyword">auto</span> tcf2it_v = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(ttcf2it) : nda::matrix_const_view&lt;double&gt;(tcf2it));</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        <span class="comment">// Take array view of fc and gc</span></div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <span class="keyword">auto</span> fca = nda::array_const_view&lt;S, 1&gt;(fc);</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <span class="keyword">auto</span> gca = nda::array_const_view&lt;S, 1&gt;(gc);</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;      <span class="comment">// Initialize convolution, if it hasn&#39;t been done already</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      <span class="keywordflow">if</span> (!<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; hilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">convolve_init</a>(); }</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; thilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">tconvolve_init</a>(); }</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      <span class="comment">// Get view of helper matrices based on time_order flag</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      <span class="keyword">auto</span> hilb_v   = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(thilb) : nda::matrix_const_view&lt;double&gt;(hilb));</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;      <span class="keyword">auto</span> tcf2it_v = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(ttcf2it) : nda::matrix_const_view&lt;double&gt;(tcf2it));</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        <span class="comment">// Take array view of fc and gc</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        <span class="keyword">auto</span> fca = nda::array_const_view&lt;S, 1&gt;(fc);</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        <span class="keyword">auto</span> gca = nda::array_const_view&lt;S, 1&gt;(gc);</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        <span class="comment">// Diagonal contribution</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tcf2it_v, make_regular(fca * gca));</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="comment">// Diagonal contribution</span></div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tcf2it_v, make_regular(fca * gca));</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <span class="comment">// Off-diagonal contribution</span></div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keyword">auto</span> tmp = fca * <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, gca) + gca * <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fca);</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <span class="keywordflow">return</span> beta * (<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, make_regular(tmp)));</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (T::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="comment">// Diagonal contribution</span></div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="keyword">auto</span> fcgc = nda::array&lt;S, 3&gt;(fc.shape()); <span class="comment">// Product of coefficients of f and g</span></div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { fcgc(i, _, _) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fc(i, _, _), gc(i, _, _)); }</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tcf2it_v, fcgc);</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        <span class="comment">// Off-diagonal contribution</span></div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc);</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        <span class="keyword">auto</span> tmp2 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, gc);</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { tmp1(i, _, _) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tmp1(i, _, _), gc(i, _, _)) + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fc(i, _, _), tmp2(i, _, _)); }</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        <span class="keywordflow">return</span> beta * (<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp1));</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must be rank 1 (scalar-valued Green&#39;s function) or 3 (matrix-valued Green&#39;s function).&quot;</span>);</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;      }</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    }</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryMatrix Tf, nda::MemoryArray Tg, nda::Scalar Sf = nda::get_value_t&lt;Tf&gt;, nda::Scalar Sg = nda::get_value_t&lt;Tg&gt;,</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;              nda::Scalar S = <span class="keyword">typename</span> std::common_type&lt;Sf, Sg&gt;::type&gt;</div>
-<div class="line"><a name="l00371"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f">  371</a></span>&#160;    <span class="keyword">typename</span> Tg::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f">convolve</a>(Tf <span class="keyword">const</span> &amp;fconv, Tg <span class="keyword">const</span> &amp;g)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;      <span class="keywordflow">if</span> (r != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of input g must be equal to DLR rank r.&quot;</span>);</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      <span class="keywordflow">if</span> constexpr (Tg::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160; </div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        <span class="keywordflow">if</span> (fconv.shape(1) != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input array dimensions incompatible.&quot;</span>);</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fconv, g);</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160; </div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (Tg::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        <span class="keywordflow">if</span> (fconv.shape(1) != g.shape(0) * g.shape(1)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input array dimensions incompatible.&quot;</span>);</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="comment">// Off-diagonal contribution</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <span class="keyword">auto</span> tmp = fca * <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, gca) + gca * <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fca);</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <span class="keywordflow">return</span> beta * (<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, make_regular(tmp)));</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (T::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        <span class="comment">// Diagonal contribution</span></div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <span class="keyword">auto</span> fcgc = nda::array&lt;S, 3&gt;(fc.shape()); <span class="comment">// Product of coefficients of f and g</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { fcgc(i, _, _) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fc(i, _, _), gc(i, _, _)); }</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tcf2it_v, fcgc);</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <span class="comment">// Off-diagonal contribution</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc);</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        <span class="keyword">auto</span> tmp2 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, gc);</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { tmp1(i, _, _) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tmp1(i, _, _), gc(i, _, _)) + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fc(i, _, _), tmp2(i, _, _)); }</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        <span class="keywordflow">return</span> beta * (<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp1));</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must be rank 1 (scalar-valued Green&#39;s function) or 3 (matrix-valued Green&#39;s function).&quot;</span>);</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;      }</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryMatrix Tf, nda::MemoryArray Tg, nda::Scalar Sf = nda::get_value_t&lt;Tf&gt;, nda::Scalar Sg = nda::get_value_t&lt;Tg&gt;,</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;              nda::Scalar S = <span class="keyword">typename</span> std::common_type&lt;Sf, Sg&gt;::type&gt;</div>
+<div class="line"><a name="l00368"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f">  368</a></span>&#160;    <span class="keyword">typename</span> Tg::regular_type <a class="code" href="classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f">convolve</a>(Tf <span class="keyword">const</span> &amp;fconv, Tg <span class="keyword">const</span> &amp;g)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;      <span class="keywordflow">if</span> (r != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of input g must be equal to DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      <span class="keywordflow">if</span> constexpr (Tg::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160; </div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        <span class="keywordflow">if</span> (fconv.shape(1) != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input array dimensions incompatible.&quot;</span>);</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160; </div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fconv, g);</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (Tg::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160; </div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;        <span class="keywordflow">if</span> (fconv.shape(1) != g.shape(0) * g.shape(1)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input array dimensions incompatible.&quot;</span>);</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160; </div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        <span class="keywordtype">int</span> norb1 = g.shape(1);</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        <span class="keywordtype">int</span> norb2 = g.shape(2);</div>
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160; </div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;        <span class="keywordtype">int</span> norb1 = g.shape(1);</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        <span class="keywordtype">int</span> norb2 = g.shape(2);</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>                       = nda::array&lt;S, 3&gt;(r, norb1, norb2);</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        reshape(<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>, r * norb1, norb2) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fconv, reshape(g, r * norb1, norb2));</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160; </div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>                       = nda::array&lt;S, 3&gt;(r, norb1, norb2);</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;        reshape(<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>, r * norb1, norb2) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fconv, reshape(g, r * norb1, norb2));</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>;</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160; </div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must be rank 1 (scalar-valued Green&#39;s function) or 3 (matrix-valued Green&#39;s function).&quot;</span>);</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;      }</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;    }</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160; </div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt;</div>
-<div class="line"><a name="l00443"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a4b0899c199459a76210d535eab89fd3a">  443</a></span>&#160;    nda::matrix&lt;S&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a4b0899c199459a76210d535eab89fd3a">convmat</a>(<span class="keywordtype">double</span> beta, <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T <span class="keyword">const</span> &amp;fc, <span class="keywordtype">bool</span> <a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> = <span class="keyword">false</span>)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;      <span class="keywordflow">if</span> (r != fc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of input array must be equal to DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>;</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160; </div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must be rank 1 (scalar-valued Green&#39;s function) or 3 (matrix-valued Green&#39;s function).&quot;</span>);</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;      }</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    }</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160; </div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;    <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt;</div>
+<div class="line"><a name="l00440"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a4b0899c199459a76210d535eab89fd3a">  440</a></span>&#160;    nda::matrix&lt;S&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a4b0899c199459a76210d535eab89fd3a">convmat</a>(<span class="keywordtype">double</span> beta, <a class="code" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T <span class="keyword">const</span> &amp;fc, <span class="keywordtype">bool</span> <a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> = <span class="keyword">false</span>)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160; </div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;      <span class="keywordflow">if</span> (r != fc.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;First dim of input array must be equal to DLR rank r.&quot;</span>);</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160; </div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;      <span class="comment">// TODO: implement bosonic case and remove</span></div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;      <span class="keywordflow">if</span> (statistic == 0) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;imtime_ops::convmat not yet implemented for bosonic Green&#39;s functions.&quot;</span>);</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160; </div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;      <span class="comment">// TODO: implement bosonic case and remove</span></div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      <span class="keywordflow">if</span> (statistic == 0) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;imtime_ops::convmat not yet implemented for bosonic Green&#39;s functions.&quot;</span>);</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      <span class="comment">// Initialize convolution, if it hasn&#39;t been done already</span></div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      <span class="keywordflow">if</span> (!<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; hilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">convolve_init</a>(); }</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; thilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">tconvolve_init</a>(); }</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160; </div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;      <span class="comment">// Get view of helper matrices based on time_order flag</span></div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;      <span class="keyword">auto</span> hilb_v   = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(thilb) : nda::matrix_const_view&lt;double&gt;(hilb));</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;      <span class="keyword">auto</span> tcf2it_v = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(ttcf2it) : nda::matrix_const_view&lt;double&gt;(tcf2it));</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160; </div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        <span class="comment">// First construct convolution matrix from DLR coefficients to DLR grid</span></div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        <span class="comment">// values</span></div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <span class="keyword">auto</span> fconv = nda::matrix&lt;S&gt;(r, r); <span class="comment">// Matrix of convolution by f</span></div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160; </div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;        <span class="comment">// Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))</span></div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { fconv(k, l) = tcf2it_v(k, l) * fc(l); }</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        }</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160; </div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="comment">// Off-diagonal contribution (given by K * (diag(hilb*fc) +</span></div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;        <span class="comment">// (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))</span></div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc); <span class="comment">// hilb * fc</span></div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;        <span class="keyword">auto</span> tmp2 = nda::matrix&lt;S&gt;(r, r);</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) {</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;            tmp2(k, l) = fc(k) * hilb_v(k, l); <span class="comment">// diag(fc) * hilb</span></div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;          }</div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;          tmp2(k, k) += tmp1(k); <span class="comment">// diag(fc)*hilb + diag(hilb*fc)</span></div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        }</div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;        fconv += <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp2);</div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160; </div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        <span class="comment">// Then precompose with DLR grid values to DLR coefficients matrix</span></div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;        <span class="keywordflow">if</span> constexpr (nda::have_same_value_type_v&lt;T, decltype(it2cf.lu)&gt;) {</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;          nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv); <span class="comment">// Note: lapack effectively tranposes fconv by fortran reordering here</span></div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;          <span class="comment">// getrs requires matrix and rhs to have same value type</span></div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;          nda::lapack::getrs(transpose(nda::matrix&lt;S&gt;(it2cf.lu)), fconv, it2cf.piv);</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;        }</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160; </div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;        <span class="keywordflow">return</span> beta * fconv;</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160; </div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (T::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;      <span class="comment">// Initialize convolution, if it hasn&#39;t been done already</span></div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      <span class="keywordflow">if</span> (!<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; hilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">convolve_init</a>(); }</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      <span class="keywordflow">if</span> (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> &amp; thilb.empty()) { <a class="code" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">tconvolve_init</a>(); }</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160; </div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      <span class="comment">// Get view of helper matrices based on time_order flag</span></div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;      <span class="keyword">auto</span> hilb_v   = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(thilb) : nda::matrix_const_view&lt;double&gt;(hilb));</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;      <span class="keyword">auto</span> tcf2it_v = (<a class="code" href="namespacecppdlr.html#afef0a162a809071b83fd09f578db52bf">time_order</a> ? nda::matrix_const_view&lt;double&gt;(ttcf2it) : nda::matrix_const_view&lt;double&gt;(tcf2it));</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;      <span class="keywordflow">if</span> constexpr (T::rank == 1) { <span class="comment">// Scalar-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160; </div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;        <span class="comment">// First construct convolution matrix from DLR coefficients to DLR grid</span></div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        <span class="comment">// values</span></div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        <span class="keyword">auto</span> fconv = nda::matrix&lt;S&gt;(r, r); <span class="comment">// Matrix of convolution by f</span></div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160; </div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        <span class="comment">// Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))</span></div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { fconv(k, l) = tcf2it_v(k, l) * fc(l); }</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;        }</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160; </div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        <span class="comment">// Off-diagonal contribution (given by K * (diag(hilb*fc) +</span></div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        <span class="comment">// (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc); <span class="comment">// hilb * fc</span></div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="keyword">auto</span> tmp2 = nda::matrix&lt;S&gt;(r, r);</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) {</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;            tmp2(k, l) = fc(k) * hilb_v(k, l); <span class="comment">// diag(fc) * hilb</span></div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;          }</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;          tmp2(k, k) += tmp1(k); <span class="comment">// diag(fc)*hilb + diag(hilb*fc)</span></div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;        }</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;        fconv += <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp2);</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160; </div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        <span class="comment">// Then precompose with DLR grid values to DLR coefficients matrix</span></div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;        <span class="keywordflow">if</span> constexpr (nda::have_same_value_type_v&lt;T, decltype(it2cf.lu)&gt;) {</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;          nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv); <span class="comment">// Note: lapack effectively tranposes fconv by fortran reordering here</span></div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;          <span class="comment">// getrs requires matrix and rhs to have same value type</span></div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;          nda::lapack::getrs(transpose(nda::matrix&lt;S&gt;(it2cf.lu)), fconv, it2cf.piv);</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;        }</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160; </div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;        <span class="keywordflow">return</span> beta * fconv;</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160; </div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (T::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160; </div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;        <span class="keywordtype">int</span> norb1 = fc.shape(1);</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;        <span class="keywordtype">int</span> norb2 = fc.shape(2);</div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160; </div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        <span class="keywordtype">int</span> norb1 = fc.shape(1);</div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        <span class="keywordtype">int</span> norb2 = fc.shape(2);</div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160; </div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        <span class="comment">// First construct convolution matrix from DLR coefficients to DLR grid</span></div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        <span class="comment">// values</span></div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        <span class="keyword">auto</span> fconv    = nda::matrix&lt;S&gt;(r * norb1, r * norb2);    <span class="comment">// Matrix of convolution by f</span></div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        <span class="keyword">auto</span> fconv_rs = nda::reshape(fconv, r, norb1, r, norb2); <span class="comment">// Array view to index into fconv for conevenience</span></div>
-<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160; </div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        <span class="comment">// Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))</span></div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { fconv_rs(k, _, l, _) = tcf2it_v(k, l) * fc(l, _, _); }</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;        }</div>
-<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160; </div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        <span class="comment">// Off-diagonal contribution (given by K * (diag(hilb*fc) +</span></div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        <span class="comment">// (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))</span></div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc); <span class="comment">// hilb * fc</span></div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        <span class="keyword">auto</span> tmp2 = nda::array&lt;S, 4&gt;(r, norb1, r, norb2);</div>
-<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) {</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;            tmp2(k, _, l, _) = fc(k, _, _) * hilb_v(k, l); <span class="comment">// diag(fc) * hilb</span></div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;          }</div>
-<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;          tmp2(k, _, k, _) += tmp1(k, _, _); <span class="comment">// diag(fc)*hilb + diag(hilb*fc)</span></div>
-<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;        }</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;        fconv_rs += <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp2);</div>
-<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160; </div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;        <span class="comment">// Then precompose with DLR grid values to DLR coefficients matrix</span></div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160; </div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;        <span class="comment">// Transpose last two indices to put make column DLR index the last</span></div>
-<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;        <span class="comment">// index</span></div>
-<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        <span class="keyword">auto</span> fconvtmp    = nda::matrix&lt;S&gt;(r * norb1 * norb2, r);</div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;        <span class="keyword">auto</span> fconvtmp_rs = nda::reshape(fconvtmp, r, norb1, norb2, r);</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; norb2; ++i) {</div>
-<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) { fconvtmp_rs(_, _, i, k) = fconv_rs(_, _, k, i); }</div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;        }</div>
-<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160; </div>
-<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;        <span class="comment">// Do the solve</span></div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;        <span class="keywordflow">if</span> constexpr (nda::have_same_value_type_v&lt;T, decltype(it2cf.lu)&gt;) {</div>
-<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;          nda::lapack::getrs(transpose(it2cf.lu), fconvtmp, it2cf.piv); <span class="comment">// Note: lapack effectively tranposes fconv by fortran reordering here</span></div>
-<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;          <span class="comment">// getrs requires matrix and rhs to have same value type</span></div>
-<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;          nda::lapack::getrs(transpose(nda::matrix&lt;S&gt;(it2cf.lu)), fconvtmp, it2cf.piv);</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;        }</div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160; </div>
-<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;        <span class="comment">// Transpose back</span></div>
-<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; norb2; ++i) {</div>
-<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) { fconv_rs(_, _, k, i) = fconvtmp_rs(_, _, i, k); }</div>
-<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;        }</div>
-<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160; </div>
-<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;        <span class="keywordflow">return</span> beta * fconv;</div>
-<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160; </div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must be rank 1 (scalar-valued Green&#39;s function) or 3 (matrix-valued Green&#39;s function).&quot;</span>);</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;      }</div>
-<div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;    }</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160; </div>
-<div class="line"><a name="l00553"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">  553</a></span>&#160;    nda::vector_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">get_itnodes</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_it; };</div>
-<div class="line"><a name="l00554"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#aec1395480d77a2f400b62171e553b0f4">  554</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#aec1395480d77a2f400b62171e553b0f4">get_itnodes</a>(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_it(i); };</div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160; </div>
-<div class="line"><a name="l00562"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">  562</a></span>&#160;    nda::vector_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">get_rfnodes</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_rf; };</div>
-<div class="line"><a name="l00563"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#ac58745b133d7a289d897c920ee89f671">  563</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#ac58745b133d7a289d897c920ee89f671">get_rfnodes</a>(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_rf(i); };</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160; </div>
-<div class="line"><a name="l00570"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">  570</a></span>&#160;    nda::matrix_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">get_cf2it</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cf2it; };</div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160; </div>
-<div class="line"><a name="l00577"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">  577</a></span>&#160;    nda::matrix_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">get_it2cf_lu</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> it2cf.lu; };</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160; </div>
-<div class="line"><a name="l00584"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">  584</a></span>&#160;    nda::vector_const_view&lt;int&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">get_it2cf_piv</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> it2cf.piv; };</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160; </div>
-<div class="line"><a name="l00591"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">  591</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">rank</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> r; }</div>
-<div class="line"><a name="l00592"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">  592</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> lambda_; }</div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160; </div>
-<div class="line"><a name="l00602"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">  602</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">convolve_init</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        <span class="comment">// First construct convolution matrix from DLR coefficients to DLR grid</span></div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        <span class="comment">// values</span></div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        <span class="keyword">auto</span> fconv    = nda::matrix&lt;S&gt;(r * norb1, r * norb2);    <span class="comment">// Matrix of convolution by f</span></div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        <span class="keyword">auto</span> fconv_rs = nda::reshape(fconv, r, norb1, r, norb2); <span class="comment">// Array view to index into fconv for conevenience</span></div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160; </div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;        <span class="comment">// Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))</span></div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) { fconv_rs(k, _, l, _) = tcf2it_v(k, l) * fc(l, _, _); }</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        }</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160; </div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;        <span class="comment">// Off-diagonal contribution (given by K * (diag(hilb*fc) +</span></div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;        <span class="comment">// (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))</span></div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc); <span class="comment">// hilb * fc</span></div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;        <span class="keyword">auto</span> tmp2 = nda::array&lt;S, 4&gt;(r, norb1, r, norb2);</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) {</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;            tmp2(k, _, l, _) = fc(k, _, _) * hilb_v(k, l); <span class="comment">// diag(fc) * hilb</span></div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;          }</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;          tmp2(k, _, k, _) += tmp1(k, _, _); <span class="comment">// diag(fc)*hilb + diag(hilb*fc)</span></div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;        }</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;        fconv_rs += <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp2);</div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160; </div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;        <span class="comment">// Then precompose with DLR grid values to DLR coefficients matrix</span></div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160; </div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;        <span class="comment">// Transpose last two indices to put make column DLR index the last</span></div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;        <span class="comment">// index</span></div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;        <span class="keyword">auto</span> fconvtmp    = nda::matrix&lt;S&gt;(r * norb1 * norb2, r);</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;        <span class="keyword">auto</span> fconvtmp_rs = nda::reshape(fconvtmp, r, norb1, norb2, r);</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; norb2; ++i) {</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) { fconvtmp_rs(_, _, i, k) = fconv_rs(_, _, k, i); }</div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;        }</div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160; </div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;        <span class="comment">// Do the solve</span></div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;        <span class="keywordflow">if</span> constexpr (nda::have_same_value_type_v&lt;T, decltype(it2cf.lu)&gt;) {</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;          nda::lapack::getrs(transpose(it2cf.lu), fconvtmp, it2cf.piv); <span class="comment">// Note: lapack effectively tranposes fconv by fortran reordering here</span></div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;          <span class="comment">// getrs requires matrix and rhs to have same value type</span></div>
+<div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160;          nda::lapack::getrs(transpose(nda::matrix&lt;S&gt;(it2cf.lu)), fconvtmp, it2cf.piv);</div>
+<div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;        }</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160; </div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;        <span class="comment">// Transpose back</span></div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; norb2; ++i) {</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) { fconv_rs(_, _, k, i) = fconvtmp_rs(_, _, i, k); }</div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;        }</div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160; </div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;        <span class="keywordflow">return</span> beta * fconv;</div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160; </div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input arrays must be rank 1 (scalar-valued Green&#39;s function) or 3 (matrix-valued Green&#39;s function).&quot;</span>);</div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;      }</div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;    }</div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160; </div>
+<div class="line"><a name="l00550"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">  550</a></span>&#160;    nda::vector_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">get_itnodes</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_it; };</div>
+<div class="line"><a name="l00551"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#aec1395480d77a2f400b62171e553b0f4">  551</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#aec1395480d77a2f400b62171e553b0f4">get_itnodes</a>(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_it(i); };</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160; </div>
+<div class="line"><a name="l00559"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">  559</a></span>&#160;    nda::vector_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">get_rfnodes</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_rf; };</div>
+<div class="line"><a name="l00560"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#ac58745b133d7a289d897c920ee89f671">  560</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#ac58745b133d7a289d897c920ee89f671">get_rfnodes</a>(<span class="keywordtype">int</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> dlr_rf(i); };</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160; </div>
+<div class="line"><a name="l00567"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">  567</a></span>&#160;    nda::matrix_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">get_cf2it</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cf2it; };</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160; </div>
+<div class="line"><a name="l00574"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">  574</a></span>&#160;    nda::matrix_const_view&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">get_it2cf_lu</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> it2cf.lu; };</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160; </div>
+<div class="line"><a name="l00581"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">  581</a></span>&#160;    nda::vector_const_view&lt;int&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">get_it2cf_piv</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> it2cf.piv; };</div>
+<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160; </div>
+<div class="line"><a name="l00588"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">  588</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">rank</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> r; }</div>
+<div class="line"><a name="l00589"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">  589</a></span>&#160;    <span class="keywordtype">double</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> lambda_; }</div>
+<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160; </div>
+<div class="line"><a name="l00599"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">  599</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">convolve_init</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160; </div>
+<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;      hilb   = nda::matrix&lt;double&gt;(r, r);</div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;      tcf2it = nda::matrix&lt;double&gt;(r, r);</div>
 <div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160; </div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;      hilb   = nda::matrix&lt;double&gt;(r, r);</div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;      tcf2it = nda::matrix&lt;double&gt;(r, r);</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160; </div>
-<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;      <span class="comment">// &quot;Discrete Hilbert transform&quot; matrix -(1-delta_jk)/(dlr_rf(j) -</span></div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;      <span class="comment">// dlr_rf(k)), scaled by beta</span></div>
-<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;          <span class="keywordflow">if</span> (j == k) {</div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;            hilb(j, k) = 0;</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;            hilb(j, k) = 1.0 / (dlr_rf(j) - dlr_rf(k));</div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;          }</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;        }</div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;      }</div>
-<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160; </div>
-<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;      <span class="comment">// Matrix which applies DLR coefficients to imaginary time grid values</span></div>
-<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;      <span class="comment">// transformation matrix, and then multiplies the result by tau, the</span></div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;      <span class="comment">// imaginary time variable</span></div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;          <span class="keywordflow">if</span> (dlr_it(j) &gt; 0) {</div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;            tcf2it(j, k) = -(dlr_it(j) + <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(1.0, dlr_rf(k))) * cf2it(j, k);</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;            tcf2it(j, k) = -(dlr_it(j) - <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k))) * cf2it(j, k);</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;          }</div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;        }</div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;      }</div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    }</div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160; </div>
-<div class="line"><a name="l00642"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">  642</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">tconvolve_init</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;      <span class="comment">// &quot;Discrete Hilbert transform&quot; matrix -(1-delta_jk)/(dlr_rf(j) -</span></div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;      <span class="comment">// dlr_rf(k)), scaled by beta</span></div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;          <span class="keywordflow">if</span> (j == k) {</div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;            hilb(j, k) = 0;</div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;            hilb(j, k) = 1.0 / (dlr_rf(j) - dlr_rf(k));</div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;          }</div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;        }</div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;      }</div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160; </div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;      <span class="comment">// Matrix which applies DLR coefficients to imaginary time grid values</span></div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;      <span class="comment">// transformation matrix, and then multiplies the result by tau, the</span></div>
+<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;      <span class="comment">// imaginary time variable</span></div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
+<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;          <span class="keywordflow">if</span> (dlr_it(j) &gt; 0) {</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;            tcf2it(j, k) = -(dlr_it(j) + <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(1.0, dlr_rf(k))) * cf2it(j, k);</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;            tcf2it(j, k) = -(dlr_it(j) - <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k))) * cf2it(j, k);</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;          }</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;        }</div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;      }</div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    }</div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160; </div>
+<div class="line"><a name="l00639"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">  639</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">tconvolve_init</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160; </div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;      thilb   = nda::matrix&lt;double&gt;(r, r);</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;      ttcf2it = nda::matrix&lt;double&gt;(r, r);</div>
 <div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160; </div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;      thilb   = nda::matrix&lt;double&gt;(r, r);</div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;      ttcf2it = nda::matrix&lt;double&gt;(r, r);</div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160; </div>
-<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;      <span class="comment">// &quot;Discrete Hilbert transform&quot; matrix</span></div>
-<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;      <span class="comment">// -(1-delta_jk)*K(0,dlr_rf(k))/(dlr_rf(j) - dlr_rf(k)) for time-ordered</span></div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;      <span class="comment">// convolution, scaled by beta</span></div>
-<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;          <span class="keywordflow">if</span> (j == k) {</div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;            thilb(j, k) = 0;</div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;            thilb(j, k) = <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k)) / (dlr_rf(k) - dlr_rf(j));</div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;          }</div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;        }</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;      }</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160; </div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;      <span class="comment">// Matrix which applies K(0,dlr_rf(j)) multiplication, then DLR</span></div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;      <span class="comment">// coefficients to imaginary time grid values transformation matrix, and</span></div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;      <span class="comment">// then multiplies the result by tau, the imaginary time variable</span></div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;          <span class="keywordflow">if</span> (dlr_it(j) &gt; 0) {</div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;            ttcf2it(j, k) = dlr_it(j) * cf2it(j, k) * <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k));</div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;            ttcf2it(j, k) = (1 + dlr_it(j)) * cf2it(j, k) * <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k));</div>
-<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;          }</div>
-<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;        }</div>
-<div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;      }</div>
-<div class="line"><a name="l00672"></a><span class="lineno">  672</span>&#160;    }</div>
-<div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160; </div>
-<div class="line"><a name="l00683"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">  683</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">reflect_init</a>()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160; </div>
-<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;      refl = nda::matrix&lt;double&gt;(r, r);</div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160; </div>
-<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;      <span class="comment">// Matrix of reflection acting on DLR coefficients and returning values at</span></div>
-<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;      <span class="comment">// DLR nodes</span></div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) {</div>
-<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) { refl(i, j) = <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(-dlr_it(i), dlr_rf(j)); }</div>
-<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;      }</div>
-<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160; </div>
-<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;      <span class="comment">// Precompose with DLR values to coefficients matrix</span></div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;      nda::lapack::getrs(transpose(it2cf.lu), refl, it2cf.piv); <span class="comment">// Lapack effectively transposes refl by fortran reordering here</span></div>
-<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;    }</div>
-<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160; </div>
-<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;    <span class="keywordtype">double</span> lambda_;</div>
-<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;    <span class="keywordtype">int</span> r;                      </div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;    nda::vector&lt;double&gt; dlr_rf; </div>
-<div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;    nda::vector&lt;double&gt; dlr_it; </div>
-<div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;    nda::matrix&lt;double&gt; cf2it;  </div>
-<div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160; </div>
-<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;    <span class="keyword">struct </span>{</div>
-<div class="line"><a name="l00708"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a83e9085aca345c3bf889ae006f0fdb3d">  708</a></span>&#160;      nda::matrix&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a83e9085aca345c3bf889ae006f0fdb3d">lu</a>; </div>
-<div class="line"><a name="l00709"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389">  709</a></span>&#160;      nda::vector&lt;int&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389">piv</a>;   </div>
-<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;    } it2cf;</div>
-<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160; </div>
-<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;    <span class="comment">// Arrays used for dlr_imtime::convolve</span></div>
-<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; hilb;   </div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; tcf2it; </div>
-<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160; </div>
-<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;    <span class="comment">// Arrays used for dlr_imtime::tconvolve</span></div>
-<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; thilb;   </div>
-<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; ttcf2it; </div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;      <span class="comment">// &quot;Discrete Hilbert transform&quot; matrix</span></div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;      <span class="comment">// -(1-delta_jk)*K(0,dlr_rf(k))/(dlr_rf(j) - dlr_rf(k)) for time-ordered</span></div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;      <span class="comment">// convolution, scaled by beta</span></div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;          <span class="keywordflow">if</span> (j == k) {</div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;            thilb(j, k) = 0;</div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;            thilb(j, k) = <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k)) / (dlr_rf(k) - dlr_rf(j));</div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;          }</div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;        }</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;      }</div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160; </div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;      <span class="comment">// Matrix which applies K(0,dlr_rf(j)) multiplication, then DLR</span></div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;      <span class="comment">// coefficients to imaginary time grid values transformation matrix, and</span></div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;      <span class="comment">// then multiplies the result by tau, the imaginary time variable</span></div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) {</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;          <span class="keywordflow">if</span> (dlr_it(j) &gt; 0) {</div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;            ttcf2it(j, k) = dlr_it(j) * cf2it(j, k) * <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k));</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;            ttcf2it(j, k) = (1 + dlr_it(j)) * cf2it(j, k) * <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(0.0, dlr_rf(k));</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;          }</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;        }</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;      }</div>
+<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    }</div>
+<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160; </div>
+<div class="line"><a name="l00680"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">  680</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">reflect_init</a>()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160; </div>
+<div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;      refl = nda::matrix&lt;double&gt;(r, r);</div>
+<div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160; </div>
+<div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160;      <span class="comment">// Matrix of reflection acting on DLR coefficients and returning values at</span></div>
+<div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;      <span class="comment">// DLR nodes</span></div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) {</div>
+<div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; r; ++j) { refl(i, j) = <a class="code" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a>(-dlr_it(i), dlr_rf(j)); }</div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;      }</div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160; </div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;      <span class="comment">// Precompose with DLR values to coefficients matrix</span></div>
+<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;      nda::lapack::getrs(transpose(it2cf.lu), refl, it2cf.piv); <span class="comment">// Lapack effectively transposes refl by fortran reordering here</span></div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;    }</div>
+<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160; </div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;    <span class="keywordtype">double</span> lambda_;</div>
+<div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;    <span class="keywordtype">int</span> r;                      </div>
+<div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;    nda::vector&lt;double&gt; dlr_rf; </div>
+<div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160;    nda::vector&lt;double&gt; dlr_it; </div>
+<div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;    nda::matrix&lt;double&gt; cf2it;  </div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160; </div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    <span class="keyword">struct </span>{</div>
+<div class="line"><a name="l00705"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a83e9085aca345c3bf889ae006f0fdb3d">  705</a></span>&#160;      nda::matrix&lt;double&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a83e9085aca345c3bf889ae006f0fdb3d">lu</a>; </div>
+<div class="line"><a name="l00706"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389">  706</a></span>&#160;      nda::vector&lt;int&gt; <a class="code" href="classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389">piv</a>;   </div>
+<div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;    } it2cf;</div>
+<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160; </div>
+<div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160;    <span class="comment">// Arrays used for dlr_imtime::convolve</span></div>
+<div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; hilb;   </div>
+<div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; tcf2it; </div>
+<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160; </div>
+<div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;    <span class="comment">// Arrays used for dlr_imtime::tconvolve</span></div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; thilb;   </div>
+<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; ttcf2it; </div>
+<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160; </div>
+<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;    <span class="comment">// Arrays used for dlr_imtime::reflect</span></div>
+<div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; refl; </div>
 <div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160; </div>
-<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;    <span class="comment">// Arrays used for dlr_imtime::reflect</span></div>
-<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;    <span class="keyword">mutable</span> nda::matrix&lt;double&gt; refl; </div>
-<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160; </div>
-<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;    <span class="comment">// -------------------- hdf5 -------------------</span></div>
+<div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;    <span class="comment">// -------------------- hdf5 -------------------</span></div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160; </div>
+<div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00723"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a649d9f6c3d257661818c3f473f49f57a">  723</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classcppdlr_1_1imtime__ops.html#a649d9f6c3d257661818c3f473f49f57a">hdf5_format</a>() { <span class="keywordflow">return</span> <span class="stringliteral">&quot;cppdlr::imtime_ops&quot;</span>; }</div>
 <div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160; </div>
-<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00726"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a649d9f6c3d257661818c3f473f49f57a">  726</a></span>&#160;    <span class="keyword">static</span> std::string <a class="code" href="classcppdlr_1_1imtime__ops.html#a649d9f6c3d257661818c3f473f49f57a">hdf5_format</a>() { <span class="keywordflow">return</span> <span class="stringliteral">&quot;cppdlr::imtime_ops&quot;</span>; }</div>
-<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160; </div>
-<div class="line"><a name="l00728"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a0eec6aaaea35d7bba7e92951a0de76db">  728</a></span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a0eec6aaaea35d7bba7e92951a0de76db">h5_write</a>(h5::group fg, std::string <span class="keyword">const</span> &amp;subgroup_name, <a class="code" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> <span class="keyword">const</span> &amp;m) {</div>
+<div class="line"><a name="l00725"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a0eec6aaaea35d7bba7e92951a0de76db">  725</a></span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a0eec6aaaea35d7bba7e92951a0de76db">h5_write</a>(h5::group fg, std::string <span class="keyword">const</span> &amp;subgroup_name, <a class="code" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> <span class="keyword">const</span> &amp;m) {</div>
+<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160; </div>
+<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;      h5::group gr = fg.create_group(subgroup_name);</div>
+<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;      write_hdf5_format(gr, m);</div>
 <div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160; </div>
-<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;      h5::group gr = fg.create_group(subgroup_name);</div>
-<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;      write_hdf5_format(gr, m);</div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160; </div>
-<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;lambda&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>());</div>
-<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;rf&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">get_rfnodes</a>());</div>
-<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;it&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">get_itnodes</a>());</div>
-<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;cf2it&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">get_cf2it</a>());</div>
-<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;it2cf_lu&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">get_it2cf_lu</a>());</div>
-<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;it2cf_piv&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">get_it2cf_piv</a>());</div>
-<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;    }</div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160; </div>
-<div class="line"><a name="l00741"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a02e5f8519e54734a74b94226d10e082d">  741</a></span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a02e5f8519e54734a74b94226d10e082d">h5_read</a>(h5::group fg, std::string <span class="keyword">const</span> &amp;subgroup_name, <a class="code" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> &amp;m) {</div>
+<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;lambda&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>());</div>
+<div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;rf&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">get_rfnodes</a>());</div>
+<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;it&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">get_itnodes</a>());</div>
+<div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;cf2it&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">get_cf2it</a>());</div>
+<div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;it2cf_lu&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">get_it2cf_lu</a>());</div>
+<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;      h5::write(gr, <span class="stringliteral">&quot;it2cf_piv&quot;</span>, m.<a class="code" href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">get_it2cf_piv</a>());</div>
+<div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;    }</div>
+<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160; </div>
+<div class="line"><a name="l00738"></a><span class="lineno"><a class="line" href="classcppdlr_1_1imtime__ops.html#a02e5f8519e54734a74b94226d10e082d">  738</a></span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">void</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a02e5f8519e54734a74b94226d10e082d">h5_read</a>(h5::group fg, std::string <span class="keyword">const</span> &amp;subgroup_name, <a class="code" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> &amp;m) {</div>
+<div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160; </div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;      h5::group gr = fg.open_group(subgroup_name);</div>
+<div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;      assert_hdf5_format(gr, m);</div>
 <div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160; </div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;      h5::group gr = fg.open_group(subgroup_name);</div>
-<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;      assert_hdf5_format(gr, m);</div>
-<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160; </div>
-<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;      <span class="keyword">auto</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>    = h5::read&lt;double&gt;(gr, <span class="stringliteral">&quot;lambda&quot;</span>);</div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;      <span class="keyword">auto</span> rf        = h5::read&lt;nda::vector&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;rf&quot;</span>);</div>
-<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;      <span class="keyword">auto</span> it        = h5::read&lt;nda::vector&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;it&quot;</span>);</div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;      <span class="keyword">auto</span> cf2it_     = h5::read&lt;nda::matrix&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;cf2it&quot;</span>);</div>
-<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;      <span class="keyword">auto</span> it2cf_lu  = h5::read&lt;nda::matrix&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;it2cf_lu&quot;</span>);</div>
-<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;      <span class="keyword">auto</span> it2cf_piv = h5::read&lt;nda::vector&lt;int&gt;&gt;(gr, <span class="stringliteral">&quot;it2cf_piv&quot;</span>);</div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160; </div>
-<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;      m = <a class="code" href="classcppdlr_1_1imtime__ops.html#a8da78cf54d39d48d2be19ad1f146b03c">imtime_ops</a>(<a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, rf, it, cf2it_, it2cf_lu, it2cf_piv);</div>
-<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;    }</div>
-<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;  };</div>
-<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160; </div>
-<div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;} <span class="comment">// namespace cppdlr</span></div>
+<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;      <span class="keyword">auto</span> <a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>    = h5::read&lt;double&gt;(gr, <span class="stringliteral">&quot;lambda&quot;</span>);</div>
+<div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;      <span class="keyword">auto</span> rf        = h5::read&lt;nda::vector&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;rf&quot;</span>);</div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;      <span class="keyword">auto</span> it        = h5::read&lt;nda::vector&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;it&quot;</span>);</div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;      <span class="keyword">auto</span> cf2it_     = h5::read&lt;nda::matrix&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;cf2it&quot;</span>);</div>
+<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;      <span class="keyword">auto</span> it2cf_lu  = h5::read&lt;nda::matrix&lt;double&gt;&gt;(gr, <span class="stringliteral">&quot;it2cf_lu&quot;</span>);</div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;      <span class="keyword">auto</span> it2cf_piv = h5::read&lt;nda::vector&lt;int&gt;&gt;(gr, <span class="stringliteral">&quot;it2cf_piv&quot;</span>);</div>
+<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160; </div>
+<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;      m = <a class="code" href="classcppdlr_1_1imtime__ops.html#a8da78cf54d39d48d2be19ad1f146b03c">imtime_ops</a>(<a class="code" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, rf, it, cf2it_, it2cf_lu, it2cf_piv);</div>
+<div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;    }</div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;  };</div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160; </div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;} <span class="comment">// namespace cppdlr</span></div>
 <div class="ttc" id="aclasscppdlr_1_1imtime__ops_html"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html">cppdlr::imtime_ops</a></div><div class="ttdoc">Class responsible for all DLR imaginary time operations, including building imaginary time grid and t...</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:46</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a02e5f8519e54734a74b94226d10e082d"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a02e5f8519e54734a74b94226d10e082d">cppdlr::imtime_ops::h5_read</a></div><div class="ttdeci">friend void h5_read(h5::group fg, std::string const &amp;subgroup_name, imtime_ops &amp;m)</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:741</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a0ee9bfed6fc9facf2d25cea9868a3af6"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6">cppdlr::imtime_ops::reflect</a></div><div class="ttdeci">T::regular_type reflect(T const &amp;g) const</div><div class="ttdoc">Compute reflection of imaginary time Green's function.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:253</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a0eec6aaaea35d7bba7e92951a0de76db"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a0eec6aaaea35d7bba7e92951a0de76db">cppdlr::imtime_ops::h5_write</a></div><div class="ttdeci">friend void h5_write(h5::group fg, std::string const &amp;subgroup_name, imtime_ops const &amp;m)</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:728</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a12761a877407fc347dc695da4b2d7f3d"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a12761a877407fc347dc695da4b2d7f3d">cppdlr::imtime_ops::coefs2eval</a></div><div class="ttdeci">auto coefs2eval(T const &amp;gc, double t) const</div><div class="ttdoc">Evaluate DLR expansion of G, given by its DLR coefficients, at imaginary time point.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:151</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a278304f50e778063a60df49be4d89909"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">cppdlr::imtime_ops::get_cf2it</a></div><div class="ttdeci">nda::matrix_const_view&lt; double &gt; get_cf2it() const</div><div class="ttdoc">Get transformation matrix from DLR coefficients to values at DLR imaginary time nodes.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:570</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a02e5f8519e54734a74b94226d10e082d"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a02e5f8519e54734a74b94226d10e082d">cppdlr::imtime_ops::h5_read</a></div><div class="ttdeci">friend void h5_read(h5::group fg, std::string const &amp;subgroup_name, imtime_ops &amp;m)</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:738</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a0ee9bfed6fc9facf2d25cea9868a3af6"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6">cppdlr::imtime_ops::reflect</a></div><div class="ttdeci">T::regular_type reflect(T const &amp;g) const</div><div class="ttdoc">Compute reflection of imaginary time Green's function.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:250</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a0eec6aaaea35d7bba7e92951a0de76db"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a0eec6aaaea35d7bba7e92951a0de76db">cppdlr::imtime_ops::h5_write</a></div><div class="ttdeci">friend void h5_write(h5::group fg, std::string const &amp;subgroup_name, imtime_ops const &amp;m)</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:725</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a12761a877407fc347dc695da4b2d7f3d"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a12761a877407fc347dc695da4b2d7f3d">cppdlr::imtime_ops::coefs2eval</a></div><div class="ttdeci">auto coefs2eval(T const &amp;gc, double t) const</div><div class="ttdoc">Evaluate DLR expansion of G, given by its DLR coefficients, at imaginary time point.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:148</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a278304f50e778063a60df49be4d89909"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a278304f50e778063a60df49be4d89909">cppdlr::imtime_ops::get_cf2it</a></div><div class="ttdeci">nda::matrix_const_view&lt; double &gt; get_cf2it() const</div><div class="ttdoc">Get transformation matrix from DLR coefficients to values at DLR imaginary time nodes.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:567</div></div>
 <div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a318b0b4409d0488814bb8db12c8b0611"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a318b0b4409d0488814bb8db12c8b0611">cppdlr::imtime_ops::build_evalvec</a></div><div class="ttdeci">nda::vector&lt; double &gt; build_evalvec(double t) const</div><div class="ttdoc">Build vector of evaluation of DLR expansion at an imaginary time point.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.cpp:88</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a369d8d83b9ed6c31d8c34784d162f389"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">cppdlr::imtime_ops::get_rfnodes</a></div><div class="ttdeci">nda::vector_const_view&lt; double &gt; get_rfnodes() const</div><div class="ttdoc">Get DLR real frequency nodes.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:562</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a3a47942235e7330cc6d392dc881d256f"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">cppdlr::imtime_ops::reflect_init</a></div><div class="ttdeci">void reflect_init() const</div><div class="ttdoc">Initialization for reflection method.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:683</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a401521dedc309ca12c1ec345da983c80"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">cppdlr::imtime_ops::lambda</a></div><div class="ttdeci">double lambda() const</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:592</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a369d8d83b9ed6c31d8c34784d162f389"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a369d8d83b9ed6c31d8c34784d162f389">cppdlr::imtime_ops::get_rfnodes</a></div><div class="ttdeci">nda::vector_const_view&lt; double &gt; get_rfnodes() const</div><div class="ttdoc">Get DLR real frequency nodes.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:559</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a3a47942235e7330cc6d392dc881d256f"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">cppdlr::imtime_ops::reflect_init</a></div><div class="ttdeci">void reflect_init() const</div><div class="ttdoc">Initialization for reflection method.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:680</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a401521dedc309ca12c1ec345da983c80"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">cppdlr::imtime_ops::lambda</a></div><div class="ttdeci">double lambda() const</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:589</div></div>
 <div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a43a9b5fb6aeefad7d8ae6865329e69de"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a43a9b5fb6aeefad7d8ae6865329e69de">cppdlr::imtime_ops::imtime_ops</a></div><div class="ttdeci">imtime_ops(double lambda, nda::vector_const_view&lt; double &gt; dlr_rf, nda::vector_const_view&lt; double &gt; dlr_it, nda::matrix_const_view&lt; double &gt; cf2it, nda::matrix_const_view&lt; double &gt; it2cf_lu, nda::vector_const_view&lt; int &gt; it2cf_piv)</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:73</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a4b0899c199459a76210d535eab89fd3a"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a4b0899c199459a76210d535eab89fd3a">cppdlr::imtime_ops::convmat</a></div><div class="ttdeci">nda::matrix&lt; S &gt; convmat(double beta, statistic_t statistic, T const &amp;fc, bool time_order=false) const</div><div class="ttdoc">Compute matrix of convolution by an imaginary time Green's function.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:443</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a4f018cf316547b2879d9a2dd76a4b80c"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c">cppdlr::imtime_ops::convolve</a></div><div class="ttdeci">T::regular_type convolve(double beta, statistic_t statistic, T const &amp;fc, T const &amp;gc, bool time_order=false) const</div><div class="ttdoc">Compute convolution of two imaginary time Green's functions.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:300</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a6257e0b3f43733c5ac06c8af11a47bb3"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">cppdlr::imtime_ops::convolve_init</a></div><div class="ttdeci">void convolve_init() const</div><div class="ttdoc">Initialization for convolution methods.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:602</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a649d9f6c3d257661818c3f473f49f57a"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a649d9f6c3d257661818c3f473f49f57a">cppdlr::imtime_ops::hdf5_format</a></div><div class="ttdeci">static std::string hdf5_format()</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:726</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a6a81a99b2858defa9513a395bd35e2bf"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a6a81a99b2858defa9513a395bd35e2bf">cppdlr::imtime_ops::fitvals2coefs</a></div><div class="ttdeci">T::regular_type fitvals2coefs(nda::vector_const_view&lt; double &gt; t, T const &amp;g) const</div><div class="ttdoc">Obtain DLR coefficients of a Green's function G from scattered imaginary time grid by least squares f...</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:211</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a6f6d71c061aec134df9edf1255e19dfb"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">cppdlr::imtime_ops::coefs2vals</a></div><div class="ttdeci">T::regular_type coefs2vals(T const &amp;gc) const</div><div class="ttdoc">Transform DLR coefficients of Green's function G to values on DLR imaginary time grid.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:123</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a7cd0e6b5498400d3afade53a6ebab389"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389">cppdlr::imtime_ops::piv</a></div><div class="ttdeci">nda::vector&lt; int &gt; piv</div><div class="ttdoc">LU pivots (LAPACK format) of imaginary time vals -&gt; coefs matrix.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:709</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a83e9085aca345c3bf889ae006f0fdb3d"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a83e9085aca345c3bf889ae006f0fdb3d">cppdlr::imtime_ops::lu</a></div><div class="ttdeci">nda::matrix&lt; double &gt; lu</div><div class="ttdoc">LU factors (LAPACK format) of imaginary time vals -&gt; coefs matrix.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:708</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a87b3e21ae66c97691a4580335795f77f"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f">cppdlr::imtime_ops::convolve</a></div><div class="ttdeci">Tg::regular_type convolve(Tf const &amp;fconv, Tg const &amp;g) const</div><div class="ttdoc">Compute convolution of two imaginary time Green's functions, given matrix of convolution by one of th...</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:371</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a88f437cb31c98929ab8a1e6dadb174aa"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">cppdlr::imtime_ops::rank</a></div><div class="ttdeci">int rank() const</div><div class="ttdoc">Get DLR rank.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:591</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a89451028e273c8753d87621081a16cee"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">cppdlr::imtime_ops::get_itnodes</a></div><div class="ttdeci">nda::vector_const_view&lt; double &gt; get_itnodes() const</div><div class="ttdoc">Get DLR imaginary time nodes.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:553</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a4b0899c199459a76210d535eab89fd3a"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a4b0899c199459a76210d535eab89fd3a">cppdlr::imtime_ops::convmat</a></div><div class="ttdeci">nda::matrix&lt; S &gt; convmat(double beta, statistic_t statistic, T const &amp;fc, bool time_order=false) const</div><div class="ttdoc">Compute matrix of convolution by an imaginary time Green's function.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:440</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a4f018cf316547b2879d9a2dd76a4b80c"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c">cppdlr::imtime_ops::convolve</a></div><div class="ttdeci">T::regular_type convolve(double beta, statistic_t statistic, T const &amp;fc, T const &amp;gc, bool time_order=false) const</div><div class="ttdoc">Compute convolution of two imaginary time Green's functions.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:297</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a6257e0b3f43733c5ac06c8af11a47bb3"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">cppdlr::imtime_ops::convolve_init</a></div><div class="ttdeci">void convolve_init() const</div><div class="ttdoc">Initialization for convolution methods.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:599</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a649d9f6c3d257661818c3f473f49f57a"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a649d9f6c3d257661818c3f473f49f57a">cppdlr::imtime_ops::hdf5_format</a></div><div class="ttdeci">static std::string hdf5_format()</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:723</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a6a81a99b2858defa9513a395bd35e2bf"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a6a81a99b2858defa9513a395bd35e2bf">cppdlr::imtime_ops::fitvals2coefs</a></div><div class="ttdeci">T::regular_type fitvals2coefs(nda::vector_const_view&lt; double &gt; t, T const &amp;g) const</div><div class="ttdoc">Obtain DLR coefficients of a Green's function G from scattered imaginary time grid by least squares f...</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:208</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a6f6d71c061aec134df9edf1255e19dfb"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">cppdlr::imtime_ops::coefs2vals</a></div><div class="ttdeci">T::regular_type coefs2vals(T const &amp;gc) const</div><div class="ttdoc">Transform DLR coefficients of Green's function G to values on DLR imaginary time grid.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:120</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a7cd0e6b5498400d3afade53a6ebab389"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389">cppdlr::imtime_ops::piv</a></div><div class="ttdeci">nda::vector&lt; int &gt; piv</div><div class="ttdoc">LU pivots (LAPACK format) of imaginary time vals -&gt; coefs matrix.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:706</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a83e9085aca345c3bf889ae006f0fdb3d"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a83e9085aca345c3bf889ae006f0fdb3d">cppdlr::imtime_ops::lu</a></div><div class="ttdeci">nda::matrix&lt; double &gt; lu</div><div class="ttdoc">LU factors (LAPACK format) of imaginary time vals -&gt; coefs matrix.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:705</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a87b3e21ae66c97691a4580335795f77f"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f">cppdlr::imtime_ops::convolve</a></div><div class="ttdeci">Tg::regular_type convolve(Tf const &amp;fconv, Tg const &amp;g) const</div><div class="ttdoc">Compute convolution of two imaginary time Green's functions, given matrix of convolution by one of th...</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:368</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a88f437cb31c98929ab8a1e6dadb174aa"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa">cppdlr::imtime_ops::rank</a></div><div class="ttdeci">int rank() const</div><div class="ttdoc">Get DLR rank.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:588</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a89451028e273c8753d87621081a16cee"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a89451028e273c8753d87621081a16cee">cppdlr::imtime_ops::get_itnodes</a></div><div class="ttdeci">nda::vector_const_view&lt; double &gt; get_itnodes() const</div><div class="ttdoc">Get DLR imaginary time nodes.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:550</div></div>
 <div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a8b83b15a4fa3eefe8f10d65a53b5885d"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a8b83b15a4fa3eefe8f10d65a53b5885d">cppdlr::imtime_ops::vals2coefs</a></div><div class="ttdeci">T::regular_type vals2coefs(T const &amp;g) const</div><div class="ttdoc">Transform values of Green's function G on DLR imaginary time grid to DLR coefficients.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:87</div></div>
 <div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_a8da78cf54d39d48d2be19ad1f146b03c"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#a8da78cf54d39d48d2be19ad1f146b03c">cppdlr::imtime_ops::imtime_ops</a></div><div class="ttdeci">imtime_ops()=default</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_ac58745b133d7a289d897c920ee89f671"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#ac58745b133d7a289d897c920ee89f671">cppdlr::imtime_ops::get_rfnodes</a></div><div class="ttdeci">double get_rfnodes(int i) const</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:563</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_acc0575ff4a9de9b9c6c186b9f002cc53"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">cppdlr::imtime_ops::get_it2cf_piv</a></div><div class="ttdeci">nda::vector_const_view&lt; int &gt; get_it2cf_piv() const</div><div class="ttdoc">Get LU pivots of transformation matrix from DLR imaginary time values to coefficients.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:584</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_ae6116f42e1f17050404974d0d6d3d226"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">cppdlr::imtime_ops::tconvolve_init</a></div><div class="ttdeci">void tconvolve_init() const</div><div class="ttdoc">Initialization for time-ordered convolution methods.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:642</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_aec1395480d77a2f400b62171e553b0f4"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#aec1395480d77a2f400b62171e553b0f4">cppdlr::imtime_ops::get_itnodes</a></div><div class="ttdeci">double get_itnodes(int i) const</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:554</div></div>
-<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_af2b17e780b762dde6a25d8f8e844dab3"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">cppdlr::imtime_ops::get_it2cf_lu</a></div><div class="ttdeci">nda::matrix_const_view&lt; double &gt; get_it2cf_lu() const</div><div class="ttdoc">Get LU factors of transformation matrix from DLR imaginary time values to coefficients.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:577</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_ac58745b133d7a289d897c920ee89f671"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#ac58745b133d7a289d897c920ee89f671">cppdlr::imtime_ops::get_rfnodes</a></div><div class="ttdeci">double get_rfnodes(int i) const</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:560</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_acc0575ff4a9de9b9c6c186b9f002cc53"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">cppdlr::imtime_ops::get_it2cf_piv</a></div><div class="ttdeci">nda::vector_const_view&lt; int &gt; get_it2cf_piv() const</div><div class="ttdoc">Get LU pivots of transformation matrix from DLR imaginary time values to coefficients.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:581</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_ae6116f42e1f17050404974d0d6d3d226"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226">cppdlr::imtime_ops::tconvolve_init</a></div><div class="ttdeci">void tconvolve_init() const</div><div class="ttdoc">Initialization for time-ordered convolution methods.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:639</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_aec1395480d77a2f400b62171e553b0f4"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#aec1395480d77a2f400b62171e553b0f4">cppdlr::imtime_ops::get_itnodes</a></div><div class="ttdeci">double get_itnodes(int i) const</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:551</div></div>
+<div class="ttc" id="aclasscppdlr_1_1imtime__ops_html_af2b17e780b762dde6a25d8f8e844dab3"><div class="ttname"><a href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">cppdlr::imtime_ops::get_it2cf_lu</a></div><div class="ttdeci">nda::matrix_const_view&lt; double &gt; get_it2cf_lu() const</div><div class="ttdoc">Get LU factors of transformation matrix from DLR imaginary time values to coefficients.</div><div class="ttdef"><b>Definition:</b> dlr_imtime.hpp:574</div></div>
 <div class="ttc" id="adlr__build_8hpp_html"><div class="ttname"><a href="dlr__build_8hpp.html">dlr_build.hpp</a></div></div>
 <div class="ttc" id="adlr__kernels_8hpp_html"><div class="ttname"><a href="dlr__kernels_8hpp.html">dlr_kernels.hpp</a></div></div>
 <div class="ttc" id="anamespacecppdlr_html"><div class="ttname"><a href="namespacecppdlr.html">cppdlr</a></div><div class="ttdef"><b>Definition:</b> dlr_build.cpp:27</div></div>
