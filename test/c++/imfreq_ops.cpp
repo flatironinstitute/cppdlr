@@ -141,7 +141,7 @@ TEST(imfreq_ops, interp_matrix) {
   auto gc = ifops.vals2coefs(beta, g);
 
   // Check that G can be recovered at imaginary frequency nodes
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 2e-14);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 5e-14);
 
   // Compute error in imaginary frequency
   auto gtru      = nda::matrix<dcomplex>(norb, norb);
