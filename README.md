@@ -12,6 +12,8 @@ quantities. For more information on the DLR, see the references below.
 
 Please see [the documentation](https://flatironinstitute.github.io/cppdlr/) for more information about `cppdlr`.
 
+While we recommend using the latest stable release of this library, which is the default branch of this repository, the `main` branch is treated as a development branch and might have new (unstabilized) features. The most up-to-date documentation corresponding to this development branch can be found [here](https://flatironinstitute.github.io/cppdlr/main/).
+
 Libraries implementing the DLR are available in other languages:
 
 - Python, via [pydlr](https://github.com/jasonkaye/libdlr)
