@@ -25,16 +25,36 @@ TEST(barycheb, interp) {
 
   barycheb mybarycheb(n);
 
-  auto& xc = mybarycheb.getnodes();
+  auto& x = mybarycheb.getnodes();
 
   nda::vector<double> f(n);
 
-  for (int i = 0; i < n; i++) { f(i) = std::cos(xc(i)); }
+  for (int i = 0; i < n; i++) { f(i) = std::cos(x(i)); }
 
-  double x = 0.378492;
+  double xeval = 0.378492;
 
-  auto val1 = mybarycheb.interp(x,f);
-  auto val2 = std::cos(x);
+  auto val1 = mybarycheb.interp(xeval,f);
+  auto val2 = std::cos(xeval);
+
+  EXPECT_NEAR(val1, val2, 1.0e-14);
+}
+
+TEST(baryleg, interp) {
+
+  int n = 16;
+
+  baryleg mybaryleg(n);
+
+  auto& x = mybaryleg.getnodes();
+
+  nda::vector<double> f(n);
+
+  for (int i = 0; i < n; i++) { f(i) = std::cos(x(i)); }
+
+  double xeval = 0.378492;
+
+  auto val1 = mybaryleg.interp(xeval,f);
+  auto val2 = std::cos(xeval);
 
   EXPECT_NEAR(val1, val2, 1.0e-14);
 }

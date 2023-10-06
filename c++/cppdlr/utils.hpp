@@ -24,12 +24,12 @@ using namespace nda;
 namespace cppdlr {
 
   /** 
-   * Initialize subroutine barycheb for barycentric Lagrange interpolation at
+   * Class constructor for barycheb: barycentric Lagrange interpolation at
    * Chebyshev nodes.
    *
    * @param   n   number of Chebyshev nodes
-   * @param   xc  n Chebyshev nodes of the first kind 
-   * @param   wc  barycentric interpolation weights at Chebyshev nodes of the
+   * @param   x   n Chebyshev nodes of the first kind 
+   * @param   w   barycentric interpolation weights at Chebyshev nodes of the
    * first kind
    */
 
@@ -40,13 +40,37 @@ namespace cppdlr {
 
     nda::vector<double> const &getnodes();
 
-    double interp(double x, nda::vector_const_view<double> f);
+    double interp(double xeval, nda::vector_const_view<double> f);
 
     private:
-    nda::vector<double> xc; /// Chebshev nodes
-    nda::vector<double> wc; /// Chebshev weights
-    const int n;            /// Chebyshev n
+    nda::vector<double> x; /// Chebshev nodes
+    nda::vector<double> w; /// Chebshev weights
   };
+
+  /** 
+   * Class constructor for baryleg: barycentric Lagrange interpolation at
+   * Legendre nodes.
+   *
+   * @param   n   number of Legendre nodes
+   * @param   x  n Legendre nodes 
+   * @param   w  barycentric interpolation weights at Legendre nodes
+   */
+
+  class baryleg {
+
+    public:
+    baryleg(int n);
+
+    nda::vector<double> const &getnodes();
+
+    double interp(double xeval, nda::vector_const_view<double> f);
+
+    private:
+    nda::vector<double> x; /// Legendre nodes
+    nda::vector<double> w; /// Legendre barycentric weights
+  };
+
+  double baryinterp(nda::vector_const_view<double> x, nda::vector_const_view<double> w, nda::vector_const_view<double> f, double xeval);
 
   /** 
    * @brief Rank-revealing pivoted reorthogonalized Gram-Schmidt

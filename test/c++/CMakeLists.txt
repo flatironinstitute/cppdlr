@@ -1,6 +1,6 @@
 # List of all tests
 set(all_tests 
-  barycheb.cpp
+  baryinterp.cpp
   dlr_build.cpp
   pivrgs.cpp
   eqptsrel.cpp

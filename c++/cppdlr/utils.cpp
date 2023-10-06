@@ -23,27 +23,43 @@ using std::numbers::pi;
 
 namespace cppdlr {
 
-  barycheb::barycheb(int n) : xc(n), wc(n), n(n) {
+  barycheb::barycheb(int n) : x(n), w(n) {
     for (int i = 0; i < n; i++) {
-      auto c        = (2 * i + 1) * pi / (2 * n);
-      xc(n - i - 1) = std::cos(c);
-      wc(n - i - 1) = (1 - 2 * (i % 2)) * std::sin(c);
+      auto c       = (2 * i + 1) * pi / (2 * n);
+      x(n - i - 1) = std::cos(c);
+      w(n - i - 1) = (1 - 2 * (i % 2)) * std::sin(c);
     }
   }
 
-  nda::vector<double> const &barycheb::getnodes() { return xc; }
+  nda::vector<double> const &barycheb::getnodes() { return x; }
 
-  double barycheb::interp(double x, nda::vector_const_view<double> f) {
+  double barycheb::interp(double xeval, nda::vector_const_view<double> f) { return baryinterp(x, w, f, xeval); }
+
+  baryleg::baryleg(int n) : x(n), w(n) {
+    auto [xgl, wgl] = gaussquad(n); // Get Gauss-Legendre nodes and weights
+    for (int j = 0; j < n; j++) {
+      x(j) = xgl(j);
+      w(j) = pow(-1, j) * sqrt((1 - pow(x(j), 2)) * wgl(j)); // Barycentric weights
+    }
+  }
+
+  nda::vector<double> const &baryleg::getnodes() { return x; }
+
+  double baryleg::interp(double xeval, nda::vector_const_view<double> f) { return baryinterp(x, w, f, xeval); }
+
+  double baryinterp(nda::vector_const_view<double> x, nda::vector_const_view<double> w, nda::vector_const_view<double> f, double xeval) {
+
+    int n = x.size();
 
     for (int i = 0; i < n; ++i) {
-      if (x == xc(i)) { return f(i); }
+      if (xeval == x(i)) { return f(i); }
     }
 
     double num = 0, den = 0, dif = 0, q = 0;
 
     for (int i = 0; i < n; ++i) {
-      dif = x - xc(i);
-      q   = wc(i) / dif;
+      dif = xeval - x(i);
+      q   = w(i) / dif;
       num = num + q * f(i);
       den = den + q;
     }
