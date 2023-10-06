@@ -86,7 +86,7 @@ namespace cppdlr {
       norms(j) = real(blas::dotc(aa(j, _), aa(j, _)));
       // TODO: Need to choose between these; this choice is consistent w/ libdlr
       //epsscal += norms(j);
-      epsscal = std::max(epsscal, norms(j));
+      //epsscal = std::max(epsscal, norms(j));
     }
     //epsscal *= eps * eps;
     epsscal = eps * eps;
@@ -196,7 +196,7 @@ namespace cppdlr {
       norms(j) = real(blas::dotc(aa(j, _), aa(j, _)));
       // TODO: Need to choose between these; this choice is consistent w/ libdlr
       //epsscal += norms(j);
-      epsscal = std::max(epsscal, norms(j));
+      //epsscal = std::max(epsscal, norms(j));
     }
     //epsscal *= eps * eps;
     epsscal = eps * eps;
@@ -346,7 +346,7 @@ namespace cppdlr {
       norms(j) = real(blas::dotc(aa(j, _), aa(j, _)));
       // TODO: Need to choose between these; this choice is consistent w/ libdlr
       //epsscal += norms(j);
-      epsscal = std::max(epsscal, norms(j));
+      //epsscal = std::max(epsscal, norms(j));
     }
     //epsscal *= eps * eps;
     epsscal = eps * eps;

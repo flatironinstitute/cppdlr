@@ -159,30 +159,24 @@ TEST(imtime_ops, interp_matrix) {
   errl2 = sqrt(errl2/ntst);
 
   EXPECT_LT(errlinf, 10 * eps);
-  EXPECT_LT(errl2, 10 * eps);
-  PRINT(errlinf);
-  PRINT(errl2);
+  EXPECT_LT(errl2, eps);
 
   // Compute error in imaginary frequency
-
   auto ifops = imfreq_ops(lambda, dlr_rf, Fermion);
 
-  errlinf = 0, errl2 = 0;
   auto gtru_if = nda::matrix<dcomplex>(norb, norb);
   auto gtst_if = nda::matrix<dcomplex>(norb, norb);
+  errlinf = 0, errl2 = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
     gtru_if = gfun(norb, beta, n, Fermion);
     gtst_if = ifops.coefs2eval(beta, gc, n);
     errlinf  = std::max(errlinf, max_element(abs(gtru_if - gtst_if)));
-    errl2 += pow(frobenius_norm(gtru-gtst),2);
+    errl2 += pow(frobenius_norm(gtru_if-gtst_if),2);
   }
-
-  errl2 = sqrt(errl2);
+  errl2 = sqrt(errl2)/beta;
 
   EXPECT_LT(errlinf, 100 * eps);
-  EXPECT_LT(errl2, 100 * eps);
-  PRINT(errlinf);
-  PRINT(errl2);
+  EXPECT_LT(errl2, eps);
 }
 
 /**

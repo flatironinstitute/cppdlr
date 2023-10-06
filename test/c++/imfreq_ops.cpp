@@ -23,18 +23,50 @@
 
 #include <gtest/gtest.h>
 #include <nda/nda.hpp>
+#include <cppdlr/cppdlr.hpp>
 #include <nda/gtest_tools.hpp>
-
-#include <cppdlr/dlr_imfreq.hpp>
-#include <cppdlr/dlr_build.hpp>
-#include <cppdlr/utils.hpp>
-#include <cppdlr/dlr_kernels.hpp>
-#include <nda/blas.hpp>
 
 using namespace cppdlr;
 using namespace nda;
 
-static constexpr auto _ = nda::range::all;
+/**
+* @brief Green's function which is a random sum of exponentials
+*
+* G_ij(t) = sum_l c_ijl K(t,om_ijl) with random c_ijl, om_ijl
+*
+* @param norb Number of orbital indices
+* @param beta Inverse temperature
+* @param t    Imaginary time evaluation point
+*
+* @return Green's function evaluated at t
+*/
+nda::matrix<double> gfun(int norb, double beta, double t) {
+
+  int npeak = 5;
+
+  auto g    = nda::matrix<double>(norb, norb);
+  g         = 0;
+  auto c    = nda::vector<double>(npeak);
+  double om = 0;
+  for (int i = 0; i < norb; ++i) {
+    for (int j = 0; j < norb; ++j) {
+
+      // Get random weights that sum to 1
+      for (int l = 0; l < npeak; ++l) {
+        c(l) = (sin(1000.0 * (i + 2 * j + 3 * l + 7)) + 1) / 2; // Quick and dirty rand # gen on [0,1]
+      }
+      c = c / sum(c);
+
+      // Evaluate Green's function
+      for (int l = 0; l < npeak; ++l) {
+        om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
+        g(i, j) += c(l) * k_it(t, om, beta);
+      }
+    }
+  }
+
+  return g;
+}
 
 /**
 * @brief Green's function which is a random sum of poles
@@ -87,8 +119,9 @@ TEST(imfreq_ops, interp_matrix) {
   double eps     = 1e-10;   // DLR tolerance
   auto statistic = Fermion; // Fermionic Green's function
 
-  double beta = 1000; // Inverse temperature
-  int nmaxtst = 5000; // # imag freq test points
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+  int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
 
@@ -108,19 +141,42 @@ TEST(imfreq_ops, interp_matrix) {
   auto gc = ifops.vals2coefs(beta, g);
 
   // Check that G can be recovered at imaginary frequency nodes
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-13);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 2e-14);
 
-  // Compute L infinity error
-  auto gtru  = nda::matrix<dcomplex>(norb, norb);
-  auto gtst  = nda::matrix<dcomplex>(norb, norb);
-  double err = 0;
+  // Compute error in imaginary frequency
+  auto gtru      = nda::matrix<dcomplex>(norb, norb);
+  auto gtst      = nda::matrix<dcomplex>(norb, norb);
+  double errlinf = 0, errl2 = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
-    gtru = gfun(norb, beta, n, statistic);
-    gtst = ifops.coefs2eval(beta, gc, n);
-    err  = std::max(err, max_element(abs(gtru - gtst)));
+    gtru    = gfun(norb, beta, n, statistic);
+    gtst    = ifops.coefs2eval(beta, gc, n);
+    errlinf = std::max(errlinf, max_element(abs(gtru - gtst)));
+    errl2 += pow(frobenius_norm(gtru - gtst), 2);
   }
+  errl2 = sqrt(errl2) / beta;
 
-  EXPECT_LT(err, 100 * eps);
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 2 * eps);
+
+  // Compute error in imaginary time
+  auto itops = imtime_ops(lambda, dlr_rf);
+ 
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  auto gtru_it = nda::matrix<double>(norb, norb);
+  auto gtst_it = nda::matrix<dcomplex>(norb, norb);
+  errlinf = 0, errl2 = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru_it = gfun(norb, beta, ttst(i));
+    gtst_it = itops.coefs2eval(gc, ttst(i));
+    errlinf  = std::max(errlinf, max_element(abs(gtru_it - gtst_it)));
+    errl2 += pow(frobenius_norm(gtru_it - gtst_it),2);
+  }
+  errl2 = sqrt(errl2/ntst);
+
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 2 * eps);
 }
 
 /**
