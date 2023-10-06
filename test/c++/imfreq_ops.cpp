@@ -229,7 +229,7 @@ TEST(imfreq_ops, interp_scalar) {
   gtst      = ifops.coefs2eval(beta, gc, 3);
   auto kvec = ifops.build_evalvec(beta, 3);
   auto zgc  = nda::vector<dcomplex>(gc);
-  EXPECT_LT((abs(blas::dotc(zgc, kvec) - gtst)), 1e-12);
+  EXPECT_LT((abs(blas::dotc(zgc, kvec) - gtst)), 1e-13);
 }
 
 /**
@@ -271,9 +271,7 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
   auto gc = ifops.vals2coefs(beta, g);
 
   // Check that G can be recovered at imaginary frequency nodes
-  // TODO: this tolerance is a bit disturbingly high...why do we seem to lose a
-  // few digits?
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 2e-12);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-13);
 
   // Compute error in imaginary frequency
   auto gtru      = nda::matrix<dcomplex>(norb, norb);
@@ -351,9 +349,7 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
   auto gc = ifops.vals2coefs(beta, g);
 
   // Check that G can be recovered at imaginary frequency nodes
-  // TODO: this tolerance is a bit disturbingly high...why do we seem to lose a
-  // few digits?
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 2e-12);
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-13);
 
   // Compute error in imaginary frequency
   auto gtru      = nda::matrix<dcomplex>(norb, norb);
