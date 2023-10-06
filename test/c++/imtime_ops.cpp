@@ -69,6 +69,47 @@ nda::matrix<double> gfun(int norb, double beta, double t) {
 }
 
 /**
+* @brief Green's function which is a random sum of poles
+*
+* G_ij(iom_n) = sum_l c_ijl K(n,om_ijl) with random c_ijl, om_ijl
+*
+* @param[in] norb      Number of orbital indices
+* @param[in] beta      Inverse temperature
+* @param[in] n         Imaginary frequency evaluation point index
+* @param[in] statistic Particle Statistic: Fermion or Boson
+*
+* @return Green's function evaluated at iom_n
+*/
+nda::matrix<dcomplex> gfun(int norb, double beta, int n, statistic_t statistic) {
+
+  int npeak = 5;
+
+  auto g    = nda::matrix<dcomplex>(norb, norb);
+  g         = 0;
+  auto c    = nda::vector<double>(npeak);
+  double om = 0;
+  for (int i = 0; i < norb; ++i) {
+    for (int j = 0; j < norb; ++j) {
+
+      // Get random weights that sum to 1
+      for (int l = 0; l < npeak; ++l) {
+        c(l) = (sin(1000.0 * (i + 2 * j + 3 * l + 7)) + 1) / 2; // Quick and dirty rand # gen on [0,1]
+      }
+      c = c / sum(c);
+      c = beta * c;
+
+      // Evaluate Green's function
+      for (int l = 0; l < npeak; ++l) {
+        om = sin(2000.0 * (3 * i + 2 * j + l + 6)); // Rand # on [-1,1]
+        g(i, j) += c(l) * k_if(n, beta * om, statistic);
+      }
+    }
+  }
+
+  return g;
+}
+
+/**
 * @brief Test DLR interpolation and evaluation for matrix-valued Green's
 * function
 */
@@ -79,6 +120,7 @@ TEST(imtime_ops, interp_matrix) {
 
   double beta = 1000;  // Inverse temperature
   int ntst    = 10000; // # imag time test points
+  int nmaxtst = 10000;  // # imag freq test points
 
   int norb = 2; // Orbital dimensions
 
@@ -104,7 +146,7 @@ TEST(imtime_ops, interp_matrix) {
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
 
-  // Compute L infinity error
+  // Compute error in imaginary time
   auto gtru  = nda::matrix<double>(norb, norb);
   auto gtst  = nda::matrix<double>(norb, norb);
   double errlinf = 0, errl2 = 0;
@@ -116,7 +158,31 @@ TEST(imtime_ops, interp_matrix) {
   }
   errl2 = sqrt(errl2/ntst);
 
+  errl2 = sqrt(errl2/ntst);
+
   EXPECT_LT(errlinf, 10 * eps);
+  EXPECT_LT(errl2, 10 * eps);
+  PRINT(errlinf);
+  PRINT(errl2);
+
+  // Compute error in imaginary frequency
+
+  auto ifops = imfreq_ops(lambda, dlr_rf, Fermion);
+
+  errlinf = 0, errl2 = 0;
+  auto gtru_if = nda::matrix<dcomplex>(norb, norb);
+  auto gtst_if = nda::matrix<dcomplex>(norb, norb);
+  for (int n = -nmaxtst; n < nmaxtst; ++n) {
+    gtru_if = gfun(norb, beta, n, Fermion);
+    gtst_if = ifops.coefs2eval(beta, gc, n);
+    errlinf  = std::max(errlinf, max_element(abs(gtru_if - gtst_if)));
+    errl2 += pow(frobenius_norm(gtru-gtst),2);
+  }
+
+  errl2 = sqrt(errl2);
+
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 100 * eps);
   PRINT(errlinf);
   PRINT(errl2);
 }

@@ -88,7 +88,7 @@ TEST(imfreq_ops, interp_matrix) {
   auto statistic = Fermion; // Fermionic Green's function
 
   double beta = 1000; // Inverse temperature
-  int nmaxtst = 5000; // # imag time test points
+  int nmaxtst = 5000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
 
