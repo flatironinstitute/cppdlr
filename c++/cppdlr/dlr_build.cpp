@@ -234,7 +234,7 @@ namespace cppdlr {
           errtmp = max(errtmp, abs(ktru - ktst));
         }
       }
-      errt = max(errt, errtmp / max_element(kmat(_, j)));
+      errt = max(errt, errtmp / max_element(abs(kmat(_, j))));
     }
 
     // Next test frequency discretization for each fixed time.
@@ -251,7 +251,7 @@ namespace cppdlr {
           errtmp = max(errtmp, abs(ktru - ktst));
         }
       }
-      errom = max(errom, errtmp / max_element(kmat(i, _)));
+      errom = max(errom, errtmp / max_element(abs(kmat(i, _))));
     }
 
     return {errt, errom};
