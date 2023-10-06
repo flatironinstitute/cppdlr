@@ -68,6 +68,19 @@ namespace cppdlr {
   nda::vector<double> build_it_fine(fineparams &fine);
 
   /**
+  * @brief Get fine composite Legendre grid in imaginary time and corresponding
+  * square root quadrature weights
+  *
+  * @param[in] fine Fine grid parameters
+  *
+  * @return Tuple containing fine imaginary time grid and corresponding square
+  * root quadrature weights
+  *
+  * \note Fine imaginary time grid is given in relative format 
+  */
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine_wgt(fineparams &fine);
+
+  /**
   * @brief Get imaginary time discretization of analytic continuation kernel
   *
   * @param[in] t Imaginary time grid in relative format
@@ -76,6 +89,18 @@ namespace cppdlr {
   * @return Discretization of analytic continuation kernel on given grid
   */
   nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> om);
+
+  /**
+  * @brief Get imaginary time discretization of analytic continuation kernel
+  * with L^2 weighting
+  *
+  * @param[in] t Imaginary time grid in relative format
+  * @param[in] w Square root quadrature weights
+  * @param[in] om Frequency real grid
+  *
+  * @return Discretization of analytic continuation kernel on given grid
+  */
+  nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> w, nda::vector_const_view<double> om);
 
   /** 
   * @copydoc build_k_it(nda::vector_const_view<double>, nda::vector_const_view<double>)
@@ -86,6 +111,11 @@ namespace cppdlr {
   * @copydoc build_k_it(nda::vector_const_view<double>, nda::vector_const_view<double>)
   */
   nda::vector<double> build_k_it(nda::vector_const_view<double> t, double om);
+
+  /** 
+  * @copydoc build_k_it(nda::vector_const_view<double>, nda::vector_const_view<double>, nda::vector_const_view<double>)
+  */
+  nda::vector<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> w, double om);
 
   /**
   * @brief Get imaginary frequency discretization of analytic continuation kernel

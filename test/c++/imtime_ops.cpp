@@ -107,14 +107,18 @@ TEST(imtime_ops, interp_matrix) {
   // Compute L infinity error
   auto gtru  = nda::matrix<double>(norb, norb);
   auto gtst  = nda::matrix<double>(norb, norb);
-  double err = 0;
+  double errlinf = 0, errl2 = 0;
   for (int i = 0; i < ntst; ++i) {
     gtru = gfun(norb, beta, ttst(i));
     gtst = itops.coefs2eval(gc, ttst(i));
-    err  = std::max(err, max_element(abs(gtru - gtst)));
+    errlinf  = std::max(errlinf, max_element(abs(gtru - gtst)));
+    errl2 += pow(frobenius_norm(gtru - gtst),2);
   }
+  errl2 = sqrt(errl2/ntst);
 
-  EXPECT_LT(err, 10 * eps);
+  EXPECT_LT(errlinf, 10 * eps);
+  PRINT(errlinf);
+  PRINT(errl2);
 }
 
 /**

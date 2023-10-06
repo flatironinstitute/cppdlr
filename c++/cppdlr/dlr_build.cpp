@@ -100,6 +100,40 @@ namespace cppdlr {
     return t;
   }
 
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine_wgt(fineparams &fine) {
+
+    int p   = fine.p;
+    int npt = fine.npt;
+
+    auto [xgl, wgl] = gaussquad(p);  // Gauss-Legendre nodes and weights on [-1,1]
+    xgl             = (xgl + 1) / 2; // Transform to [0,1]
+    //auto bc = barycheb(p);             // Get barycheb object for Chebyshev nodes
+    //auto xc = (bc.getnodes() + 1) / 2; // Cheb nodes on [0,1]
+
+    // Imaginary time grid points
+
+    auto t = nda::vector<double>(fine.nt);
+    auto w = nda::vector<double>(fine.nt);
+
+    double a = 0, b = 0;
+
+    // Nodes and weights on (0,1/2)
+
+    for (int i = 0; i < npt; ++i) {
+      b                            = 1.0 / pow(2.0, npt - i);
+      t(range(i * p, (i + 1) * p)) = a + (b - a) * xgl;
+      w(range(i * p, (i + 1) * p)) = sqrt(((b - a) / 2) * wgl);
+      a                            = b;
+    }
+
+    // Points on (1/2,1) in relative format
+
+    t(range(npt * p, 2 * npt * p)) = -t(range(npt * p - 1, -1, -1));
+    w(range(npt * p, 2 * npt * p)) = w(range(npt * p - 1, -1, -1));
+
+    return {t, w};
+  }
+
   nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> om) {
 
     int nt  = t.size();
@@ -109,6 +143,20 @@ namespace cppdlr {
 
     for (int i = 0; i < nt; ++i) {
       for (int j = 0; j < nom; ++j) { kmat(i, j) = k_it(t(i), om(j)); }
+    }
+
+    return kmat;
+  }
+
+  nda::matrix<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> w, nda::vector_const_view<double> om) {
+
+    int nt  = t.size();
+    int nom = om.size();
+
+    auto kmat = nda::matrix<double>(nt, nom);
+
+    for (int i = 0; i < nt; ++i) {
+      for (int j = 0; j < nom; ++j) { kmat(i, j) = w(i) * k_it(t(i), om(j)); }
     }
 
     return kmat;
@@ -130,6 +178,16 @@ namespace cppdlr {
 
     auto kvec = nda::vector<double>(nt);
     for (int i = 0; i < nt; ++i) { kvec(i) = k_it(t(i), om); }
+
+    return kvec;
+  }
+
+  nda::vector<double> build_k_it(nda::vector_const_view<double> t, nda::vector_const_view<double> w, double om) {
+
+    int nt = t.size();
+
+    auto kvec = nda::vector<double>(nt);
+    for (int i = 0; i < nt; ++i) { kvec(i) = w(i) * k_it(t(i), om); }
 
     return kvec;
   }
@@ -224,7 +282,6 @@ namespace cppdlr {
     }
   }
 
-  // TODO: Fix this to account for both fermionic and bosonic cases symmetrized cases
   nda::vector<double> build_dlr_rf(double lambda, double eps, statistic_t statistic, bool symmetrize) {
 
     // Get fine grid parameters
@@ -233,12 +290,15 @@ namespace cppdlr {
 
     // Get fine grids in frequency and imaginary time
 
-    auto t  = build_it_fine(fine);
+    //auto t  = build_it_fine(fine);
+    auto [t, w] = build_it_fine_wgt(fine);
+
     auto om = build_rf_fine(fine);
 
     // Get discretization of analytic continuation kernel on fine grid (the K matrix)
 
-    auto kmat = build_k_it(t, om);
+    //auto kmat = build_k_it(t, om);
+    auto kmat = build_k_it(t, w, om);
 
     if (!(symmetrize && statistic == Boson)) { // Treat symmetrized bosonic case separately
 
@@ -255,7 +315,8 @@ namespace cppdlr {
 
     } else { // Symmetrized bosonic case: enforce omega = 0 chosen as DLR frequency
 
-      auto kvec0 = build_k_it(t, 0.0); // K at zero frequency: K(tau, 0)
+      //auto kvec0 = build_k_it(t, 0.0); // K at zero frequency: K(tau, 0)
+      auto kvec0 = build_k_it(t, w, 0.0); // K at zero frequency: K(tau, 0)
 
       // Pivoted Gram-Schmidt on columns of K matrix, augmented by vector K(tau, 0), to obtain DLR frequencies
       auto [q, norms, piv] = pivrgs_sym(transpose(kmat), kvec0, eps);

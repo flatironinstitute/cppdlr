@@ -88,7 +88,8 @@ namespace cppdlr {
       //epsscal += norms(j);
       epsscal = std::max(epsscal, norms(j));
     }
-    epsscal *= eps * eps;
+    //epsscal *= eps * eps;
+    epsscal = eps * eps;
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -184,7 +185,7 @@ namespace cppdlr {
     if (m % 2 != 0) { throw std::runtime_error("Input matrix must have even number of rows."); }
 
     // Copy input data, re-ordering rows to make symmetric rows adjacent
-    auto aa               = typename T::regular_type(m, n);
+    auto aa                    = typename T::regular_type(m, n);
     aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
     aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
 
@@ -197,7 +198,8 @@ namespace cppdlr {
       //epsscal += norms(j);
       epsscal = std::max(epsscal, norms(j));
     }
-    epsscal *= eps * eps;
+    //epsscal *= eps * eps;
+    epsscal = eps * eps;
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -346,7 +348,8 @@ namespace cppdlr {
       //epsscal += norms(j);
       epsscal = std::max(epsscal, norms(j));
     }
-    epsscal *= eps * eps;
+    //epsscal *= eps * eps;
+    epsscal = eps * eps;
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -363,7 +366,7 @@ namespace cppdlr {
     // First, choose provided vector as first pivot
 
     // Normalize
-    nrm = real(blas::dotc(aa(0, _), aa(0, _)));
+    nrm      = real(blas::dotc(aa(0, _), aa(0, _)));
     aa(0, _) = aa(0, _) * (1 / sqrt(nrm));
 
     // Orthogonalize remaining rows against current row
@@ -500,7 +503,7 @@ namespace cppdlr {
   * Background section of the cppdlr documentation. 
   */
   nda::vector<double> abs2rel(nda::vector_const_view<double> t_abs);
-  
+
   /**
   * @copydoc rel2abs(nda::vector_const_view<double>)
   */
