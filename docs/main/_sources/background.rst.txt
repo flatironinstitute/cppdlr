@@ -87,7 +87,7 @@ Given :math:`\Lambda` and another user-specified error tolerance parameter
     G(\tau) \approx \sum_{l=1}^r K(\tau,\omega_l) \widehat{g}_l, \label{dlrexp} \tag{1}
   \end{equation}
 
-with equality to accuracy :math:`\epsilon`. Here, the :math:`r` *DLR frequencies*
+with equality to accuracy :math:`\epsilon` in a suitable norm (discussed :ref:`below<measuringerror>`). Here, the :math:`r` *DLR frequencies*
 :math:`\omega_l` determining the *DLR basis functions* :math:`K(\tau,\omega_l)`
 are carefully chosen (by a pivoted Gram-Schmidt procedure) depending only on
 :math:`\Lambda` and :math:`\epsilon`, but *not* on :math:`G` itself. As for the
@@ -244,6 +244,55 @@ i/\beta` for bosonic Green's functions. In ``cppdlr``, Matsubara frequency
 points are represented by specifying the integer ``n``, the inverse temperature
 :math:`\beta`, and whether the point is a fermionic or bosonic Matsubara
 frequency using the ``statistic_t`` specifier.
+
+.. _measuringerror:
+
+Measuring error
+---------------
+
+In what sense is the error of the DLR guaranteed to be less than
+:math:`\epsilon`? Strictly speaking, if one obtains the DLR expansion by
+interpolation at the DLR nodes or by fitting on a finite number of grid points,
+there is no guarantee. However, in practice we observe very well-controlled errors, and we can give a more useful and practical answer. We consider the case of scalar-valued Green's functions for simplicity. Let us define the :math:`L^2(\tau)` norm as follows:
+
+.. math::
+
+  ||G||_{L^2(\tau)}^2 = \frac{1}{\beta} \int_0^\beta d\tau \, |G(\tau)|^2.
+
+By Parseval's theorem, this is equal to the :math:`l^2(i \nu_n)` norm:
+
+.. math::
+
+  ||G||_{l^2(i \nu_n)}^2 = \frac{1}{\beta^2} \sum_{n=-\infty}^\infty |G(i \nu_n)|^2.
+  
+Ignoring errors at the level of machine precision, it can be shown that given an imaginary time Green's function :math:`G(\tau)`
+with spectral function :math:`\rho(\omega)`, there exists a DLR expansion 
+:math:`G_{\text{DLR}}(\tau) \approx \sum_{l=1}^r K(\tau,\omega_l) \widehat{g}_l` 
+such that
+
+.. math::
+
+  ||G - G_{\text{DLR}}||_{L^2(\tau)} = ||G - G_{\text{DLR}}||_{l^2(i \nu_n)} \leq ||\rho||_{L^1(\omega)} \epsilon.
+
+Here, :math:`||\rho||_{L^1(\omega)} = \int_{-\infty}^\infty d\omega \, |\rho(\omega)|`, 
+which is typically :math:`1`. Note: The inequality holds as long as
+the DLR frequencies :math:`\omega_l` are constructed using the pivoted
+Gram-Schmidt procedure on a suitably fine discretization of :math:`K(\tau,
+\omega)` with rows weighted by appropriate quadrature weights. The latter point
+is not discussed in the original reference on the DLR, but will be in an
+upcoming publication.
+
+This is an existence statement: can we actually find such a DLR expansion? Least
+squares fitting on a sufficiently fine imaginary time grid would yield a DLR
+expansion satisfying this error bound. However, in practice, we also find that
+interpolation at the DLR nodes is sufficient to produce an expansion of
+comparable quality, satisfying the bound, or very nearly so.
+
+We therefore recommend measuring error in either the :math:`L^2(\tau)` or the
+:math:`l^2(i \nu_n)` norm, as defined above. If one wishes to obtain a given
+accuracy in the :math:`L^\infty` norm---that is, pointwise accuracy---in
+imaginary time or frequency, we would recommend decreasing :math:`\epsilon`
+further.
 
 Symmetrized DLR grids
 ---------------------
