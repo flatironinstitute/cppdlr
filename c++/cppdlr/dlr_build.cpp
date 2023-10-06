@@ -214,9 +214,10 @@ namespace cppdlr {
     // Interpolate values in K matrix to finer grids using barycentral Chebyshev
     // interpolation, and test against exact expression for kernel.
 
-    barycheb bc(p);
+    barycheb bc(p); // Barycentric Chebyshev interpolator
+    baryleg bl(p);  // Barycentric Legendre interpolator
     barycheb bc2(p2);
-    auto xc = bc2.getnodes(); // Cheb nodes on [-1,1]
+    auto x = bc2.getnodes(); // Dense grid of Legendre nodes on [-1,1]
 
     double ktru = 0, ktst = 0, errtmp = 0;
 
@@ -229,7 +230,7 @@ namespace cppdlr {
         for (int k = 0; k < p2; ++k) {
 
           ktru = k_it(ttst(i * p2 + k), om(j));
-          ktst = bc.interp(xc(k), kmat(range(i * p, (i + 1) * p), j));
+          ktst = bl.interp(x(k), kmat(range(i * p, (i + 1) * p), j));
 
           errtmp = max(errtmp, abs(ktru - ktst));
         }
@@ -246,7 +247,7 @@ namespace cppdlr {
         for (int k = 0; k < p2; ++k) {
 
           ktru = k_it(t(i), omtst(j * p2 + k));
-          ktst = bc.interp(xc(k), kmat(i, range(j * p, (j + 1) * p)));
+          ktst = bc.interp(x(k), kmat(i, range(j * p, (j + 1) * p)));
 
           errtmp = max(errtmp, abs(ktru - ktst));
         }
