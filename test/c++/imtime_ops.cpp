@@ -158,8 +158,6 @@ TEST(imtime_ops, interp_matrix) {
   }
   errl2 = sqrt(errl2/ntst);
 
-  errl2 = sqrt(errl2/ntst);
-
   EXPECT_LT(errlinf, 10 * eps);
   EXPECT_LT(errl2, 10 * eps);
   PRINT(errlinf);
