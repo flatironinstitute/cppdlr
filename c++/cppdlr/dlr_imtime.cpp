@@ -34,9 +34,9 @@ namespace cppdlr {
 
     // Get discretization of analytic continuation kernel on fine grid in
     // imaginary time, at DLR frequencies
-    auto fine = fineparams(lambda);
-    auto t    = build_it_fine(fine);
-    auto kmat = build_k_it(t, dlr_rf);
+    auto fine   = fineparams(lambda);
+    auto [t, w] = build_it_fine(fine);
+    auto kmat   = build_k_it(t, dlr_rf);
 
     if (!(symmetrize && statistic == Boson)) { // Treat symmetrized bosonic case separately
 

@@ -57,17 +57,6 @@ namespace cppdlr {
   nda::vector<double> build_rf_fine(fineparams &fine);
 
   /**
-  * @brief Get fine composite Chebyshev grid in imaginary time
-  *
-  * @param[in] fine Fine grid parameters
-  *
-  * @return Fine imaginary time grid
-  *
-  * \note Fine imaginary time grid is given in relative format 
-  */
-  nda::vector<double> build_it_fine(fineparams &fine);
-
-  /**
   * @brief Get fine composite Legendre grid in imaginary time and corresponding
   * square root quadrature weights
   *
@@ -78,7 +67,7 @@ namespace cppdlr {
   *
   * \note Fine imaginary time grid is given in relative format 
   */
-  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine_wgt(fineparams &fine);
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams &fine);
 
   /**
   * @brief Get imaginary time discretization of analytic continuation kernel

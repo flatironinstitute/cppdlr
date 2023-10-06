@@ -70,6 +70,16 @@ namespace cppdlr {
     nda::vector<double> w; /// Legendre barycentric weights
   };
 
+  /**
+  * @brief Barycentric Lagrange interpolation
+  *
+  * @param[in] x       Interpolation nodes
+  * @param[in] w       Barycentric interpolation weights
+  * @param[in] f       Function values at interpolation nodes
+  * @param[in] xeval   Point at which to evaluate interpolated function
+  *
+  * @return Interpolated function value at xeval
+  */
   double baryinterp(nda::vector_const_view<double> x, nda::vector_const_view<double> w, nda::vector_const_view<double> f, double xeval);
 
   /** 
@@ -104,16 +114,9 @@ namespace cppdlr {
     int maxrnk  = std::min(m, n);
 
     // Compute norms of rows of input matrix, and rescale eps tolerance
-    auto norms     = nda::vector<double>(m);
-    double epsscal = 0; // Scaled eps threshold parameter
-    for (int j = 0; j < m; ++j) {
-      norms(j) = real(blas::dotc(aa(j, _), aa(j, _)));
-      // TODO: Need to choose between these; this choice is consistent w/ libdlr
-      //epsscal += norms(j);
-      //epsscal = std::max(epsscal, norms(j));
-    }
-    //epsscal *= eps * eps;
-    epsscal = eps * eps;
+    auto norms   = nda::vector<double>(m);
+    double epssq = eps * eps;
+    for (int j = 0; j < m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -156,14 +159,14 @@ namespace cppdlr {
 
       // Terminate if sufficiently small, and return previously selected rows
       // (not including current row)
-      if (nrm <= epsscal) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
+      if (nrm <= epssq) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
 
       // Normalize current row
       aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 1; k < m; ++k) {
-        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
         aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
         norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
       }
@@ -214,16 +217,9 @@ namespace cppdlr {
     aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
 
     // Compute norms of rows of input matrix, and rescale eps tolerance
-    auto norms     = nda::vector<double>(m);
-    double epsscal = 0; // Scaled eps threshold parameter
-    for (int j = 0; j < m; ++j) {
-      norms(j) = real(blas::dotc(aa(j, _), aa(j, _)));
-      // TODO: Need to choose between these; this choice is consistent w/ libdlr
-      //epsscal += norms(j);
-      //epsscal = std::max(epsscal, norms(j));
-    }
-    //epsscal *= eps * eps;
-    epsscal = eps * eps;
+    auto norms   = nda::vector<double>(m);
+    double epssq = eps * eps;
+    for (int j = 0; j < m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -280,14 +276,14 @@ namespace cppdlr {
 
       // Terminate if sufficiently small, and return previously selected rows
       // (not including current row)
-      if (nrm <= epsscal) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
+      if (nrm <= epssq) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
 
       // Normalize current row
       aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 1; k < m; ++k) {
-        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
         aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
         norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
       }
@@ -302,7 +298,7 @@ namespace cppdlr {
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 2; k < m; ++k) {
-        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
         aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));
         norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
       }
@@ -364,16 +360,9 @@ namespace cppdlr {
     aa(nda::range(2, m + 1, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
 
     // Compute norms of rows of augmented matrix, and rescale eps tolerance
-    auto norms     = nda::vector<double>(m + 1);
-    double epsscal = 0; // Scaled eps threshold parameter
-    for (int j = 0; j < m + 1; ++j) {
-      norms(j) = real(blas::dotc(aa(j, _), aa(j, _)));
-      // TODO: Need to choose between these; this choice is consistent w/ libdlr
-      //epsscal += norms(j);
-      //epsscal = std::max(epsscal, norms(j));
-    }
-    //epsscal *= eps * eps;
-    epsscal = eps * eps;
+    auto norms   = nda::vector<double>(m + 1);
+    double epssq = eps * eps;
+    for (int j = 0; j < m + 1; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -395,7 +384,7 @@ namespace cppdlr {
 
     // Orthogonalize remaining rows against current row
     for (int k = 1; k < m + 1; ++k) {
-      if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+      if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
       aa(k, _) = aa(k, _) - aa(0, _) * blas::dotc(aa(0, _), aa(k, _));
       norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
     }
@@ -445,14 +434,14 @@ namespace cppdlr {
 
       // Terminate if sufficiently small, and return previously selected rows
       // (not including current row)
-      if (nrm <= epsscal) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
+      if (nrm <= epssq) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
 
       // Normalize current row
       aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 1; k < m + 1; ++k) {
-        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
         aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
         norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
       }
@@ -467,7 +456,7 @@ namespace cppdlr {
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 2; k < m + 1; ++k) {
-        if (norms(k) <= epsscal) { continue; } // Can skip rows with norm less than tolerance
+        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
         aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));
         norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
       }

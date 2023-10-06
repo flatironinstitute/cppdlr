@@ -71,44 +71,13 @@ namespace cppdlr {
     return om;
   }
 
-  nda::vector<double> build_it_fine(fineparams &fine) {
-
-    int p   = fine.p;
-    int npt = fine.npt;
-
-    auto bc = barycheb(p);             // Get barycheb object for Chebyshev nodes
-    auto xc = (bc.getnodes() + 1) / 2; // Cheb nodes on [0,1]
-
-    // Imaginary time grid points
-
-    auto t = nda::vector<double>(fine.nt);
-
-    double a = 0, b = 0;
-
-    // Points on (0,1/2)
-
-    for (int i = 0; i < npt; ++i) {
-      b                            = 1.0 / pow(2.0, npt - i);
-      t(range(i * p, (i + 1) * p)) = a + (b - a) * xc;
-      a                            = b;
-    }
-
-    // Points on (1/2,1) in relative format
-
-    t(range(npt * p, 2 * npt * p)) = -t(range(npt * p - 1, -1, -1));
-
-    return t;
-  }
-
-  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine_wgt(fineparams &fine) {
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams &fine) {
 
     int p   = fine.p;
     int npt = fine.npt;
 
     auto [xgl, wgl] = gaussquad(p);  // Gauss-Legendre nodes and weights on [-1,1]
     xgl             = (xgl + 1) / 2; // Transform to [0,1]
-    //auto bc = barycheb(p);             // Get barycheb object for Chebyshev nodes
-    //auto xc = (bc.getnodes() + 1) / 2; // Cheb nodes on [0,1]
 
     // Imaginary time grid points
 
@@ -120,7 +89,7 @@ namespace cppdlr {
     // Nodes and weights on (0,1/2)
 
     for (int i = 0; i < npt; ++i) {
-      b                            = 1.0 / pow(2.0, npt - i);
+      b                            = 1.0 / pow(2, npt - i);
       t(range(i * p, (i + 1) * p)) = a + (b - a) * xgl;
       w(range(i * p, (i + 1) * p)) = sqrt(((b - a) / 2) * wgl);
       a                            = b;
@@ -207,9 +176,9 @@ namespace cppdlr {
     // number of points per panel as the given fine grid
 
     fineparams fine2(fine.lambda, 2 * fine.p);
-    auto ttst  = build_it_fine(fine2);
-    auto omtst = build_rf_fine(fine2);
-    int p2     = fine2.p;
+    auto [ttst, junk] = build_it_fine(fine2);
+    auto omtst        = build_rf_fine(fine2);
+    int p2            = fine2.p;
 
     // Interpolate values in K matrix to finer grids using barycentral Chebyshev
     // interpolation, and test against exact expression for kernel.
@@ -217,7 +186,9 @@ namespace cppdlr {
     barycheb bc(p); // Barycentric Chebyshev interpolator
     baryleg bl(p);  // Barycentric Legendre interpolator
     barycheb bc2(p2);
-    auto x = bc2.getnodes(); // Dense grid of Legendre nodes on [-1,1]
+    baryleg bl2(p2);
+    auto xc = bc2.getnodes(); // Dense grid of Chebyshev nodes on [-1,1]
+    auto xl = bl2.getnodes(); // Dense grid of Legendre nodes on [-1,1]
 
     double ktru = 0, ktst = 0, errtmp = 0;
 
@@ -230,7 +201,7 @@ namespace cppdlr {
         for (int k = 0; k < p2; ++k) {
 
           ktru = k_it(ttst(i * p2 + k), om(j));
-          ktst = bl.interp(x(k), kmat(range(i * p, (i + 1) * p), j));
+          ktst = bl.interp(xl(k), kmat(range(i * p, (i + 1) * p), j));
 
           errtmp = max(errtmp, abs(ktru - ktst));
         }
@@ -247,7 +218,7 @@ namespace cppdlr {
         for (int k = 0; k < p2; ++k) {
 
           ktru = k_it(t(i), omtst(j * p2 + k));
-          ktst = bc.interp(x(k), kmat(i, range(j * p, (j + 1) * p)));
+          ktst = bc.interp(xc(k), kmat(i, range(j * p, (j + 1) * p)));
 
           errtmp = max(errtmp, abs(ktru - ktst));
         }
@@ -286,25 +257,22 @@ namespace cppdlr {
   nda::vector<double> build_dlr_rf(double lambda, double eps, statistic_t statistic, bool symmetrize) {
 
     // Get fine grid parameters
-
     auto fine = fineparams(lambda);
 
     // Get fine grids in frequency and imaginary time
-
-    //auto t  = build_it_fine(fine);
-    auto [t, w] = build_it_fine_wgt(fine);
-
+    auto [t, w] = build_it_fine(fine);
     auto om = build_rf_fine(fine);
 
-    // Get discretization of analytic continuation kernel on fine grid (the K matrix)
-
-    //auto kmat = build_k_it(t, om);
+    // Get discretization of analytic continuation kernel on fine grids (the K
+    // matrix), weighted in the time variable by the square root of the
+    // composite Gauss-Legendre quadrature weights. The purpose of this is to
+    // make the dot products in the pivoted Gram-Schmidt process approximate the
+    // L^2 inner product.
     auto kmat = build_k_it(t, w, om);
 
     if (!(symmetrize && statistic == Boson)) { // Treat symmetrized bosonic case separately
 
       // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
-
       auto [q, norms, piv] = (symmetrize ? pivrgs_sym(transpose(kmat), eps) : pivrgs(transpose(kmat), eps));
       long r               = norms.size();
       std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
@@ -316,7 +284,6 @@ namespace cppdlr {
 
     } else { // Symmetrized bosonic case: enforce omega = 0 chosen as DLR frequency
 
-      //auto kvec0 = build_k_it(t, 0.0); // K at zero frequency: K(tau, 0)
       auto kvec0 = build_k_it(t, w, 0.0); // K at zero frequency: K(tau, 0)
 
       // Pivoted Gram-Schmidt on columns of K matrix, augmented by vector K(tau, 0), to obtain DLR frequencies

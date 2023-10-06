@@ -48,7 +48,7 @@ TEST(dlr_build, get_kfine) {
 
   fineparams fine(100.0);
 
-  auto [t, w] = build_it_fine_wgt(fine);
+  auto [t, w] = build_it_fine(fine);
   auto om     = build_rf_fine(fine);
 
   auto kmat          = build_k_it(t, om);

@@ -50,13 +50,11 @@ namespace cppdlr {
   double baryinterp(nda::vector_const_view<double> x, nda::vector_const_view<double> w, nda::vector_const_view<double> f, double xeval) {
 
     int n = x.size();
-
     for (int i = 0; i < n; ++i) {
       if (xeval == x(i)) { return f(i); }
     }
 
     double num = 0, den = 0, dif = 0, q = 0;
-
     for (int i = 0; i < n; ++i) {
       dif = xeval - x(i);
       q   = w(i) / dif;
