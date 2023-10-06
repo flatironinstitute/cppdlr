@@ -14,14 +14,18 @@
 \item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}{cppdlr\+::build\+\_\+rf\+\_\+fine}} (fineparams \&fine)
 \begin{DoxyCompactList}\small\item\em Build fine composite Chebyshev grid in real frequency. \end{DoxyCompactList}\item 
-nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}{cppdlr\+::build\+\_\+it\+\_\+fine}} (fineparams \&fine)
-\begin{DoxyCompactList}\small\item\em Get fine composite Chebyshev grid in imaginary time. \end{DoxyCompactList}\item 
+std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}{cppdlr\+::build\+\_\+it\+\_\+fine}} (fineparams \&fine)
+\begin{DoxyCompactList}\small\item\em Get fine composite Legendre grid in imaginary time and corresponding square root quadrature weights. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}{cppdlr\+::build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::matrix$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ad6df2a0cc73644667ba77bf562a9e140}{cppdlr\+::build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel with L$^\wedge$2 weighting. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}{cppdlr\+::build\+\_\+k\+\_\+it}} (double t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}{cppdlr\+::build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, double om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a45377bb09b54d66487cf379b1a6037de}{cppdlr\+::build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, double om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel with L$^\wedge$2 weighting. \end{DoxyCompactList}\item 
 std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}{cppdlr\+::geterr\+\_\+k\+\_\+it}} (fineparams \&fine, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ kmat)
 \begin{DoxyCompactList}\small\item\em Get error of fine composite Chebyshev discretization of analytic continuation kernel in imaginary time. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ dcomplex $>$ \mbox{\hyperlink{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}{cppdlr\+::build\+\_\+k\+\_\+if}} (int nmax, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, statistic\+\_\+t statistic)

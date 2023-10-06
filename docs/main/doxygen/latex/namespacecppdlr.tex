@@ -11,6 +11,8 @@ class \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}
 \begin{DoxyCompactList}\small\item\em Class responsible for all DLR imaginary time operations, including building imaginary time grid and transformations. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classcppdlr_1_1barycheb}{barycheb}}
 \item 
+class \mbox{\hyperlink{classcppdlr_1_1baryleg}{baryleg}}
+\item 
 struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{make\+\_\+common\+\_\+helper}}
 \begin{DoxyCompactList}\small\item\em Get type of given nda Memory\+Array with scalar value type replaced by common type of two given types (real if both are real, complex otherwise) \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
@@ -18,14 +20,18 @@ struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{make\+\_\+common\+
 \item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}{build\+\_\+rf\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine)
 \begin{DoxyCompactList}\small\item\em Build fine composite Chebyshev grid in real frequency. \end{DoxyCompactList}\item 
-nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}{build\+\_\+it\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine)
-\begin{DoxyCompactList}\small\item\em Get fine composite Chebyshev grid in imaginary time. \end{DoxyCompactList}\item 
+std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}{build\+\_\+it\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine)
+\begin{DoxyCompactList}\small\item\em Get fine composite Legendre grid in imaginary time and corresponding square root quadrature weights. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::matrix$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ad6df2a0cc73644667ba77bf562a9e140}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel with L$^\wedge$2 weighting. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}{build\+\_\+k\+\_\+it}} (double t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, double om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a45377bb09b54d66487cf379b1a6037de}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, double om)
+\begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel with L$^\wedge$2 weighting. \end{DoxyCompactList}\item 
 std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}{geterr\+\_\+k\+\_\+it}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ kmat)
 \begin{DoxyCompactList}\small\item\em Get error of fine composite Chebyshev discretization of analytic continuation kernel in imaginary time. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ dcomplex $>$ \mbox{\hyperlink{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}{build\+\_\+k\+\_\+if}} (int nmax, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic)
@@ -52,6 +58,8 @@ std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_af8f77e12b089b5ddb
 \begin{DoxyCompactList}\small\item\em Evaluate analytic continuation kernel in imaginary frequency using dimensionless variables (beta = 1) \end{DoxyCompactList}\item 
 std\+::complex$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a672098c598c55c8f9da60cd194a741ea}{k\+\_\+if}} (int n, double om, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, double beta)
 \begin{DoxyCompactList}\small\item\em Evaluate analytic continuation kernel in imaginary frequency for a given inverse temperature. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacecppdlr_aa355c3aaf829296d7e5869eff98fedd1}{baryinterp}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ x, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ f, double xeval)
+\begin{DoxyCompactList}\small\item\em Barycentric Lagrange interpolation. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a2d46bf12944fe36c90343df67e2d783b}{eqptsrel}} (int n)
 \begin{DoxyCompactList}\small\item\em Get grid of equispaced points on \mbox{[}0,1\mbox{]} in relative time format. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a3b1ccba6393dfc517757677a13ad2553}{rel2abs}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t)
@@ -272,6 +280,30 @@ Contract the last dimension of an array a with the first dimension of an array b
 \begin{DoxyReturn}{Returns}
 Contraction of the inner dimensions of {\ttfamily a} and {\ttfamily b} 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespacecppdlr_aa355c3aaf829296d7e5869eff98fedd1}\label{namespacecppdlr_aa355c3aaf829296d7e5869eff98fedd1}} 
+\index{cppdlr@{cppdlr}!baryinterp@{baryinterp}}
+\index{baryinterp@{baryinterp}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{baryinterp()}{baryinterp()}}
+{\footnotesize\ttfamily double cppdlr\+::baryinterp (\begin{DoxyParamCaption}\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{x,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{w,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{f,  }\item[{double}]{xeval }\end{DoxyParamCaption})}
+
+
+
+Barycentric Lagrange interpolation. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em x} & Interpolation nodes \\
+\hline
+\mbox{\texttt{ in}}  & {\em w} & Barycentric interpolation weights \\
+\hline
+\mbox{\texttt{ in}}  & {\em f} & Function values at interpolation nodes \\
+\hline
+\mbox{\texttt{ in}}  & {\em xeval} & Point at which to evaluate interpolated function\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Interpolated function value at xeval 
+\end{DoxyReturn}
 \mbox{\Hypertarget{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}\label{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}} 
 \index{cppdlr@{cppdlr}!build\_dlr\_rf@{build\_dlr\_rf}}
 \index{build\_dlr\_rf@{build\_dlr\_rf}!cppdlr@{cppdlr}}
@@ -322,15 +354,15 @@ DLR frequencies
 \begin{DoxyNote}{Note}
 In case Boson and SYM options are selected, we enforce that omega = 0 is chosen as a DLR frequency. For an explanation, please see the \char`\"{}\+Symmetrized DLR grids\char`\"{} subsection in the \char`\"{}\+Background\char`\"{} section of the documentation. 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}\label{namespacecppdlr_a04d66881c7086a1f6fc2452f10bc9bc0}} 
+\mbox{\Hypertarget{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}\label{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}} 
 \index{cppdlr@{cppdlr}!build\_it\_fine@{build\_it\_fine}}
 \index{build\_it\_fine@{build\_it\_fine}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_it\_fine()}{build\_it\_fine()}}
-{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+it\+\_\+fine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&}]{fine }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ cppdlr\+::build\+\_\+it\+\_\+fine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&}]{fine }\end{DoxyParamCaption})}
 
 
 
-Get fine composite Chebyshev grid in imaginary time. 
+Get fine composite Legendre grid in imaginary time and corresponding square root quadrature weights. 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -338,7 +370,7 @@ Get fine composite Chebyshev grid in imaginary time.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Fine imaginary time grid
+Tuple containing fine imaginary time grid and corresponding square root quadrature weights
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
 Fine imaginary time grid is given in relative format 
@@ -368,7 +400,7 @@ Discretization of analytic continuation kernel on given grid
 \mbox{\Hypertarget{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}\label{namespacecppdlr_ab471fd1439bcd11be6bc10de9703138a}} 
 \index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
 \index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
 {\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{double}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{om }\end{DoxyParamCaption})}
 
 
@@ -388,7 +420,7 @@ Discretization of analytic continuation kernel on given grid
 \mbox{\Hypertarget{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}\label{namespacecppdlr_ad4b931a8f12802eee8e74307c655ca85}} 
 \index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
 \index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
 {\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{double}]{om }\end{DoxyParamCaption})}
 
 
@@ -408,7 +440,7 @@ Discretization of analytic continuation kernel on given grid
 \mbox{\Hypertarget{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}\label{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}} 
 \index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
 \index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
-\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
 {\footnotesize\ttfamily nda\+::matrix$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{om }\end{DoxyParamCaption})}
 
 
@@ -418,6 +450,50 @@ Get imaginary time discretization of analytic continuation kernel.
 
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\texttt{ in}}  & {\em t} & Imaginary time grid in relative format \\
+\hline
+\mbox{\texttt{ in}}  & {\em om} & Frequency real grid\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Discretization of analytic continuation kernel on given grid 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecppdlr_a45377bb09b54d66487cf379b1a6037de}\label{namespacecppdlr_a45377bb09b54d66487cf379b1a6037de}} 
+\index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
+\index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{w,  }\item[{double}]{om }\end{DoxyParamCaption})}
+
+
+
+Get imaginary time discretization of analytic continuation kernel with L$^\wedge$2 weighting. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em t} & Imaginary time grid in relative format \\
+\hline
+\mbox{\texttt{ in}}  & {\em w} & Square root quadrature weights \\
+\hline
+\mbox{\texttt{ in}}  & {\em om} & Frequency real grid\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Discretization of analytic continuation kernel on given grid 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacecppdlr_ad6df2a0cc73644667ba77bf562a9e140}\label{namespacecppdlr_ad6df2a0cc73644667ba77bf562a9e140}} 
+\index{cppdlr@{cppdlr}!build\_k\_it@{build\_k\_it}}
+\index{build\_k\_it@{build\_k\_it}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{build\_k\_it()}{build\_k\_it()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily nda\+::matrix$<$ double $>$ cppdlr\+::build\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{w,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{om }\end{DoxyParamCaption})}
+
+
+
+Get imaginary time discretization of analytic continuation kernel with L$^\wedge$2 weighting. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em t} & Imaginary time grid in relative format \\
+\hline
+\mbox{\texttt{ in}}  & {\em w} & Square root quadrature weights \\
 \hline
 \mbox{\texttt{ in}}  & {\em om} & Frequency real grid\\
 \hline

@@ -8,6 +8,8 @@
 \item 
 class \mbox{\hyperlink{classcppdlr_1_1barycheb}{cppdlr\+::barycheb}}
 \item 
+class \mbox{\hyperlink{classcppdlr_1_1baryleg}{cppdlr\+::baryleg}}
+\item 
 struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{cppdlr\+::make\+\_\+common\+\_\+helper$<$ T, S1, S2 $>$}}
 \begin{DoxyCompactList}\small\item\em Get type of given nda Memory\+Array with scalar value type replaced by common type of two given types (real if both are real, complex otherwise) \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Namespaces}
@@ -27,6 +29,8 @@ struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{cppdlr\+::make\+\_
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+double \mbox{\hyperlink{namespacecppdlr_aa355c3aaf829296d7e5869eff98fedd1}{cppdlr\+::baryinterp}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ x, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ f, double xeval)
+\begin{DoxyCompactList}\small\item\em Barycentric Lagrange interpolation. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_ac02cc711894b431452f59f40e6f17dac}{cppdlr\+::pivrgs}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a65790598f458616dbc7fc84ab3cfe02c}{cppdlr\+::pivrgs\+\_\+sym}} (T const \&a, double eps)

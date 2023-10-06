@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>cppdlr: cppdlr::barycheb Class Reference</title>
+<title>cppdlr: cppdlr::baryleg Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,15 +63,15 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="namespacecppdlr.html">cppdlr</a></li><li class="navelem"><a class="el" href="classcppdlr_1_1barycheb.html">barycheb</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacecppdlr.html">cppdlr</a></li><li class="navelem"><a class="el" href="classcppdlr_1_1baryleg.html">baryleg</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classcppdlr_1_1barycheb-members.html">List of all members</a>  </div>
+<a href="classcppdlr_1_1baryleg-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">cppdlr::barycheb Class Reference</div>  </div>
+<div class="title">cppdlr::baryleg Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -79,32 +79,32 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a50776172ee807116f79c9911a5081be5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1barycheb.html#a50776172ee807116f79c9911a5081be5">barycheb</a> (int n)</td></tr>
-<tr class="separator:a50776172ee807116f79c9911a5081be5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afac15e0f486dc87d3f550a5b385117de"><td class="memItemLeft" align="right" valign="top">nda::vector&lt; double &gt; const  &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1barycheb.html#afac15e0f486dc87d3f550a5b385117de">getnodes</a> ()</td></tr>
-<tr class="separator:afac15e0f486dc87d3f550a5b385117de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2f5044a724a2450499000f078b495c3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1barycheb.html#ab2f5044a724a2450499000f078b495c3">interp</a> (double xeval, nda::vector_const_view&lt; double &gt; f)</td></tr>
-<tr class="separator:ab2f5044a724a2450499000f078b495c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48e4355d979de64ff4ad59d1bd2290bb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1baryleg.html#a48e4355d979de64ff4ad59d1bd2290bb">baryleg</a> (int n)</td></tr>
+<tr class="separator:a48e4355d979de64ff4ad59d1bd2290bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5488d8c3069e1c6a03684fa0d368cc1"><td class="memItemLeft" align="right" valign="top">nda::vector&lt; double &gt; const  &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1baryleg.html#ad5488d8c3069e1c6a03684fa0d368cc1">getnodes</a> ()</td></tr>
+<tr class="separator:ad5488d8c3069e1c6a03684fa0d368cc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab540248ef2bbc19cc6345ad07bc779ed"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1baryleg.html#ab540248ef2bbc19cc6345ad07bc779ed">interp</a> (double xeval, nda::vector_const_view&lt; double &gt; f)</td></tr>
+<tr class="separator:ab540248ef2bbc19cc6345ad07bc779ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class constructor for barycheb: barycentric Lagrange interpolation at Chebyshev nodes.</p>
+<div class="textblock"><p>Class constructor for baryleg: barycentric Lagrange interpolation at Legendre nodes.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">n</td><td>number of Chebyshev nodes </td></tr>
-    <tr><td class="paramname">x</td><td>n Chebyshev nodes of the first kind </td></tr>
-    <tr><td class="paramname">w</td><td>barycentric interpolation weights at Chebyshev nodes of the first kind </td></tr>
+    <tr><td class="paramname">n</td><td>number of Legendre nodes </td></tr>
+    <tr><td class="paramname">x</td><td>n Legendre nodes </td></tr>
+    <tr><td class="paramname">w</td><td>barycentric interpolation weights at Legendre nodes </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a50776172ee807116f79c9911a5081be5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50776172ee807116f79c9911a5081be5">&#9670;&nbsp;</a></span>barycheb()</h2>
+<a id="a48e4355d979de64ff4ad59d1bd2290bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48e4355d979de64ff4ad59d1bd2290bb">&#9670;&nbsp;</a></span>baryleg()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cppdlr::barycheb::barycheb </td>
+          <td class="memname">cppdlr::baryleg::baryleg </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>n</em></td><td>)</td>
@@ -116,14 +116,14 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="afac15e0f486dc87d3f550a5b385117de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afac15e0f486dc87d3f550a5b385117de">&#9670;&nbsp;</a></span>getnodes()</h2>
+<a id="ad5488d8c3069e1c6a03684fa0d368cc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5488d8c3069e1c6a03684fa0d368cc1">&#9670;&nbsp;</a></span>getnodes()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">nda::vector&lt; double &gt; const  &amp; cppdlr::barycheb::getnodes </td>
+          <td class="memname">nda::vector&lt; double &gt; const  &amp; cppdlr::baryleg::getnodes </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -133,14 +133,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab2f5044a724a2450499000f078b495c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2f5044a724a2450499000f078b495c3">&#9670;&nbsp;</a></span>interp()</h2>
+<a id="ab540248ef2bbc19cc6345ad07bc779ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab540248ef2bbc19cc6345ad07bc779ed">&#9670;&nbsp;</a></span>interp()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double cppdlr::barycheb::interp </td>
+          <td class="memname">double cppdlr::baryleg::interp </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>xeval</em>, </td>
