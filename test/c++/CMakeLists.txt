@@ -11,6 +11,7 @@ set(all_tests
   dyson_it.cpp
   symcompare_it.cpp
   symcompare_if.cpp
+  print_ranks.cpp
   )
 
 foreach(test ${all_tests})
