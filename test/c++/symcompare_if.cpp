@@ -84,24 +84,28 @@ int main() {
   auto gc     = ifops.vals2coefs(beta, g);
   auto gc_sym = ifops_sym.vals2coefs(beta, g_sym);
 
-  // Compute L infinity error
+  // Compute error in imaginary frequency
   auto gtru     = nda::matrix<dcomplex>(norb, norb);
   auto gtst     = nda::matrix<dcomplex>(norb, norb);
   auto gtst_sym = nda::matrix<dcomplex>(norb, norb);
-  double err = 0, err_sym = 0;
+  double errlinf = 0, errl2 = 0, errlinf_sym = 0, errl2_sym = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
     gtru = gfun(norb, beta, n, statistic);
-
     gtst     = ifops.coefs2eval(beta, gc, n);
     gtst_sym = ifops_sym.coefs2eval(beta, gc_sym, n);
-
-    err     = std::max(err, max_element(abs(gtru - gtst)));
-    err_sym = std::max(err_sym, max_element(abs(gtru - gtst_sym)));
+    errlinf     = std::max(errlinf, max_element(abs(gtru - gtst)));
+    errlinf_sym = std::max(errlinf_sym, max_element(abs(gtru - gtst_sym)));
+    errl2 += pow(frobenius_norm(gtru - gtst), 2);
+    errl2_sym += pow(frobenius_norm(gtru - gtst_sym), 2);
   }
+  errl2 = sqrt(errl2) / beta;
+  errl2_sym = sqrt(errl2_sym) / beta;
 
   // Print results
   std::cout << "Unsymmetrized DLR rank = " << r << std::endl;
   std::cout << "Symmetrized DLR rank = " << rsym << std::endl;
-  std::cout << "L infinity error for unsymmetrized DLR = " << err << std::endl;
-  std::cout << "L infinity error for symmetrized DLR = " << err_sym << std::endl;
+  std::cout << "Linf error for unsymmetrized DLR = " << errlinf << std::endl;
+  std::cout << "Linf error for symmetrized DLR = " << errlinf_sym << std::endl;
+  std::cout << "L2 error for unsymmetrized DLR = " << errl2 << std::endl;
+  std::cout << "L2 error for symmetrized DLR = " << errl2_sym << std::endl;
 }

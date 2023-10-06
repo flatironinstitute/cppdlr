@@ -99,22 +99,22 @@ TEST(dyson_it, dyson_vs_ed_real) {
   auto gexc = itops.vals2coefs(gex); // Get DLR coefficients
 
   // Get equispaced test grid in relative format
-  auto ittst = eqptsrel(ntst);
+  auto ttst = eqptsrel(ntst);
 
-  // Compare on test grid
-  double t  = 0;
-  auto gtst = nda::array<dcomplex, 3>(ntst, norb, norb);
-  auto gtru = nda::array<dcomplex, 3>(ntst, norb, norb);
-
+  // Compute error in imaginary time
+  auto gtru      = nda::matrix<dcomplex>(norb, norb);
+  auto gtst      = nda::matrix<dcomplex>(norb, norb);
+  double errlinf = 0, errl2 = 0;
   for (int i = 0; i < ntst; ++i) {
-    t             = ittst(i);
-    gtst(i, _, _) = itops.coefs2eval(gc, t);
-    gtru(i, _, _) = itops.coefs2eval(gexc, t);
+    gtru    = itops.coefs2eval(gexc, ttst(i));
+    gtst    = itops.coefs2eval(gc, ttst(i));
+    errlinf = std::max(errlinf, max_element(abs(gtru - gtst)));
+    errl2 += pow(frobenius_norm(gtru - gtst), 2);
   }
+  errl2 = sqrt(errl2 / ntst);
 
-  // Check error
-  std::cout << "Max error: " << max_element(abs((gtst - gtru))) << std::endl;
-  EXPECT_LT(max_element(abs((gtst - gtru))), 1.0e-13);
+  EXPECT_LT(errlinf, 10 * eps);
+  EXPECT_LT(errl2, eps);
 }
 
 /**
@@ -185,22 +185,22 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
   auto gexc = itops.vals2coefs(gex); // Get DLR coefficients
 
   // Get equispaced test grid in relative format
-  auto ittst = eqptsrel(ntst);
+  auto ttst = eqptsrel(ntst);
 
-  // Compare on test grid
-  double t  = 0;
-  auto gtst = nda::array<dcomplex, 3>(ntst, norb, norb);
-  auto gtru = nda::array<dcomplex, 3>(ntst, norb, norb);
-
+  // Compute error in imaginary time
+  auto gtru      = nda::matrix<dcomplex>(norb, norb);
+  auto gtst      = nda::matrix<dcomplex>(norb, norb);
+  double errlinf = 0, errl2 = 0;
   for (int i = 0; i < ntst; ++i) {
-    t             = ittst(i);
-    gtst(i, _, _) = itops.coefs2eval(gc, t);
-    gtru(i, _, _) = itops.coefs2eval(gexc, t);
+    gtru    = itops.coefs2eval(gexc, ttst(i));
+    gtst    = itops.coefs2eval(gc, ttst(i));
+    errlinf = std::max(errlinf, max_element(abs(gtru - gtst)));
+    errl2 += pow(frobenius_norm(gtru - gtst), 2);
   }
+  errl2 = sqrt(errl2 / ntst);
 
-  // Check error
-  std::cout << "Max error: " << max_element(abs((gtst - gtru))) << std::endl;
-  EXPECT_LT(max_element(abs((gtst - gtru))), 1.0e-13);
+  EXPECT_LT(errlinf, 10 * eps);
+  EXPECT_LT(errl2, eps);
 }
 
 /** 
@@ -291,22 +291,20 @@ TEST(dyson_it, dyson_bethe) {
   auto gbethec = itops.vals2coefs(gbethe); // DLR coefficients
   auto gc      = itops.vals2coefs(g);
 
-  auto ittst = eqptsrel(ntst); // Equispaced test grid in relative format
+  auto ttst = eqptsrel(ntst); // Equispaced test grid in relative format
 
-  // Compare on test grid
-  double t  = 0;
-  auto gtst = nda::vector<double>(ntst);
-  auto gtru = nda::vector<double>(ntst);
-
+  // Compute error in imaginary time
+  double gtru, gtst = 0, errlinf = 0, errl2 = 0;
   for (int i = 0; i < ntst; ++i) {
-    t       = ittst(i);
-    gtst(i) = itops.coefs2eval(gc, t);
-    gtru(i) = itops.coefs2eval(gbethec, t);
+    gtru    = itops.coefs2eval(gbethec, ttst(i));
+    gtst    = itops.coefs2eval(gc, ttst(i));
+    errlinf = std::max(errlinf, abs(gtru - gtst));
+    errl2 += pow(gtru - gtst, 2);
   }
+  errl2 = sqrt(errl2 / ntst);
 
-  // Check error
-  std::cout << "Max error: " << max_element(abs((gtst - gtru))) << std::endl;
-  EXPECT_LT(max_element(abs((gtst - gtru))), 2.0e-13);
+  EXPECT_LT(errlinf, 10 * eps);
+  EXPECT_LT(errl2, eps);
 }
 
 /**
@@ -361,20 +359,18 @@ TEST(dyson_it, dyson_bethe_fpi) {
   auto gbethec = itops.vals2coefs(gbethe); // DLR coefficients
   auto gc      = itops.vals2coefs(g);
 
-  auto ittst = eqptsrel(ntst); // Equispaced test grid in relative format
+  auto ttst = eqptsrel(ntst); // Equispaced test grid in relative format
 
-  // Compare on test grid
-  double t  = 0;
-  auto gtst = nda::vector<double>(ntst);
-  auto gtru = nda::vector<double>(ntst);
-
+  // Compute error in imaginary time
+  double gtru, gtst = 0, errlinf = 0, errl2 = 0;
   for (int i = 0; i < ntst; ++i) {
-    t       = ittst(i);
-    gtst(i) = itops.coefs2eval(gc, t);
-    gtru(i) = itops.coefs2eval(gbethec, t);
+    gtru    = itops.coefs2eval(gbethec, ttst(i));
+    gtst    = itops.coefs2eval(gc, ttst(i));
+    errlinf = std::max(errlinf, abs(gtru - gtst));
+    errl2 += pow(gtru - gtst, 2);
   }
+  errl2 = sqrt(errl2 / ntst);
 
-  // Check error
-  std::cout << "Max error: " << max_element(abs((gtst - gtru))) << std::endl;
-  EXPECT_LT(max_element(abs((gtst - gtru))), 2.0e-13);
+  EXPECT_LT(errlinf, 10 * eps);
+  EXPECT_LT(errl2, eps);
 }

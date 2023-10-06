@@ -160,7 +160,7 @@ TEST(imfreq_ops, interp_matrix) {
 
   // Compute error in imaginary time
   auto itops = imtime_ops(lambda, dlr_rf);
- 
+
   // Get test points in relative format
   auto ttst = eqptsrel(ntst);
 
@@ -170,10 +170,10 @@ TEST(imfreq_ops, interp_matrix) {
   for (int i = 0; i < ntst; ++i) {
     gtru_it = gfun(norb, beta, ttst(i));
     gtst_it = itops.coefs2eval(gc, ttst(i));
-    errlinf  = std::max(errlinf, max_element(abs(gtru_it - gtst_it)));
-    errl2 += pow(frobenius_norm(gtru_it - gtst_it),2);
+    errlinf = std::max(errlinf, max_element(abs(gtru_it - gtst_it)));
+    errl2 += pow(frobenius_norm(gtru_it - gtst_it), 2);
   }
-  errl2 = sqrt(errl2/ntst);
+  errl2 = sqrt(errl2 / ntst);
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
@@ -210,16 +210,19 @@ TEST(imfreq_ops, interp_scalar) {
   // Check that G can be recovered at imaginary frequency nodes
   EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-13);
 
-  // Compute L infinity error
+  // Compute error in imaginary frequency
   std::complex<double> gtru = 0, gtst = 0;
-  double err = 0;
+  double errlinf = 0, errl2 = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
-    gtru = gfun(1, beta, n, statistic)(0, 0);
-    gtst = ifops.coefs2eval(beta, gc, n);
-    err  = std::max(err, abs(gtru - gtst));
+    gtru    = gfun(1, beta, n, statistic)(0, 0);
+    gtst    = ifops.coefs2eval(beta, gc, n);
+    errlinf = std::max(errlinf, abs(gtru - gtst));
+    errl2 += pow(abs(gtru - gtst), 2);
   }
+  errl2 = sqrt(errl2) / beta;
 
-  EXPECT_LT(err, 100 * eps);
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 2 * eps);
 
   // Test that constructing vector of evaluation at a point and then applying to
   // coefficients gives same result as direct evaluation method
@@ -239,8 +242,9 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
   double eps     = 1e-10;   // DLR tolerance
   auto statistic = Fermion; // Fermionic Green's function
 
-  double beta = 1000; // Inverse temperature
-  int nmaxtst = 5000; // # imag time test points
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+  int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
 
@@ -271,17 +275,40 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
   // few digits?
   EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 2e-12);
 
-  // Compute L infinity error
-  auto gtru  = nda::matrix<dcomplex>(norb, norb);
-  auto gtst  = nda::matrix<dcomplex>(norb, norb);
-  double err = 0;
+  // Compute error in imaginary frequency
+  auto gtru      = nda::matrix<dcomplex>(norb, norb);
+  auto gtst      = nda::matrix<dcomplex>(norb, norb);
+  double errlinf = 0, errl2 = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
-    gtru = gfun(norb, beta, n, statistic);
-    gtst = ifops.coefs2eval(beta, gc, n);
-    err  = std::max(err, max_element(abs(gtru - gtst)));
+    gtru    = gfun(norb, beta, n, statistic);
+    gtst    = ifops.coefs2eval(beta, gc, n);
+    errlinf = std::max(errlinf, max_element(abs(gtru - gtst)));
+    errl2 += pow(frobenius_norm(gtru - gtst), 2);
   }
+  errl2 = sqrt(errl2) / beta;
 
-  EXPECT_LT(err, 100 * eps);
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 2 * eps);
+
+  // Compute error in imaginary time
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  auto gtru_it = nda::matrix<double>(norb, norb);
+  auto gtst_it = nda::matrix<dcomplex>(norb, norb);
+  errlinf = 0, errl2 = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru_it = gfun(norb, beta, ttst(i));
+    gtst_it = itops.coefs2eval(gc, ttst(i));
+    errlinf = std::max(errlinf, max_element(abs(gtru_it - gtst_it)));
+    errl2 += pow(frobenius_norm(gtru_it - gtst_it), 2);
+  }
+  errl2 = sqrt(errl2 / ntst);
+
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 2 * eps);
 }
 
 /**
@@ -294,8 +321,9 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
   double eps     = 1e-10; // DLR tolerance
   auto statistic = Boson; // Bosonic Green's function
 
-  double beta = 1000; // Inverse temperature
-  int nmaxtst = 5000; // # imag time test points
+  double beta = 1000;  // Inverse temperature
+  int ntst    = 10000; // # imag time test points
+  int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
 
@@ -327,17 +355,40 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
   // few digits?
   EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 2e-12);
 
-  // Compute L infinity error
-  auto gtru  = nda::matrix<dcomplex>(norb, norb);
-  auto gtst  = nda::matrix<dcomplex>(norb, norb);
-  double err = 0;
+  // Compute error in imaginary frequency
+  auto gtru      = nda::matrix<dcomplex>(norb, norb);
+  auto gtst      = nda::matrix<dcomplex>(norb, norb);
+  double errlinf = 0, errl2 = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
-    gtru = gfun(norb, beta, n, statistic);
-    gtst = ifops.coefs2eval(beta, gc, n);
-    err  = std::max(err, max_element(abs(gtru - gtst)));
+    gtru    = gfun(norb, beta, n, statistic);
+    gtst    = ifops.coefs2eval(beta, gc, n);
+    errlinf = std::max(errlinf, max_element(abs(gtru - gtst)));
+    errl2 += pow(frobenius_norm(gtru - gtst), 2);
   }
+  errl2 = sqrt(errl2) / beta;
 
-  EXPECT_LT(err, 100 * eps);
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 2 * eps);
+
+  // Compute error in imaginary time
+  auto itops = imtime_ops(lambda, dlr_rf);
+
+  // Get test points in relative format
+  auto ttst = eqptsrel(ntst);
+
+  auto gtru_it = nda::matrix<double>(norb, norb);
+  auto gtst_it = nda::matrix<dcomplex>(norb, norb);
+  errlinf = 0, errl2 = 0;
+  for (int i = 0; i < ntst; ++i) {
+    gtru_it = gfun(norb, beta, ttst(i));
+    gtst_it = itops.coefs2eval(gc, ttst(i));
+    errlinf = std::max(errlinf, max_element(abs(gtru_it - gtst_it)));
+    errl2 += pow(frobenius_norm(gtru_it - gtst_it), 2);
+  }
+  errl2 = sqrt(errl2 / ntst);
+
+  EXPECT_LT(errlinf, 100 * eps);
+  EXPECT_LT(errl2, 2 * eps);
 }
 
 TEST(dlr_imfreq, h5_rw) {
