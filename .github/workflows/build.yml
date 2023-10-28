@@ -23,11 +23,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - uses: actions/cache/restore@v3
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}
+        restore-keys:
+          ccache-${{ matrix.os }}-${{ matrix.cc }}-
+
     - name: Install ubuntu dependencies
       if: matrix.os == 'ubuntu-22.04'
       run: >
         sudo apt-get update &&
         sudo apt-get install
+        ccache
         clang-15
         g++-12
         hdf5-tools
@@ -65,6 +73,7 @@ jobs:
     - name: Test cppdlr
       env:
         DYLD_FALLBACK_LIBRARY_PATH: /usr/local/opt/llvm/lib
+        OPENBLAS_NUM_THREADS: "1"
       run: |
         cd build
         ctest -j2 --output-on-failure
