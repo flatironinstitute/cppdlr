@@ -61,6 +61,11 @@ jobs:
         brew install gcc@12 llvm hdf5 open-mpi openblas
         pip3 install mako
 
+    - name: add clang cxxflags
+      if: ${{ contains(matrix.cxx, 'clang') }}
+      run:
+        echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
+
     - name: Build cppdlr
       env:
         CC: ${{ matrix.cc }}
