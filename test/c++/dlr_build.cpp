@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 #include <cppdlr/dlr_build.hpp>
 #include <cppdlr/dlr_kernels.hpp>
+#include <fmt/format.h>
 
 using namespace cppdlr;
 
@@ -57,6 +58,5 @@ TEST(dlr_build, get_kfine) {
   EXPECT_LT(errt, 1e-14);
   EXPECT_LT(errom, 1e-14);
 
-  PRINT(errt);
-  PRINT(errom);
+  std::cout << fmt::format("Max imag time err = {:e}, Max freq err = {:e}\n", errt, errom);
 }

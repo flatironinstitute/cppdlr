@@ -25,6 +25,7 @@
 #include <nda/nda.hpp>
 #include <cppdlr/cppdlr.hpp>
 #include <nda/gtest_tools.hpp>
+#include <fmt/format.h>
 
 using namespace cppdlr;
 using namespace nda;
@@ -124,6 +125,8 @@ TEST(imfreq_ops, interp_matrix) {
   int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
+  
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps);
@@ -157,6 +160,7 @@ TEST(imfreq_ops, interp_matrix) {
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
+  std::cout << fmt::format("Imag freq: l^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 
   // Compute error in imaginary time
   auto itops = imtime_ops(lambda, dlr_rf);
@@ -177,6 +181,7 @@ TEST(imfreq_ops, interp_matrix) {
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
+  std::cout << fmt::format("Imag time: L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
 /**
@@ -191,6 +196,8 @@ TEST(imfreq_ops, interp_scalar) {
 
   double beta = 1000; // Inverse temperature
   int nmaxtst = 5000; // # imag time test points
+  
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps);
@@ -223,6 +230,7 @@ TEST(imfreq_ops, interp_scalar) {
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
+  std::cout << fmt::format("Imag freq: l^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 
   // Test that constructing vector of evaluation at a point and then applying to
   // coefficients gives same result as direct evaluation method
@@ -247,6 +255,8 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
   int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
+
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps, Fermion, SYM);
@@ -287,6 +297,7 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
+  std::cout << fmt::format("Imag freq: l^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 
   // Compute error in imaginary time
   auto itops = imtime_ops(lambda, dlr_rf);
@@ -307,6 +318,7 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
+  std::cout << fmt::format("Imag time: L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
 /**
@@ -324,6 +336,8 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
   int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
+
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps, statistic, SYM);
@@ -365,6 +379,7 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
+  std::cout << fmt::format("Imag freq: l^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 
   // Compute error in imaginary time
   auto itops = imtime_ops(lambda, dlr_rf);
@@ -385,6 +400,7 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
 
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, 2 * eps);
+  std::cout << fmt::format("Imag time: L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
 TEST(dlr_imfreq, h5_rw) {

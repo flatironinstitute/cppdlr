@@ -62,3 +62,10 @@ external_dependency(nda
   VERSION 1.2
   GIT_TAG unstable
 )
+
+# -- fmt --
+set(FMT_INSTALL ON)
+external_dependency(fmt
+  GIT_REPO https://github.com/fmtlib/fmt
+  GIT_TAG 10.1.1
+)

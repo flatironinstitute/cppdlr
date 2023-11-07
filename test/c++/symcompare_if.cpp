@@ -1,5 +1,6 @@
 #include <nda/nda.hpp>
 #include <cppdlr/cppdlr.hpp>
+#include <fmt/format.h>
 
 using namespace cppdlr;
 using namespace nda;
@@ -59,6 +60,8 @@ int main() {
   int nmaxtst = 10000; // # imag time test points
 
   int norb = 2; // Orbital dimensions
+  
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
   auto dlr_rf     = build_dlr_rf(lambda, eps);
@@ -102,10 +105,6 @@ int main() {
   errl2_sym = sqrt(errl2_sym) / beta;
 
   // Print results
-  std::cout << "Unsymmetrized DLR rank = " << r << std::endl;
-  std::cout << "Symmetrized DLR rank = " << rsym << std::endl;
-  std::cout << "Linf error for unsymmetrized DLR = " << errlinf << std::endl;
-  std::cout << "Linf error for symmetrized DLR = " << errlinf_sym << std::endl;
-  std::cout << "L2 error for unsymmetrized DLR = " << errl2 << std::endl;
-  std::cout << "L2 error for symmetrized DLR = " << errl2_sym << std::endl;
+  std::cout << fmt::format("Unsymmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", r, errl2, errlinf);
+  std::cout << fmt::format("Symmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", r, errl2_sym, errlinf_sym);
 }

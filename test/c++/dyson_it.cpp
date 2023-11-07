@@ -24,9 +24,7 @@
 #include <nda/nda.hpp>
 #include <nda/gtest_tools.hpp>
 #include <cppdlr/cppdlr.hpp>
-
-#include <nda/linalg/eigenelements.hpp>
-#include <string>
+#include <fmt/format.h>
 
 using namespace cppdlr;
 using namespace nda;
@@ -58,6 +56,8 @@ TEST(dyson_it, dyson_vs_ed_real) {
   // Set DLR parameters
   double lambda = 100;
   double eps    = 1.0e-14;
+
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get random nxn Hamiltonian w/ eigenvalues in [-1 1]
   auto a         = nda::matrix<double>(nda::rand<double>(std::array<int, 2>({n, n}))); // Random matrix
@@ -115,6 +115,7 @@ TEST(dyson_it, dyson_vs_ed_real) {
 
   EXPECT_LT(errlinf, 10 * eps);
   EXPECT_LT(errl2, eps);
+  std::cout << fmt::format("L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
 /**
@@ -144,6 +145,8 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
   // Set DLR parameters
   double lambda = 100;
   double eps    = 1.0e-14;
+
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get random nxn Hamiltonian w/ eigenvalues in [-1 1]
   auto a = nda::matrix<dcomplex>(nda::rand<double>(std::array<int, 2>({n, n})) + 1i * nda::rand<double>(std::array<int, 2>({n, n}))); // Random matrix
@@ -201,6 +204,7 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
 
   EXPECT_LT(errlinf, 10 * eps);
   EXPECT_LT(errl2, eps);
+  std::cout << fmt::format("L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
 /** 
@@ -262,6 +266,8 @@ TEST(dyson_it, dyson_bethe) {
   // Set DLR parameters
   double lambda = 100;
   double eps    = 1.0e-14;
+  
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // --- Build DLR --- //
 
@@ -305,6 +311,7 @@ TEST(dyson_it, dyson_bethe) {
 
   EXPECT_LT(errlinf, 10 * eps);
   EXPECT_LT(errl2, eps);
+  std::cout << fmt::format("L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
 /**
@@ -324,6 +331,8 @@ TEST(dyson_it, dyson_bethe_fpi) {
   // Set DLR parameters
   double lambda = 100;
   double eps    = 1.0e-14;
+  
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // --- Build DLR --- //
 
@@ -373,4 +382,5 @@ TEST(dyson_it, dyson_bethe_fpi) {
 
   EXPECT_LT(errlinf, 10 * eps);
   EXPECT_LT(errl2, eps);
+  std::cout << fmt::format("L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
