@@ -193,10 +193,11 @@ namespace cppdlr {
    * respect to subspace spanned by first n-1 selected rows, (3) vector of
    * pivots
    *
-   * \note The input matrix A must have an even number of rows. The symmetrization
-   * condition is that if A(i,:), the ith row of A, is selected as a pivot, then
-   * A(m-i-1,:) is also selected as a pivot. Here, m is the row dimension of
-   * A, and A is zero-indexed.
+   * \note The symmetrization condition is that if A(i,:), the ith row of A, is
+   * selected as a pivot, then A(m-i-1,:) is also selected as a pivot. Here, m
+   * is the row dimension of A, and A is zero-indexed. If A has an odd number of
+   * rows, we do not allow the middle row (index (m-1)/2) to be selected as a
+   * pivot.
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
@@ -209,12 +210,19 @@ namespace cppdlr {
     auto [m, n] = a.shape();
     int maxrnk  = std::min(m, n);
 
-    if (m % 2 != 0) { throw std::runtime_error("Input matrix must have even number of rows."); }
+    //if (m % 2 != 0) { throw std::runtime_error("Input matrix must have even number of rows."); }
 
-    // Copy input data, re-ordering rows to make symmetric rows adjacent
-    auto aa                    = typename T::regular_type(m, n);
-    aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
-    aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
+    // Copy input data, re-ordering rows to make symmetric rows adjacent. If m
+    // odd, put middle row at the end.
+    auto aa = typename T::regular_type(m, n);
+    if (m % 2 == 0) {
+      aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
+      aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
+    } else {
+      aa(nda::range(0, m - 1, 2), _) = a(nda::range(0, (m - 1) / 2), _);
+      aa(nda::range(1, m - 1, 2), _) = a(nda::range(m - 1, (m - 1) / 2, -1), _);
+      aa(m - 1, _)                   = a((m - 1) / 2, _);
+    }
 
     // Compute norms of rows of input matrix, and rescale eps tolerance
     auto norms   = nda::vector<double>(m);
@@ -223,22 +231,29 @@ namespace cppdlr {
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
-    double nrm               = 0;
-    auto piv                 = nda::arange(0, m);
-    piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); // Re-order pivots to match re-ordered input matrix
-    piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);
-    auto tmp                 = nda::vector<S>(n);
+    double nrm = 0;
+    auto piv   = nda::arange(0, m);
+    if (m % 2 == 0) {
+      piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); // Re-order pivots to match re-ordered input matrix
+      piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);
+    } else {
+      piv(nda::range(0, m - 1, 2)) = nda::arange(0, (m - 1) / 2);
+      piv(nda::range(1, m - 1, 2)) = nda::arange(m - 1, (m - 1) / 2, -1);
+      piv(m - 1)                   = (m - 1) / 2;
+    }
+    auto tmp = nda::vector<S>(n);
 
     if (maxrnk % 2 != 0) { // If n < m and n is odd, decrease maxrnk to maintain symmetry
       maxrnk -= 1;
     }
+    int kmax = (m & 1) ? m - 1 : m; // If m odd, skip final row to prevent middle row of original matrix from being selected as pivot
 
     for (int j = 0; j < maxrnk; j += 2) {
 
       // Find next pair of pivots
       jpiv = j;
       nrm  = norms(j) + norms(j + 1);
-      for (int k = j + 2; k < m; k += 2) {
+      for (int k = j + 2; k < kmax; k += 2) {
         if (norms(k) + norms(k + 1) > nrm) {
           jpiv = k;
           nrm  = norms(k) + norms(k + 1);
