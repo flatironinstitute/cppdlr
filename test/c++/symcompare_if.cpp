@@ -65,7 +65,7 @@ int main() {
 
   // Get DLR frequencies
   auto dlr_rf     = build_dlr_rf(lambda, eps);
-  auto dlr_rf_sym = build_dlr_rf(lambda, eps, statistic, SYM);
+  auto dlr_rf_sym = build_dlr_rf(lambda, eps, SYM);
 
   int r    = dlr_rf.size();
   int rsym = dlr_rf_sym.size();
