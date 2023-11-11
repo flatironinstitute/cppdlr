@@ -68,7 +68,6 @@ int main() {
   auto dlr_rf_sym = build_dlr_rf(lambda, eps, SYM);
 
   int r    = dlr_rf.size();
-  int rsym = dlr_rf_sym.size();
 
   // Get DLR imaginary frequency object
   auto ifops     = imfreq_ops(lambda, dlr_rf, statistic);
@@ -77,11 +76,12 @@ int main() {
   // Sample Green's function G at DLR imaginary frequency nodes
   auto const &dlr_if     = ifops.get_ifnodes();
   auto const &dlr_if_sym = ifops_sym.get_ifnodes();
+  int niomsym = dlr_if_sym.size();
 
   auto g     = nda::array<dcomplex, 3>(r, norb, norb);
-  auto g_sym = nda::array<dcomplex, 3>(rsym, norb, norb);
+  auto g_sym = nda::array<dcomplex, 3>(niomsym, norb, norb);
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
-  for (int i = 0; i < rsym; ++i) { g_sym(i, _, _) = gfun(norb, beta, dlr_if_sym(i), statistic); }
+  for (int i = 0; i < niomsym; ++i) { g_sym(i, _, _) = gfun(norb, beta, dlr_if_sym(i), statistic); }
 
   // DLR coefficients of G
   auto gc     = ifops.vals2coefs(beta, g);
