@@ -259,7 +259,7 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps, Fermion, SYM);
+  auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
 
   // Verify symmetry
@@ -340,7 +340,7 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps, statistic, SYM);
+  auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
 
   // Get DLR imaginary frequency object

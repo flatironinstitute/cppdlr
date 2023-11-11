@@ -149,18 +149,13 @@ namespace cppdlr {
   *
   * @param[in] lambda DLR cutoff parameter
   * @param[in] eps Accuracy of DLR basis
-  * @param[in] statistic Particle statistics: Boson or Fermion
   * @param[in] symmetrize NONSYM or false for non-symmetrized DLR frequencies,
   * SYM or true for symmetrized
   *
   * @return DLR frequencies
   *
-  * @note In case Boson and SYM options are selected, we enforce that omega = 0
-  * is chosen as a DLR frequency. For an explanation, please see the
-  * "Symmetrized DLR grids" subsection in the "Background" section of the
-  * documentation.
   */
-  nda::vector<double> build_dlr_rf(double lambda, double eps, statistic_t statistic, bool symmetrize);
+  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize);
 
   /**
   * @brief Construct DLR basis by obtaining DLR frequencies

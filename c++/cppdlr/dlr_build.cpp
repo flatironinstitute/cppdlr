@@ -254,14 +254,14 @@ namespace cppdlr {
     }
   }
 
-  nda::vector<double> build_dlr_rf(double lambda, double eps, statistic_t statistic, bool symmetrize) {
+  nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize) {
 
     // Get fine grid parameters
     auto fine = fineparams(lambda);
 
     // Get fine grids in frequency and imaginary time
     auto [t, w] = build_it_fine(fine);
-    auto om = build_rf_fine(fine);
+    auto om     = build_rf_fine(fine);
 
     // Get discretization of analytic continuation kernel on fine grids (the K
     // matrix), weighted in the time variable by the square root of the
@@ -270,40 +270,17 @@ namespace cppdlr {
     // L^2 inner product.
     auto kmat = build_k_it(t, w, om);
 
-    if (!(symmetrize && statistic == Boson)) { // Treat symmetrized bosonic case separately
+    // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
+    auto [q, norms, piv] = (symmetrize ? pivrgs_sym(transpose(kmat), eps) : pivrgs(transpose(kmat), eps));
+    long r               = norms.size();
+    std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
 
-      // Pivoted Gram-Schmidt on columns of K matrix to obtain DLR frequencies
-      auto [q, norms, piv] = (symmetrize ? pivrgs_sym(transpose(kmat), eps) : pivrgs(transpose(kmat), eps));
-      long r               = norms.size();
-      std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
+    auto omega = nda::vector<double>(r);
+    for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
 
-      auto omega = nda::vector<double>(r);
-      for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
-
-      return omega;
-
-    } else { // Symmetrized bosonic case: enforce omega = 0 chosen as DLR frequency
-
-      auto kvec0 = build_k_it(t, w, 0.0); // K at zero frequency: K(tau, 0)
-
-      // Pivoted Gram-Schmidt on columns of K matrix, augmented by vector K(tau, 0), to obtain DLR frequencies
-      auto [q, norms, piv] = pivrgs_sym(transpose(kmat), kvec0, eps);
-      long r               = norms.size();
-      std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
-
-      auto omega = nda::vector<double>(r);
-      for (int i = 0; i < (r - 1) / 2; ++i) { // Fill in negative frequencies
-        omega(i) = om(piv(i + 1) - 1);        // Shift by 1 to obtain pivots of original matrix, not augmented matrix
-      }
-      omega((r - 1) / 2) = 0.0;                   // Zero frequency is always chosen
-      for (int i = (r - 1) / 2 + 1; i < r; ++i) { // Fill in positive frequencies
-        omega(i) = om(piv(i) - 1);
-      }
-
-      return omega;
-    }
+    return omega;
   }
 
-  nda::vector<double> build_dlr_rf(double lambda, double eps) { return build_dlr_rf(lambda, eps, statistic_t::Fermion, NONSYM); }
+  nda::vector<double> build_dlr_rf(double lambda, double eps) { return build_dlr_rf(lambda, eps, NONSYM); }
 
 } // namespace cppdlr
