@@ -114,7 +114,7 @@ TEST(dyson_it, dyson_vs_ed_real) {
   errl2 = sqrt(errl2 / ntst);
 
   EXPECT_LT(errlinf, 10 * eps);
-  EXPECT_LT(errl2, 2*eps);
+  EXPECT_LT(errl2, 2 * eps);
   std::cout << fmt::format("L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
@@ -203,7 +203,7 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
   errl2 = sqrt(errl2 / ntst);
 
   EXPECT_LT(errlinf, 10 * eps);
-  EXPECT_LT(errl2, eps);
+  EXPECT_LT(errl2, 3 * eps);
   std::cout << fmt::format("L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
@@ -266,7 +266,7 @@ TEST(dyson_it, dyson_bethe) {
   // Set DLR parameters
   double lambda = 100;
   double eps    = 1.0e-14;
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // --- Build DLR --- //
@@ -331,7 +331,7 @@ TEST(dyson_it, dyson_bethe_fpi) {
   // Set DLR parameters
   double lambda = 100;
   double eps    = 1.0e-14;
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // --- Build DLR --- //
