@@ -48,9 +48,7 @@ namespace cppdlr {
     * SYM or true for symmetrized
     *
     * @note In case Boson and SYM options are selected, we enforce that i*nu_n=0 is
-    * chosen as a DLR imaginary frequency node. For an explanation, please see
-    * the "Symmetrized DLR grids" subsection in the "Background" section of the
-    * documentation.
+    * chosen as a DLR imaginary frequency node.
     */
     imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize = false);
 
@@ -80,18 +78,26 @@ namespace cppdlr {
       // these; taking a regular_type converts, for example, a matrix view to a
       // matrix.
 
-      if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
+      if (niom != g.shape(0)) throw std::runtime_error("First dim of g != # DLR imaginary frequency nodes.");
 
       // Make a copy of the data in Fortran Layout as required by getrs
       auto gf = nda::array<get_value_t<T>, get_rank<T>, F_layout>(g);
 
       // Reshape as matrix_view with r rows
-      auto gfv = nda::reshape(gf, r, g.size() / r);
+      auto gfv = nda::reshape(gf, niom, g.size() / niom);
 
-      // Solve linear system (multiple right hand sides) to convert vals -> coeffs
-      nda::lapack::getrs(if2cf.lu, gfv, if2cf.piv);
+      // Solve linear system (multiple right hand sides) to convert vals ->
+      // coeffs
+      if (niom == r) {
+        nda::lapack::getrs(if2cf.lu, gfv, if2cf.piv);
+      } else {                                 // Non-square system---use least squares solver
+        auto s       = nda::vector<double>(r); // Not needed
+        double rcond = 0;                      // Not needed
+        int rank     = 0;                      // Not needed
+        nda::lapack::gelss(nda::matrix<dcomplex, F_layout>(cf2if), gfv, s, rcond, rank);
+      }
 
-      return gf;
+      return gf(nda::range(r), nda::ellipsis());
     }
 
     /** 
@@ -109,7 +115,7 @@ namespace cppdlr {
 
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> make_cplx_t<T> coefs2vals(T const &gc) const {
 
-      if (r != gc.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
+      if (r != gc.shape(0)) throw std::runtime_error("First dim of gc != DLR rank r.");
 
       // Reshape gc to a matrix w/ first dimension r
       auto gc_rs = nda::reshape(gc, r, gc.size() / r);
@@ -117,8 +123,13 @@ namespace cppdlr {
       // Apply coeffs -> vals matrix
       auto g = cf2if * nda::matrix_const_view<S>(gc_rs);
 
+      // Get output shape
+      std::array<long, T::rank> shape_out;
+      shape_out[0] = niom;
+      for (int i = 1; i < T::rank; ++i) { shape_out[i] = gc.shape(i); }
+
       // Reshape to original dimensions and return
-      return nda::reshape(g, gc.shape());
+      return nda::reshape(g, shape_out);
     }
 
     /** 
@@ -227,6 +238,7 @@ namespace cppdlr {
     double lambda_;                   ///< Energy cutoff divided by temperature
     statistic_t statistic;            ///< Particle statistic: Fermion or Boson
     int r;                            ///< DLR rank
+    int niom;                         ///< # DLR imaginary freq nodes (different from r in symmetrized bosonic case)
     nda::vector<double> dlr_rf;       ///< DLR frequencies
     nda::vector<int> dlr_if;          ///< DLR imaginary frequency nodes
     nda::matrix<nda::dcomplex> cf2if; /// Transformation matrix from DLR coefficients to values at DLR imaginary frequency nodes

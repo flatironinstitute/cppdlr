@@ -259,7 +259,7 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps, Fermion, SYM);
+  auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
 
   // Verify symmetry
@@ -340,30 +340,27 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps, statistic, SYM);
-  int r       = dlr_rf.size();
+  auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
 
   // Get DLR imaginary frequency object
   auto ifops = imfreq_ops(lambda, dlr_rf, statistic, SYM);
 
   // Obtain DLR imaginary frequency nodes
   auto const &dlr_if = ifops.get_ifnodes();
+  int niom = dlr_if.size();
 
   // Verify symmetry
-  EXPECT_EQ(max_element(abs(2 * dlr_if(range((r - 1) / 2)) + 2 * dlr_if(range(r - 1, (r - 1) / 2, -1)))), 0);
+  EXPECT_EQ(max_element(abs(2 * dlr_if(range((niom - 1) / 2)) + 2 * dlr_if(range(niom - 1, (niom - 1) / 2, -1)))), 0);
 
   // Verify n = 0 was selected
-  EXPECT_EQ(dlr_if((r - 1) / 2), 0);
+  EXPECT_EQ(dlr_if((niom - 1) / 2), 0);
 
   // Sample Green's function at DLR nodes
-  auto g = nda::array<dcomplex, 3>(r, norb, norb);
-  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
+  auto g = nda::array<dcomplex, 3>(niom, norb, norb);
+  for (int i = 0; i < niom; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
 
   // DLR coefficients of G
   auto gc = ifops.vals2coefs(beta, g);
-
-  // Check that G can be recovered at imaginary frequency nodes
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 1e-13);
 
   // Compute error in imaginary frequency
   auto gtru      = nda::matrix<dcomplex>(norb, norb);
