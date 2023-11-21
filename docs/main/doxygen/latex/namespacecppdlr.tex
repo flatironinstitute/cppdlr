@@ -36,7 +36,7 @@ std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_a48fb848c5a6
 \begin{DoxyCompactList}\small\item\em Get error of fine composite Chebyshev discretization of analytic continuation kernel in imaginary time. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ dcomplex $>$ \mbox{\hyperlink{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}{build\+\_\+k\+\_\+if}} (int nmax, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic)
 \begin{DoxyCompactList}\small\item\em Get imaginary frequency discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
-nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a134a65b6f951a80cb99e41d52d89f0ed}{build\+\_\+dlr\+\_\+rf}} (double lambda, double eps, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, bool symmetrize)
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a07f27d33c07f08031768f0844d14724e}{build\+\_\+dlr\+\_\+rf}} (double lambda, double eps, bool symmetrize)
 \begin{DoxyCompactList}\small\item\em Construct DLR basis by obtaining DLR frequencies. \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ace84f47b6cc94a562dfd5207791c27b0}{build\+\_\+dlr\+\_\+rf}} (double lambda, double eps)
 \begin{DoxyCompactList}\small\item\em Construct DLR basis by obtaining DLR frequencies. \end{DoxyCompactList}\item 
@@ -78,8 +78,8 @@ std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_adcede29d387
 \begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a65790598f458616dbc7fc84ab3cfe02c}{pivrgs\+\_\+sym}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$, nda\+::\+Memory\+Vector V$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a87cd86b43bae8fd0272a4f764bcd163f}{pivrgs\+\_\+sym}} (T const \&a, V const \&v, double eps)
-\begin{DoxyCompactList}\small\item\em Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt, with matrix augmented by a vector. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a9aba1fa20ea0a1eda128fb3b564e1c5c}{pivrgs\+\_\+sym}} (T const \&a, int r)
+\begin{DoxyCompactList}\small\item\em Symmetrized pivoted reorthogonalized Gram-\/\+Schmidt with specified rank. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a240eb87e88ef0bdc5994d57fe9b7d3a1}{arraymult}} (Ta const \&a, Tb const \&b)
 \begin{DoxyCompactList}\small\item\em Contract the last dimension of an array a with the first dimension of an array b. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename S $>$ }\\S \mbox{\hyperlink{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}{adapgl}} (std\+::function$<$ nda\+::array$<$ S, 1 $>$(nda\+::array$<$ double, 1 $>$)$>$ f, double a, double b, double tol, nda\+::vector$<$ double $>$ xgl, nda\+::vector$<$ double $>$ wgl)
@@ -327,11 +327,11 @@ DLR frequencies
 \begin{DoxyNote}{Note}
 With this signature, the DLR frequencies are unsymmetrized. 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a134a65b6f951a80cb99e41d52d89f0ed}\label{namespacecppdlr_a134a65b6f951a80cb99e41d52d89f0ed}} 
+\mbox{\Hypertarget{namespacecppdlr_a07f27d33c07f08031768f0844d14724e}\label{namespacecppdlr_a07f27d33c07f08031768f0844d14724e}} 
 \index{cppdlr@{cppdlr}!build\_dlr\_rf@{build\_dlr\_rf}}
 \index{build\_dlr\_rf@{build\_dlr\_rf}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_dlr\_rf()}{build\_dlr\_rf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+dlr\+\_\+rf (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{double}]{eps,  }\item[{\mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}}}]{statistic,  }\item[{bool}]{symmetrize }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+dlr\+\_\+rf (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{double}]{eps,  }\item[{bool}]{symmetrize }\end{DoxyParamCaption})}
 
 
 
@@ -343,17 +343,12 @@ Construct DLR basis by obtaining DLR frequencies.
 \hline
 \mbox{\texttt{ in}}  & {\em eps} & Accuracy of DLR basis \\
 \hline
-\mbox{\texttt{ in}}  & {\em statistic} & Particle statistics\+: Boson or Fermion \\
-\hline
 \mbox{\texttt{ in}}  & {\em symmetrize} & NONSYM or false for non-\/symmetrized DLR frequencies, SYM or true for symmetrized\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-DLR frequencies
+DLR frequencies 
 \end{DoxyReturn}
-\begin{DoxyNote}{Note}
-In case Boson and SYM options are selected, we enforce that omega = 0 is chosen as a DLR frequency. For an explanation, please see the \char`\"{}\+Symmetrized DLR grids\char`\"{} subsection in the \char`\"{}\+Background\char`\"{} section of the documentation. 
-\end{DoxyNote}
 \mbox{\Hypertarget{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}\label{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}} 
 \index{cppdlr@{cppdlr}!build\_it\_fine@{build\_it\_fine}}
 \index{build\_it\_fine@{build\_it\_fine}!cppdlr@{cppdlr}}
@@ -794,20 +789,20 @@ This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V.
 Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The input matrix A must have an even number of rows. The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. 
+The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. m must be even. 
 \end{DoxyNote}
-\mbox{\Hypertarget{namespacecppdlr_a87cd86b43bae8fd0272a4f764bcd163f}\label{namespacecppdlr_a87cd86b43bae8fd0272a4f764bcd163f}} 
+\mbox{\Hypertarget{namespacecppdlr_a9aba1fa20ea0a1eda128fb3b564e1c5c}\label{namespacecppdlr_a9aba1fa20ea0a1eda128fb3b564e1c5c}} 
 \index{cppdlr@{cppdlr}!pivrgs\_sym@{pivrgs\_sym}}
 \index{pivrgs\_sym@{pivrgs\_sym}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{pivrgs\_sym()}{pivrgs\_sym()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$, nda\+::\+Memory\+Vector V$>$ \\
-std\+::tuple$<$typename T\+::regular\+\_\+type, nda\+::vector$<$double$>$, nda\+::vector$<$int$>$ $>$ cppdlr\+::pivrgs\+\_\+sym (\begin{DoxyParamCaption}\item[{T const \&}]{a,  }\item[{V const \&}]{v,  }\item[{double}]{eps }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
+std\+::tuple$<$typename T\+::regular\+\_\+type, nda\+::vector$<$double$>$, nda\+::vector$<$int$>$ $>$ cppdlr\+::pivrgs\+\_\+sym (\begin{DoxyParamCaption}\item[{T const \&}]{a,  }\item[{int}]{r }\end{DoxyParamCaption})}
 
 
 
-Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt, with matrix augmented by a vector. 
+Symmetrized pivoted reorthogonalized Gram-\/\+Schmidt with specified rank. 
 
-Determine the epsilon-\/rank of a matrix, augmented with a row vector, and return an orthogonal basis of the epsilon-\/row space of the augmented matrix, enforcing symmetrization of pivots and the selection of the provided vector.
+Return the leading r vectors of an orthogonal basis of the row space, enforcing symmetrization of pivots.
 
 This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V. Rokhlin, with symmetrization added.
 
@@ -815,16 +810,14 @@ This is a translation of the Fortran subroutine \char`\"{}qrdgrm\char`\"{} by V.
 \begin{DoxyParams}{Parameters}
 {\em a} & Matrix to be orthogonalized \\
 \hline
-{\em v} & Row vector to append to matrix \\
-\hline
-{\em eps} & Rank cutoff tolerance\\
+{\em r} & Rank cutoff\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} appended by {\ttfamily v}, to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots. Note that the provided vector is always selected as the first pivot before the main pivoting procedure begins; the first row of the return matrix is always the normalization of the provided vector, and the first entry of the vector of pivots is always zero, corresponding to the provided vector.
+Tuple of (1) matrix whose rows are leading {\ttfamily r} vectors in orthogonal basis of row space of {\ttfamily a}, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The (un-\/augmented) input matrix A must have an even number of rows. The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. This does not include the provided row vector, which is always selected as a pivot. 
+The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. A can have an odd number of rows if and only if {\ttfamily r} is odd, and in this case the middle row (index (m-\/1)/2) of A is automatically selected as a pivot. 
 \end{DoxyNote}
 \mbox{\Hypertarget{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}\label{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}} 
 \index{cppdlr@{cppdlr}!rel2abs@{rel2abs}}

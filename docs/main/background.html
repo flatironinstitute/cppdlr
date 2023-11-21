@@ -343,15 +343,15 @@ desirable to have symmetric frequencies and grids, and <code class="docutils lit
 functionality via symmetrization flags. Please see the <a class="reference internal" href="examples.html#listofothercapabilities"><span class="std std-ref">list of
 other cppdlr capabilities</span></a> section on the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples
 page</span></a> for a list of <cite>cppdlr</cite> tests which showcase this functionality.</p>
-<p>We make a small note about symmetrization for bosonic Green’s functions. In this
-case, we always select the DLR frequency <span class="math notranslate nohighlight">\(\omega = 0\)</span>, the DLR imaginary
-time node <span class="math notranslate nohighlight">\(\tau = \beta/2\)</span>, and the DLR imaginary frequency node
-<span class="math notranslate nohighlight">\(i \nu_n = 0\)</span>. The reason is as follows. A symmetric DLR imaginary frequency grid
-containing the point <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span> must have an odd number of points.
-Since it is undesirable to disallow this point, and to make sure all grids have
-the same number <span class="math notranslate nohighlight">\(r\)</span> of points, we force <span class="math notranslate nohighlight">\(r\)</span> to be odd. This requires
-including in each grid, by hand, a single point of high symmetry, and then allowing the
-pivoted Gram-Schmidt procedure to select the rest of the points symmetrically.</p>
+<p>We make a note about symmetrization for bosonic Green’s functions. In this case,
+we always include <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span> as a DLR imaginary frequency node. Since
+we do not include the point <span class="math notranslate nohighlight">\(\omega = 0\)</span> in the <span class="math notranslate nohighlight">\(r\)</span> symmetrized DLR
+frequencies, <span class="math notranslate nohighlight">\(r\)</span> is even in this case, and the extra imaginary frequency
+grid points makes the number of DLR imaginary frequency nodes <span class="math notranslate nohighlight">\(r+1\)</span>. To
+obtain the DLR coefficients from samples of the Green’s function at the DLR
+imaginary frequency nodes, we therefore solve a slightly overdetermined
+(<span class="math notranslate nohighlight">\((r+1) \times r\)</span>, rather than <span class="math notranslate nohighlight">\(r \times r\)</span>) linear system using the
+least squares method.</p>
 </div>
 </div>
 

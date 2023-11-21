@@ -308,12 +308,12 @@ functionality via symmetrization flags. Please see the :ref:`list of
 other cppdlr capabilities<listofothercapabilities>` section on the :ref:`examples
 page<examples>` for a list of `cppdlr` tests which showcase this functionality.
 
-We make a small note about symmetrization for bosonic Green's functions. In this
-case, we always select the DLR frequency :math:`\omega = 0`, the DLR imaginary
-time node :math:`\tau = \beta/2`, and the DLR imaginary frequency node 
-:math:`i \nu_n = 0`. The reason is as follows. A symmetric DLR imaginary frequency grid
-containing the point :math:`i \nu_n = 0` must have an odd number of points.
-Since it is undesirable to disallow this point, and to make sure all grids have
-the same number :math:`r` of points, we force :math:`r` to be odd. This requires
-including in each grid, by hand, a single point of high symmetry, and then allowing the
-pivoted Gram-Schmidt procedure to select the rest of the points symmetrically.
+We make a note about symmetrization for bosonic Green's functions. In this case,
+we always include :math:`i \nu_n = 0` as a DLR imaginary frequency node. Since
+we do not include the point :math:`\omega = 0` in the :math:`r` symmetrized DLR
+frequencies, :math:`r` is even in this case, and the extra imaginary frequency
+grid points makes the number of DLR imaginary frequency nodes :math:`r+1`. To
+obtain the DLR coefficients from samples of the Green's function at the DLR
+imaginary frequency nodes, we therefore solve a slightly overdetermined
+(:math:`(r+1) \times r`, rather than :math:`r \times r`) linear system using the
+least squares method.

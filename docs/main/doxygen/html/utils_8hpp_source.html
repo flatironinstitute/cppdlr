@@ -201,380 +201,387 @@ $(function() {
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordflow">return</span> {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;  }</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  <span class="comment">// Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArrayOfRank&lt;2&gt; T, nda::Scalar S = get_value_t&lt;T&gt;&gt;</div>
-<div class="line"><a name="l00204"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a65790598f458616dbc7fc84ab3cfe02c">  204</a></span>&#160;  std::tuple&lt;typename T::regular_type, nda::vector&lt;double&gt;, nda::vector&lt;int&gt;&gt; <a class="code" href="namespacecppdlr.html#a87cd86b43bae8fd0272a4f764bcd163f">pivrgs_sym</a>(T <span class="keyword">const</span> &amp;a, <span class="keywordtype">double</span> eps) {</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    <span class="keyword">auto</span> _ = nda::range::all;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="comment">// Get matrix dimensions</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keyword">auto</span> [m, n] = a.shape();</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    <span class="keywordtype">int</span> maxrnk  = std::min(m, n);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keywordflow">if</span> (m % 2 != 0) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input matrix must have even number of rows.&quot;</span>); }</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="comment">// Copy input data, re-ordering rows to make symmetric rows adjacent</span></div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keyword">auto</span> aa                    = <span class="keyword">typename</span> T::regular_type(m, n);</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="comment">// Compute norms of rows of input matrix, and rescale eps tolerance</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keyword">auto</span> norms   = nda::vector&lt;double&gt;(m);</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keywordtype">double</span> epssq = eps * eps;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="comment">// Begin pivoted double Gram-Schmidt procedure</span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordtype">int</span> jpiv = 0, jj = 0;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keywordtype">double</span> nrm               = 0;</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="keyword">auto</span> piv                 = nda::arange(0, m);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); <span class="comment">// Re-order pivots to match re-ordered input matrix</span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keyword">auto</span> tmp                 = nda::vector&lt;S&gt;(n);</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordflow">if</span> (maxrnk % 2 != 0) { <span class="comment">// If n &lt; m and n is odd, decrease maxrnk to maintain symmetry</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      maxrnk -= 1;</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    }</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; maxrnk; j += 2) {</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      <span class="comment">// Find next pair of pivots</span></div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      jpiv = j;</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      nrm  = norms(j) + norms(j + 1);</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m; k += 2) {</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        <span class="keywordflow">if</span> (norms(k) + norms(k + 1) &gt; nrm) {</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;          jpiv = k;</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;          nrm  = norms(k) + norms(k + 1);</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        }</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;      }</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;      <span class="comment">// Swap current row pair with chosen pivot row pair</span></div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;      tmp             = aa(j, _);</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;      aa(j, _)        = aa(jpiv, _);</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;      aa(jpiv, _)     = tmp;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;      tmp             = aa(j + 1, _);</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;      aa(j + 1, _)    = aa(jpiv + 1, _);</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;      aa(jpiv + 1, _) = tmp;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;      nrm             = norms(j);</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      norms(j)        = norms(jpiv);</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      norms(jpiv)     = nrm;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      nrm             = norms(j + 1);</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      norms(j + 1)    = norms(jpiv + 1);</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      norms(jpiv + 1) = nrm;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      jj            = piv(j);</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      piv(j)        = piv(jpiv);</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      piv(jpiv)     = jj;</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      jj            = piv(j + 1);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      piv(j + 1)    = piv(jpiv + 1);</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;      piv(jpiv + 1) = jj;</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      <span class="comment">// Orthogonalize current row (now the first chosen pivot row) against all</span></div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;      <span class="comment">// previously chosen rows</span></div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      <span class="comment">// Get norm of current row</span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;      nrm = real(blas::dotc(aa(j, _), aa(j, _)));</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;      <span class="comment">// Terminate if sufficiently small, and return previously selected rows</span></div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;      <span class="comment">// (not including current row)</span></div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;      <span class="keywordflow">if</span> (nrm &lt;= epssq) { <span class="keywordflow">return</span> {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;      <span class="comment">// Normalize current row</span></div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;      aa(j, _) = aa(j, _) * (1 / sqrt(nrm));</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 1; k &lt; m; ++k) {</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        <span class="keywordflow">if</span> (norms(k) &lt;= epssq) { <span class="keywordflow">continue</span>; } <span class="comment">// Can skip rows with norm less than tolerance</span></div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;      }</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;      <span class="comment">// Orthogonalize current row (now the second chosen pivot row) against all</span></div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      <span class="comment">// previously chosen rows</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j + 1, _)); }</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      <span class="comment">// Normalize current row</span></div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      nrm          = real(blas::dotc(aa(j + 1, _), aa(j + 1, _)));</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;      aa(j + 1, _) = aa(j + 1, _) * (1 / sqrt(nrm));</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m; ++k) {</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        <span class="keywordflow">if</span> (norms(k) &lt;= epssq) { <span class="keywordflow">continue</span>; } <span class="comment">// Can skip rows with norm less than tolerance</span></div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;      }</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    }</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160; </div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keywordflow">return</span> {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;  }</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;  <span class="comment">// Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view</span></div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArrayOfRank&lt;2&gt; T, nda::Scalar S = get_value_t&lt;T&gt;, nda::MemoryVector V&gt;</div>
-<div class="line"><a name="l00345"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a87cd86b43bae8fd0272a4f764bcd163f">  345</a></span>&#160;  std::tuple&lt;typename T::regular_type, nda::vector&lt;double&gt;, nda::vector&lt;int&gt;&gt; <a class="code" href="namespacecppdlr.html#a87cd86b43bae8fd0272a4f764bcd163f">pivrgs_sym</a>(T <span class="keyword">const</span> &amp;a, V <span class="keyword">const</span> &amp;v, <span class="keywordtype">double</span> eps) {</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <span class="keyword">auto</span> _ = nda::range::all;</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <span class="comment">// Get matrix dimensions</span></div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keyword">auto</span> [m, n] = a.shape();</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordtype">int</span> maxrnk  = std::min(m + 1, n);</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <span class="keywordflow">if</span> (m % 2 != 0) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input matrix must have even number of rows.&quot;</span>); }</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;    <span class="comment">// Copy input data, re-ordering rows to make symmetric rows adjacent, and</span></div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    <span class="comment">// appending provided vector to beginning of matrix</span></div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <span class="keyword">auto</span> aa                        = <span class="keyword">typename</span> T::regular_type(m + 1, n);</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    aa(0, _)                       = v;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    aa(nda::range(1, m + 1, 2), _) = a(nda::range(0, m / 2), _);</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    aa(nda::range(2, m + 1, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160; </div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="comment">// Compute norms of rows of augmented matrix, and rescale eps tolerance</span></div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keyword">auto</span> norms   = nda::vector&lt;double&gt;(m + 1);</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordtype">double</span> epssq = eps * eps;</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; m + 1; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="comment">// Begin pivoted double Gram-Schmidt procedure</span></div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keywordtype">int</span> jpiv = 0, jj = 0;</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <span class="keywordtype">double</span> nrm                   = 0;</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keyword">auto</span> piv                     = nda::arange(0, m + 1);</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    piv(nda::range(1, m + 1, 2)) = nda::arange(1, m / 2 + 1); <span class="comment">// Re-order pivots to match re-ordered input matrix</span></div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    piv(nda::range(2, m + 1, 2)) = nda::arange(m, m / 2, -1);</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keyword">auto</span> tmp                     = nda::vector&lt;S&gt;(n);</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;    <span class="keywordflow">if</span> (n &lt; m + 1 &amp;&amp; n % 2 == 0) { <span class="comment">// If n &lt; m+1 and n is even, decrease maxrnk to maintain symmetry</span></div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;      maxrnk -= 1;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;  <span class="comment">// Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArrayOfRank&lt;2&gt; T, nda::Scalar S = get_value_t&lt;T&gt;&gt;</div>
+<div class="line"><a name="l00203"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a65790598f458616dbc7fc84ab3cfe02c">  203</a></span>&#160;  std::tuple&lt;typename T::regular_type, nda::vector&lt;double&gt;, nda::vector&lt;int&gt;&gt; <a class="code" href="namespacecppdlr.html#a9aba1fa20ea0a1eda128fb3b564e1c5c">pivrgs_sym</a>(T <span class="keyword">const</span> &amp;a, <span class="keywordtype">double</span> eps) {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keyword">auto</span> _ = nda::range::all;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="comment">// Get matrix dimensions</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keyword">auto</span> [m, n] = a.shape();</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordtype">int</span> maxrnk  = std::min(m, n);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordflow">if</span> (m % 2 != 0) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input matrix must have even number of rows.&quot;</span>); }</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="comment">// Copy input data, re-ordering rows to make symmetric rows adjacent.</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    <span class="keyword">auto</span> aa = <span class="keyword">typename</span> T::regular_type(m, n);</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="comment">// Compute norms of rows of input matrix, and rescale eps tolerance</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keyword">auto</span> norms   = nda::vector&lt;double&gt;(m);</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordtype">double</span> epssq = eps * eps;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160; </div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="comment">// Begin pivoted double Gram-Schmidt procedure</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordtype">int</span> jpiv = 0, jj = 0;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordtype">double</span> nrm = 0;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keyword">auto</span> piv   = nda::arange(0, m);</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); <span class="comment">// Re-order pivots to match re-ordered input matrix</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keyword">auto</span> tmp = nda::vector&lt;S&gt;(n);</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">if</span> (maxrnk % 2 != 0) { <span class="comment">// If n &lt; m and n is odd, decrease maxrnk to maintain symmetry</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      maxrnk -= 1;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    }</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; maxrnk; j += 2) {</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      <span class="comment">// Find next pair of pivots</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      jpiv = j;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      nrm  = norms(j) + norms(j + 1);</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m; k += 2) {</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        <span class="keywordflow">if</span> (norms(k) + norms(k + 1) &gt; nrm) {</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;          jpiv = k;</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;          nrm  = norms(k) + norms(k + 1);</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        }</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;      }</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;      <span class="comment">// Swap current row pair with chosen pivot row pair</span></div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;      tmp             = aa(j, _);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;      aa(j, _)        = aa(jpiv, _);</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;      aa(jpiv, _)     = tmp;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;      tmp             = aa(j + 1, _);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;      aa(j + 1, _)    = aa(jpiv + 1, _);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;      aa(jpiv + 1, _) = tmp;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;      nrm             = norms(j);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;      norms(j)        = norms(jpiv);</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      norms(jpiv)     = nrm;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;      nrm             = norms(j + 1);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      norms(j + 1)    = norms(jpiv + 1);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      norms(jpiv + 1) = nrm;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      jj            = piv(j);</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      piv(j)        = piv(jpiv);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      piv(jpiv)     = jj;</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;      jj            = piv(j + 1);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      piv(j + 1)    = piv(jpiv + 1);</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      piv(jpiv + 1) = jj;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;      <span class="comment">// Orthogonalize current row (now the first chosen pivot row) against all</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      <span class="comment">// previously chosen rows</span></div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;      <span class="comment">// Get norm of current row</span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      nrm = real(blas::dotc(aa(j, _), aa(j, _)));</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;      <span class="comment">// Terminate if sufficiently small, and return previously selected rows</span></div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;      <span class="comment">// (not including current row)</span></div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;      <span class="keywordflow">if</span> (nrm &lt;= epssq) { <span class="keywordflow">return</span> {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;      <span class="comment">// Normalize current row</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;      aa(j, _) = aa(j, _) * (1 / sqrt(nrm));</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 1; k &lt; m; ++k) {</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        <span class="keywordflow">if</span> (norms(k) &lt;= epssq) { <span class="keywordflow">continue</span>; } <span class="comment">// Can skip rows with norm less than tolerance</span></div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;      }</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;      <span class="comment">// Orthogonalize current row (now the second chosen pivot row) against all</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;      <span class="comment">// previously chosen rows</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j + 1, _)); }</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;      <span class="comment">// Normalize current row</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      nrm          = real(blas::dotc(aa(j + 1, _), aa(j + 1, _)));</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      aa(j + 1, _) = aa(j + 1, _) * (1 / sqrt(nrm));</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m; ++k) {</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="keywordflow">if</span> (norms(k) &lt;= epssq) { <span class="keywordflow">continue</span>; } <span class="comment">// Can skip rows with norm less than tolerance</span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;      }</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    }</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keywordflow">return</span> {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  }</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  <span class="comment">// Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArrayOfRank&lt;2&gt; T, nda::Scalar S = get_value_t&lt;T&gt;&gt;</div>
+<div class="line"><a name="l00336"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a9aba1fa20ea0a1eda128fb3b564e1c5c">  336</a></span>&#160;  std::tuple&lt;typename T::regular_type, nda::vector&lt;double&gt;, nda::vector&lt;int&gt;&gt; <a class="code" href="namespacecppdlr.html#a9aba1fa20ea0a1eda128fb3b564e1c5c">pivrgs_sym</a>(T <span class="keyword">const</span> &amp;a, <span class="keywordtype">int</span> r) {</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    <span class="keyword">auto</span> _ = nda::range::all;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="comment">// Get matrix dimensions</span></div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keyword">auto</span> [m, n] = a.shape();</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keywordflow">if</span> (m % 2 == 1 &amp;&amp; r % 2 == 0) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;If input matrix has odd number of rows, r must be odd.&quot;</span>); }</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    <span class="keywordflow">if</span> (r % 2 == 1 &amp;&amp; m % 2 == 0) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;If r is odd, input matrix must have odd number of rows.&quot;</span>); }</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keywordflow">if</span> (r &gt; m || r &gt; n + 1) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;r must be less than or equal to min(m,n+1).&quot;</span>); }</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    <span class="keywordflow">if</span> (r == n + 1 &amp;&amp; (n % 2 == 1 || n &gt; m)) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;If r = n+1, n must be even and less than or equal to m.&quot;</span>); }</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="comment">// Copy input data, re-ordering rows to make symmetric rows adjacent. If m</span></div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <span class="comment">// odd, put middle row at the end.</span></div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keyword">auto</span> aa = <span class="keyword">typename</span> T::regular_type(m, n);</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordflow">if</span> (m % 2 == 0) {</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;      aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;      aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;      aa(0, _) = a((m - 1) / 2, _);</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;      aa(nda::range(1, m, 2), _) = a(nda::range(0, (m - 1) / 2), _);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;      aa(nda::range(2, m, 2), _) = a(nda::range(m - 1, (m - 1) / 2, -1), _);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;      <span class="comment">//aa(m - 1, _)                   = a((m - 1) / 2, _);</span></div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    }</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160; </div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    <span class="comment">// Compute norms of rows of input matrix</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keyword">auto</span> norms = nda::vector&lt;double&gt;(m);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="comment">// Begin pivoted double Gram-Schmidt procedure</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordtype">int</span> jpiv = 0, jj = 0;</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="keywordtype">double</span> nrm = 0;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keyword">auto</span> piv   = nda::arange(0, m);</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    <span class="keywordflow">if</span> (m % 2 == 0) {</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;      piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); <span class="comment">// Re-order pivots to match re-ordered input matrix</span></div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;      piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;      piv(0)                   = (m - 1) / 2;</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;      piv(nda::range(1, m, 2)) = nda::arange(0, (m - 1) / 2);</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      piv(nda::range(2, m, 2)) = nda::arange(m - 1, (m - 1) / 2, -1);</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;      <span class="comment">//piv(m - 1)                   = (m - 1) / 2;</span></div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    }</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    <span class="comment">// First, choose provided vector as first pivot</span></div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160; </div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    <span class="comment">// Normalize</span></div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    nrm      = real(blas::dotc(aa(0, _), aa(0, _)));</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    aa(0, _) = aa(0, _) * (1 / sqrt(nrm));</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160; </div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    <span class="comment">// Orthogonalize remaining rows against current row</span></div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt; m + 1; ++k) {</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;      <span class="keywordflow">if</span> (norms(k) &lt;= epssq) { <span class="keywordflow">continue</span>; } <span class="comment">// Can skip rows with norm less than tolerance</span></div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;      aa(k, _) = aa(k, _) - aa(0, _) * blas::dotc(aa(0, _), aa(k, _));</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;      norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    }</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160; </div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="comment">// Then proceed with pivoted GS algorithm as normal</span></div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160; </div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 1; j &lt; maxrnk; j += 2) {</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160; </div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;      <span class="comment">// Find next pair of pivots</span></div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;      jpiv = j;</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;      nrm  = norms(j) + norms(j + 1);</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m + 1; k += 2) {</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;        <span class="keywordflow">if</span> (norms(k) + norms(k + 1) &gt; nrm) {</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;          jpiv = k;</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;          nrm  = norms(k) + norms(k + 1);</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;        }</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;      }</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160; </div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;      <span class="comment">// Swap current row pair with chosen pivot row pair</span></div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;      tmp             = aa(j, _);</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;      aa(j, _)        = aa(jpiv, _);</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;      aa(jpiv, _)     = tmp;</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;      tmp             = aa(j + 1, _);</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;      aa(j + 1, _)    = aa(jpiv + 1, _);</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;      aa(jpiv + 1, _) = tmp;</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160; </div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      nrm             = norms(j);</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;      norms(j)        = norms(jpiv);</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;      norms(jpiv)     = nrm;</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;      nrm             = norms(j + 1);</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;      norms(j + 1)    = norms(jpiv + 1);</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;      norms(jpiv + 1) = nrm;</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;      jj            = piv(j);</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;      piv(j)        = piv(jpiv);</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;      piv(jpiv)     = jj;</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;      jj            = piv(j + 1);</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;      piv(j + 1)    = piv(jpiv + 1);</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;      piv(jpiv + 1) = jj;</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      <span class="comment">// Orthogonalize current row (now the first chosen pivot row) against all</span></div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;      <span class="comment">// previously chosen rows</span></div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160; </div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;      <span class="comment">// Get norm of current row</span></div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;      nrm = real(blas::dotc(aa(j, _), aa(j, _)));</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;      <span class="comment">// Terminate if sufficiently small, and return previously selected rows</span></div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;      <span class="comment">// (not including current row)</span></div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;      <span class="keywordflow">if</span> (nrm &lt;= epssq) { <span class="keywordflow">return</span> {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160; </div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;      <span class="comment">// Normalize current row</span></div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    <span class="keyword">auto</span> tmp = nda::vector&lt;S&gt;(n);</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160; </div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    <span class="comment">// If m odd, first choose middle row (now last row) as first pivot</span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160; </div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    <span class="keywordflow">if</span> (m % 2 == 1) {</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;      <span class="comment">//int j = 0;     // Index of current row</span></div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;      <span class="comment">//jpiv  = 0; // Index of pivot row</span></div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160; </div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;      <span class="comment">// Normalize</span></div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;      nrm      = real(blas::dotc(aa(0, _), aa(0, _)));</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;      aa(0, _) = aa(0, _) * (1 / sqrt(nrm));</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;      <span class="comment">//aa(0, _) /= sqrt(real(blas::dotc(aa(0, _), aa(0, _))));</span></div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt; m; ++k) {</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        aa(k, _) = aa(k, _) - aa(0, _) * blas::dotc(aa(0, _), aa(k, _));</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;      }</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;    }</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160; </div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;    <span class="keywordtype">int</span> jstrt = (m % 2 == 1) ? 1 : 0;</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    <span class="comment">// Then proceed with pivoted GS algorithm as normal</span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = jstrt; j &lt; r; j += 2) {</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160; </div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;      <span class="comment">// Find next pair of pivots</span></div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;      jpiv = j;</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;      nrm  = norms(j) + norms(j + 1);</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m; k += 2) {</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;        <span class="keywordflow">if</span> (norms(k) + norms(k + 1) &gt; nrm) {</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;          jpiv = k;</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;          nrm  = norms(k) + norms(k + 1);</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        }</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;      }</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;      <span class="comment">// Swap current row pair with chosen pivot row pair</span></div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;      tmp             = aa(j, _);</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      aa(j, _)        = aa(jpiv, _);</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;      aa(jpiv, _)     = tmp;</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;      tmp             = aa(j + 1, _);</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;      aa(j + 1, _)    = aa(jpiv + 1, _);</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;      aa(jpiv + 1, _) = tmp;</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;      nrm             = norms(j);</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;      norms(j)        = norms(jpiv);</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;      norms(jpiv)     = nrm;</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;      nrm             = norms(j + 1);</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;      norms(j + 1)    = norms(jpiv + 1);</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;      norms(jpiv + 1) = nrm;</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160; </div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;      jj            = piv(j);</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      piv(j)        = piv(jpiv);</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;      piv(jpiv)     = jj;</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;      jj            = piv(j + 1);</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;      piv(j + 1)    = piv(jpiv + 1);</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;      piv(jpiv + 1) = jj;</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160; </div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;      <span class="comment">// Orthogonalize current row (now the first chosen pivot row) against all</span></div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;      <span class="comment">// previously chosen rows</span></div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160; </div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;      <span class="comment">// Normalize current row</span></div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;      nrm      = real(blas::dotc(aa(j, _), aa(j, _)));</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;      aa(j, _) = aa(j, _) * (1 / sqrt(nrm));</div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160; </div>
 <div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 1; k &lt; m + 1; ++k) {</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        <span class="keywordflow">if</span> (norms(k) &lt;= epssq) { <span class="keywordflow">continue</span>; } <span class="comment">// Can skip rows with norm less than tolerance</span></div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;      }</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160; </div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      <span class="comment">// Orthogonalize current row (now the second chosen pivot row) against all</span></div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      <span class="comment">// previously chosen rows</span></div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j + 1, _)); }</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160; </div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;      <span class="comment">// Normalize current row</span></div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;      nrm          = real(blas::dotc(aa(j + 1, _), aa(j + 1, _)));</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;      aa(j + 1, _) = aa(j + 1, _) * (1 / sqrt(nrm));</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160; </div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m + 1; ++k) {</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        <span class="keywordflow">if</span> (norms(k) &lt;= epssq) { <span class="keywordflow">continue</span>; } <span class="comment">// Can skip rows with norm less than tolerance</span></div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;      }</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;    }</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160; </div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    <span class="keywordflow">return</span> {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;  }</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160; </div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;  nda::vector&lt;double&gt; <a class="code" href="namespacecppdlr.html#a2d46bf12944fe36c90343df67e2d783b">eqptsrel</a>(<span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160; </div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;  nda::vector&lt;double&gt; <a class="code" href="namespacecppdlr.html#a3b1ccba6393dfc517757677a13ad2553">rel2abs</a>(nda::vector_const_view&lt;double&gt; t);</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160; </div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;  <span class="keywordtype">double</span> <a class="code" href="namespacecppdlr.html#a3b1ccba6393dfc517757677a13ad2553">rel2abs</a>(<span class="keywordtype">double</span> t);</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160; </div>
-<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;  nda::vector&lt;double&gt; <a class="code" href="namespacecppdlr.html#a103a8aae4c8af512d2682d381a676561">abs2rel</a>(nda::vector_const_view&lt;double&gt; t_abs);</div>
-<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160; </div>
-<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;  <span class="keywordtype">double</span> <a class="code" href="namespacecppdlr.html#a103a8aae4c8af512d2682d381a676561">abs2rel</a>(<span class="keywordtype">double</span> t_abs);</div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160; </div>
-<div class="line"><a name="l00528"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a85cd7bdb1fd649296322df16d329ca27">  528</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T&gt; <span class="keyword">using</span> <a class="code" href="namespacecppdlr.html#a85cd7bdb1fd649296322df16d329ca27">make_real_t</a> = decltype(make_regular(real(std::declval&lt;T&gt;())));</div>
-<div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160; </div>
-<div class="line"><a name="l00533"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#af7426dd83d2c831f6ae3fa9b8e6172ad">  533</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T&gt; <span class="keyword">using</span> <a class="code" href="namespacecppdlr.html#af7426dd83d2c831f6ae3fa9b8e6172ad">make_cplx_t</a> = decltype(make_regular(std::declval&lt;T&gt;() * 1i));</div>
-<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160; </div>
-<div class="line"><a name="l00539"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html">  539</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2&gt; <span class="keyword">struct </span><a class="code" href="structcppdlr_1_1make__common__helper.html">make_common_helper</a> {</div>
-<div class="line"><a name="l00540"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">  540</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">S</a>              = std::common_type_t&lt;S1, S2&gt;;</div>
-<div class="line"><a name="l00541"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html#a2d4aae79d5de09d01c41489d92939392">  541</a></span>&#160;    <span class="keyword">static</span> constexpr <a class="code" href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">S</a> x = 0;</div>
-<div class="line"><a name="l00542"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">  542</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">type</a>           = decltype(make_regular(std::declval&lt;T&gt;() * x));</div>
-<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;  };</div>
-<div class="line"><a name="l00544"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#ac23dfec829ec6ed8deec469faeea3981">  544</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2&gt; <span class="keyword">using</span> <a class="code" href="namespacecppdlr.html#ac23dfec829ec6ed8deec469faeea3981">make_common_t</a> = <span class="keyword">typename</span> <a class="code" href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">make_common_helper&lt;T, S1, S2&gt;::type</a>;</div>
-<div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160; </div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;,</div>
-<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;            nda::Scalar S = <span class="keyword">typename</span> std::common_type&lt;Sa, Sb&gt;::type&gt;</div>
-<div class="line"><a name="l00557"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">  557</a></span>&#160;  nda::array&lt;S, Ta::rank + Tb::rank - 2&gt; <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(Ta <span class="keyword">const</span> &amp;a, Tb <span class="keyword">const</span> &amp;b) {</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160; </div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;    <span class="comment">// Get ranks of input arrays</span></div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;    constexpr <span class="keywordtype">int</span> ra = Ta::rank;</div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;    constexpr <span class="keywordtype">int</span> rb = Tb::rank;</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160; </div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    <span class="comment">// Get inner dimensions of input arrays</span></div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;    <span class="keywordtype">int</span> p = a.shape(ra - 1);</div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <span class="keywordflow">if</span> (b.shape(0) != p) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;last dim of a != first dim of b&quot;</span>);</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160; </div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    <span class="comment">// Get product of outer dimensions of input arrays</span></div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    <span class="keywordtype">int</span> m = a.size() / p;</div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;    <span class="keywordtype">int</span> n = b.size() / p;</div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160; </div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    <span class="comment">// Reshape input arrays to 2D arrays</span></div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;    <span class="keyword">auto</span> a_reshaped = nda::reshape(a, m, p);</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;    <span class="keyword">auto</span> b_reshaped = nda::reshape(b, p, n);</div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160; </div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;    <span class="comment">// Get shape of output array</span></div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    <span class="keyword">auto</span> c_shape = std::array&lt;int, ra + rb - 2&gt;();</div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; ra - 1; ++i) { c_shape[i] = a.shape(i); }</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = ra - 1; i &lt; ra + rb - 2; ++i) { c_shape[i] = b.shape(i - ra + 2); }</div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160; </div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;    <span class="comment">// Compute the contraction, reshape, and return</span></div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;    <span class="keywordflow">return</span> reshape(matmul(a_reshaped, b_reshaped), c_shape);</div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;  }</div>
-<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160; </div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> S&gt;</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;  <span class="comment">// TODO: require S is scalar</span></div>
-<div class="line"><a name="l00607"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a93826a1ab8ed29d304e0194fefd4e19c">  607</a></span>&#160;  S <a class="code" href="namespacecppdlr.html#a93826a1ab8ed29d304e0194fefd4e19c">adapgl</a>(std::function&lt;nda::array&lt;S, 1&gt;(nda::array&lt;double, 1&gt;)&gt; f, <span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b, <span class="keywordtype">double</span> tol, nda::vector&lt;double&gt; xgl,</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;           nda::vector&lt;double&gt; wgl) {</div>
-<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160; </div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;    <span class="keywordtype">int</span> maxnde = 100000; <span class="comment">// Max nodes in integration tree</span></div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;    <span class="keywordtype">int</span> maxstk = 1000;   <span class="comment">// Max stack size</span></div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 1; k &lt; m; ++k) {</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;      }</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160; </div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      <span class="comment">// Orthogonalize current row (now the second chosen pivot row) against all</span></div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      <span class="comment">// previously chosen rows</span></div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j + 1, _)); }</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160; </div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;      <span class="comment">// Normalize current row</span></div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;      nrm          = real(blas::dotc(aa(j + 1, _), aa(j + 1, _)));</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;      aa(j + 1, _) = aa(j + 1, _) * (1 / sqrt(nrm));</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160; </div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;      <span class="comment">// Orthogonalize remaining rows against current row</span></div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = j + 2; k &lt; m; ++k) {</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;      }</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    }</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160; </div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;    <span class="keywordflow">return</span> {aa(nda::range(r), _), norms(nda::range(r)), piv(nda::range(r))};</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;  }</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160; </div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;  nda::vector&lt;double&gt; <a class="code" href="namespacecppdlr.html#a2d46bf12944fe36c90343df67e2d783b">eqptsrel</a>(<span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;  nda::vector&lt;double&gt; <a class="code" href="namespacecppdlr.html#a3b1ccba6393dfc517757677a13ad2553">rel2abs</a>(nda::vector_const_view&lt;double&gt; t);</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160; </div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;  <span class="keywordtype">double</span> <a class="code" href="namespacecppdlr.html#a3b1ccba6393dfc517757677a13ad2553">rel2abs</a>(<span class="keywordtype">double</span> t);</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160; </div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;  nda::vector&lt;double&gt; <a class="code" href="namespacecppdlr.html#a103a8aae4c8af512d2682d381a676561">abs2rel</a>(nda::vector_const_view&lt;double&gt; t_abs);</div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160; </div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;  <span class="keywordtype">double</span> <a class="code" href="namespacecppdlr.html#a103a8aae4c8af512d2682d381a676561">abs2rel</a>(<span class="keywordtype">double</span> t_abs);</div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160; </div>
+<div class="line"><a name="l00526"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a85cd7bdb1fd649296322df16d329ca27">  526</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T&gt; <span class="keyword">using</span> <a class="code" href="namespacecppdlr.html#a85cd7bdb1fd649296322df16d329ca27">make_real_t</a> = decltype(make_regular(real(std::declval&lt;T&gt;())));</div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160; </div>
+<div class="line"><a name="l00531"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#af7426dd83d2c831f6ae3fa9b8e6172ad">  531</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T&gt; <span class="keyword">using</span> <a class="code" href="namespacecppdlr.html#af7426dd83d2c831f6ae3fa9b8e6172ad">make_cplx_t</a> = decltype(make_regular(std::declval&lt;T&gt;() * 1i));</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160; </div>
+<div class="line"><a name="l00537"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html">  537</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2&gt; <span class="keyword">struct </span><a class="code" href="structcppdlr_1_1make__common__helper.html">make_common_helper</a> {</div>
+<div class="line"><a name="l00538"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">  538</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">S</a>              = std::common_type_t&lt;S1, S2&gt;;</div>
+<div class="line"><a name="l00539"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html#a2d4aae79d5de09d01c41489d92939392">  539</a></span>&#160;    <span class="keyword">static</span> constexpr <a class="code" href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">S</a> x = 0;</div>
+<div class="line"><a name="l00540"></a><span class="lineno"><a class="line" href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">  540</a></span>&#160;    <span class="keyword">using</span> <a class="code" href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">type</a>           = decltype(make_regular(std::declval&lt;T&gt;() * x));</div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;  };</div>
+<div class="line"><a name="l00542"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#ac23dfec829ec6ed8deec469faeea3981">  542</a></span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray T, nda::Scalar S1, nda::Scalar S2&gt; <span class="keyword">using</span> <a class="code" href="namespacecppdlr.html#ac23dfec829ec6ed8deec469faeea3981">make_common_t</a> = <span class="keyword">typename</span> <a class="code" href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">make_common_helper&lt;T, S1, S2&gt;::type</a>;</div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160; </div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;  <span class="keyword">template</span> &lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;,</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;            nda::Scalar S = <span class="keyword">typename</span> std::common_type&lt;Sa, Sb&gt;::type&gt;</div>
+<div class="line"><a name="l00555"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">  555</a></span>&#160;  nda::array&lt;S, Ta::rank + Tb::rank - 2&gt; <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(Ta <span class="keyword">const</span> &amp;a, Tb <span class="keyword">const</span> &amp;b) {</div>
+<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160; </div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;    <span class="comment">// Get ranks of input arrays</span></div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;    constexpr <span class="keywordtype">int</span> ra = Ta::rank;</div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;    constexpr <span class="keywordtype">int</span> rb = Tb::rank;</div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160; </div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;    <span class="comment">// Get inner dimensions of input arrays</span></div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    <span class="keywordtype">int</span> p = a.shape(ra - 1);</div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    <span class="keywordflow">if</span> (b.shape(0) != p) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;last dim of a != first dim of b&quot;</span>);</div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160; </div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <span class="comment">// Get product of outer dimensions of input arrays</span></div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;    <span class="keywordtype">int</span> m = a.size() / p;</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    <span class="keywordtype">int</span> n = b.size() / p;</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160; </div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;    <span class="comment">// Reshape input arrays to 2D arrays</span></div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    <span class="keyword">auto</span> a_reshaped = nda::reshape(a, m, p);</div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    <span class="keyword">auto</span> b_reshaped = nda::reshape(b, p, n);</div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160; </div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;    <span class="comment">// Get shape of output array</span></div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;    <span class="keyword">auto</span> c_shape = std::array&lt;int, ra + rb - 2&gt;();</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; ra - 1; ++i) { c_shape[i] = a.shape(i); }</div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = ra - 1; i &lt; ra + rb - 2; ++i) { c_shape[i] = b.shape(i - ra + 2); }</div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160; </div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;    <span class="comment">// Compute the contraction, reshape, and return</span></div>
+<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;    <span class="keywordflow">return</span> reshape(matmul(a_reshaped, b_reshaped), c_shape);</div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;  }</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160; </div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> S&gt;</div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;  <span class="comment">// TODO: require S is scalar</span></div>
+<div class="line"><a name="l00605"></a><span class="lineno"><a class="line" href="namespacecppdlr.html#a93826a1ab8ed29d304e0194fefd4e19c">  605</a></span>&#160;  S <a class="code" href="namespacecppdlr.html#a93826a1ab8ed29d304e0194fefd4e19c">adapgl</a>(std::function&lt;nda::array&lt;S, 1&gt;(nda::array&lt;double, 1&gt;)&gt; f, <span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b, <span class="keywordtype">double</span> tol, nda::vector&lt;double&gt; xgl,</div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;           nda::vector&lt;double&gt; wgl) {</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160; </div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;    <span class="keywordtype">int</span> maxnde = 100000; <span class="comment">// Max nodes in integration tree</span></div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;    <span class="keywordtype">int</span> maxstk = 1000;   <span class="comment">// Max stack size</span></div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160; </div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;    S sum = 0; <span class="comment">// Integral</span></div>
 <div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160; </div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;    S sum = 0; <span class="comment">// Integral</span></div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160; </div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;    <span class="comment">// Initialize stack: there is a stack of interval endpoints associated w/</span></div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;    <span class="comment">// each node in the integration tree, and a corresponding stack of values</span></div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    <span class="comment">// associated w/ each such interval</span></div>
-<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160; </div>
-<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;    <span class="keyword">auto</span> endpt = nda::array&lt;double, 2&gt;(maxstk, 2); <span class="comment">// Stack of interval endpoints</span></div>
-<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;    <span class="keyword">auto</span> sums  = nda::array&lt;S, 1&gt;(maxstk);         <span class="comment">// Stack of sums associated w/ each interval</span></div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160; </div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    <span class="keywordtype">int</span> istk = 0; <span class="comment">// Stack pointer</span></div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;    <span class="keywordtype">int</span> nnde = 1; <span class="comment">// Number of nodes in integration tree</span></div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160; </div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;    endpt(istk, 0) = a; <span class="comment">// Root node interval is [a,b]</span></div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;    endpt(istk, 1) = b;</div>
-<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160; </div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>   = (b - a) / 2;                                        <span class="comment">// Interval half-width</span></div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;    sums(istk) = <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> * nda::blas::dotc(wgl, f(xgl * <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + (a + b) / 2)); <span class="comment">// Integral of f on root node interval</span></div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160; </div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    <span class="keywordtype">double</span> aa = 0, bb = 0, cc = 0; <span class="comment">// Interval endpoints, midpoint</span></div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    S sum1 = 0, sum2 = 0;          <span class="comment">// Integrals on subintervals</span></div>
-<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160; </div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;    <span class="comment">// Main loop</span></div>
-<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
-<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160; </div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;      aa = endpt(istk, 0); <span class="comment">// Get interval endpoints</span></div>
-<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;      bb = endpt(istk, 1);</div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;      cc = (aa + bb) / 2; <span class="comment">// Get midpoint</span></div>
-<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160; </div>
-<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;      <span class="comment">// Get integral on each subinterval</span></div>
-<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;      <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>    = (cc - aa) / 2;</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;      sum1 = <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> * nda::blas::dotc(wgl, f(xgl * <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + (aa + cc) / 2));</div>
-<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;      sum2 = <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> * nda::blas::dotc(wgl, f(xgl * <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + (cc + bb) / 2));</div>
-<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160; </div>
-<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;      <span class="comment">// If error on subintervals is less than tolerance, add to integral and</span></div>
-<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;      <span class="comment">// move to next node</span></div>
-<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160; </div>
-<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;      <span class="keywordflow">if</span> (std::abs(sum1 + sum2 - sums(istk)) &lt; tol) {</div>
-<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;        sum += sum1 + sum2;           <span class="comment">// Add to subintervals to integral</span></div>
-<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;        istk--;                       <span class="comment">// Remove current interval from stack</span></div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;        <span class="keywordflow">if</span> (istk &lt; 0) { <span class="keywordflow">return</span> sum; } <span class="comment">// If stack is empty, return integral</span></div>
-<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;      } <span class="keywordflow">else</span> {                        <span class="comment">// Integral on current interval not converged</span></div>
-<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160; </div>
-<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;        <span class="comment">// Remove current interval from stack, and add subintervals</span></div>
-<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;        endpt(istk, 1)     = cc;</div>
-<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;        endpt(istk + 1, 0) = cc;</div>
-<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;        endpt(istk + 1, 1) = bb;</div>
-<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160;        sums(istk)         = sum1;</div>
-<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;        sums(istk + 1)     = sum2;</div>
-<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160; </div>
-<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160;        istk++;</div>
-<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;        nnde += 2;</div>
-<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160; </div>
-<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;        <span class="keywordflow">if</span> (istk &gt; maxstk) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;integration stack too large&quot;</span>); }</div>
-<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;        <span class="keywordflow">if</span> (nnde &gt; maxnde) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;integration tree too large&quot;</span>); }</div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;      }</div>
-<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    }</div>
-<div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;  }</div>
-<div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160; </div>
-<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;  std::tuple&lt;nda::vector&lt;double&gt;, nda::vector&lt;double&gt;&gt; <a class="code" href="namespacecppdlr.html#afbfcb627a6ab1115bb02670e7ce61219">gaussquad</a>(<span class="keywordtype">int</span> n);</div>
-<div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160; </div>
-<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;  std::tuple&lt;double, double&gt; <a class="code" href="namespacecppdlr.html#adcede29d3876b4a265f09a56db33085d">leg_eval</a>(<span class="keywordtype">int</span> n, <span class="keywordtype">double</span> x);</div>
-<div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160; </div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;} <span class="comment">// namespace cppdlr</span></div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;    <span class="comment">// Initialize stack: there is a stack of interval endpoints associated w/</span></div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;    <span class="comment">// each node in the integration tree, and a corresponding stack of values</span></div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;    <span class="comment">// associated w/ each such interval</span></div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160; </div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    <span class="keyword">auto</span> endpt = nda::array&lt;double, 2&gt;(maxstk, 2); <span class="comment">// Stack of interval endpoints</span></div>
+<div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160;    <span class="keyword">auto</span> sums  = nda::array&lt;S, 1&gt;(maxstk);         <span class="comment">// Stack of sums associated w/ each interval</span></div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160; </div>
+<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;    <span class="keywordtype">int</span> istk = 0; <span class="comment">// Stack pointer</span></div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;    <span class="keywordtype">int</span> nnde = 1; <span class="comment">// Number of nodes in integration tree</span></div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160; </div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;    endpt(istk, 0) = a; <span class="comment">// Root node interval is [a,b]</span></div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;    endpt(istk, 1) = b;</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160; </div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;    <span class="keywordtype">double</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>   = (b - a) / 2;                                        <span class="comment">// Interval half-width</span></div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;    sums(istk) = <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> * nda::blas::dotc(wgl, f(xgl * <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + (a + b) / 2)); <span class="comment">// Integral of f on root node interval</span></div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160; </div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;    <span class="keywordtype">double</span> aa = 0, bb = 0, cc = 0; <span class="comment">// Interval endpoints, midpoint</span></div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    S sum1 = 0, sum2 = 0;          <span class="comment">// Integrals on subintervals</span></div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160; </div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    <span class="comment">// Main loop</span></div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;    <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160; </div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;      aa = endpt(istk, 0); <span class="comment">// Get interval endpoints</span></div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;      bb = endpt(istk, 1);</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;      cc = (aa + bb) / 2; <span class="comment">// Get midpoint</span></div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160; </div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;      <span class="comment">// Get integral on each subinterval</span></div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;      <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>    = (cc - aa) / 2;</div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;      sum1 = <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> * nda::blas::dotc(wgl, f(xgl * <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + (aa + cc) / 2));</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;      sum2 = <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> * nda::blas::dotc(wgl, f(xgl * <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + (cc + bb) / 2));</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160; </div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;      <span class="comment">// If error on subintervals is less than tolerance, add to integral and</span></div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;      <span class="comment">// move to next node</span></div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160; </div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;      <span class="keywordflow">if</span> (std::abs(sum1 + sum2 - sums(istk)) &lt; tol) {</div>
+<div class="line"><a name="l00648"></a><span class="lineno">  648</span>&#160;        sum += sum1 + sum2;           <span class="comment">// Add to subintervals to integral</span></div>
+<div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;        istk--;                       <span class="comment">// Remove current interval from stack</span></div>
+<div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;        <span class="keywordflow">if</span> (istk &lt; 0) { <span class="keywordflow">return</span> sum; } <span class="comment">// If stack is empty, return integral</span></div>
+<div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;      } <span class="keywordflow">else</span> {                        <span class="comment">// Integral on current interval not converged</span></div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160; </div>
+<div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;        <span class="comment">// Remove current interval from stack, and add subintervals</span></div>
+<div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;        endpt(istk, 1)     = cc;</div>
+<div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;        endpt(istk + 1, 0) = cc;</div>
+<div class="line"><a name="l00656"></a><span class="lineno">  656</span>&#160;        endpt(istk + 1, 1) = bb;</div>
+<div class="line"><a name="l00657"></a><span class="lineno">  657</span>&#160;        sums(istk)         = sum1;</div>
+<div class="line"><a name="l00658"></a><span class="lineno">  658</span>&#160;        sums(istk + 1)     = sum2;</div>
+<div class="line"><a name="l00659"></a><span class="lineno">  659</span>&#160; </div>
+<div class="line"><a name="l00660"></a><span class="lineno">  660</span>&#160;        istk++;</div>
+<div class="line"><a name="l00661"></a><span class="lineno">  661</span>&#160;        nnde += 2;</div>
+<div class="line"><a name="l00662"></a><span class="lineno">  662</span>&#160; </div>
+<div class="line"><a name="l00663"></a><span class="lineno">  663</span>&#160;        <span class="keywordflow">if</span> (istk &gt; maxstk) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;integration stack too large&quot;</span>); }</div>
+<div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;        <span class="keywordflow">if</span> (nnde &gt; maxnde) { <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;integration tree too large&quot;</span>); }</div>
+<div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;      }</div>
+<div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;    }</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;  }</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160; </div>
+<div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;  std::tuple&lt;nda::vector&lt;double&gt;, nda::vector&lt;double&gt;&gt; <a class="code" href="namespacecppdlr.html#afbfcb627a6ab1115bb02670e7ce61219">gaussquad</a>(<span class="keywordtype">int</span> n);</div>
+<div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160; </div>
+<div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;  std::tuple&lt;double, double&gt; <a class="code" href="namespacecppdlr.html#adcede29d3876b4a265f09a56db33085d">leg_eval</a>(<span class="keywordtype">int</span> n, <span class="keywordtype">double</span> x);</div>
+<div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160; </div>
+<div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;} <span class="comment">// namespace cppdlr</span></div>
 <div class="ttc" id="aclasscppdlr_1_1barycheb_html"><div class="ttname"><a href="classcppdlr_1_1barycheb.html">cppdlr::barycheb</a></div><div class="ttdef"><b>Definition:</b> utils.hpp:36</div></div>
 <div class="ttc" id="aclasscppdlr_1_1baryleg_html"><div class="ttname"><a href="classcppdlr_1_1baryleg.html">cppdlr::baryleg</a></div><div class="ttdef"><b>Definition:</b> utils.hpp:59</div></div>
 <div class="ttc" id="anamespacecppdlr_html"><div class="ttname"><a href="namespacecppdlr.html">cppdlr</a></div><div class="ttdef"><b>Definition:</b> dlr_build.cpp:27</div></div>
 <div class="ttc" id="anamespacecppdlr_html_a103a8aae4c8af512d2682d381a676561"><div class="ttname"><a href="namespacecppdlr.html#a103a8aae4c8af512d2682d381a676561">cppdlr::abs2rel</a></div><div class="ttdeci">nda::vector&lt; double &gt; abs2rel(nda::vector_const_view&lt; double &gt; t_abs)</div><div class="ttdoc">Convert points on [0,1] from absolute to relative time format.</div><div class="ttdef"><b>Definition:</b> utils.cpp:106</div></div>
-<div class="ttc" id="anamespacecppdlr_html_a240eb87e88ef0bdc5994d57fe9b7d3a1"><div class="ttname"><a href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">cppdlr::arraymult</a></div><div class="ttdeci">nda::array&lt; S, Ta::rank+Tb::rank - 2 &gt; arraymult(Ta const &amp;a, Tb const &amp;b)</div><div class="ttdoc">Contract the last dimension of an array a with the first dimension of an array b.</div><div class="ttdef"><b>Definition:</b> utils.hpp:557</div></div>
+<div class="ttc" id="anamespacecppdlr_html_a240eb87e88ef0bdc5994d57fe9b7d3a1"><div class="ttname"><a href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">cppdlr::arraymult</a></div><div class="ttdeci">nda::array&lt; S, Ta::rank+Tb::rank - 2 &gt; arraymult(Ta const &amp;a, Tb const &amp;b)</div><div class="ttdoc">Contract the last dimension of an array a with the first dimension of an array b.</div><div class="ttdef"><b>Definition:</b> utils.hpp:555</div></div>
 <div class="ttc" id="anamespacecppdlr_html_a2d46bf12944fe36c90343df67e2d783b"><div class="ttname"><a href="namespacecppdlr.html#a2d46bf12944fe36c90343df67e2d783b">cppdlr::eqptsrel</a></div><div class="ttdeci">nda::vector&lt; double &gt; eqptsrel(int n)</div><div class="ttdoc">Get grid of equispaced points on [0,1] in relative time format.</div><div class="ttdef"><b>Definition:</b> utils.cpp:68</div></div>
 <div class="ttc" id="anamespacecppdlr_html_a3b1ccba6393dfc517757677a13ad2553"><div class="ttname"><a href="namespacecppdlr.html#a3b1ccba6393dfc517757677a13ad2553">cppdlr::rel2abs</a></div><div class="ttdeci">nda::vector&lt; double &gt; rel2abs(nda::vector_const_view&lt; double &gt; t)</div><div class="ttdoc">Convert points on [0,1] from relative to absolute time format.</div><div class="ttdef"><b>Definition:</b> utils.cpp:84</div></div>
 <div class="ttc" id="anamespacecppdlr_html_a78129915b4883af7ef355b517eb130f3"><div class="ttname"><a href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">cppdlr::h</a></div><div class="ttdeci">imtime_ops const Ht const  &amp; h</div><div class="ttdef"><b>Definition:</b> dlr_dyson.hpp:167</div></div>
-<div class="ttc" id="anamespacecppdlr_html_a85cd7bdb1fd649296322df16d329ca27"><div class="ttname"><a href="namespacecppdlr.html#a85cd7bdb1fd649296322df16d329ca27">cppdlr::make_real_t</a></div><div class="ttdeci">decltype(make_regular(real(std::declval&lt; T &gt;()))) make_real_t</div><div class="ttdoc">Get real-valued type corresponding to type of given nda MemoryArray.</div><div class="ttdef"><b>Definition:</b> utils.hpp:528</div></div>
-<div class="ttc" id="anamespacecppdlr_html_a87cd86b43bae8fd0272a4f764bcd163f"><div class="ttname"><a href="namespacecppdlr.html#a87cd86b43bae8fd0272a4f764bcd163f">cppdlr::pivrgs_sym</a></div><div class="ttdeci">std::tuple&lt; typename T::regular_type, nda::vector&lt; double &gt;, nda::vector&lt; int &gt; &gt; pivrgs_sym(T const &amp;a, V const &amp;v, double eps)</div><div class="ttdoc">Symmetrized rank-revealing pivoted reorthogonalized Gram-Schmidt, with matrix augmented by a vector.</div><div class="ttdef"><b>Definition:</b> utils.hpp:345</div></div>
-<div class="ttc" id="anamespacecppdlr_html_a93826a1ab8ed29d304e0194fefd4e19c"><div class="ttname"><a href="namespacecppdlr.html#a93826a1ab8ed29d304e0194fefd4e19c">cppdlr::adapgl</a></div><div class="ttdeci">S adapgl(std::function&lt; nda::array&lt; S, 1 &gt;(nda::array&lt; double, 1 &gt;)&gt; f, double a, double b, double tol, nda::vector&lt; double &gt; xgl, nda::vector&lt; double &gt; wgl)</div><div class="ttdoc">Quick and dirty adaptive Gauss quadrature.</div><div class="ttdef"><b>Definition:</b> utils.hpp:607</div></div>
+<div class="ttc" id="anamespacecppdlr_html_a85cd7bdb1fd649296322df16d329ca27"><div class="ttname"><a href="namespacecppdlr.html#a85cd7bdb1fd649296322df16d329ca27">cppdlr::make_real_t</a></div><div class="ttdeci">decltype(make_regular(real(std::declval&lt; T &gt;()))) make_real_t</div><div class="ttdoc">Get real-valued type corresponding to type of given nda MemoryArray.</div><div class="ttdef"><b>Definition:</b> utils.hpp:526</div></div>
+<div class="ttc" id="anamespacecppdlr_html_a93826a1ab8ed29d304e0194fefd4e19c"><div class="ttname"><a href="namespacecppdlr.html#a93826a1ab8ed29d304e0194fefd4e19c">cppdlr::adapgl</a></div><div class="ttdeci">S adapgl(std::function&lt; nda::array&lt; S, 1 &gt;(nda::array&lt; double, 1 &gt;)&gt; f, double a, double b, double tol, nda::vector&lt; double &gt; xgl, nda::vector&lt; double &gt; wgl)</div><div class="ttdoc">Quick and dirty adaptive Gauss quadrature.</div><div class="ttdef"><b>Definition:</b> utils.hpp:605</div></div>
+<div class="ttc" id="anamespacecppdlr_html_a9aba1fa20ea0a1eda128fb3b564e1c5c"><div class="ttname"><a href="namespacecppdlr.html#a9aba1fa20ea0a1eda128fb3b564e1c5c">cppdlr::pivrgs_sym</a></div><div class="ttdeci">std::tuple&lt; typename T::regular_type, nda::vector&lt; double &gt;, nda::vector&lt; int &gt; &gt; pivrgs_sym(T const &amp;a, int r)</div><div class="ttdoc">Symmetrized pivoted reorthogonalized Gram-Schmidt with specified rank.</div><div class="ttdef"><b>Definition:</b> utils.hpp:336</div></div>
 <div class="ttc" id="anamespacecppdlr_html_aa355c3aaf829296d7e5869eff98fedd1"><div class="ttname"><a href="namespacecppdlr.html#aa355c3aaf829296d7e5869eff98fedd1">cppdlr::baryinterp</a></div><div class="ttdeci">double baryinterp(nda::vector_const_view&lt; double &gt; x, nda::vector_const_view&lt; double &gt; w, nda::vector_const_view&lt; double &gt; f, double xeval)</div><div class="ttdoc">Barycentric Lagrange interpolation.</div><div class="ttdef"><b>Definition:</b> utils.cpp:50</div></div>
 <div class="ttc" id="anamespacecppdlr_html_ac02cc711894b431452f59f40e6f17dac"><div class="ttname"><a href="namespacecppdlr.html#ac02cc711894b431452f59f40e6f17dac">cppdlr::pivrgs</a></div><div class="ttdeci">std::tuple&lt; typename T::regular_type, nda::vector&lt; double &gt;, nda::vector&lt; int &gt; &gt; pivrgs(T const &amp;a, double eps)</div><div class="ttdoc">Rank-revealing pivoted reorthogonalized Gram-Schmidt.</div><div class="ttdef"><b>Definition:</b> utils.hpp:105</div></div>
-<div class="ttc" id="anamespacecppdlr_html_ac23dfec829ec6ed8deec469faeea3981"><div class="ttname"><a href="namespacecppdlr.html#ac23dfec829ec6ed8deec469faeea3981">cppdlr::make_common_t</a></div><div class="ttdeci">typename make_common_helper&lt; T, S1, S2 &gt;::type make_common_t</div><div class="ttdef"><b>Definition:</b> utils.hpp:544</div></div>
+<div class="ttc" id="anamespacecppdlr_html_ac23dfec829ec6ed8deec469faeea3981"><div class="ttname"><a href="namespacecppdlr.html#ac23dfec829ec6ed8deec469faeea3981">cppdlr::make_common_t</a></div><div class="ttdeci">typename make_common_helper&lt; T, S1, S2 &gt;::type make_common_t</div><div class="ttdef"><b>Definition:</b> utils.hpp:542</div></div>
 <div class="ttc" id="anamespacecppdlr_html_adcede29d3876b4a265f09a56db33085d"><div class="ttname"><a href="namespacecppdlr.html#adcede29d3876b4a265f09a56db33085d">cppdlr::leg_eval</a></div><div class="ttdeci">std::tuple&lt; double, double &gt; leg_eval(int n, double x)</div><div class="ttdoc">Evaluate Legendre polynomial of degree n and its derivative.</div><div class="ttdef"><b>Definition:</b> utils.cpp:162</div></div>
-<div class="ttc" id="anamespacecppdlr_html_af7426dd83d2c831f6ae3fa9b8e6172ad"><div class="ttname"><a href="namespacecppdlr.html#af7426dd83d2c831f6ae3fa9b8e6172ad">cppdlr::make_cplx_t</a></div><div class="ttdeci">decltype(make_regular(std::declval&lt; T &gt;() *1i)) make_cplx_t</div><div class="ttdoc">Get complex-valued type corresponding to type of given nda MemoryArray.</div><div class="ttdef"><b>Definition:</b> utils.hpp:533</div></div>
+<div class="ttc" id="anamespacecppdlr_html_af7426dd83d2c831f6ae3fa9b8e6172ad"><div class="ttname"><a href="namespacecppdlr.html#af7426dd83d2c831f6ae3fa9b8e6172ad">cppdlr::make_cplx_t</a></div><div class="ttdeci">decltype(make_regular(std::declval&lt; T &gt;() *1i)) make_cplx_t</div><div class="ttdoc">Get complex-valued type corresponding to type of given nda MemoryArray.</div><div class="ttdef"><b>Definition:</b> utils.hpp:531</div></div>
 <div class="ttc" id="anamespacecppdlr_html_afbfcb627a6ab1115bb02670e7ce61219"><div class="ttname"><a href="namespacecppdlr.html#afbfcb627a6ab1115bb02670e7ce61219">cppdlr::gaussquad</a></div><div class="ttdeci">std::tuple&lt; nda::vector&lt; double &gt;, nda::vector&lt; double &gt; &gt; gaussquad(int n)</div><div class="ttdoc">Gauss-Legendre nodes and weights.</div><div class="ttdef"><b>Definition:</b> utils.cpp:128</div></div>
-<div class="ttc" id="astructcppdlr_1_1make__common__helper_html"><div class="ttname"><a href="structcppdlr_1_1make__common__helper.html">cppdlr::make_common_helper</a></div><div class="ttdoc">Get type of given nda MemoryArray with scalar value type replaced by common type of two given types (...</div><div class="ttdef"><b>Definition:</b> utils.hpp:539</div></div>
-<div class="ttc" id="astructcppdlr_1_1make__common__helper_html_a107dd2255fe65dc6a5575ccd059d42c9"><div class="ttname"><a href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">cppdlr::make_common_helper::type</a></div><div class="ttdeci">decltype(make_regular(std::declval&lt; T &gt;() *x)) type</div><div class="ttdef"><b>Definition:</b> utils.hpp:542</div></div>
-<div class="ttc" id="astructcppdlr_1_1make__common__helper_html_af2b0051f601013d1a403cff27d6719b4"><div class="ttname"><a href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">cppdlr::make_common_helper::S</a></div><div class="ttdeci">std::common_type_t&lt; S1, S2 &gt; S</div><div class="ttdef"><b>Definition:</b> utils.hpp:540</div></div>
+<div class="ttc" id="astructcppdlr_1_1make__common__helper_html"><div class="ttname"><a href="structcppdlr_1_1make__common__helper.html">cppdlr::make_common_helper</a></div><div class="ttdoc">Get type of given nda MemoryArray with scalar value type replaced by common type of two given types (...</div><div class="ttdef"><b>Definition:</b> utils.hpp:537</div></div>
+<div class="ttc" id="astructcppdlr_1_1make__common__helper_html_a107dd2255fe65dc6a5575ccd059d42c9"><div class="ttname"><a href="structcppdlr_1_1make__common__helper.html#a107dd2255fe65dc6a5575ccd059d42c9">cppdlr::make_common_helper::type</a></div><div class="ttdeci">decltype(make_regular(std::declval&lt; T &gt;() *x)) type</div><div class="ttdef"><b>Definition:</b> utils.hpp:540</div></div>
+<div class="ttc" id="astructcppdlr_1_1make__common__helper_html_af2b0051f601013d1a403cff27d6719b4"><div class="ttname"><a href="structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4">cppdlr::make_common_helper::S</a></div><div class="ttdeci">std::common_type_t&lt; S1, S2 &gt; S</div><div class="ttdef"><b>Definition:</b> utils.hpp:538</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

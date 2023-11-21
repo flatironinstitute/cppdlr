@@ -84,9 +84,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7bd1629f4508a8e75bab475cb5322ae1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a7bd1629f4508a8e75bab475cb5322ae1">imtime_ops</a> (double <a class="el" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, bool symmetrize)</td></tr>
-<tr class="memdesc:a7bd1629f4508a8e75bab475cb5322ae1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classcppdlr_1_1imtime__ops.html" title="Class responsible for all DLR imaginary time operations, including building imaginary time grid and t...">imtime_ops</a>.  <a href="classcppdlr_1_1imtime__ops.html#a7bd1629f4508a8e75bab475cb5322ae1">More...</a><br /></td></tr>
-<tr class="separator:a7bd1629f4508a8e75bab475cb5322ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31b2703038bafa04b59e3731ab0bf234"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a31b2703038bafa04b59e3731ab0bf234">imtime_ops</a> (double <a class="el" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf, bool symmetrize)</td></tr>
+<tr class="memdesc:a31b2703038bafa04b59e3731ab0bf234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classcppdlr_1_1imtime__ops.html" title="Class responsible for all DLR imaginary time operations, including building imaginary time grid and t...">imtime_ops</a>.  <a href="classcppdlr_1_1imtime__ops.html#a31b2703038bafa04b59e3731ab0bf234">More...</a><br /></td></tr>
+<tr class="separator:a31b2703038bafa04b59e3731ab0bf234"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7">imtime_ops</a> (double <a class="el" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf)</td></tr>
 <tr class="memdesc:a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classcppdlr_1_1imtime__ops.html" title="Class responsible for all DLR imaginary time operations, including building imaginary time grid and t...">imtime_ops</a>.  <a href="classcppdlr_1_1imtime__ops.html#a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7">More...</a><br /></td></tr>
 <tr class="separator:a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -179,8 +179,8 @@ Friends</h2></td></tr>
 <div class="textblock"><p>Class responsible for all DLR imaginary time operations, including building imaginary time grid and transformations. </p>
 <dl class="section note"><dt>Note</dt><dd>First dimension of all Green's function and coefficient arrays must be DLR rank r. </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a7bd1629f4508a8e75bab475cb5322ae1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bd1629f4508a8e75bab475cb5322ae1">&#9670;&nbsp;</a></span>imtime_ops() <span class="overload">[1/4]</span></h2>
+<a id="a31b2703038bafa04b59e3731ab0bf234"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31b2703038bafa04b59e3731ab0bf234">&#9670;&nbsp;</a></span>imtime_ops() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -196,12 +196,6 @@ Friends</h2></td></tr>
           <td></td>
           <td class="paramtype">nda::vector_const_view&lt; double &gt;&#160;</td>
           <td class="paramname"><em>dlr_rf</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>&#160;</td>
-          <td class="paramname"><em>statistic</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -222,12 +216,10 @@ Friends</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">lambda</td><td>DLR cutoff parameter </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dlr_rf</td><td>DLR frequencies </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">statistic</td><td>Particle statistics: Boson or Fermion </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">symmetrize</td><td>NONSYM or false for non-symmetrized DLR frequencies, SYM or true for symmetrized</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symmetrize</td><td>NONSYM or false for non-symmetrized DLR frequencies, SYM or true for symmetrized </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>In case Boson and SYM options are selected, we enforce that tau = 1/2 is chosen as a DLR imaginary time node. For an explanation, please see the "Symmetrized DLR grids" subsection in the "Background" section of the documentation. </dd></dl>
 
 </div>
 </div>

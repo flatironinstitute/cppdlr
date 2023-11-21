@@ -12,7 +12,7 @@ Class responsible for all DLR imaginary time operations, including building imag
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a7bd1629f4508a8e75bab475cb5322ae1}{imtime\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, bool symmetrize)
+\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a31b2703038bafa04b59e3731ab0bf234}{imtime\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, bool symmetrize)
 \begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7}{imtime\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf)
 \begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}. \end{DoxyCompactList}\item 
@@ -85,11 +85,11 @@ First dimension of all Green\textquotesingle{}s function and coefficient arrays 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a7bd1629f4508a8e75bab475cb5322ae1}\label{classcppdlr_1_1imtime__ops_a7bd1629f4508a8e75bab475cb5322ae1}} 
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a31b2703038bafa04b59e3731ab0bf234}\label{classcppdlr_1_1imtime__ops_a31b2703038bafa04b59e3731ab0bf234}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!imtime\_ops@{imtime\_ops}}
 \index{imtime\_ops@{imtime\_ops}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{imtime\_ops()}{imtime\_ops()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
-{\footnotesize\ttfamily cppdlr\+::imtime\+\_\+ops\+::imtime\+\_\+ops (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+rf,  }\item[{\mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}}}]{statistic,  }\item[{bool}]{symmetrize }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily cppdlr\+::imtime\+\_\+ops\+::imtime\+\_\+ops (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+rf,  }\item[{bool}]{symmetrize }\end{DoxyParamCaption})}
 
 
 
@@ -101,14 +101,9 @@ Constructor for \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}.
 \hline
 \mbox{\texttt{ in}}  & {\em dlr\+\_\+rf} & DLR frequencies \\
 \hline
-\mbox{\texttt{ in}}  & {\em statistic} & Particle statistics\+: Boson or Fermion \\
-\hline
-\mbox{\texttt{ in}}  & {\em symmetrize} & NONSYM or false for non-\/symmetrized DLR frequencies, SYM or true for symmetrized\\
+\mbox{\texttt{ in}}  & {\em symmetrize} & NONSYM or false for non-\/symmetrized DLR frequencies, SYM or true for symmetrized \\
 \hline
 \end{DoxyParams}
-\begin{DoxyNote}{Note}
-In case Boson and SYM options are selected, we enforce that tau = 1/2 is chosen as a DLR imaginary time node. For an explanation, please see the \char`\"{}\+Symmetrized DLR grids\char`\"{} subsection in the \char`\"{}\+Background\char`\"{} section of the documentation. 
-\end{DoxyNote}
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7}\label{classcppdlr_1_1imtime__ops_a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!imtime\_ops@{imtime\_ops}}
 \index{imtime\_ops@{imtime\_ops}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
