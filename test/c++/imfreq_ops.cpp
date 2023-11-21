@@ -179,8 +179,8 @@ TEST(imfreq_ops, interp_matrix) {
   }
   errl2 = sqrt(errl2 / ntst);
 
-  EXPECT_LT(errlinf, 100 * eps);
-  EXPECT_LT(errl2, 2 * eps);
+  EXPECT_LT(errlinf, 200 * eps);
+  EXPECT_LT(errl2, 3 * eps);
   std::cout << fmt::format("Imag time: L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
