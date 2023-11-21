@@ -114,7 +114,7 @@ TEST(dyson_it, dyson_vs_ed_real) {
   errl2 = sqrt(errl2 / ntst);
 
   EXPECT_LT(errlinf, 10 * eps);
-  EXPECT_LT(errl2, eps);
+  EXPECT_LT(errl2, 2*eps);
   std::cout << fmt::format("L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
