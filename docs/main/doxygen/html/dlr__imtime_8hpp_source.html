@@ -267,23 +267,23 @@ $(function() {
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        <span class="keyword">auto</span> gca = nda::array_const_view&lt;S, 1&gt;(gc);</div>
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        <span class="comment">// Diagonal contribution</span></div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tcf2it_v, make_regular(fca * gca));</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> = matvecmul(tcf2it_v, make_regular(fca * gca));</div>
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        <span class="comment">// Off-diagonal contribution</span></div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        <span class="keyword">auto</span> tmp = fca * <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, gca) + gca * <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fca);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        <span class="keywordflow">return</span> beta * (<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, make_regular(tmp)));</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        <span class="keywordflow">return</span> beta * (<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + matvecmul(cf2it, make_regular(tmp)));</div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (T::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;        <span class="comment">// Diagonal contribution</span></div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <span class="keyword">auto</span> fcgc = nda::array&lt;S, 3&gt;(fc.shape()); <span class="comment">// Product of coefficients of f and g</span></div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { fcgc(i, _, _) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fc(i, _, _), gc(i, _, _)); }</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { fcgc(i, _, _) = matmul(fc(i, _, _), gc(i, _, _)); }</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tcf2it_v, fcgc);</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <span class="comment">// Off-diagonal contribution</span></div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc);</div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <span class="keyword">auto</span> tmp2 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, gc);</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { tmp1(i, _, _) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(tmp1(i, _, _), gc(i, _, _)) + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fc(i, _, _), tmp2(i, _, _)); }</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; r; ++i) { tmp1(i, _, _) = matmul(tmp1(i, _, _), gc(i, _, _)) + matmul(fc(i, _, _), tmp2(i, _, _)); }</div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="keywordflow">return</span> beta * (<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a> + <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp1));</div>
 <div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
@@ -302,7 +302,7 @@ $(function() {
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="keywordflow">if</span> (fconv.shape(1) != g.shape(0)) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;Input array dimensions incompatible.&quot;</span>);</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fconv, g);</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;        <span class="keywordflow">return</span> matvecmul(fconv, g);</div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (Tg::rank == 3) { <span class="comment">// Matrix-valued Green&#39;s function</span></div>
 <div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160; </div>
@@ -312,7 +312,7 @@ $(function() {
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        <span class="keywordtype">int</span> norb2 = g.shape(2);</div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="keyword">auto</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>                       = nda::array&lt;S, 3&gt;(r, norb1, norb2);</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;        reshape(<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>, r * norb1, norb2) = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(fconv, reshape(g, r * norb1, norb2));</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;        reshape(<a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>, r * norb1, norb2) = matmul(fconv, reshape(g, r * norb1, norb2));</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160; </div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespacecppdlr.html#a78129915b4883af7ef355b517eb130f3">h</a>;</div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
@@ -350,7 +350,7 @@ $(function() {
 <div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160; </div>
 <div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        <span class="comment">// Off-diagonal contribution (given by K * (diag(hilb*fc) +</span></div>
 <div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        <span class="comment">// (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))</span></div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <span class="keyword">auto</span> tmp1 = <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(hilb_v, fc); <span class="comment">// hilb * fc</span></div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <span class="keyword">auto</span> tmp1 = matvecmul(hilb_v, fc); <span class="comment">// hilb * fc</span></div>
 <div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        <span class="keyword">auto</span> tmp2 = nda::matrix&lt;S&gt;(r, r);</div>
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 0; k &lt; r; ++k) {</div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l = 0; l &lt; r; ++l) {</div>
@@ -358,7 +358,7 @@ $(function() {
 <div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;          }</div>
 <div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;          tmp2(k, k) += tmp1(k); <span class="comment">// diag(fc)*hilb + diag(hilb*fc)</span></div>
 <div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        }</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;        fconv += <a class="code" href="namespacecppdlr.html#a240eb87e88ef0bdc5994d57fe9b7d3a1">arraymult</a>(cf2it, tmp2);</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;        fconv += matmul(cf2it, tmp2);</div>
 <div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160; </div>
 <div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;        <span class="comment">// Then precompose with DLR grid values to DLR coefficients matrix</span></div>
 <div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;        <span class="keywordflow">if</span> constexpr (nda::have_same_value_type_v&lt;T, decltype(it2cf.lu)&gt;) {</div>
