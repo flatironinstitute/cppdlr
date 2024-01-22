@@ -311,23 +311,23 @@ namespace cppdlr {
         auto gca = nda::array_const_view<S, 1>(gc);
 
         // Diagonal contribution
-        auto h = arraymult(tcf2it_v, make_regular(fca * gca));
+        auto h = matvecmul(tcf2it_v, make_regular(fca * gca));
 
         // Off-diagonal contribution
         auto tmp = fca * arraymult(hilb_v, gca) + gca * arraymult(hilb_v, fca);
-        return beta * (h + arraymult(cf2it, make_regular(tmp)));
+        return beta * (h + matvecmul(cf2it, make_regular(tmp)));
 
       } else if (T::rank == 3) { // Matrix-valued Green's function
 
         // Diagonal contribution
         auto fcgc = nda::array<S, 3>(fc.shape()); // Product of coefficients of f and g
-        for (int i = 0; i < r; ++i) { fcgc(i, _, _) = arraymult(fc(i, _, _), gc(i, _, _)); }
+        for (int i = 0; i < r; ++i) { fcgc(i, _, _) = matmul(fc(i, _, _), gc(i, _, _)); }
         auto h = arraymult(tcf2it_v, fcgc);
 
         // Off-diagonal contribution
         auto tmp1 = arraymult(hilb_v, fc);
         auto tmp2 = arraymult(hilb_v, gc);
-        for (int i = 0; i < r; ++i) { tmp1(i, _, _) = arraymult(tmp1(i, _, _), gc(i, _, _)) + arraymult(fc(i, _, _), tmp2(i, _, _)); }
+        for (int i = 0; i < r; ++i) { tmp1(i, _, _) = matmul(tmp1(i, _, _), gc(i, _, _)) + matmul(fc(i, _, _), tmp2(i, _, _)); }
 
         return beta * (h + arraymult(cf2it, tmp1));
 
@@ -367,7 +367,7 @@ namespace cppdlr {
 
         if (fconv.shape(1) != g.shape(0)) throw std::runtime_error("Input array dimensions incompatible.");
 
-        return arraymult(fconv, g);
+        return matvecmul(fconv, g);
 
       } else if (Tg::rank == 3) { // Matrix-valued Green's function
 
@@ -377,7 +377,7 @@ namespace cppdlr {
         int norb2 = g.shape(2);
 
         auto h                       = nda::array<S, 3>(r, norb1, norb2);
-        reshape(h, r * norb1, norb2) = arraymult(fconv, reshape(g, r * norb1, norb2));
+        reshape(h, r * norb1, norb2) = matmul(fconv, reshape(g, r * norb1, norb2));
 
         return h;
 
@@ -459,7 +459,7 @@ namespace cppdlr {
 
         // Off-diagonal contribution (given by K * (diag(hilb*fc) +
         // (diag(fc)*hilb)), where K is the matrix K(dlr_it(k), dlr_rf(l))
-        auto tmp1 = arraymult(hilb_v, fc); // hilb * fc
+        auto tmp1 = matvecmul(hilb_v, fc); // hilb * fc
         auto tmp2 = nda::matrix<S>(r, r);
         for (int k = 0; k < r; ++k) {
           for (int l = 0; l < r; ++l) {
@@ -467,7 +467,7 @@ namespace cppdlr {
           }
           tmp2(k, k) += tmp1(k); // diag(fc)*hilb + diag(hilb*fc)
         }
-        fconv += arraymult(cf2it, tmp2);
+        fconv += matmul(cf2it, tmp2);
 
         // Then precompose with DLR grid values to DLR coefficients matrix
         if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
