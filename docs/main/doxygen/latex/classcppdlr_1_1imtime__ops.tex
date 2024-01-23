@@ -16,7 +16,7 @@ Class responsible for all DLR imaginary time operations, including building imag
 \begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7}{imtime\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf)
 \begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a43a9b5fb6aeefad7d8ae6865329e69de}{imtime\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+it, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ cf2it, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ it2cf\+\_\+lu, nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ it2cf\+\_\+piv)
+\mbox{\hyperlink{classcppdlr_1_1imtime__ops_ac44ddf86d5fd185dcf12add54362a6c0}{imtime\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+it, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ cf2it, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ it2cf\+\_\+lu, nda\+::matrix\+\_\+const\+\_\+view$<$ dcomplex $>$ it2cf\+\_\+zlu, nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ it2cf\+\_\+piv)
 \item 
 \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a8da78cf54d39d48d2be19ad1f146b03c}{imtime\+\_\+ops}} ()=default
 \item 
@@ -50,6 +50,8 @@ nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_
 \begin{DoxyCompactList}\small\item\em Get transformation matrix from DLR coefficients to values at DLR imaginary time nodes. \end{DoxyCompactList}\item 
 nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_af2b17e780b762dde6a25d8f8e844dab3}{get\+\_\+it2cf\+\_\+lu}} () const
 \begin{DoxyCompactList}\small\item\em Get LU factors of transformation matrix from DLR imaginary time values to coefficients. \end{DoxyCompactList}\item 
+nda\+::matrix\+\_\+const\+\_\+view$<$ dcomplex $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a348fcd0b23b228a73b29c1507c27d589}{get\+\_\+it2cf\+\_\+zlu}} () const
+\begin{DoxyCompactList}\small\item\em Get LU factors of transformation matrix from DLR imaginary time values to coefficients, cast to complex. \end{DoxyCompactList}\item 
 nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_acc0575ff4a9de9b9c6c186b9f002cc53}{get\+\_\+it2cf\+\_\+piv}} () const
 \begin{DoxyCompactList}\small\item\em Get LU pivots of transformation matrix from DLR imaginary time values to coefficients. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a88f437cb31c98929ab8a1e6dadb174aa}{rank}} () const
@@ -121,11 +123,11 @@ Constructor for \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}}.
 \mbox{\texttt{ in}}  & {\em dlr\+\_\+rf} & DLR frequencies \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a43a9b5fb6aeefad7d8ae6865329e69de}\label{classcppdlr_1_1imtime__ops_a43a9b5fb6aeefad7d8ae6865329e69de}} 
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_ac44ddf86d5fd185dcf12add54362a6c0}\label{classcppdlr_1_1imtime__ops_ac44ddf86d5fd185dcf12add54362a6c0}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!imtime\_ops@{imtime\_ops}}
 \index{imtime\_ops@{imtime\_ops}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{imtime\_ops()}{imtime\_ops()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
-{\footnotesize\ttfamily cppdlr\+::imtime\+\_\+ops\+::imtime\+\_\+ops (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+rf,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+it,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$}]{cf2it,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$}]{it2cf\+\_\+lu,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ int $>$}]{it2cf\+\_\+piv }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily cppdlr\+::imtime\+\_\+ops\+::imtime\+\_\+ops (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+rf,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+it,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$}]{cf2it,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$}]{it2cf\+\_\+lu,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ dcomplex $>$}]{it2cf\+\_\+zlu,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ int $>$}]{it2cf\+\_\+piv }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a8da78cf54d39d48d2be19ad1f146b03c}\label{classcppdlr_1_1imtime__ops_a8da78cf54d39d48d2be19ad1f146b03c}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!imtime\_ops@{imtime\_ops}}
@@ -368,6 +370,19 @@ Get LU pivots of transformation matrix from DLR imaginary time values to coeffic
 \begin{DoxyReturn}{Returns}
 LU pivots 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a348fcd0b23b228a73b29c1507c27d589}\label{classcppdlr_1_1imtime__ops_a348fcd0b23b228a73b29c1507c27d589}} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!get\_it2cf\_zlu@{get\_it2cf\_zlu}}
+\index{get\_it2cf\_zlu@{get\_it2cf\_zlu}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{get\_it2cf\_zlu()}{get\_it2cf\_zlu()}}
+{\footnotesize\ttfamily nda\+::matrix\+\_\+const\+\_\+view$<$dcomplex$>$ cppdlr\+::imtime\+\_\+ops\+::get\+\_\+it2cf\+\_\+zlu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get LU factors of transformation matrix from DLR imaginary time values to coefficients, cast to complex. 
+
+\begin{DoxyReturn}{Returns}
+LU factors 
+\end{DoxyReturn}
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a89451028e273c8753d87621081a16cee}\label{classcppdlr_1_1imtime__ops_a89451028e273c8753d87621081a16cee}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!get\_itnodes@{get\_itnodes}}
 \index{get\_itnodes@{get\_itnodes}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
@@ -530,6 +545,16 @@ LU factors (LAPACK format) of imaginary time vals -\/$>$ coefs matrix.
 
 
 LU pivots (LAPACK format) of imaginary time vals -\/$>$ coefs matrix. 
+
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a4868c3d774292b4d3610ac3225682bc0}\label{classcppdlr_1_1imtime__ops_a4868c3d774292b4d3610ac3225682bc0}} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!zlu@{zlu}}
+\index{zlu@{zlu}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{zlu}{zlu}}
+{\footnotesize\ttfamily nda\+::matrix$<$dcomplex$>$ cppdlr\+::imtime\+\_\+ops\+::zlu}
+
+
+
+Same as lu, cast to complex (for use with lapack\+::getrs w/ cmplx input) 
 
 
 

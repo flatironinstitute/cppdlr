@@ -90,8 +90,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7">imtime_ops</a> (double <a class="el" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf)</td></tr>
 <tr class="memdesc:a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="classcppdlr_1_1imtime__ops.html" title="Class responsible for all DLR imaginary time operations, including building imaginary time grid and t...">imtime_ops</a>.  <a href="classcppdlr_1_1imtime__ops.html#a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7">More...</a><br /></td></tr>
 <tr class="separator:a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43a9b5fb6aeefad7d8ae6865329e69de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a43a9b5fb6aeefad7d8ae6865329e69de">imtime_ops</a> (double <a class="el" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf, nda::vector_const_view&lt; double &gt; dlr_it, nda::matrix_const_view&lt; double &gt; cf2it, nda::matrix_const_view&lt; double &gt; it2cf_lu, nda::vector_const_view&lt; int &gt; it2cf_piv)</td></tr>
-<tr class="separator:a43a9b5fb6aeefad7d8ae6865329e69de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac44ddf86d5fd185dcf12add54362a6c0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#ac44ddf86d5fd185dcf12add54362a6c0">imtime_ops</a> (double <a class="el" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a>, nda::vector_const_view&lt; double &gt; dlr_rf, nda::vector_const_view&lt; double &gt; dlr_it, nda::matrix_const_view&lt; double &gt; cf2it, nda::matrix_const_view&lt; double &gt; it2cf_lu, nda::matrix_const_view&lt; dcomplex &gt; it2cf_zlu, nda::vector_const_view&lt; int &gt; it2cf_piv)</td></tr>
+<tr class="separator:ac44ddf86d5fd185dcf12add54362a6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8da78cf54d39d48d2be19ad1f146b03c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a8da78cf54d39d48d2be19ad1f146b03c">imtime_ops</a> ()=default</td></tr>
 <tr class="separator:a8da78cf54d39d48d2be19ad1f146b03c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b83b15a4fa3eefe8f10d65a53b5885d"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
@@ -145,6 +145,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af2b17e780b762dde6a25d8f8e844dab3"><td class="memItemLeft" align="right" valign="top">nda::matrix_const_view&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">get_it2cf_lu</a> () const</td></tr>
 <tr class="memdesc:af2b17e780b762dde6a25d8f8e844dab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get LU factors of transformation matrix from DLR imaginary time values to coefficients.  <a href="classcppdlr_1_1imtime__ops.html#af2b17e780b762dde6a25d8f8e844dab3">More...</a><br /></td></tr>
 <tr class="separator:af2b17e780b762dde6a25d8f8e844dab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a348fcd0b23b228a73b29c1507c27d589"><td class="memItemLeft" align="right" valign="top">nda::matrix_const_view&lt; dcomplex &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a348fcd0b23b228a73b29c1507c27d589">get_it2cf_zlu</a> () const</td></tr>
+<tr class="memdesc:a348fcd0b23b228a73b29c1507c27d589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get LU factors of transformation matrix from DLR imaginary time values to coefficients, cast to complex.  <a href="classcppdlr_1_1imtime__ops.html#a348fcd0b23b228a73b29c1507c27d589">More...</a><br /></td></tr>
+<tr class="separator:a348fcd0b23b228a73b29c1507c27d589"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc0575ff4a9de9b9c6c186b9f002cc53"><td class="memItemLeft" align="right" valign="top">nda::vector_const_view&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">get_it2cf_piv</a> () const</td></tr>
 <tr class="memdesc:acc0575ff4a9de9b9c6c186b9f002cc53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get LU pivots of transformation matrix from DLR imaginary time values to coefficients.  <a href="classcppdlr_1_1imtime__ops.html#acc0575ff4a9de9b9c6c186b9f002cc53">More...</a><br /></td></tr>
 <tr class="separator:acc0575ff4a9de9b9c6c186b9f002cc53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -260,8 +263,8 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a43a9b5fb6aeefad7d8ae6865329e69de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43a9b5fb6aeefad7d8ae6865329e69de">&#9670;&nbsp;</a></span>imtime_ops() <span class="overload">[3/4]</span></h2>
+<a id="ac44ddf86d5fd185dcf12add54362a6c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac44ddf86d5fd185dcf12add54362a6c0">&#9670;&nbsp;</a></span>imtime_ops() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -298,6 +301,12 @@ Friends</h2></td></tr>
           <td></td>
           <td class="paramtype">nda::matrix_const_view&lt; double &gt;&#160;</td>
           <td class="paramname"><em>it2cf_lu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">nda::matrix_const_view&lt; dcomplex &gt;&#160;</td>
+          <td class="paramname"><em>it2cf_zlu</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -812,6 +821,34 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
 
 </div>
 </div>
+<a id="a348fcd0b23b228a73b29c1507c27d589"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a348fcd0b23b228a73b29c1507c27d589">&#9670;&nbsp;</a></span>get_it2cf_zlu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">nda::matrix_const_view&lt;dcomplex&gt; cppdlr::imtime_ops::get_it2cf_zlu </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get LU factors of transformation matrix from DLR imaginary time values to coefficients, cast to complex. </p>
+<dl class="section return"><dt>Returns</dt><dd>LU factors </dd></dl>
+
+</div>
+</div>
 <a id="a89451028e273c8753d87621081a16cee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a89451028e273c8753d87621081a16cee">&#9670;&nbsp;</a></span>get_itnodes() <span class="overload">[1/2]</span></h2>
 
@@ -1245,6 +1282,22 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
 </div><div class="memdoc">
 
 <p>LU pivots (LAPACK format) of imaginary time vals -&gt; coefs matrix. </p>
+
+</div>
+</div>
+<a id="a4868c3d774292b4d3610ac3225682bc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4868c3d774292b4d3610ac3225682bc0">&#9670;&nbsp;</a></span>zlu</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nda::matrix&lt;dcomplex&gt; cppdlr::imtime_ops::zlu</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Same as lu, cast to complex (for use with lapack::getrs w/ cmplx input) </p>
 
 </div>
 </div>
