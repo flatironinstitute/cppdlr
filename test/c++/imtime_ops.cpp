@@ -1070,5 +1070,6 @@ TEST(dlr_imtime, h5_rw) {
   EXPECT_EQ_ARRAY(itops.get_itnodes(), itops_ref.get_itnodes());
   EXPECT_EQ_ARRAY(itops.get_cf2it(), itops_ref.get_cf2it());
   EXPECT_EQ_ARRAY(itops.get_it2cf_lu(), itops_ref.get_it2cf_lu());
+  EXPECT_EQ_ARRAY(itops.get_it2cf_zlu(), itops_ref.get_it2cf_zlu());
   EXPECT_EQ_ARRAY(itops.get_it2cf_piv(), itops_ref.get_it2cf_piv());
 }

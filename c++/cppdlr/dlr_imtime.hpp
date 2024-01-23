@@ -32,7 +32,7 @@ namespace cppdlr {
   /**
   * Option for ordinary or time-ordered convolution 
   */
-   static constexpr bool ORDINARY = false, TIME_ORDERED = true;
+  static constexpr bool ORDINARY = false, TIME_ORDERED = true;
 
   /**
   * @class imtime_ops
@@ -65,8 +65,8 @@ namespace cppdlr {
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
 
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, nda::vector_const_view<double> dlr_it, nda::matrix_const_view<double> cf2it,
-               nda::matrix_const_view<double> it2cf_lu, nda::vector_const_view<int> it2cf_piv)
-       : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it), cf2it(cf2it), it2cf{it2cf_lu, it2cf_piv} {};
+               nda::matrix_const_view<double> it2cf_lu, nda::matrix_const_view<dcomplex> it2cf_zlu, nda::vector_const_view<int> it2cf_piv)
+       : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it), cf2it(cf2it), it2cf{it2cf_lu, it2cf_zlu, it2cf_piv} {};
 
     imtime_ops() = default;
 
@@ -93,11 +93,10 @@ namespace cppdlr {
       auto gfv = nda::reshape(gf, r, g.size() / r);
 
       // Solve linear system (multiple right hand sides) to convert vals -> coeffs
-      if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
-        nda::lapack::getrs(it2cf.lu, gfv, it2cf.piv);
+      if constexpr (nda::is_complex_v<S>) { // getrs requires matrix and rhs to have same value type
+        nda::lapack::getrs(it2cf.zlu, gfv, it2cf.piv);
       } else {
-        // getrs requires matrix and rhs to have same value type
-        nda::lapack::getrs(nda::matrix<S>(it2cf.lu), gfv, it2cf.piv);
+        nda::lapack::getrs(it2cf.lu, gfv, it2cf.piv);
       }
 
       return gf;
@@ -256,7 +255,6 @@ namespace cppdlr {
         return gr;
       }
     }
-
 
     /** 
     * @brief Compute convolution of two imaginary time Green's functions
@@ -470,11 +468,11 @@ namespace cppdlr {
         fconv += matmul(cf2it, tmp2);
 
         // Then precompose with DLR grid values to DLR coefficients matrix
-        if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
-          nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        if constexpr (nda::is_complex_v<S>) {                         // getrs requires matrix and rhs to have same value type
+          nda::lapack::getrs(transpose(it2cf.zlu), fconv, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(transpose(nda::matrix<S>(it2cf.lu)), fconv, it2cf.piv);
+          nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv);
         }
 
         return beta * fconv;
@@ -517,11 +515,11 @@ namespace cppdlr {
         }
 
         // Do the solve
-        if constexpr (nda::have_same_value_type_v<T, decltype(it2cf.lu)>) {
-          nda::lapack::getrs(transpose(it2cf.lu), fconvtmp, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        if constexpr (nda::is_complex_v<S>) {                            // getrs requires matrix and rhs to have same value type
+          nda::lapack::getrs(transpose(it2cf.zlu), fconvtmp, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(transpose(nda::matrix<S>(it2cf.lu)), fconvtmp, it2cf.piv);
+          nda::lapack::getrs(transpose(it2cf.lu), fconvtmp, it2cf.piv);
         }
 
         // Transpose back
@@ -566,6 +564,14 @@ namespace cppdlr {
     * @return LU factors
     */
     nda::matrix_const_view<double> get_it2cf_lu() const { return it2cf.lu; };
+
+    /**
+    * @brief Get LU factors of transformation matrix from DLR imaginary time
+    * values to coefficients, cast to complex
+    *
+    * @return LU factors
+    */
+    nda::matrix_const_view<dcomplex> get_it2cf_zlu() const { return it2cf.zlu; };
 
     /**
     * @brief Get LU pivots of transformation matrix from DLR imaginary time values to coefficients
@@ -696,8 +702,9 @@ namespace cppdlr {
     * @brief Struct for transformation from DLR imaginary time values to coefficients
     */
     struct {
-      nda::matrix<double> lu; ///< LU factors (LAPACK format) of imaginary time vals -> coefs matrix
-      nda::vector<int> piv;   ///< LU pivots (LAPACK format) of imaginary time vals -> coefs matrix
+      nda::matrix<double> lu;    ///< LU factors (LAPACK format) of imaginary time vals -> coefs matrix
+      nda::matrix<dcomplex> zlu; ///< Same as lu, cast to complex (for use with lapack::getrs w/ cmplx input)
+      nda::vector<int> piv;      ///< LU pivots (LAPACK format) of imaginary time vals -> coefs matrix
     } it2cf;
 
     // Arrays used for dlr_imtime::convolve
@@ -726,6 +733,7 @@ namespace cppdlr {
       h5::write(gr, "it", m.get_itnodes());
       h5::write(gr, "cf2it", m.get_cf2it());
       h5::write(gr, "it2cf_lu", m.get_it2cf_lu());
+      h5::write(gr, "it2cf_zlu", m.get_it2cf_zlu());
       h5::write(gr, "it2cf_piv", m.get_it2cf_piv());
     }
 
@@ -737,11 +745,12 @@ namespace cppdlr {
       auto lambda    = h5::read<double>(gr, "lambda");
       auto rf        = h5::read<nda::vector<double>>(gr, "rf");
       auto it        = h5::read<nda::vector<double>>(gr, "it");
-      auto cf2it_     = h5::read<nda::matrix<double>>(gr, "cf2it");
+      auto cf2it_    = h5::read<nda::matrix<double>>(gr, "cf2it");
       auto it2cf_lu  = h5::read<nda::matrix<double>>(gr, "it2cf_lu");
+      auto it2cf_zlu = h5::read<nda::matrix<dcomplex>>(gr, "it2cf_zlu");
       auto it2cf_piv = h5::read<nda::vector<int>>(gr, "it2cf_piv");
 
-      m = imtime_ops(lambda, rf, it, cf2it_, it2cf_lu, it2cf_piv);
+      m = imtime_ops(lambda, rf, it, cf2it_, it2cf_lu, it2cf_zlu, it2cf_piv);
     }
   };
 

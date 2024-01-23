@@ -51,6 +51,7 @@ namespace cppdlr {
     // LU factors of coefficient to imaginary time matrix
     it2cf.lu = cf2it;
     lapack::getrf(it2cf.lu, it2cf.piv);
+    it2cf.zlu = it2cf.lu;
   }
 
   imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf) : imtime_ops(lambda, dlr_rf, NONSYM) {}
