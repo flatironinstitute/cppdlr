@@ -969,6 +969,9 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
 
+  // Verify DLR rank is even
+  EXPECT_EQ(r % 2, 0);
+
   // Verify DLR rank is odd
   //EXPECT_EQ(r % 2, 1);
 
@@ -985,7 +988,8 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   auto const &dlr_it = itops.get_itnodes();
 
   // Verify symmetry
-  EXPECT_EQ(max_element(abs(dlr_it(range((r - 1) / 2)) + dlr_it(range(r - 1, (r - 1) / 2, -1)))), 0);
+  EXPECT_EQ(max_element(abs(dlr_it(range(r / 2)) + dlr_it(range(r - 1, r / 2 - 1, -1)))), 0); // r even
+  //EXPECT_EQ(max_element(abs(dlr_it(range((r - 1) / 2)) + dlr_it(range(r - 1, (r - 1) / 2, -1)))), 0); // r odd
 
   // Verify tau = 1/2 was selected
   //EXPECT_EQ(dlr_it((r - 1) / 2), 0.5);
