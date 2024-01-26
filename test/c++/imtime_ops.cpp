@@ -124,7 +124,7 @@ TEST(imtime_ops, interp_matrix) {
   int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
@@ -197,7 +197,7 @@ TEST(imtime_ops, interp_matrix_complex) {
   int ntst    = 10000; // # imag time test points
 
   int norb = 2; // Orbital dimensions
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
@@ -312,7 +312,6 @@ TEST(imtime_ops, fit_matrix) {
 
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}, noise = {:e}\n", eps, lambda, noise);
 
-
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps);
 
@@ -362,7 +361,7 @@ TEST(imtime_ops, fit_matrix_cmplx) {
   int ntst     = 10000; // # imag time test points
 
   int norb = 2; // Orbital dimensions
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}, noise = {:e}\n", eps, lambda, noise);
 
   // Get DLR frequencies
@@ -412,7 +411,7 @@ TEST(imtime_ops, fit_scalar) {
   int nsample  = 5000;  // # imag time sampling points
   double noise = 1e-6;  // Noise level
   int ntst     = 10000; // # imag time test points
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}, noise = {:e}\n", eps, lambda, noise);
 
   // Get DLR frequencies
@@ -467,7 +466,7 @@ TEST(imtime_ops, convolve_scalar_real) {
 
   double beta = 1000;  // Inverse temperature
   int ntst    = 10000; // # imag time test points
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Specify frequency of single exponentials to be used for f and g
@@ -638,7 +637,7 @@ TEST(imtime_ops, convolve_matrix_real) {
 
   double beta = 1000;  // Inverse temperature
   int ntst    = 10000; // # imag time test points
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   int norb = 2; // Orbital dimensions
@@ -728,7 +727,7 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
 
   double beta = 1000;  // Inverse temperature
   int ntst    = 10000; // # imag time test points
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   int norb = 2; // Orbital dimensions
@@ -813,7 +812,7 @@ TEST(imtime_ops, refl_matrix) {
 
   double beta = 10; // Inverse temperature
   int ntst    = 10; // # imag time test points
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   int norb = 2; // Orbital dimensions
@@ -882,12 +881,15 @@ TEST(imtime_ops, interp_matrix_sym_fer) {
   int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
   auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
+
+  // Verify DLR rank is even
+  EXPECT_EQ(r % 2, 0);
 
   // Verify symmetry
   EXPECT_EQ(max_element(abs(dlr_rf(range(r / 2)) + dlr_rf(range(r - 1, r / 2 - 1, -1)))), 0);
@@ -962,7 +964,7 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
@@ -972,14 +974,8 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   // Verify DLR rank is even
   EXPECT_EQ(r % 2, 0);
 
-  // Verify DLR rank is odd
-  //EXPECT_EQ(r % 2, 1);
-
   // Verify symmetry
-  //EXPECT_EQ(max_element(abs(dlr_rf(range((r - 1) / 2)) + dlr_rf(range(r - 1, (r - 1) / 2, -1)))), 0);
-
-  // Verify zero frequency was selected
-  //EXPECT_EQ(dlr_rf((r - 1) / 2), 0.0);
+  EXPECT_EQ(max_element(abs(dlr_rf(range(r / 2)) + dlr_rf(range(r - 1, r / 2 - 1, -1)))), 0);
 
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf, SYM);
@@ -989,10 +985,6 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
 
   // Verify symmetry
   EXPECT_EQ(max_element(abs(dlr_it(range(r / 2)) + dlr_it(range(r - 1, r / 2 - 1, -1)))), 0); // r even
-  //EXPECT_EQ(max_element(abs(dlr_it(range((r - 1) / 2)) + dlr_it(range(r - 1, (r - 1) / 2, -1)))), 0); // r odd
-
-  // Verify tau = 1/2 was selected
-  //EXPECT_EQ(dlr_it((r - 1) / 2), 0.5);
 
   // Sample Green's function at DLR nodes
   auto g = nda::array<double, 3>(r, norb, norb);
