@@ -57,7 +57,14 @@ namespace cppdlr {
                nda::matrix_const_view<nda::dcomplex> cf2if,                                 //
                nda::matrix_const_view<nda::dcomplex> if2cf_lu,                              //
                nda::vector_const_view<int> if2cf_piv)
-       : lambda_(lambda), statistic(statistic), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_if(dlr_if), cf2if(cf2if), if2cf{if2cf_lu, if2cf_piv} {};
+       : lambda_(lambda),
+         statistic(statistic),
+         r(cf2if.extent(1)),
+         niom(dlr_if.size()),
+         dlr_rf(dlr_rf),
+         dlr_if(dlr_if),
+         cf2if(cf2if),
+         if2cf{if2cf_lu, if2cf_piv} {};
 
     imfreq_ops() = default;
 
