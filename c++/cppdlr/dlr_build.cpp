@@ -256,6 +256,10 @@ namespace cppdlr {
 
   nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize) {
 
+    if (eps < 1e-14) {
+      std::cerr << "Warning: Selection of DLR frequencies might fail for eps near or below machine precision. Considering increasing eps. \n";
+    }
+
     // Get fine grid parameters
     auto fine = fineparams(lambda);
 
