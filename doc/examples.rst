@@ -192,6 +192,8 @@ list several such use cases below.
 - Perform a "reflection" operation :math:`G(\tau) \mapsto G(\beta-\tau)` on a
   Green's function: see the test ``imtime_ops.refl_matrix`` in the file
   ``test/imtime_ops.cpp``.
+- Compute the inner product of two DLR expansions: see the test
+  ``imtime_ops.innerprod`` in the file ``test/imtime_ops.cpp``.
 - Obtain a DLR expansion by interpolation on the DLR Matsubara frequency nodes:
   see the tests ``imfreq_ops.interp_scalar`` and ``imfreq_ops.interp_matrix`` in
   the file ``test/imfreq_ops.cpp``.

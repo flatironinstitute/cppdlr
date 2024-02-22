@@ -535,6 +535,51 @@ namespace cppdlr {
     }
 
     /** 
+    * @brief Compute inner product of two imaginary time Green's functions
+    *
+    * We define the inner product of complex matrix-valued f and g as
+    *
+    * (f,g) = 1/beta * sum_{ij} int_0^beta dt conj(f_ij(t)) g_ij(t), 
+    *
+    * where conj refers to complex conjugation. This method takes
+    * the DLR coefficients of f and g as input and returns the inner product.
+    *
+    * We use the numerically stable method described in Appendix B of 
+    *
+    * H. LaBollita, J. Kaye, A. Hampel, "Stabilizing the calculation of the
+    * self-energy in dynamical mean-field theory using constrained residual
+    * minimization," arXiv:2310.01266 (2023).
+    *
+    * @param[in] fc DLR coefficients of f
+    * @param[in] gc DLR coefficients of g
+    *
+    * @return Inner product of f and g
+    * */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> std::complex<double> innerprod(T const &fc, T const &gc) const {
+
+      if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
+      if (fc.shape() != gc.shape()) throw std::runtime_error("Input arrays must have the same shape.");
+
+      // Initialize inner product matrix, if it hasn't been done already
+      if (ipmat.empty()) { innerprod_init(); }
+
+      std::complex<double> ip = 0;
+      if constexpr (T::rank == 1) { // Scalar-valued Green's function
+        ip = nda::blas::dotc(fc, matvecmul(ipmat, gc));
+      } else if (T::rank == 3) { // Matrix-valued Green's function
+        int norb = fc.shape(1);
+        // Compute inner product
+        for (int i = 0; i < norb; ++i) {
+          for (int j = 0; j < norb; ++j) { ip += nda::blas::dotc(fc(_, i, j), matvecmul(ipmat, gc(_, i, j))); }
+        }
+      } else {
+        throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
+      }
+
+      return ip;
+    }
+
+    /** 
     * @brief Get DLR imaginary time nodes
     *
     * @return DLR imaginary time nodes
@@ -669,6 +714,33 @@ namespace cppdlr {
     }
 
     /**
+    * @brief Initialization for inner product method
+    *
+    * This method is called automatically the first time the innerprod method is
+    * called, but it may also be called manually to avoid the additional
+    * overhead in the first inner product call.
+    */
+    void innerprod_init() const {
+
+      ipmat = nda::matrix<double>(r, r);
+
+      // Matrix of inner product of two DLR expansions
+      double ssum = 0;
+      for (int k = 0; k < r; ++k) {
+        for (int l = 0; l < r; ++l) {
+          ssum = dlr_rf(k) + dlr_rf(l);
+          if (ssum == 0) {
+            ipmat(k, l) = k_it(0.0, dlr_rf(k)) * k_it(0.0, dlr_rf(l));
+          } else if (abs(ssum) < 1) {
+            ipmat(k, l) = -k_it(0.0, dlr_rf(k)) * k_it(0.0, dlr_rf(l)) * std::expm1(-ssum) / ssum;
+          } else {
+            ipmat(k, l) = (k_it(0.0, dlr_rf(k)) * k_it(0.0, dlr_rf(l)) - k_it(1.0, dlr_rf(k)) * k_it(1.0, dlr_rf(l))) / ssum;
+          }
+        }
+      }
+    }
+
+    /**
     * @brief Initialization for reflection method
     *
     * Initialize matrix of the reflection G(tau) -> G(beta - tau) acting on the
@@ -715,7 +787,10 @@ namespace cppdlr {
     mutable nda::matrix<double> thilb;   ///< "Discrete Hilbert transform" matrix, modified for time-ordered convolution
     mutable nda::matrix<double> ttcf2it; ///< A matrix required for time-ordered convolution
 
-    // Arrays used for dlr_imtime::reflect
+    // Array used for dlr_imtime::innerprod
+    mutable nda::matrix<double> ipmat; ///< Inner product matrix
+
+    // Array used for dlr_imtime::reflect
     mutable nda::matrix<double> refl; ///< Matrix of reflection
 
     // -------------------- hdf5 -------------------

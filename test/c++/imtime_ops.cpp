@@ -1034,6 +1034,78 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   std::cout << fmt::format("Imag freq: l^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
+/**
+* @brief Test inner product of two DLR expansions
+*/
+TEST(imtime_ops, innerprod) {
+
+  double lambda = 200;   // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  double beta = 100; // Inverse temperature
+  int norb    = 2;   // Orbital dimensions
+
+  std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+  int r       = dlr_rf.size();
+
+  // Get DLR imaginary time object
+  auto itops  = imtime_ops(lambda, dlr_rf);
+  auto dlr_it = itops.get_itnodes();
+
+  // We take the inner product of two matrix-valued functions, each of the form
+  //
+  // c_{1,2} * exp(-tau * om_{1,2})/(1+exp(-beta * om_{1,2}))
+  //
+  // where c_1, c_2 are 2x2 complex-valued matrices, and om_1, om_2 are real
+  // frequencies. The inner product is given by
+  //
+  // (sum_ij conj(c1_ij) * c2_ij) * (1+exp(-beta * om_1))^{-1} * (1+exp(-beta *
+  // om_2))^{-1}  * (1 - exp(-beta * (om_1 + om_2))) / (om_1 + om_2)
+  //
+  // If om_1 + om_2 is positive and not too small, this formula is numerically
+  // stable, and can be used for an analytical reference.
+
+  auto c1    = nda::array<dcomplex, 2>(norb, norb);
+  auto c2    = nda::array<dcomplex, 2>(norb, norb);
+  c1(0, 0)   = 0.12 + 0.21i;
+  c1(0, 1)   = 0.34 + 0.43i;
+  c1(1, 1)   = 0.56 + 0.65i;
+  c1(1, 0)   = conj(c1(0, 1));
+  c2(0, 0)   = -0.22 + 0.11i;
+  c2(0, 1)   = -0.44 + 0.33i;
+  c2(1, 1)   = 0.66 - 0.55i;
+  c2(1, 0)   = conj(c2(0, 1));
+  double om1 = 0.0789;
+  double om2 = 0.456;
+
+  std::complex<double> iptrue = conj(c1(0, 0)) * c2(0, 0) + conj(c1(0, 1)) * c2(0, 1) + conj(c1(1, 0)) * c2(1, 0) + conj(c1(1, 1)) * c2(1, 1);
+  iptrue *= (1.0 - exp(-beta * (om1 + om2))) / (beta * (om1 + om2) * (1.0 + exp(-beta * om1)) * (1.0 + exp(-beta * om2)));
+
+  // Sample Green's functions at DLR nodes
+  auto f = nda::array<dcomplex, 3>(r, norb, norb);
+  auto g = nda::array<dcomplex, 3>(r, norb, norb);
+  for (int i = 0; i < r; ++i) {
+    f(i, _, _) = k_it(dlr_it(i), om1, beta) * c1;
+    g(i, _, _) = k_it(dlr_it(i), om2, beta) * c2;
+  }
+
+  // DLR coefficients of f and g
+  auto fc = itops.vals2coefs(f);
+  auto gc = itops.vals2coefs(g);
+
+  std::complex<double> iptest = itops.innerprod(fc, gc);
+
+  double err = abs(iptest - iptrue);
+  std::cout << fmt::format("True inner product: {:.16e}+1i*{:.16e}\n", iptrue.real(), iptrue.imag());
+  std::cout << fmt::format("Test inner product: {:.16e}+1i*{:.16e}\n", iptest.real(), iptest.imag());
+  std::cout << fmt::format("Inner product error: {:e}\n", err);
+
+  EXPECT_LT(err, eps);
+}
+
 TEST(dlr_imtime, h5_rw) {
 
   double lambda = 1000;  // DLR cutoff
