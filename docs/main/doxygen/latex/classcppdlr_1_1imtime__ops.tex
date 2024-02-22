@@ -38,6 +38,8 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a318b0b4
 \begin{DoxyCompactList}\small\item\em Compute convolution of two imaginary time Green\textquotesingle{}s functions, given matrix of convolution by one of them. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\nda\+::matrix$<$ S $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a4b0899c199459a76210d535eab89fd3a}{convmat}} (double beta, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, T const \&fc, bool \mbox{\hyperlink{namespacecppdlr_afef0a162a809071b83fd09f578db52bf}{time\+\_\+order}}=false) const
 \begin{DoxyCompactList}\small\item\em Compute matrix of convolution by an imaginary time Green\textquotesingle{}s function. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::complex$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}{innerprod}} (T const \&fc, T const \&gc) const
+\begin{DoxyCompactList}\small\item\em Compute inner product of two imaginary time Green\textquotesingle{}s functions. \end{DoxyCompactList}\item 
 nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a89451028e273c8753d87621081a16cee}{get\+\_\+itnodes}} () const
 \begin{DoxyCompactList}\small\item\em Get DLR imaginary time nodes. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_aec1395480d77a2f400b62171e553b0f4}{get\+\_\+itnodes}} (int i) const
@@ -62,6 +64,8 @@ void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6257e0b3f43733c5ac06c8af11a47b
 \begin{DoxyCompactList}\small\item\em Initialization for convolution methods. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}{tconvolve\+\_\+init}} () const
 \begin{DoxyCompactList}\small\item\em Initialization for time-\/ordered convolution methods. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6ce574cd38bdb5bee21d499710f2e8fa}{innerprod\+\_\+init}} () const
+\begin{DoxyCompactList}\small\item\em Initialization for inner product method. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a3a47942235e7330cc6d392dc881d256f}{reflect\+\_\+init}} () const
 \begin{DoxyCompactList}\small\item\em Initialization for reflection method. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
@@ -429,7 +433,48 @@ DLR real frequency nodes
 \doxysubsubsection{\texorpdfstring{hdf5\_format()}{hdf5\_format()}}
 {\footnotesize\ttfamily static std\+::string cppdlr\+::imtime\+\_\+ops\+::hdf5\+\_\+format (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}\label{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}} 
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}\label{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!innerprod@{innerprod}}
+\index{innerprod@{innerprod}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{innerprod()}{innerprod()}}
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
+std\+::complex$<$double$>$ cppdlr\+::imtime\+\_\+ops\+::innerprod (\begin{DoxyParamCaption}\item[{T const \&}]{fc,  }\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute inner product of two imaginary time Green\textquotesingle{}s functions. 
+
+We define the inner product of complex matrix-\/valued f and g as
+
+(f,g) = 1/beta $\ast$ sum\+\_\+\{ij\} int\+\_\+0$^\wedge$beta dt conj(f\+\_\+ij(t)) g\+\_\+ij(t),
+
+where conj refers to complex conjugation. This method takes the DLR coefficients of f and g as input and returns the inner product.
+
+We use the numerically stable method described in Appendix B of
+
+H. La\+Bollita, J. Kaye, A. Hampel, "{}Stabilizing the calculation of the self-\/energy in dynamical mean-\/field theory using constrained residual minimization,"{} ar\+Xiv\+:2310.\+01266 (2023).
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em fc} & DLR coefficients of f \\
+\hline
+\mbox{\texttt{ in}}  & {\em gc} & DLR coefficients of g\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Inner product of f and g 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a6ce574cd38bdb5bee21d499710f2e8fa}\label{classcppdlr_1_1imtime__ops_a6ce574cd38bdb5bee21d499710f2e8fa}} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!innerprod\_init@{innerprod\_init}}
+\index{innerprod\_init@{innerprod\_init}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{innerprod\_init()}{innerprod\_init()}}
+{\footnotesize\ttfamily void cppdlr\+::imtime\+\_\+ops\+::innerprod\+\_\+init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Initialization for inner product method. 
+
+This method is called automatically the first time the innerprod method is called, but it may also be called manually to avoid the additional overhead in the first inner product call. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}\label{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!lambda@{lambda}}
 \index{lambda@{lambda}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{lambda()}{lambda()}}
