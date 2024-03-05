@@ -67,11 +67,11 @@ if(Build_Tests)
   enable_testing()
 endif()
 
-# Build static libraries by default
-option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-
 # ############
 # Global Compilation Settings
+
+# Build static libraries by default
+option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 
 # Export the list of compile-commands into compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
