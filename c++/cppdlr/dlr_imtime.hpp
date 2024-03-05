@@ -731,7 +731,7 @@ namespace cppdlr {
           ssum = dlr_rf(k) + dlr_rf(l);
           if (ssum == 0) {
             ipmat(k, l) = k_it(0.0, dlr_rf(k)) * k_it(0.0, dlr_rf(l));
-          } else if (abs(ssum) < 1) {
+          } else if (std::abs(ssum) < 1) {
             ipmat(k, l) = -k_it(0.0, dlr_rf(k)) * k_it(0.0, dlr_rf(l)) * std::expm1(-ssum) / ssum;
           } else {
             ipmat(k, l) = (k_it(0.0, dlr_rf(k)) * k_it(0.0, dlr_rf(l)) - k_it(1.0, dlr_rf(k)) * k_it(1.0, dlr_rf(l))) / ssum;
