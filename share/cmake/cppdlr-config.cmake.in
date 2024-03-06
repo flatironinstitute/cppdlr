@@ -25,7 +25,7 @@ find_dep(nda 1.2)
 
 # Include the exported targets of this project
 include(@CMAKE_INSTALL_PREFIX@/@FMT_CMAKE_DIR@/fmt-targets.cmake)
-include(@CMAKE_INSTALL_PREFIX@/lib/cmake/@PROJECT_NAME@/@PROJECT_NAME@-targets.cmake)
+include(@CMAKE_INSTALL_FULL_LIBDIR@/cmake/@PROJECT_NAME@/@PROJECT_NAME@-targets.cmake)
 
 message(STATUS "Found @PROJECT_NAME@-config.cmake with version @PROJECT_VERSION@, hash = @PROJECT_GIT_HASH@, root = @CMAKE_INSTALL_PREFIX@")
 
