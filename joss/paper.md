@@ -10,16 +10,14 @@ tags:
 authors:
   - name: Jason Kaye
     orcid: 0000-0001-8045-6179
-    equal-contrib: true
     affiliation: "1, 2" # (Multiple affiliations must be quoted)
     corresponding: true # (This is how to denote the corresponding author)
-  - name: Nils Wentzell
-    orcid: 0000-0003-3613-007X
-    equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
-    affiliation: 1
   - name: Hugo U. R. Strand
     orcid: 0000-0002-7263-4403
     affiliation: "3, 4"
+  - name: Nils Wentzell
+    orcid: 0000-0003-3613-007X
+    affiliation: 1
 affiliations:
  - name: Center for Computational Quantum Physics, Flatiron Institute, New York, NY, USA
    index: 1
@@ -64,10 +62,10 @@ highly efficient. This has led to a variety of recent algorithmic advances, incl
 reducing the size of the Matsubara frequency mesh in dynamical mean-field theory
 calculations [@sheng23], stabilizing the calculation of the single-particle self-energy via the Dyson
 equation [@labollita23], improving the efficiency of the imaginary time discretization in the
-mixing Green's function of the Keldysh formalism [@kaye23_eqdyson], and accelerating the
+mixing Green's function of the Keldysh formalism [@kaye23_eqdyson; @blommel24], and accelerating the
 evaluation of imaginary time Feynman diagrams [@kaye23_diagrams]. It has also
 yielded immediate applications in computational physics, for example in low-temperature
-studies of superconductivity [@cai22; @hou23; @johnston23]. The DLR can be straightforwardly
+studies of superconductivity [@cai22; @hou24; @tanjaroonly23]. The DLR can be straightforwardly
 integrated into existing algorithms and codes, often yielding significant
 improvements in efficiency, accuracy, and algorithmic simplicity.
 
