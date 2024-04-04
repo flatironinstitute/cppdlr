@@ -5,6 +5,19 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  CMAKE_C_COMPILER_LAUNCHER: ccache
+  CMAKE_CXX_COMPILER_LAUNCHER: ccache
+  CCACHE_COMPILERCHECK: content
+  CCACHE_BASEDIR: ${{ github.workspace }}
+  CCACHE_DIR: ${{ github.workspace }}/.ccache
+  CCACHE_MAXSIZE: 500M
+  CCACHE_SLOPPINESS: pch_defines,time_macros,include_file_mtime,include_file_ctime
+  CCACHE_COMPRESS: "1"
+  CCACHE_COMPRESSLEVEL: "1"
 
 jobs:
   build:
@@ -16,7 +29,7 @@ jobs:
           - {os: ubuntu-22.04, cc: gcc-12, cxx: g++-12, doc: OFF}
           - {os: ubuntu-22.04, cc: clang-15, cxx: clang++-15, doc: ON}
           #- {os: macos-12, cc: gcc-12, cxx: g++-12, doc: OFF}
-          #- {os: macos-12, cc: /usr/local/opt/llvm/bin/clang, cxx: /usr/local/opt/llvm/bin/clang++, doc: OFF}
+          #- {os: macos-12, cc: clang, cxx: clang++, doc: OFF}
 
     runs-on: ${{ matrix.os }}
 
@@ -58,12 +71,18 @@ jobs:
     - name: Install homebrew dependencies
       if: matrix.os == 'macos-12'
       run: |
-        brew install gcc@12 llvm hdf5 open-mpi openblas
-        pip3 install mako
+        brew install ccache gcc@12 llvm hdf5 open-mpi openblas
+        mkdir $HOME/.venv
+        python3 -m venv $HOME/.venv/my_python
+        source $HOME/.venv/my_python/bin/activate
+        pip install mako
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "PATH=$PATH" >> $GITHUB_ENV
 
     - name: add clang cxxflags
       if: ${{ contains(matrix.cxx, 'clang') }}
-      run:
+      run: |
+        echo "PATH=/usr/local/opt/llvm/bin:$PATH" >> $GITHUB_ENV
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
 
     - name: Build cppdlr
@@ -82,6 +101,16 @@ jobs:
       run: |
         cd build
         ctest -j2 --output-on-failure
+
+    - name: ccache statistics
+      if: always()
+      run: ccache -sv
+
+    - uses: actions/cache/save@v3
+      if: always()
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-${{ matrix.os }}-${{ matrix.cc }}-${{ github.run_id }}
 
     - name: Deploy documentation to website
       if: matrix.doc == 'ON' && github.ref == 'refs/heads/main'
