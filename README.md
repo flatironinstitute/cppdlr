@@ -22,18 +22,12 @@ Libraries implementing the DLR are available in other languages:
 
 ## References and citation
 
-If you use `cppdlr` in your software or published research works, please cite one, or
-all, of the following. Citations help to encourage the development and
-maintainence of open-source scientific software.
+If you use `cppdlr` in your software or published research works, please mention
+this, and cite the following references. Citations help to encourage the
+development and maintainence of open-source scientific software.
 
-- This repository: https://github.com/flatironinstitute/cppdlr
-- The original reference on the DLR: [Discrete Lehmann representation of imaginary time Green's functions, Jason Kaye, Kun Chen, and Olivier Parcollet, Phys. Rev. B 105, 235115, 2022.](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.105.235115) \[[arXiv:2107.13094](https://arxiv.org/abs/2107.13094)\]
-- The companion paper to [libdlr](https://github.com/jasonkaye/libdlr), which
-  contains a briefer overview of the DLR: [libdlr: Efficient imaginary time calculations using the discrete
-  Lehmann representation, Jason Kaye, Kun Chen, and Hugo U.R. Strand, Comput.
-  Phys. Commun. 280, 108458,
-  2022.](https://www.sciencedirect.com/science/article/pii/S0010465522001771)
-  \[[arXiv:2110.06765](https://arxiv.org/abs/2110.06765)\]
+- The original reference on the DLR: [J. Kaye, K. Chen, O. Parcollet, "Discrete Lehmann representation of imaginary time Green's functions", Phys. Rev. B, 105, 235115 (2022).](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.105.235115) \[[arXiv:2107.13094](https://arxiv.org/abs/2107.13094)\]
+- The companion paper to `cppdlr`: [J. Kaye, H. U. R. Strand, N. Wentzell, "cppdlr: Imaginary time calculations using the discrete Lehmann representation", arXiv:2404.02334 (2024).](https://arxiv.org/abs/2404.02334)
 
 ## Contact
 
