@@ -69,6 +69,34 @@ namespace cppdlr {
   double k_it_abs(double t, double om);
 
   /**
+  * @brief Evaluate fermionic analytic continuation kernel in imaginary frequency using
+  * dimensionless variables (beta = 1)
+  *
+  * @param[in] n Imaginary frequency index
+  * @param[in] om Real frequency value
+  *
+  * @return Value K(i nu_n, om) of analytic continuation kernel
+  *
+  * \note The definition of the fermionic analytic continuation kernel using dimensionless
+  * variables is K(i nu_n, om) = 1 / (i nu_n - om) with i nu_n = (2n+1) * i * pi. 
+  */
+  std::complex<double> k_if_fermion(int n, double om);
+
+  /**
+  * @brief Evaluate bosonic analytic continuation kernel in imaginary frequency using
+  * dimensionless variables (beta = 1)
+  *
+  * @param[in] n Imaginary frequency index
+  * @param[in] om Real frequency value
+  *
+  * @return Value K(i nu_n, om) of analytic continuation kernel
+  *
+  * \note The definition of the bosonic analytic continuation kernel using dimensionless
+  * variables is K(i nu_n, om) = 1 / (i nu_n - om) with i nu_n = 2n * i * pi.
+  */
+  std::complex<double> k_if_boson(int n, double om);
+
+  /**
   * @brief Evaluate analytic continuation kernel in imaginary frequency using
   * dimensionless variables (beta = 1)
   *
@@ -76,7 +104,7 @@ namespace cppdlr {
   * @param[in] om Real frequency value
   * @param[in] statistic Particle Statistic: Boson or Fermion
   *
-  * @return Value K(i nu_n,om) of analytic continuation kernel
+  * @return Value K(i nu_n, om) of analytic continuation kernel
   *
   * \note The definition of the analytic continuation kernel using dimensionless
   * variables is K(i nu_n, om) = 1 / (i nu_n - om) with i nu_n = (2n+1) * i *
@@ -93,7 +121,7 @@ namespace cppdlr {
   * @param[in] statistic Particle Statistic: Boson or Fermion
   * @param[in] beta Inverse temperature
   *
-  * @return Value K(i nu_n,om) of analytic continuation kernel
+  * @return Value K(i nu_n, om) of analytic continuation kernel
   *
   * \note The definition of the analytic continuation kernel at a given inverse
   * temperature beta is K(i nu_n, om) = 1 / (i nu_n - om) with i nu_n = (2n+1) *
