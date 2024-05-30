@@ -109,6 +109,121 @@
 <p>This is the initial release of cppdlr, a C++ library implementing the discrete Lehmann representation of imaginary time Green’s functions.</p>
 <p>We thank all contributors: Thomas Hahn, Jason Kaye, Hugo U. R. Strand, Nils Wentzell</p>
 </div>
+<div class="section" id="version-1-1-0">
+<h2>Version 1.1.0<a class="headerlink" href="#version-1-1-0" title="Permalink to this heading"></a></h2>
+<p>This update to cppdlr adds significant new functionality, including symmetrized DLR grids, and improvements to ensure accuracy of DLR expansions in L^2(tau) norm (both described in the updated documentation).</p>
+<p>We thank all contributors: Thomas Hahn, Alexander Hampel, Jason Kaye, Henri Menke, Hugo U. R. Strand, Nils Wentzell</p>
+<div class="section" id="new-features">
+<h3>New features<a class="headerlink" href="#new-features" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Symmetrized DLR grids, w/ tests to compare symmetrized/non-symmetrized grids</li>
+<li>Documentation updates: symmetrized grids, discussion of error</li>
+<li>Imaginary time quadrature weighting for DLR frequency selection to ensure accuracy in L^2(tau) norm, updated tests accordingly</li>
+<li>Function to compute imaginary time inner products of DLR expansions</li>
+<li>Program to print DLR ranks for various Lambda</li>
+<li>Tests to interpolate in imag time and measure error in imag freq, and vice versa</li>
+<li>Unit tests print errors via fmt</li>
+<li>Implementation of symmetrized pivoted Gram-Schmidt with tolerance or rank specified</li>
+<li>Print warning if user chooses epsilon dangerously small</li>
+<li>Expose fermionic and bosonic Matsubara frequency kernels to user directly</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Fixed bosonic kernel at i*om_n=0</li>
+<li>Fixed bug involving non-contiguous views in vals2coefs implementations</li>
+<li>Fixed bug in error checking of fine discretization of imag time kernel in geterr_k_it</li>
+<li>Fixed uninitialized niom value in dlr_imfreq constructor</li>
+<li>Fixed range bug in imtime_ops.interp_matrix_sym_bos</li>
+</ul>
+</div>
+<div class="section" id="optimizations">
+<h3>Optimizations<a class="headerlink" href="#optimizations" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Make complex copy of <a class="reference external" href="http://it2cf.lu" rel="noopener noreferrer" target="_blank">it2cf.lu</a> in imtime_ops constructor to avoid on-the-fly copies</li>
+<li>imtime_ops::convolve optimizations; use nda::matmul when possible</li>
+</ul>
+</div>
+<div class="section" id="other-changes">
+<h3>Other changes<a class="headerlink" href="#other-changes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Various code simplifications</li>
+<li>Test tolerance adjustments</li>
+<li>References to cppdlr preprint in documentation and readme</li>
+</ul>
+</div>
+<div class="section" id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Remove redundant sys.path insertion in <a class="reference external" href="http://conf.py.in" rel="noopener noreferrer" target="_blank">conf.py.in</a></li>
+<li>Remove pip3 install command from Dockerfile</li>
+<li>Update requirements.txt with dependencies for documentation builds</li>
+<li>Disable notes about C++ ABI changes when using gcc</li>
+<li>Fix compiler warning, use abs from std namespace</li>
+<li>Update macos build instructions in Jenkinsfile and build.yml</li>
+<li>Set proper GNU install dirs also in env vars file</li>
+<li>Fix typo in Jenkinsfile</li>
+<li>Bump actions/checkout from 2 to 4</li>
+<li>Fix settings environment variables</li>
+<li>Allow manual dispatch and triggering action from other workflow</li>
+<li>Prevent unintentional parallelization in OpenBLAS</li>
+<li>Use ccache to speed up compilation</li>
+<li>Remove numpydoc sources from doc/sphinxext</li>
+<li>Raise shm size for docker run commands to comply with mkl requirements</li>
+<li>Skip image and binary files in replace_and_rename</li>
+<li>Use python3 instead of python2 in replace_and_rename.py script</li>
+</ul>
+</div>
+<div class="section" id="cmake">
+<h3>cmake<a class="headerlink" href="#cmake" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Bump version number to 1.1.0</li>
+<li>Bump Version number to 3.3</li>
+<li>Remove C as a project language</li>
+<li>Update top-level CMakeLists.txt file with latest app4triqs skeleton</li>
+<li>Fix inclusion of targets file in <a class="reference external" href="http://cppdlr-config.cmake.in" rel="noopener noreferrer" target="_blank">cppdlr-config.cmake.in</a></li>
+<li>Do not define DEBUG macros for RelWithDebInfo builds</li>
+<li>Correct target file inclusion PATH to be absolute</li>
+<li>Only use GNUInstallDirs for LIBDIR</li>
+<li>Fix target inclusion directory to use GNUInstallDirs</li>
+<li>Use unstable branch of cpp2py</li>
+<li>Minor improvements in top-level CMakeLists.txt</li>
+<li>Consistently use GNUInstallDirs for install commands</li>
+<li>Use GNUInstallDirs to obtain installation directories</li>
+<li>Set policy 114 to new</li>
+<li>Set policy CMP0144 to new</li>
+<li>Run Debug checks also in RelWithDebInfo build mode</li>
+</ul>
+</div>
+<div class="section" id="actions">
+<h3>actions<a class="headerlink" href="#actions" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Bump actions/cache restore/save to version 4</li>
+</ul>
+</div>
+<div class="section" id="ghactions">
+<h3>ghactions<a class="headerlink" href="#ghactions" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Synchronize build file with app4triqs, add caching using ccache</li>
+<li>Use libc++ for clang builds</li>
+</ul>
+</div>
+<div class="section" id="jenkins">
+<h3>jenkins<a class="headerlink" href="#jenkins" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Add ubuntu-intel build</li>
+<li>For sanitized build use RelWithDebInfo build mode</li>
+</ul>
+</div>
+<div class="section" id="build">
+<h3>build<a class="headerlink" href="#build" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>add packaging directory to cmake</li>
+<li>automatically set version in packaging</li>
+</ul>
+</div>
+</div>
 </div>
 
 
