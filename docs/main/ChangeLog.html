@@ -104,11 +104,6 @@
              
   <div class="tex2jax_ignore mathjax_ignore section" id="changelog">
 <span id="id1"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h1>
-<div class="section" id="version-1-0-0">
-<h2>Version 1.0.0<a class="headerlink" href="#version-1-0-0" title="Permalink to this heading"></a></h2>
-<p>This is the initial release of cppdlr, a C++ library implementing the discrete Lehmann representation of imaginary time Green’s functions.</p>
-<p>We thank all contributors: Thomas Hahn, Jason Kaye, Hugo U. R. Strand, Nils Wentzell</p>
-</div>
 <div class="section" id="version-1-1-0">
 <h2>Version 1.1.0<a class="headerlink" href="#version-1-1-0" title="Permalink to this heading"></a></h2>
 <p>This update to cppdlr adds significant new functionality, including symmetrized DLR grids, and improvements to ensure accuracy of DLR expansions in L^2(tau) norm (both described in the updated documentation).</p>
@@ -151,78 +146,15 @@
 <li>Various code simplifications</li>
 <li>Test tolerance adjustments</li>
 <li>References to cppdlr preprint in documentation and readme</li>
+<li>Merge latest changes of app4triqs skeleton</li>
+<li>Add ubuntu-intel build to jenkins</li>
 </ul>
 </div>
-<div class="section" id="general">
-<h3>General<a class="headerlink" href="#general" title="Permalink to this heading"></a></h3>
-<ul class="simple">
-<li>Remove redundant sys.path insertion in <a class="reference external" href="http://conf.py.in" rel="noopener noreferrer" target="_blank">conf.py.in</a></li>
-<li>Remove pip3 install command from Dockerfile</li>
-<li>Update requirements.txt with dependencies for documentation builds</li>
-<li>Disable notes about C++ ABI changes when using gcc</li>
-<li>Fix compiler warning, use abs from std namespace</li>
-<li>Update macos build instructions in Jenkinsfile and build.yml</li>
-<li>Set proper GNU install dirs also in env vars file</li>
-<li>Fix typo in Jenkinsfile</li>
-<li>Bump actions/checkout from 2 to 4</li>
-<li>Fix settings environment variables</li>
-<li>Allow manual dispatch and triggering action from other workflow</li>
-<li>Prevent unintentional parallelization in OpenBLAS</li>
-<li>Use ccache to speed up compilation</li>
-<li>Remove numpydoc sources from doc/sphinxext</li>
-<li>Raise shm size for docker run commands to comply with mkl requirements</li>
-<li>Skip image and binary files in replace_and_rename</li>
-<li>Use python3 instead of python2 in replace_and_rename.py script</li>
-</ul>
 </div>
-<div class="section" id="cmake">
-<h3>cmake<a class="headerlink" href="#cmake" title="Permalink to this heading"></a></h3>
-<ul class="simple">
-<li>Bump version number to 1.1.0</li>
-<li>Bump Version number to 3.3</li>
-<li>Remove C as a project language</li>
-<li>Update top-level CMakeLists.txt file with latest app4triqs skeleton</li>
-<li>Fix inclusion of targets file in <a class="reference external" href="http://cppdlr-config.cmake.in" rel="noopener noreferrer" target="_blank">cppdlr-config.cmake.in</a></li>
-<li>Do not define DEBUG macros for RelWithDebInfo builds</li>
-<li>Correct target file inclusion PATH to be absolute</li>
-<li>Only use GNUInstallDirs for LIBDIR</li>
-<li>Fix target inclusion directory to use GNUInstallDirs</li>
-<li>Use unstable branch of cpp2py</li>
-<li>Minor improvements in top-level CMakeLists.txt</li>
-<li>Consistently use GNUInstallDirs for install commands</li>
-<li>Use GNUInstallDirs to obtain installation directories</li>
-<li>Set policy 114 to new</li>
-<li>Set policy CMP0144 to new</li>
-<li>Run Debug checks also in RelWithDebInfo build mode</li>
-</ul>
-</div>
-<div class="section" id="actions">
-<h3>actions<a class="headerlink" href="#actions" title="Permalink to this heading"></a></h3>
-<ul class="simple">
-<li>Bump actions/cache restore/save to version 4</li>
-</ul>
-</div>
-<div class="section" id="ghactions">
-<h3>ghactions<a class="headerlink" href="#ghactions" title="Permalink to this heading"></a></h3>
-<ul class="simple">
-<li>Synchronize build file with app4triqs, add caching using ccache</li>
-<li>Use libc++ for clang builds</li>
-</ul>
-</div>
-<div class="section" id="jenkins">
-<h3>jenkins<a class="headerlink" href="#jenkins" title="Permalink to this heading"></a></h3>
-<ul class="simple">
-<li>Add ubuntu-intel build</li>
-<li>For sanitized build use RelWithDebInfo build mode</li>
-</ul>
-</div>
-<div class="section" id="build">
-<h3>build<a class="headerlink" href="#build" title="Permalink to this heading"></a></h3>
-<ul class="simple">
-<li>add packaging directory to cmake</li>
-<li>automatically set version in packaging</li>
-</ul>
-</div>
+<div class="section" id="version-1-0-0">
+<h2>Version 1.0.0<a class="headerlink" href="#version-1-0-0" title="Permalink to this heading"></a></h2>
+<p>This is the initial release of cppdlr, a C++ library implementing the discrete Lehmann representation of imaginary time Green’s functions.</p>
+<p>We thank all contributors: Thomas Hahn, Jason Kaye, Hugo U. R. Strand, Nils Wentzell</p>
 </div>
 </div>
 
