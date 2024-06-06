@@ -38,7 +38,7 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a318b0b4
 \begin{DoxyCompactList}\small\item\em Compute convolution of two imaginary time Green\textquotesingle{}s functions, given matrix of convolution by one of them. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\nda\+::matrix$<$ S $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a4b0899c199459a76210d535eab89fd3a}{convmat}} (double beta, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, T const \&fc, bool \mbox{\hyperlink{namespacecppdlr_afef0a162a809071b83fd09f578db52bf}{time\+\_\+order}}=false) const
 \begin{DoxyCompactList}\small\item\em Compute matrix of convolution by an imaginary time Green\textquotesingle{}s function. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::complex$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}{innerprod}} (T const \&fc, T const \&gc) const
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\S \mbox{\hyperlink{classcppdlr_1_1imtime__ops_aaaa4303e1ee0897417308f380bb75de8}{innerprod}} (T const \&fc, T const \&gc) const
 \begin{DoxyCompactList}\small\item\em Compute inner product of two imaginary time Green\textquotesingle{}s functions. \end{DoxyCompactList}\item 
 nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a89451028e273c8753d87621081a16cee}{get\+\_\+itnodes}} () const
 \begin{DoxyCompactList}\small\item\em Get DLR imaginary time nodes. \end{DoxyCompactList}\item 
@@ -433,12 +433,12 @@ DLR real frequency nodes
 \doxysubsubsection{\texorpdfstring{hdf5\_format()}{hdf5\_format()}}
 {\footnotesize\ttfamily static std\+::string cppdlr\+::imtime\+\_\+ops\+::hdf5\+\_\+format (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}\label{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}} 
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_aaaa4303e1ee0897417308f380bb75de8}\label{classcppdlr_1_1imtime__ops_aaaa4303e1ee0897417308f380bb75de8}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!innerprod@{innerprod}}
 \index{innerprod@{innerprod}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{innerprod()}{innerprod()}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-std\+::complex$<$double$>$ cppdlr\+::imtime\+\_\+ops\+::innerprod (\begin{DoxyParamCaption}\item[{T const \&}]{fc,  }\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+S cppdlr\+::imtime\+\_\+ops\+::innerprod (\begin{DoxyParamCaption}\item[{T const \&}]{fc,  }\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
