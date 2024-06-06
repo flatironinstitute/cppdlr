@@ -555,7 +555,7 @@ namespace cppdlr {
     *
     * @return Inner product of f and g
     * */
-    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> std::complex<double> innerprod(T const &fc, T const &gc) const {
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> S innerprod(T const &fc, T const &gc) const {
 
       if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
       if (fc.shape() != gc.shape()) throw std::runtime_error("Input arrays must have the same shape.");
@@ -563,7 +563,7 @@ namespace cppdlr {
       // Initialize inner product matrix, if it hasn't been done already
       if (ipmat.empty()) { innerprod_init(); }
 
-      std::complex<double> ip = 0;
+      S ip = 0;
       if constexpr (T::rank == 1) { // Scalar-valued Green's function
         ip = nda::blas::dotc(fc, matvecmul(ipmat, gc));
       } else if (T::rank == 3) { // Matrix-valued Green's function
