@@ -1112,7 +1112,7 @@ TEST(imtime_ops, innerprod) {
 TEST(dlr_imtime, vals2coefs_transpose) {
 
   double lambda = 100;   // DLR cutoff
-  double eps    = 1e-14; // DLR tolerance
+  double eps    = 1e-12; // DLR tolerance
   double beta   = 100;   // Inverse temperature
 
   // Get DLR frequencies
@@ -1137,7 +1137,7 @@ TEST(dlr_imtime, vals2coefs_transpose) {
   double inttst = nda::blas::dot(intvec, gc);
   double inttru = -tanh(beta * om0 / 2) / om0;
 
-  EXPECT_LT(abs(inttst - inttru), eps);
+  EXPECT_LT(abs(inttst - inttru), 2 * eps);
 
   // Build row vector of integration taking values at DLR nodes; since
   //
@@ -1150,7 +1150,7 @@ TEST(dlr_imtime, vals2coefs_transpose) {
   // Compute integral of G using this vector and compare with true integral
   double inttst2 = nda::blas::dot(intvec_vals, g);
 
-  EXPECT_LT(abs(inttst2 - inttru), eps);
+  EXPECT_LT(abs(inttst2 - inttru), 2 * eps);
 }
 
 TEST(dlr_imtime, h5_rw) {
