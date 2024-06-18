@@ -634,6 +634,21 @@ namespace cppdlr {
     double lambda() const { return lambda_; }
 
     /**
+    * @brief Get inner product matrix
+    *
+    * Given the vector f and g of DLR coefficients of scalar-valued imaginary time functions F
+    * and G, respectively, the inner product matrix M gives
+    * 
+    * f^T M g = 1/beta int_0^beta dt f(t) g(t).
+    *
+    * @return Inner product matrix
+    */
+    nda::matrix_const_view<double> get_ipmat() const {
+      if (ipmat.empty()) { innerprod_init(); }
+      return ipmat;
+    }
+
+    /**
     * @brief Initialization for convolution methods
     *
     * Initialize matrices required for the convolution methods. This method is
