@@ -60,6 +60,8 @@ int \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a88f437cb31c98929ab8a1e6dadb174a
 \begin{DoxyCompactList}\small\item\em Get DLR rank. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}} () const
 \item 
+nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6c1c9607902f7f82d93ea8710efc9882}{get\+\_\+ipmat}} () const
+\begin{DoxyCompactList}\small\item\em Get inner product matrix. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6257e0b3f43733c5ac06c8af11a47bb3}{convolve\+\_\+init}} () const
 \begin{DoxyCompactList}\small\item\em Initialization for convolution methods. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}{tconvolve\+\_\+init}} () const
@@ -347,6 +349,23 @@ Get transformation matrix from DLR coefficients to values at DLR imaginary time 
 
 \begin{DoxyReturn}{Returns}
 Transformation matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a6c1c9607902f7f82d93ea8710efc9882}\label{classcppdlr_1_1imtime__ops_a6c1c9607902f7f82d93ea8710efc9882}} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!get\_ipmat@{get\_ipmat}}
+\index{get\_ipmat@{get\_ipmat}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{get\_ipmat()}{get\_ipmat()}}
+{\footnotesize\ttfamily nda\+::matrix\+\_\+const\+\_\+view$<$double$>$ cppdlr\+::imtime\+\_\+ops\+::get\+\_\+ipmat (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get inner product matrix. 
+
+Given the vector f and g of DLR coefficients of scalar-\/valued imaginary time functions F and G, respectively, the inner product matrix M gives
+
+f$^\wedge$T M g = 1/beta int\+\_\+0$^\wedge$beta dt f(t) g(t).
+
+\begin{DoxyReturn}{Returns}
+Inner product matrix 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_af2b17e780b762dde6a25d8f8e844dab3}\label{classcppdlr_1_1imtime__ops_af2b17e780b762dde6a25d8f8e844dab3}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!get\_it2cf\_lu@{get\_it2cf\_lu}}

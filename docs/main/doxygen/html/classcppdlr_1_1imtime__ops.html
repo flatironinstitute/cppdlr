@@ -160,6 +160,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a88f437cb31c98929ab8a1e6dadb174aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a401521dedc309ca12c1ec345da983c80"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a401521dedc309ca12c1ec345da983c80">lambda</a> () const</td></tr>
 <tr class="separator:a401521dedc309ca12c1ec345da983c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c1c9607902f7f82d93ea8710efc9882"><td class="memItemLeft" align="right" valign="top">nda::matrix_const_view&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a6c1c9607902f7f82d93ea8710efc9882">get_ipmat</a> () const</td></tr>
+<tr class="memdesc:a6c1c9607902f7f82d93ea8710efc9882"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get inner product matrix.  <a href="classcppdlr_1_1imtime__ops.html#a6c1c9607902f7f82d93ea8710efc9882">More...</a><br /></td></tr>
+<tr class="separator:a6c1c9607902f7f82d93ea8710efc9882"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6257e0b3f43733c5ac06c8af11a47bb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">convolve_init</a> () const</td></tr>
 <tr class="memdesc:a6257e0b3f43733c5ac06c8af11a47bb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization for convolution methods.  <a href="classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3">More...</a><br /></td></tr>
 <tr class="separator:a6257e0b3f43733c5ac06c8af11a47bb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -769,6 +772,36 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
 
 <p>Get transformation matrix from DLR coefficients to values at DLR imaginary time nodes. </p>
 <dl class="section return"><dt>Returns</dt><dd>Transformation matrix </dd></dl>
+
+</div>
+</div>
+<a id="a6c1c9607902f7f82d93ea8710efc9882"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c1c9607902f7f82d93ea8710efc9882">&#9670;&nbsp;</a></span>get_ipmat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">nda::matrix_const_view&lt;double&gt; cppdlr::imtime_ops::get_ipmat </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get inner product matrix. </p>
+<p>Given the vector f and g of DLR coefficients of scalar-valued imaginary time functions F and G, respectively, the inner product matrix M gives</p>
+<p>f^T M g = 1/beta int_0^beta dt f(t) g(t).</p>
+<dl class="section return"><dt>Returns</dt><dd>Inner product matrix </dd></dl>
 
 </div>
 </div>
