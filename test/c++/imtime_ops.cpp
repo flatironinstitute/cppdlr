@@ -1141,7 +1141,7 @@ TEST(dlr_imtime, vals2coefs_transpose) {
 
   // Build row vector of integration taking values at DLR nodes; since
   //
-  // intvec^T * gc = intvec^T * it2cf * g = (it2cf^T * intvec) * g,
+  // intvec^T * gc = intvec^T * it2cf * g = (it2cf^T * intvec)^T * g,
   //
   // this is given by applying the transpose of the DLR values -> coefficients
   // transformation to the integration vector
