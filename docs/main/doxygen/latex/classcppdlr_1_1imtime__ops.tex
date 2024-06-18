@@ -20,7 +20,7 @@ Class responsible for all DLR imaginary time operations, including building imag
 \item 
 \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a8da78cf54d39d48d2be19ad1f146b03c}{imtime\+\_\+ops}} ()=default
 \item 
-{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\T\+::regular\+\_\+type \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a8b83b15a4fa3eefe8f10d65a53b5885d}{vals2coefs}} (T const \&g) const
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\T\+::regular\+\_\+type \mbox{\hyperlink{classcppdlr_1_1imtime__ops_af5bafac0dcc76bd713c732a3792c6e0c}{vals2coefs}} (T const \&g, bool transpose=false) const
 \begin{DoxyCompactList}\small\item\em Transform values of Green\textquotesingle{}s function G on DLR imaginary time grid to DLR coefficients. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\T\+::regular\+\_\+type \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6f6d71c061aec134df9edf1255e19dfb}{coefs2vals}} (T const \&gc) const
 \begin{DoxyCompactList}\small\item\em Transform DLR coefficients of Green\textquotesingle{}s function G to values on DLR imaginary time grid. \end{DoxyCompactList}\item 
@@ -553,12 +553,12 @@ Initialize matrix of the reflection G(tau) -\/$>$ G(beta -\/ tau) acting on the 
 
 Initialization for time-\/ordered convolution methods. 
 
-Initialize matrices required for the time-\/ordered convolution methods. This method is called automatically the first time one of the relevant time-\/ordered convolution methods is called, but it may also be called manually to avoid the additional overhead in the first time-\/ordered convolution call. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a8b83b15a4fa3eefe8f10d65a53b5885d}\label{classcppdlr_1_1imtime__ops_a8b83b15a4fa3eefe8f10d65a53b5885d}} 
+Initialize matrices required for the time-\/ordered convolution methods. This method is called automatically the first time one of the relevant time-\/ordered convolution methods is called, but it may also be called manually to avoid the additional overhead in the first time-\/ordered convolution call. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_af5bafac0dcc76bd713c732a3792c6e0c}\label{classcppdlr_1_1imtime__ops_af5bafac0dcc76bd713c732a3792c6e0c}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!vals2coefs@{vals2coefs}}
 \index{vals2coefs@{vals2coefs}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{vals2coefs()}{vals2coefs()}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-T\+::regular\+\_\+type cppdlr\+::imtime\+\_\+ops\+::vals2coefs (\begin{DoxyParamCaption}\item[{T const \&}]{g }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+T\+::regular\+\_\+type cppdlr\+::imtime\+\_\+ops\+::vals2coefs (\begin{DoxyParamCaption}\item[{T const \&}]{g,  }\item[{bool}]{transpose = {\ttfamily false} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -566,7 +566,9 @@ Transform values of Green\textquotesingle{}s function G on DLR imaginary time gr
 
 
 \begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em g} & Values of G on DLR imaginary time grid\\
+\mbox{\texttt{ in}}  & {\em g} & Values of G on DLR imaginary time grid \\
+\hline
+\mbox{\texttt{ in}}  & {\em transpose} & Transpose values -\/$>$ coefficients transformation (default is false)\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}

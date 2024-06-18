@@ -94,10 +94,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac44ddf86d5fd185dcf12add54362a6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8da78cf54d39d48d2be19ad1f146b03c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a8da78cf54d39d48d2be19ad1f146b03c">imtime_ops</a> ()=default</td></tr>
 <tr class="separator:a8da78cf54d39d48d2be19ad1f146b03c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b83b15a4fa3eefe8f10d65a53b5885d"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
-<tr class="memitem:a8b83b15a4fa3eefe8f10d65a53b5885d"><td class="memTemplItemLeft" align="right" valign="top">T::regular_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a8b83b15a4fa3eefe8f10d65a53b5885d">vals2coefs</a> (T const &amp;g) const</td></tr>
-<tr class="memdesc:a8b83b15a4fa3eefe8f10d65a53b5885d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform values of Green's function G on DLR imaginary time grid to DLR coefficients.  <a href="classcppdlr_1_1imtime__ops.html#a8b83b15a4fa3eefe8f10d65a53b5885d">More...</a><br /></td></tr>
-<tr class="separator:a8b83b15a4fa3eefe8f10d65a53b5885d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5bafac0dcc76bd713c732a3792c6e0c"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:af5bafac0dcc76bd713c732a3792c6e0c"><td class="memTemplItemLeft" align="right" valign="top">T::regular_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#af5bafac0dcc76bd713c732a3792c6e0c">vals2coefs</a> (T const &amp;g, bool transpose=false) const</td></tr>
+<tr class="memdesc:af5bafac0dcc76bd713c732a3792c6e0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform values of Green's function G on DLR imaginary time grid to DLR coefficients.  <a href="classcppdlr_1_1imtime__ops.html#af5bafac0dcc76bd713c732a3792c6e0c">More...</a><br /></td></tr>
+<tr class="separator:af5bafac0dcc76bd713c732a3792c6e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f6d71c061aec134df9edf1255e19dfb"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:a6f6d71c061aec134df9edf1255e19dfb"><td class="memTemplItemLeft" align="right" valign="top">T::regular_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">coefs2vals</a> (T const &amp;gc) const</td></tr>
 <tr class="memdesc:a6f6d71c061aec134df9edf1255e19dfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform DLR coefficients of Green's function G to values on DLR imaginary time grid.  <a href="classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb">More...</a><br /></td></tr>
@@ -1251,8 +1251,8 @@ template&lt;nda::MemoryArray T&gt; </div>
 
 </div>
 </div>
-<a id="a8b83b15a4fa3eefe8f10d65a53b5885d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b83b15a4fa3eefe8f10d65a53b5885d">&#9670;&nbsp;</a></span>vals2coefs()</h2>
+<a id="af5bafac0dcc76bd713c732a3792c6e0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5bafac0dcc76bd713c732a3792c6e0c">&#9670;&nbsp;</a></span>vals2coefs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1266,8 +1266,18 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
           <td class="memname">T::regular_type cppdlr::imtime_ops::vals2coefs </td>
           <td>(</td>
           <td class="paramtype">T const &amp;&#160;</td>
-          <td class="paramname"><em>g</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>transpose</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
   </td>
@@ -1280,7 +1290,8 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
 <p>Transform values of Green's function G on DLR imaginary time grid to DLR coefficients. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">g</td><td>Values of G on DLR imaginary time grid</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">g</td><td>Values of G on DLR imaginary time grid </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">transpose</td><td>Transpose values -&gt; coefficients transformation (default is false)</td></tr>
   </table>
   </dd>
 </dl>
