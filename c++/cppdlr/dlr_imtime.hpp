@@ -74,11 +74,13 @@ namespace cppdlr {
     * @brief Transform values of Green's function G on DLR imaginary time grid to
     * DLR coefficients 
     *
-    * @param[in] g Values of G on DLR imaginary time grid
+    * @param[in] g          Values of G on DLR imaginary time grid
+    * @param[in] transpose  Transpose values -> coefficients transformation
+    * (default is false)
     *
     * @return DLR coefficients of G
     */
-    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> typename T::regular_type vals2coefs(T const &g) const {
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> typename T::regular_type vals2coefs(T const &g, bool transpose = false) const {
 
       // MemoryArray type can be nda vector, matrix, array, or view of any of
       // these; taking a regular_type converts, for example, a matrix view to a
@@ -94,9 +96,9 @@ namespace cppdlr {
 
       // Solve linear system (multiple right hand sides) to convert vals -> coeffs
       if constexpr (nda::is_complex_v<S>) { // getrs requires matrix and rhs to have same value type
-        nda::lapack::getrs(it2cf.zlu, gfv, it2cf.piv);
+        transpose ? nda::lapack::getrs(nda::transpose(it2cf.zlu), gfv, it2cf.piv) : nda::lapack::getrs(it2cf.zlu, gfv, it2cf.piv);
       } else {
-        nda::lapack::getrs(it2cf.lu, gfv, it2cf.piv);
+        transpose ? nda::lapack::getrs(nda::transpose(it2cf.lu), gfv, it2cf.piv) : nda::lapack::getrs(it2cf.lu, gfv, it2cf.piv);
       }
 
       return gf;

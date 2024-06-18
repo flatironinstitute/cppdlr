@@ -1106,6 +1106,53 @@ TEST(imtime_ops, innerprod) {
   EXPECT_LT(err, eps);
 }
 
+/**
+* @brief Test transpose of DLR values -> coefficients transformation
+*/
+TEST(dlr_imtime, vals2coefs_transpose) {
+
+  double lambda = 100;   // DLR cutoff
+  double eps    = 1e-14; // DLR tolerance
+  double beta   = 100;   // Inverse temperature
+
+  // Get DLR frequencies
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+  int r       = dlr_rf.size();
+
+  // Get DLR coefficients -> values matrix
+  auto itops         = imtime_ops(lambda, dlr_rf);
+  auto const &dlr_it = itops.get_itnodes();
+
+  // Define Green's function G(t) = k(t,om0) for fixed om0
+  double om0 = 0.4321;
+  auto g     = nda::vector<double>(r);
+  for (int k = 0; k < r; ++k) { g(k) = k_it(dlr_it(k), beta * om0); }
+  auto gc = itops.vals2coefs(g);
+
+  // Row vector of integration taking DLR coefficients
+  auto intvec = nda::vector<double>(r);
+  for (int k = 0; k < r; ++k) { intvec(k) = -beta * tanh(dlr_rf(k) / 2) / dlr_rf(k); }
+
+  // Compute integral of G via integration vector and compare with true integral
+  double inttst = nda::blas::dot(intvec, gc);
+  double inttru = -tanh(beta * om0 / 2) / om0;
+
+  EXPECT_LT(abs(inttst - inttru), eps);
+
+  // Build row vector of integration taking values at DLR nodes; since
+  //
+  // intvec^T * gc = intvec^T * it2cf * g = (it2cf^T * intvec) * g,
+  //
+  // this is given by applying the transpose of the DLR values -> coefficients
+  // transformation to the integration vector
+  auto intvec_vals = itops.vals2coefs(intvec, true);
+
+  // Compute integral of G using this vector and compare with true integral
+  double inttst2 = nda::blas::dot(intvec_vals, g);
+
+  EXPECT_LT(abs(inttst2 - inttru), eps);
+}
+
 TEST(dlr_imtime, h5_rw) {
 
   double lambda = 1000;  // DLR cutoff
