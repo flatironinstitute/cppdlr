@@ -78,7 +78,25 @@ namespace cppdlr {
     * @param[in] transpose  Transpose values -> coefficients transformation
     * (default is false)
     *
-    * @return DLR coefficients of G
+    * @return DLR coefficients of G (if transpose = false, as it is by default;
+    * otherwise, see note below)
+    *
+    * @note By setting the optional argument \p transpose to true, this method
+    * applies the transpose of the values -> coefficients transformation. This
+    * is useful for constructing matrices of linear operators which act on
+    * vectors of DLR grid values, rather than DLR coefficients. As an example,
+    * suppose L is a linear functional such that L[G] = c, G is a Green's
+    * function and c is a scalar.  If gc is the vector of DLR coefficient of G,
+    * then we can represent L by a vector l, with entries given by the action of
+    * L on the DLR basis functions, and we have l^T * gc = c. Then 
+    *
+    * c = l^T * it2cf * g = (it2cf^T * l)^T * g, 
+    *
+    * where g is the vector of values of G at the DLR nodes, and it2cf is the
+    * imaginary time values -> coefficients matrix. Thus it2cf^T * l is the
+    * vector of the linear operator T acting on the vector of values of G at the
+    * DLR nodes, and can be precomputed using the vals2coefs method with the
+    * transpose option set to true.
     */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>> typename T::regular_type vals2coefs(T const &g, bool transpose = false) const {
 
