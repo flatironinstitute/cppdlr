@@ -572,9 +572,14 @@ Transform values of Green\textquotesingle{}s function G on DLR imaginary time gr
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-DLR coefficients of G 
+DLR coefficients of G (if transpose = false, as it is by default; otherwise, see note below)
 \end{DoxyReturn}
+\begin{DoxyNote}{Note}
+By setting the optional argument {\ttfamily transpose} to true, this method applies the transpose of the values -\/$>$ coefficients transformation. This is useful for constructing matrices of linear operators which act on vectors of DLR grid values, rather than DLR coefficients. As an example, suppose L is a linear functional such that L\mbox{[}G\mbox{]} = c, G is a Green\textquotesingle{}s function and c is a scalar. If gc is the vector of DLR coefficient of G, then we can represent L by a vector l, with entries given by the action of L on the DLR basis functions, and we have l$^\wedge$T $\ast$ gc = c. Then
+\end{DoxyNote}
+c = l$^\wedge$T $\ast$ it2cf $\ast$ g = (it2cf$^\wedge$T $\ast$ l)$^\wedge$T $\ast$ g,
 
+where g is the vector of values of G at the DLR nodes, and it2cf is the imaginary time values -\/$>$ coefficients matrix. Thus it2cf$^\wedge$T $\ast$ l is the vector of the linear operator T acting on the vector of values of G at the DLR nodes, and can be precomputed using the vals2coefs method with the transpose option set to true. 
 
 \doxysubsection{Friends And Related Function Documentation}
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a02e5f8519e54734a74b94226d10e082d}\label{classcppdlr_1_1imtime__ops_a02e5f8519e54734a74b94226d10e082d}} 

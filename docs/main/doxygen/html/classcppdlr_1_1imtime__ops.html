@@ -1295,7 +1295,10 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>DLR coefficients of G </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>DLR coefficients of G (if transpose = false, as it is by default; otherwise, see note below)</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>By setting the optional argument <code>transpose</code> to true, this method applies the transpose of the values -&gt; coefficients transformation. This is useful for constructing matrices of linear operators which act on vectors of DLR grid values, rather than DLR coefficients. As an example, suppose L is a linear functional such that L[G] = c, G is a Green's function and c is a scalar. If gc is the vector of DLR coefficient of G, then we can represent L by a vector l, with entries given by the action of L on the DLR basis functions, and we have l^T * gc = c. Then</dd></dl>
+<p>c = l^T * it2cf * g = (it2cf^T * l)^T * g,</p>
+<p>where g is the vector of values of G at the DLR nodes, and it2cf is the imaginary time values -&gt; coefficients matrix. Thus it2cf^T * l is the vector of the linear operator T acting on the vector of values of G at the DLR nodes, and can be precomputed using the vals2coefs method with the transpose option set to true. </p>
 
 </div>
 </div>
