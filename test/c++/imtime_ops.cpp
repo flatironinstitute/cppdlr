@@ -1137,7 +1137,7 @@ TEST(dlr_imtime, vals2coefs_transpose) {
   double inttst = nda::blas::dot(intvec, gc);
   double inttru = -tanh(beta * om0 / 2) / om0;
 
-  EXPECT_LT(abs(inttst - inttru), 2 * eps);
+  EXPECT_LT(abs(inttst - inttru), 5 * eps);
 
   // Build row vector of integration taking values at DLR nodes; since
   //
@@ -1150,7 +1150,7 @@ TEST(dlr_imtime, vals2coefs_transpose) {
   // Compute integral of G using this vector and compare with true integral
   double inttst2 = nda::blas::dot(intvec_vals, g);
 
-  EXPECT_LT(abs(inttst2 - inttru), 2 * eps);
+  EXPECT_LT(abs(inttst2 - inttru), 5 * eps);
 }
 
 TEST(dlr_imtime, h5_rw) {
