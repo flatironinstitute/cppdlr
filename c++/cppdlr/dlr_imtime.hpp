@@ -65,8 +65,8 @@ namespace cppdlr {
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
 
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, nda::vector_const_view<double> dlr_it, nda::matrix_const_view<double> cf2it,
-               nda::matrix_const_view<double> it2cf_lu, nda::matrix_const_view<dcomplex> it2cf_zlu, nda::vector_const_view<int> it2cf_piv)
-       : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it), cf2it(cf2it), it2cf{it2cf_lu, it2cf_zlu, it2cf_piv} {};
+               nda::matrix_const_view<double> it2cf_lu, nda::vector_const_view<int> it2cf_piv)
+       : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it), cf2it(cf2it), it2cf{it2cf_lu, it2cf_lu, it2cf_piv} {};
 
     imtime_ops() = default;
 
@@ -843,7 +843,6 @@ namespace cppdlr {
       h5::write(gr, "it", m.get_itnodes());
       h5::write(gr, "cf2it", m.get_cf2it());
       h5::write(gr, "it2cf_lu", m.get_it2cf_lu());
-      h5::write(gr, "it2cf_zlu", m.get_it2cf_zlu());
       h5::write(gr, "it2cf_piv", m.get_it2cf_piv());
     }
 
@@ -857,11 +856,9 @@ namespace cppdlr {
       auto it        = h5::read<nda::vector<double>>(gr, "it");
       auto cf2it_    = h5::read<nda::matrix<double>>(gr, "cf2it");
       auto it2cf_lu  = h5::read<nda::matrix<double>>(gr, "it2cf_lu");
-      auto it2cf_zlu = nda::matrix<dcomplex>(it2cf_lu);
-      h5::try_read(gr, "it2cf_zlu", it2cf_zlu);
       auto it2cf_piv = h5::read<nda::vector<int>>(gr, "it2cf_piv");
 
-      m = imtime_ops(lambda, rf, it, cf2it_, it2cf_lu, it2cf_zlu, it2cf_piv);
+      m = imtime_ops(lambda, rf, it, cf2it_, it2cf_lu, it2cf_piv);
     }
   };
 
