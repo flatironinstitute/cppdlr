@@ -20,7 +20,7 @@ Class responsible for all DLR imaginary time operations, including building imag
 \item 
 \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a8da78cf54d39d48d2be19ad1f146b03c}{imtime\+\_\+ops}} ()=default
 \item 
-{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\T\+::regular\+\_\+type \mbox{\hyperlink{classcppdlr_1_1imtime__ops_af5bafac0dcc76bd713c732a3792c6e0c}{vals2coefs}} (T const \&g, bool transpose=false) const
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\T\+::regular\+\_\+type \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a8b83b15a4fa3eefe8f10d65a53b5885d}{vals2coefs}} (T const \&g) const
 \begin{DoxyCompactList}\small\item\em Transform values of Green\textquotesingle{}s function G on DLR imaginary time grid to DLR coefficients. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\T\+::regular\+\_\+type \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6f6d71c061aec134df9edf1255e19dfb}{coefs2vals}} (T const \&gc) const
 \begin{DoxyCompactList}\small\item\em Transform DLR coefficients of Green\textquotesingle{}s function G to values on DLR imaginary time grid. \end{DoxyCompactList}\item 
@@ -38,7 +38,7 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a318b0b4
 \begin{DoxyCompactList}\small\item\em Compute convolution of two imaginary time Green\textquotesingle{}s functions, given matrix of convolution by one of them. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\nda\+::matrix$<$ S $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a4b0899c199459a76210d535eab89fd3a}{convmat}} (double beta, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, T const \&fc, bool \mbox{\hyperlink{namespacecppdlr_afef0a162a809071b83fd09f578db52bf}{time\+\_\+order}}=false) const
 \begin{DoxyCompactList}\small\item\em Compute matrix of convolution by an imaginary time Green\textquotesingle{}s function. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\S \mbox{\hyperlink{classcppdlr_1_1imtime__ops_aaaa4303e1ee0897417308f380bb75de8}{innerprod}} (T const \&fc, T const \&gc) const
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::complex$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}{innerprod}} (T const \&fc, T const \&gc) const
 \begin{DoxyCompactList}\small\item\em Compute inner product of two imaginary time Green\textquotesingle{}s functions. \end{DoxyCompactList}\item 
 nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a89451028e273c8753d87621081a16cee}{get\+\_\+itnodes}} () const
 \begin{DoxyCompactList}\small\item\em Get DLR imaginary time nodes. \end{DoxyCompactList}\item 
@@ -60,8 +60,6 @@ int \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a88f437cb31c98929ab8a1e6dadb174a
 \begin{DoxyCompactList}\small\item\em Get DLR rank. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}} () const
 \item 
-nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6c1c9607902f7f82d93ea8710efc9882}{get\+\_\+ipmat}} () const
-\begin{DoxyCompactList}\small\item\em Get inner product matrix. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6257e0b3f43733c5ac06c8af11a47bb3}{convolve\+\_\+init}} () const
 \begin{DoxyCompactList}\small\item\em Initialization for convolution methods. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}{tconvolve\+\_\+init}} () const
@@ -350,23 +348,6 @@ Get transformation matrix from DLR coefficients to values at DLR imaginary time 
 \begin{DoxyReturn}{Returns}
 Transformation matrix 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a6c1c9607902f7f82d93ea8710efc9882}\label{classcppdlr_1_1imtime__ops_a6c1c9607902f7f82d93ea8710efc9882}} 
-\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!get\_ipmat@{get\_ipmat}}
-\index{get\_ipmat@{get\_ipmat}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
-\doxysubsubsection{\texorpdfstring{get\_ipmat()}{get\_ipmat()}}
-{\footnotesize\ttfamily nda\+::matrix\+\_\+const\+\_\+view$<$double$>$ cppdlr\+::imtime\+\_\+ops\+::get\+\_\+ipmat (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Get inner product matrix. 
-
-Given the vector f and g of DLR coefficients of scalar-\/valued imaginary time functions F and G, respectively, the inner product matrix M gives
-
-f$^\wedge$T M g = 1/beta int\+\_\+0$^\wedge$beta dt f(t) g(t).
-
-\begin{DoxyReturn}{Returns}
-Inner product matrix 
-\end{DoxyReturn}
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_af2b17e780b762dde6a25d8f8e844dab3}\label{classcppdlr_1_1imtime__ops_af2b17e780b762dde6a25d8f8e844dab3}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!get\_it2cf\_lu@{get\_it2cf\_lu}}
 \index{get\_it2cf\_lu@{get\_it2cf\_lu}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
@@ -452,12 +433,12 @@ DLR real frequency nodes
 \doxysubsubsection{\texorpdfstring{hdf5\_format()}{hdf5\_format()}}
 {\footnotesize\ttfamily static std\+::string cppdlr\+::imtime\+\_\+ops\+::hdf5\+\_\+format (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_aaaa4303e1ee0897417308f380bb75de8}\label{classcppdlr_1_1imtime__ops_aaaa4303e1ee0897417308f380bb75de8}} 
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}\label{classcppdlr_1_1imtime__ops_a45496ed46dbf01e8a70baa687d9c8f5c}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!innerprod@{innerprod}}
 \index{innerprod@{innerprod}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{innerprod()}{innerprod()}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-S cppdlr\+::imtime\+\_\+ops\+::innerprod (\begin{DoxyParamCaption}\item[{T const \&}]{fc,  }\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+std\+::complex$<$double$>$ cppdlr\+::imtime\+\_\+ops\+::innerprod (\begin{DoxyParamCaption}\item[{T const \&}]{fc,  }\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -553,12 +534,12 @@ Initialize matrix of the reflection G(tau) -\/$>$ G(beta -\/ tau) acting on the 
 
 Initialization for time-\/ordered convolution methods. 
 
-Initialize matrices required for the time-\/ordered convolution methods. This method is called automatically the first time one of the relevant time-\/ordered convolution methods is called, but it may also be called manually to avoid the additional overhead in the first time-\/ordered convolution call. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_af5bafac0dcc76bd713c732a3792c6e0c}\label{classcppdlr_1_1imtime__ops_af5bafac0dcc76bd713c732a3792c6e0c}} 
+Initialize matrices required for the time-\/ordered convolution methods. This method is called automatically the first time one of the relevant time-\/ordered convolution methods is called, but it may also be called manually to avoid the additional overhead in the first time-\/ordered convolution call. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a8b83b15a4fa3eefe8f10d65a53b5885d}\label{classcppdlr_1_1imtime__ops_a8b83b15a4fa3eefe8f10d65a53b5885d}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!vals2coefs@{vals2coefs}}
 \index{vals2coefs@{vals2coefs}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{vals2coefs()}{vals2coefs()}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-T\+::regular\+\_\+type cppdlr\+::imtime\+\_\+ops\+::vals2coefs (\begin{DoxyParamCaption}\item[{T const \&}]{g,  }\item[{bool}]{transpose = {\ttfamily false} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+T\+::regular\+\_\+type cppdlr\+::imtime\+\_\+ops\+::vals2coefs (\begin{DoxyParamCaption}\item[{T const \&}]{g }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -566,20 +547,13 @@ Transform values of Green\textquotesingle{}s function G on DLR imaginary time gr
 
 
 \begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em g} & Values of G on DLR imaginary time grid \\
-\hline
-\mbox{\texttt{ in}}  & {\em transpose} & Transpose values -\/$>$ coefficients transformation (default is false)\\
+\mbox{\texttt{ in}}  & {\em g} & Values of G on DLR imaginary time grid\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-DLR coefficients of G (if transpose = false, as it is by default; otherwise, see note below)
+DLR coefficients of G 
 \end{DoxyReturn}
-\begin{DoxyNote}{Note}
-By setting the optional argument {\ttfamily transpose} to true, this method applies the transpose of the values -\/$>$ coefficients transformation. This is useful for constructing matrices of linear operators which act on vectors of DLR grid values, rather than DLR coefficients. As an example, suppose L is a linear functional such that L\mbox{[}G\mbox{]} = c, G is a Green\textquotesingle{}s function and c is a scalar. If gc is the vector of DLR coefficient of G, then we can represent L by a vector l, with entries given by the action of L on the DLR basis functions, and we have l$^\wedge$T $\ast$ gc = c. Then
-\end{DoxyNote}
-c = l$^\wedge$T $\ast$ it2cf $\ast$ g = (it2cf$^\wedge$T $\ast$ l)$^\wedge$T $\ast$ g,
 
-where g is the vector of values of G at the DLR nodes, and it2cf is the imaginary time values -\/$>$ coefficients matrix. Thus it2cf$^\wedge$T $\ast$ l is the vector of the linear operator T acting on the vector of values of G at the DLR nodes, and can be precomputed using the vals2coefs method with the transpose option set to true. 
 
 \doxysubsection{Friends And Related Function Documentation}
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a02e5f8519e54734a74b94226d10e082d}\label{classcppdlr_1_1imtime__ops_a02e5f8519e54734a74b94226d10e082d}} 

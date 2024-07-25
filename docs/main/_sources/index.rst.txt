@@ -5,15 +5,7 @@
 
 ``cppdlr`` is a C++ library implementing the discrete Lehmann representation (DLR) of
 imaginary time single-particle Green's functions and other imaginary time
-quantities, including standard operations. It can be downloaded `from GitHub <https://github.com/flatironinstitute/cppdlr>`_.
-
-The DLR has been implemented in other programming languages (see the :ref:`related libraries<otherlibraries>` below). 
-``cppdlr`` offers a particularly simple high-level user interface, enabled by
-the use of C++ templating and the `nda library <https://github.com/TRIQS/nda>`_ for array types and BLAS/LAPACK
-compatibility. This facilitates its use both in small-scale applications and in
-existing large-scale software projects such as the `TRIQS library
-<https://triqs.github.io>`_ for quantum many-body calculations, which has
-incorporated the DLR via ``cppdlr``. 
+quantities. It can be downloaded `from GitHub <https://github.com/flatironinstitute/cppdlr>`_.
 
 Getting started
 ---------------
@@ -40,9 +32,6 @@ development and maintainence of open-source scientific software.
   [`arXiv:2107.13094 <https://arxiv.org/abs/2107.13094>`_]
 - The companion paper to ``cppdlr``: `J. Kaye, H. U. R. Strand, N. Wentzell, "cppdlr: Imaginary time calculations using the discrete Lehmann representation", arXiv:2404.02334 (2024).
   <https://arxiv.org/abs/2404.02334>`_
-
-
-.. _otherlibraries:
 
 Related libraries
 -----------------
