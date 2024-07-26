@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; cppdlr  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Background" href="background.html" />
+    <link rel="prev" title="cppdlr: Imaginary time calculations using the discrete Lehmann representation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #7E588A" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cppdlr
+          </a>
+              <div class="version">
+                1.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-steps">Installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versions">Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-cmake-options">Custom CMake options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#compiling-with-clang">Compiling with clang</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#note-for-macos-users">Note for MacOS users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-green-s-functions-and-the-lehmann-representation">Imaginary time Green’s functions and the Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#discrete-lehmann-representation">Discrete Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#constructing-a-dlr-expansion">Constructing a DLR expansion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#dlr-in-the-matsubara-frequency-domain">DLR in the Matsubara frequency domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-point-format">Imaginary time point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#measuring-error">Measuring error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#symmetrized-dlr-grids">Symmetrized DLR grids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency">Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-examples">List of examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-other-cppdlr-capabilities">List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Reporting issues</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #7E588A" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cppdlr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="installation">
+<span id="install"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We recommend using a stable <a class="reference external" href="https://github.com/flatironinstitute/cppdlr/releases" rel="noopener noreferrer" target="_blank">release</a> of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are compiling with clang, please look at the “Compiling with clang” section below.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are a MacOS user, and are having trouble installing <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>,
+please look at the “Note for MacOS users” below.</p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
+<p>The dependencies of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> are as follows:</p>
+<ul class="simple">
+<li>gcc version 12 or later OR clang version 15 or later</li>
+<li>BLAS/LAPACK</li>
+<li>hdf5</li>
+<li>openmp</li>
+<li>mpi</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> are required by the <code class="docutils literal notranslate"><span class="pre">nda</span></code> library, which is itself built
+automatically with <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>.</p>
+<p>If you wish to build the documentation, the dependencies also include:</p>
+<ul class="simple">
+<li>libclang</li>
+<li>python</li>
+</ul>
+<p>and the Python packages</p>
+<ul class="simple">
+<li>sphinx</li>
+<li>nbsphinx</li>
+<li>myst_parser</li>
+<li>sphinx_rtd_theme</li>
+<li>linkify-it-py</li>
+<li>clang</li>
+</ul>
+</div>
+<div class="section" id="installation-steps">
+<h2>Installation steps<a class="headerlink" href="#installation-steps" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p class="first">Download the source code of the latest stable version by cloning the <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> repository from GitHub:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/flatironinstitute/cppdlr<span class="w"> </span>cppdlr.src
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create and move to a new directory where you will compile the code:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>cppdlr.build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>cppdlr.build
+</pre></div>
+</div>
+</li>
+<li><p class="first">In the build directory call cmake, including any additional custom CMake options, see below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>cmake<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>path_to_install_dir<span class="w"> </span>../cppdlr.src
+</pre></div>
+</div>
+</li>
+<li><p class="first">Compile the code, run the tests and install the application:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make
+$<span class="w"> </span>make<span class="w"> </span><span class="nb">test</span>
+$<span class="w"> </span>make<span class="w"> </span>install
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="versions">
+<h2>Versions<a class="headerlink" href="#versions" title="Permalink to this heading"></a></h2>
+<p>To use a particular version, go into the directory with the sources, and look at all available versions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>cppdlr.src<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>tag
+</pre></div>
+</div>
+<p>Checkout the version of the code that you want:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span><span class="m">2</span>.1.0
+</pre></div>
+</div>
+<p>and follow steps 2 to 4 above to compile the code.</p>
+</div>
+<div class="section" id="custom-cmake-options">
+<h2>Custom CMake options<a class="headerlink" href="#custom-cmake-options" title="Permalink to this heading"></a></h2>
+<p>The compilation of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> can be configured using CMake-options:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>../cppdlr.src<span class="w"> </span>-DOPTION1<span class="o">=</span>value1<span class="w"> </span>-DOPTION2<span class="o">=</span>value2<span class="w"> </span>...
+</pre></div>
+</div>
+<table border="1" class="docutils align-default">
+<colgroup>
+<col width="58%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Options</th>
+<th class="head">Syntax</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Specify an installation path other than path_to_triqs</td>
+<td>-DCMAKE_INSTALL_PREFIX=path_to_cppdlr</td>
+</tr>
+<tr class="row-odd"><td>Build in Debugging Mode</td>
+<td>-DCMAKE_BUILD_TYPE=Debug</td>
+</tr>
+<tr class="row-even"><td>Disable testing (not recommended)</td>
+<td>-DBuild_Tests=OFF</td>
+</tr>
+<tr class="row-odd"><td>Build the documentation</td>
+<td>-DBuild_Documentation=ON</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="compiling-with-clang">
+<h2>Compiling with clang<a class="headerlink" href="#compiling-with-clang" title="Permalink to this heading"></a></h2>
+<p>To compile with clang, use the following flags in your cmake command (see step 3 above):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-DCMAKE_C_COMPILER<span class="o">=</span>clang
+-DCMAKE_CXX_COMPILER<span class="o">=</span>clang++
+-DCMAKE_CXX_FLAGS<span class="o">=</span><span class="s2">&quot;-stdlib=libc++&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="note-for-macos-users">
+<h2>Note for MacOS users<a class="headerlink" href="#note-for-macos-users" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> currently does not support the AppleClang compiler. Instead, we
+recommend installing the Clang compiler via <a class="reference external" href="https://brew.sh/" rel="noopener noreferrer" target="_blank">homebrew</a> using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>llvm
+</pre></div>
+</div>
+<p>and including the following flags in your cmake command (see step 3 above):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-DCMAKE_C_COMPILER<span class="o">=</span><span class="k">$(</span>brew<span class="w"> </span>--prefix<span class="k">)</span>/opt/llvm/bin/clang
+-DCMAKE_CXX_COMPILER<span class="o">=</span><span class="k">$(</span>brew<span class="w"> </span>--prefix<span class="k">)</span>/opt/llvm/bin/clang++
+</pre></div>
+</div>
+<p>If this does not work for you, please let us know via a <a class="reference external" href="https://github.com/flatironinstitute/cppdlr/issues" rel="noopener noreferrer" target="_blank">GitHub issue</a>.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="cppdlr: Imaginary time calculations using the discrete Lehmann representation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="background.html" class="btn btn-neutral float-right" title="Background" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 The Simons Foundation, Hugo U.R. Strand. Authors: J. Kaye, N. Wentzell, H. U. R. Strand.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
