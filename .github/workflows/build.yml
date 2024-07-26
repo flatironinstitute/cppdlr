@@ -118,4 +118,4 @@ jobs:
       with:
         folder: build/doc/html
         branch: github.io
-        target-folder: docs/main
+        target-folder: docs/1.1.x
