@@ -76,7 +76,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="issues.html">Reporting issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Issues and contributions</a></li>
 </ul>
 
         </div>
@@ -107,7 +107,13 @@
 <span id="main"></span><h1><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>: Imaginary time calculations using the discrete Lehmann representation<a class="headerlink" href="#cppdlr-imaginary-time-calculations-using-the-discrete-lehmann-representation" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> is a C++ library implementing the discrete Lehmann representation (DLR) of
 imaginary time single-particle Green’s functions and other imaginary time
-quantities. It can be downloaded <a class="reference external" href="https://github.com/flatironinstitute/cppdlr" rel="noopener noreferrer" target="_blank">from GitHub</a>.</p>
+quantities, including standard operations. It can be downloaded <a class="reference external" href="https://github.com/flatironinstitute/cppdlr" rel="noopener noreferrer" target="_blank">from GitHub</a>.</p>
+<p>The DLR has been implemented in other programming languages (see the <a class="reference internal" href="#otherlibraries"><span class="std std-ref">related libraries</span></a> below).
+<code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> offers a particularly simple high-level user interface, enabled by
+the use of C++ templating and the <a class="reference external" href="https://github.com/TRIQS/nda" rel="noopener noreferrer" target="_blank">nda library</a> for array types and BLAS/LAPACK
+compatibility. This facilitates its use both in small-scale applications and in
+existing large-scale software projects such as the <a class="reference external" href="https://triqs.github.io" rel="noopener noreferrer" target="_blank">TRIQS library</a> for quantum many-body calculations, which has
+incorporated the DLR via <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>.</p>
 <div class="section" id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
 <blockquote>
@@ -136,7 +142,7 @@ development and maintainence of open-source scientific software.</p>
 </ul>
 </div>
 <div class="section" id="related-libraries">
-<h2>Related libraries<a class="headerlink" href="#related-libraries" title="Permalink to this heading"></a></h2>
+<span id="otherlibraries"></span><h2>Related libraries<a class="headerlink" href="#related-libraries" title="Permalink to this heading"></a></h2>
 <p>Libraries implementing the DLR are available in other languages:</p>
 <ul class="simple">
 <li>Python, via <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">pydlr</a></li>
@@ -176,7 +182,7 @@ Interacting Quantum Systems (TRIQS)</a>.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="issues.html">Reporting issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Issues and contributions</a></li>
 </ul>
 </div>
 </div>
