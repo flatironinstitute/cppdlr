@@ -67,5 +67,5 @@ external_dependency(nda
 set(FMT_INSTALL ON)
 external_dependency(fmt
   GIT_REPO https://github.com/fmtlib/fmt
-  GIT_TAG 10.1.1
+  GIT_TAG 11.0.2
 )
