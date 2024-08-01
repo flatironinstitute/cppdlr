@@ -104,12 +104,43 @@
              
   <div class="tex2jax_ignore mathjax_ignore section" id="changelog">
 <span id="id1"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h1>
+<div class="section" id="version-1-2-0">
+<h2>Version 1.2.0<a class="headerlink" href="#version-1-2-0" title="Permalink to this heading"></a></h2>
+<p>This update contains minor additional functionality, bug fixes, and optimizations.</p>
+<p>We thank all contributors: Jason Kaye, Hugo U. R. Strand, Nils Wentzell</p>
+<div class="section" id="new-features">
+<h3>New features<a class="headerlink" href="#new-features" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Added imtime_ops::get_ipmat function to expose matrix of imaginary time inner product</li>
+<li>Implemented transpose of values -&gt; coefficients operation in imtime_ops::vals2coefs</li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Fixed backwards compatibility issue w/ 1.0.x for h5 reading of it2cf_zlu object in imtime_ops</li>
+</ul>
+</div>
+<div class="section" id="optimizations">
+<h3>Optimizations<a class="headerlink" href="#optimizations" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>imtime_ops::inner_prod function can return double, rather than always complex double</li>
+</ul>
+</div>
+<div class="section" id="other-changes">
+<h3>Other changes<a class="headerlink" href="#other-changes" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li>Test tolerance adjustments</li>
+<li>Minor documentation updates</li>
+</ul>
+</div>
+</div>
 <div class="section" id="version-1-1-0">
 <h2>Version 1.1.0<a class="headerlink" href="#version-1-1-0" title="Permalink to this heading"></a></h2>
 <p>This update to cppdlr adds significant new functionality, including symmetrized DLR grids, and improvements to ensure accuracy of DLR expansions in L^2(tau) norm (both described in the updated documentation).</p>
 <p>We thank all contributors: Thomas Hahn, Alexander Hampel, Jason Kaye, Henri Menke, Hugo U. R. Strand, Nils Wentzell</p>
-<div class="section" id="new-features">
-<h3>New features<a class="headerlink" href="#new-features" title="Permalink to this heading"></a></h3>
+<div class="section" id="id2">
+<h3>New features<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li>Symmetrized DLR grids, w/ tests to compare symmetrized/non-symmetrized grids</li>
 <li>Documentation updates: symmetrized grids, discussion of error</li>
@@ -123,8 +154,8 @@
 <li>Expose fermionic and bosonic Matsubara frequency kernels to user directly</li>
 </ul>
 </div>
-<div class="section" id="bug-fixes">
-<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this heading"></a></h3>
+<div class="section" id="id3">
+<h3>Bug fixes<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li>Fixed bosonic kernel at i*om_n=0</li>
 <li>Fixed bug involving non-contiguous views in vals2coefs implementations</li>
@@ -133,15 +164,15 @@
 <li>Fixed range bug in imtime_ops.interp_matrix_sym_bos</li>
 </ul>
 </div>
-<div class="section" id="optimizations">
-<h3>Optimizations<a class="headerlink" href="#optimizations" title="Permalink to this heading"></a></h3>
+<div class="section" id="id4">
+<h3>Optimizations<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li>Make complex copy of <a class="reference external" href="http://it2cf.lu" rel="noopener noreferrer" target="_blank">it2cf.lu</a> in imtime_ops constructor to avoid on-the-fly copies</li>
 <li>imtime_ops::convolve optimizations; use nda::matmul when possible</li>
 </ul>
 </div>
-<div class="section" id="other-changes">
-<h3>Other changes<a class="headerlink" href="#other-changes" title="Permalink to this heading"></a></h3>
+<div class="section" id="id5">
+<h3>Other changes<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li>Various code simplifications</li>
 <li>Test tolerance adjustments</li>
