@@ -2,6 +2,27 @@
 
 # Changelog
 
+## Version 1.2.0
+
+This update contains minor additional functionality, bug fixes, and optimizations.
+
+We thank all contributors: Jason Kaye, Hugo U. R. Strand, Nils Wentzell
+
+### New features
+* Added imtime_ops::get_ipmat function to expose matrix of imaginary time inner product
+* Implemented transpose of values -> coefficients operation in imtime_ops::vals2coefs 
+
+### Bug fixes
+* Fixed backwards compatibility issue w/ 1.0.x for h5 reading of it2cf_zlu object in imtime_ops 
+
+### Optimizations
+* imtime_ops::inner_prod function can return double, rather than always complex double
+
+### Other changes
+* Test tolerance adjustments
+* Minor documentation updates
+
+
 ## Version 1.1.0
 
 This update to cppdlr adds significant new functionality, including symmetrized DLR grids, and improvements to ensure accuracy of DLR expansions in L^2(tau) norm (both described in the updated documentation).
