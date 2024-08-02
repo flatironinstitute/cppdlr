@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; cppdlr  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=default"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference documentation" href="documentation.html" />
+    <link rel="prev" title="Background" href="background.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #7E588A" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cppdlr
+          </a>
+              <div class="version">
+                1.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installation-steps">Installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#versions">Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#custom-cmake-options">Custom CMake options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#compiling-with-clang">Compiling with clang</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#note-for-macos-users">Note for MacOS users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-green-s-functions-and-the-lehmann-representation">Imaginary time Green’s functions and the Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#discrete-lehmann-representation">Discrete Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#constructing-a-dlr-expansion">Constructing a DLR expansion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#dlr-in-the-matsubara-frequency-domain">DLR in the Matsubara frequency domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-point-format">Imaginary time point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#measuring-error">Measuring error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#symmetrized-dlr-grids">Symmetrized DLR grids</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency">Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#list-of-examples">List of examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#list-of-other-cppdlr-capabilities">List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Issues and contributions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #7E588A" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cppdlr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="examples">
+<span id="id1"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h1>
+<p>This page gives one step-by-step example of the most basic usage of the DLR
+within <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>. For a basic overview of the DLR, definitions, and
+conventions, please see the <a class="reference internal" href="background.html#background"><span class="std std-ref">background page</span></a>.</p>
+<p>Further examples, containing thorough documentation of all steps, can be
+found in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory of the repository. The <a class="reference internal" href="#listofexamples"><span class="std std-ref">list of
+examples</span></a> below gives a list of all examples, with brief
+descriptions. These examples should serve as a good starting point for writing
+your own code using <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>.</p>
+<p>For the time being, not all use cases are covered by examples in the
+<code class="docutils literal notranslate"><span class="pre">examples</span></code> directory. However, the <code class="docutils literal notranslate"><span class="pre">test</span></code> directory of the repository
+contains tests of all the components of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>, and these can also serve as
+useful examples (though they might not be as user-friendly as the examples in
+the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory). Therefore, in the <a class="reference internal" href="#listofothercapabilities"><span class="std std-ref">list of other
+capabilities</span></a> below, we list capabilities of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>
+which are not currently covered by examples, and point to the relevant tests in
+the <code class="docutils literal notranslate"><span class="pre">test</span></code> directory which can serve as examples of these capabilities. This
+is a temporary measure, until we have a more comprehensive set of examples.</p>
+<div class="section" id="example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency">
+<h2>Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency<a class="headerlink" href="#example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency" title="Permalink to this heading"></a></h2>
+<p>This example follows the example program in the file
+<code class="docutils literal notranslate"><span class="pre">examples/dlr_interpolation.cpp</span></code>. You should follow the code in that file as
+you read this example. If you see a definition you do not know, or need to look
+up a convention, you can find this information on the <a class="reference internal" href="background.html#background"><span class="std std-ref">background page</span></a>.</p>
+<p>We first include the header file <code class="docutils literal notranslate"><span class="pre">cppdlr.hpp</span></code>, which is
+necessary to use <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> functionality, and use the <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> namespace. We
+then define an evaluator function, <code class="docutils literal notranslate"><span class="pre">gfun</span></code>, for an imaginary time Green’s
+function. In this case, we take a simple example: a Green’s function
+corresponding to a spectral function which is a discrete sum of delta functions:</p>
+<div class="math notranslate nohighlight">
+\[\rho(\omega) = \sum_{i=1}^N A_i \delta(\omega - a_i).\]</div>
+<p>In this case, we have taken each <span class="math notranslate nohighlight">\(A_i\)</span> to be a <span class="math notranslate nohighlight">\(2 \times 2\)</span>
+symmetric matrix. Using the Lehmann representation, defined on the
+<a class="reference internal" href="background.html#background"><span class="std std-ref">background page</span></a>, we see that this yields the following imaginary time
+Green’s function:</p>
+<div class="math notranslate nohighlight">
+\[G(\tau) = \sum_{i=1}^N A_i K(\tau, a_i) \equiv \sum_{i=1}^N A_i \frac{e^{-\tau a_i}}{1+e^{-\beta a_i}}.\]</div>
+<p>There is nothing special about this Green’s function, except that it is
+convenient for this example because it has a simple analytical form. We also
+define an evaluator for the Green’s function in fermionic Matsubara frequency
+space, which, by direct Fourier transform, is given by</p>
+<div class="math notranslate nohighlight">
+\[G(i \nu_n) = \sum_{i=1}^N A_i K(i \nu_n, a_i) \equiv \sum_{i=1}^N \frac{A_i}{i \nu_n - a_i}.\]</div>
+<p>Next we move to the main program. We first define the
+the inverse temperature <span class="math notranslate nohighlight">\(\beta\)</span>, the number of orbital indices, which in
+this case is 2 since <span class="math notranslate nohighlight">\(G\)</span> is a <span class="math notranslate nohighlight">\(2 \times 2\)</span> matrix-valued function,
+the DLR cutoff parameter <span class="math notranslate nohighlight">\(\Lambda\)</span>, and the desired accuracy <span class="math notranslate nohighlight">\(\epsilon\)</span> of our DLR
+expansion. We note that we took all the <span class="math notranslate nohighlight">\(a_i\)</span> above to be less than 1, so
+the spectral width <span class="math notranslate nohighlight">\(\omega_{\max}\)</span> of the Green’s function is less than 1;
+therefore, the DLR cutoff parameter <span class="math notranslate nohighlight">\(\Lambda = \beta \omega_{\max}\)</span> can be
+safely set to <span class="math notranslate nohighlight">\(\beta\)</span>. If the spectral width is unknown, it is recommended
+to converge results with respect to <span class="math notranslate nohighlight">\(\Lambda\)</span>. After this, we set the
+number of points at which we will test the accuracy of our DLR expansion, both
+in imaginary time and Matsubara frequency.</p>
+<p>We now begin to see some of the basic functionality of <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>. We first
+obtain the DLR frequencies <span class="math notranslate nohighlight">\(\omega_l\)</span> by calling the function
+<code class="docutils literal notranslate"><span class="pre">build_dlr_rf</span></code>, supplying the DLR cutoff parameter and tolerance as input
+parameters. We obtain a vector of <span class="math notranslate nohighlight">\(r = 31\)</span> DLR frequencies, which are
+shown below for the given parameters. We note that although <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> works in
+non-dimensionalized variables (e.g., we consider <span class="math notranslate nohighlight">\(\tau \in [0,1]\)</span> rather
+than <span class="math notranslate nohighlight">\(\tau \in [0,\beta]\)</span>), we have converted back to the original
+physical variables in all figures on this page.</p>
+<a class="reference internal image-reference" href="_images/dlr_rf.png"><img alt="_images/dlr_rf.png" class="align-center" src="_images/dlr_rf.png" style="width: 500px;" /></a>
+<p>We next obtain an object of type <code class="docutils literal notranslate"><span class="pre">imtime_ops</span></code>. This class is responsible for
+all imaginary time operations on Green’s functions, such as interpolation,
+fitting, and convolution, and given a particular set of DLR frequencies,
+determined by <span class="math notranslate nohighlight">\(\Lambda\)</span> and <span class="math notranslate nohighlight">\(\epsilon\)</span>, you only need one of these.
+The vector of DLR imaginary time grid nodes <span class="math notranslate nohighlight">\(\tau_k\)</span> can be extracted from
+this object using the <code class="docutils literal notranslate"><span class="pre">get_itnodes</span></code> method.</p>
+<p>We next evaluate the Green’s function at the DLR imaginary time grid nodes by
+calling the evaluator function discussed above. In practice, you would supply
+your own Green’s function evaluator, which could involve a complicated program.
+Below, we plot the Green’s function, with the <span class="math notranslate nohighlight">\(r = 31\)</span> DLR imaginary time
+nodes indicated.</p>
+<a class="reference internal image-reference" href="_images/gfun.png"><img alt="_images/gfun.png" class="align-center" src="_images/gfun.png" style="width: 500px;" /></a>
+<p>Now that we have the values of the Green’s function on the DLR imaginary time
+grid, <span class="math notranslate nohighlight">\(G(\tau_k)\)</span>, we can form its DLR expansion by obtaining its DLR
+coefficients <span class="math notranslate nohighlight">\(\widehat{g}_l\)</span> via the <code class="docutils literal notranslate"><span class="pre">vals2coefs</span></code> method of the
+<code class="docutils literal notranslate"><span class="pre">imtime_ops</span></code> object. We sometimes call this the interpolation step, since we
+are interpolating the Green’s function at the DLR nodes using an expansion in
+the DLR basis functions <span class="math notranslate nohighlight">\(K(\tau, \omega_l)\)</span>. In other words, we solve the
+linear system</p>
+<div class="math notranslate nohighlight">
+\[\sum_{l=1}^r K(\tau_k, \omega_l) \widehat{g}_l = G(\tau_k)\]</div>
+<p>which constitutes an interpolation problem.</p>
+<p>Having obtained the DLR expansion of <span class="math notranslate nohighlight">\(G\)</span> (characterized by its DLR
+coefficients <span class="math notranslate nohighlight">\(\widehat{g}_l\)</span>), we can now evaluate it at any imaginary
+time point <span class="math notranslate nohighlight">\(\tau\)</span> by simply evaluating the DLR expansion:</p>
+<div class="math notranslate nohighlight">
+\[G(\tau) \approx \sum_{l=1}^r K(\tau, \omega_l) \widehat{g}_l.\]</div>
+<p>This is done using the <code class="docutils literal notranslate"><span class="pre">coefs2eval</span></code> method of the <code class="docutils literal notranslate"><span class="pre">imtime_ops</span></code> object. Here,
+we evaluate the DLR expansion on an equispaced grid of <span class="math notranslate nohighlight">\(\tau\)</span> points
+generated by the function <code class="docutils literal notranslate"><span class="pre">eqptsrel</span></code> (this function generates the points in
+the <em>relative</em> time format used by <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>; please see <a class="reference internal" href="background.html#relativeformat"><span class="std std-ref">the imaginary
+time point format section of the Background page</span></a> for details). We also evaluate
+the true Green’s function, and compare the two. The pointwise error for the
+top-left entry of the Green’s function, <span class="math notranslate nohighlight">\(G_00(\tau)\)</span>, is shown below.</p>
+<a class="reference internal image-reference" href="_images/gfun_err_it.png"><img alt="_images/gfun_err_it.png" class="align-center" src="_images/gfun_err_it.png" style="width: 500px;" /></a>
+<p>We see that the DLR expansion is correct to within the specified <span class="math notranslate nohighlight">\(\epsilon
+= 10^{-10}\)</span> tolerance.</p>
+<p>Since the Fourier transform of the DLR basis functions are known, we can
+directly evaluate the DLR expansion of <span class="math notranslate nohighlight">\(G\)</span> in the fermionic Matsubara
+frequency space:</p>
+<div class="math notranslate nohighlight">
+\[G(i \nu_n) \approx \sum_{l=1}^r K(i \nu_n, \omega_l) \widehat{g}_l.\]</div>
+<p>To do this, we first construct an object of type <code class="docutils literal notranslate"><span class="pre">imfreq_ops</span></code>. This class is
+analogous to the <code class="docutils literal notranslate"><span class="pre">imtime_ops</span></code> class, but is responsible for all Matsubara
+frequency operations. Here, we use its <code class="docutils literal notranslate"><span class="pre">coefs2eval</span></code> method to evaluate the DLR
+expansion of <span class="math notranslate nohighlight">\(G\)</span> at a large set of Matsubara frequencies, which in <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>
+are characterized by their index <span class="math notranslate nohighlight">\(n\)</span>. Again comparing to the top-left
+entry <span class="math notranslate nohighlight">\(G_00(i \nu_n)\)</span> of the true Green’s
+function, we find agreement within the specified <span class="math notranslate nohighlight">\(\epsilon = 10^{-10}\)</span>
+tolerance.</p>
+<a class="reference internal image-reference" href="_images/gfun_err_if.png"><img alt="_images/gfun_err_if.png" class="align-center" src="_images/gfun_err_if.png" style="width: 500px;" /></a>
+</div>
+<div class="section" id="list-of-examples">
+<span id="listofexamples"></span><h2>List of examples<a class="headerlink" href="#list-of-examples" title="Permalink to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory contains the following example programs, which are
+documented in detail in the files themselves.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">examples/dlr_interpolation.cpp</span></code>: form a DLR expansion via interpolation,
+and evaluate it in imaginary time and frequency. This example is described in
+detail above.</li>
+</ul>
+</div>
+<div class="section" id="list-of-other-cppdlr-capabilities">
+<span id="listofothercapabilities"></span><h2>List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities<a class="headerlink" href="#list-of-other-cppdlr-capabilities" title="Permalink to this heading"></a></h2>
+<p>For <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> use cases which are not covered by examples in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> directory,
+relevant unit tests in the <code class="docutils literal notranslate"><span class="pre">test</span></code> directory can serve as useful examples. We
+list several such use cases below.</p>
+<ul class="simple">
+<li>Obtain a DLR expansion by fitting to data in imaginary time: see the tests <code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_scalar</span></code>,
+<code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_matrix</span></code>, and <code class="docutils literal notranslate"><span class="pre">imtime_ops.fit_matrix_cmplx</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</li>
+<li>Compute the convolution of two DLR expansions: see the tests
+<code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_scalar_real</span></code>, <code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_scalar_cmplx</span></code>,
+<code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_matrix_real</span></code>, and <code class="docutils literal notranslate"><span class="pre">imtime_ops.convolve_matrix_cmplx</span></code>
+in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</li>
+<li>Perform a “reflection” operation <span class="math notranslate nohighlight">\(G(\tau) \mapsto G(\beta-\tau)\)</span> on a
+Green’s function: see the test <code class="docutils literal notranslate"><span class="pre">imtime_ops.refl_matrix</span></code> in the file
+<code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</li>
+<li>Compute the inner product of two DLR expansions: see the test
+<code class="docutils literal notranslate"><span class="pre">imtime_ops.innerprod</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code>.</li>
+<li>Obtain a DLR expansion by interpolation on the DLR Matsubara frequency nodes:
+see the tests <code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_scalar</span></code> and <code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_matrix</span></code> in
+the file <code class="docutils literal notranslate"><span class="pre">test/imfreq_ops.cpp</span></code>.</li>
+<li>Obtain symmetrized DLR grids, and obtain a DLR expansion by interpolation on
+these grids: see the tests <code class="docutils literal notranslate"><span class="pre">imtime_ops.interp_matrix_sym_fer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">imtime_ops.interp_matrix_sym_bos</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imtime_ops.cpp</span></code> for
+fermionic and bosonic Green’s functions, respectively, on a symmetric
+imaginary time grid. See the tests <code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_matrix_sym_fer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">imfreq_ops.interp_matrix_sym_bos</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/imfreq_ops.cpp</span></code> for
+fermionic and bosonic Green’s functions, respectively, on a symmetric
+Matsubara frequency grid. All of these tests show how to obtain a symmetric
+set of DLR frequencies.</li>
+<li>Given a fixed self-energy, solve the Dyson equation in imaginary time to
+obtain the Green’s function: see the tests <code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_vs_ed_real</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_vs_ed_cmplx</span></code>, and <code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_bethe</span></code> in the file
+<code class="docutils literal notranslate"><span class="pre">test/dyson_it.cpp</span></code>.</li>
+<li>Solve the Dyson equation self-consistently in imaginary time, given an
+expression for the self-energy in terms of the Green’s function: see the test
+<code class="docutils literal notranslate"><span class="pre">dyson_it.dyson_bethe_fpi</span></code> in the file <code class="docutils literal notranslate"><span class="pre">test/dyson_it.cpp</span></code>.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="background.html" class="btn btn-neutral float-left" title="Background" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="documentation.html" class="btn btn-neutral float-right" title="Reference documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 The Simons Foundation, Hugo U.R. Strand. Authors: J. Kaye, N. Wentzell, H. U. R. Strand.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

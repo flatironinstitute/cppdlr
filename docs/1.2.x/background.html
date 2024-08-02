@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Background &mdash; cppdlr  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=default"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #7E588A" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cppdlr
+          </a>
+              <div class="version">
+                1.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installation-steps">Installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#versions">Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#custom-cmake-options">Custom CMake options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#compiling-with-clang">Compiling with clang</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#note-for-macos-users">Note for MacOS users</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#imaginary-time-green-s-functions-and-the-lehmann-representation">Imaginary time Green’s functions and the Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#discrete-lehmann-representation">Discrete Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constructing-a-dlr-expansion">Constructing a DLR expansion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dlr-in-the-matsubara-frequency-domain">DLR in the Matsubara frequency domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#imaginary-time-point-format">Imaginary time point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#measuring-error">Measuring error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#symmetrized-dlr-grids">Symmetrized DLR grids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency">Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-examples">List of examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-other-cppdlr-capabilities">List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Issues and contributions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #7E588A" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cppdlr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Background</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/background.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="background">
+<span id="id1"></span><h1>Background<a class="headerlink" href="#background" title="Permalink to this heading"></a></h1>
+<p>This page gives a brief review of the discrete Lehmann representation (DLR), and
+establishes the definitions and conventions used in <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> (which can vary
+from one reference to another). If you are already familiar with the DLR, you
+should probably still read <a class="reference internal" href="#relativeformat"><span class="std std-ref">the section on the relative imaginary time
+format below</span></a>. For a more detailed description of the DLR,
+please see the references listed on the <a class="reference internal" href="index.html#main"><span class="std std-ref">main page</span></a>. For examples of
+the implementation of these concepts in <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>, please see the
+<a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples page</span></a>.</p>
+<div class="section" id="imaginary-time-green-s-functions-and-the-lehmann-representation">
+<h2>Imaginary time Green’s functions and the Lehmann representation<a class="headerlink" href="#imaginary-time-green-s-functions-and-the-lehmann-representation" title="Permalink to this heading"></a></h2>
+<p>The single-particle imaginary time Green’s function is defined in terms of the time-ordered expectation value as</p>
+<div class="math notranslate nohighlight">
+\[G_{ab}(\tau) = - \langle \mathcal{T} c_a(\tau) c_b^\dagger(0) \rangle,\]</div>
+<p>where <span class="math notranslate nohighlight">\(c^\dagger_b(0)\)</span> is the creation operator for a particle in state <span class="math notranslate nohighlight">\(b\)</span> at time <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(c_a(\tau)\)</span> is the annihilation operator for a particle in state <span class="math notranslate nohighlight">\(a\)</span> at time <span class="math notranslate nohighlight">\(\tau\)</span>. The Green’s function is defined on the interval <span class="math notranslate nohighlight">\(\tau \in (0, \beta)\)</span>, where <span class="math notranslate nohighlight">\(\beta\)</span> is the inverse temperature, but it can be extended to <span class="math notranslate nohighlight">\(\tau \in (-\beta, 0)\)</span> using the periodicity and anti-periodicity properties</p>
+<div class="math notranslate nohighlight">
+\[G_{ab}(\tau) = \xi G_{ab}(\beta + \tau),\]</div>
+<p>of bosonic (<span class="math notranslate nohighlight">\(\xi = 1\)</span>) and fermionic (<span class="math notranslate nohighlight">\(\xi = -1\)</span>) particles, respectively.</p>
+<p>The spectral Lehmann representation of a Green’s function is given by</p>
+<div class="math notranslate nohighlight">
+\[G(\tau) = \int_{-\infty}^\infty K(\tau,\omega) \rho(\omega) \, d\omega,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho(\omega)\)</span> is the spectral function corresponding to the Green’s
+function <span class="math notranslate nohighlight">\(G\)</span>, and <span class="math notranslate nohighlight">\(K(\tau,\omega)\)</span> is the analytic continuation
+kernel, given by</p>
+<div class="math notranslate nohighlight">
+\[K(\tau, \omega) = -\frac{e^{-\omega \tau}}{1 + e^{-\beta \omega}}.\]</div>
+<p>Taking the Fourier transform to the imaginary (or Matsubara) frequency domain
+gives</p>
+<div class="math notranslate nohighlight">
+\[G(i \nu_n) = \int_{-\infty}^\infty K(i \nu_n,\omega) \rho(\omega) \, d\omega,\]</div>
+<p>with</p>
+<div class="math notranslate nohighlight">
+\[K(i \nu_n, \omega) = \frac{1}{i\nu_n - \omega}\]</div>
+<p>for fermionic Green’s functions, and</p>
+<div class="math notranslate nohighlight">
+\[K(i \nu_n, \omega) = \frac{\tanh (\beta \omega/2)}{i\nu_n - \omega}\]</div>
+<p>for bosonic Green’s functions. Here, the Matsubara frequencies are defined as
+<span class="math notranslate nohighlight">\(i \nu_n = 2 n \pi i/\beta\)</span> and <span class="math notranslate nohighlight">\(i \nu_n = (2n+1) \pi i/\beta\)</span> for
+bosonic and fermionic Green’s functions, respectively.</p>
+</div>
+<div class="section" id="discrete-lehmann-representation">
+<h2>Discrete Lehmann representation<a class="headerlink" href="#discrete-lehmann-representation" title="Permalink to this heading"></a></h2>
+<p>The discrete Lehmann representation (DLR) is constructed by making a low-rank
+approximation of the analytic continuation kernel (using the <a class="reference external" href="https://epubs.siam.org/doi/10.1137/030602678" rel="noopener noreferrer" target="_blank">interpolative
+decomposition</a>). Let us define
+the dimensionless cutoff paramter <span class="math notranslate nohighlight">\(\Lambda \equiv \beta \omega_{\max}\)</span>,
+where <span class="math notranslate nohighlight">\(\omega_{\max}\)</span> is defined such that <span class="math notranslate nohighlight">\(\rho(\omega) = 0\)</span>
+outside of <span class="math notranslate nohighlight">\([-\omega_{\max},\omega_{\max}]\)</span>. In practice, <span class="math notranslate nohighlight">\(\beta\)</span> is
+typically known, and <span class="math notranslate nohighlight">\(\omega_{\max}\)</span> can be estimated. <span class="math notranslate nohighlight">\(\Lambda\)</span> is
+a user-specified parameter, and in the typical case that <span class="math notranslate nohighlight">\(\omega_{\max}\)</span>
+is not known exactly, results can be converged with respect to <span class="math notranslate nohighlight">\(\Lambda\)</span>.
+Given <span class="math notranslate nohighlight">\(\Lambda\)</span> and another user-specified error tolerance parameter
+<span class="math notranslate nohighlight">\(\epsilon\)</span>, the DLR expansion of an imaginary time Green’s function
+<span class="math notranslate nohighlight">\(G(\tau)\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{equation}
+  G(\tau) \approx \sum_{l=1}^r K(\tau,\omega_l) \widehat{g}_l, \label{dlrexp} \tag{1}
+\end{equation}\]</div>
+<p>with equality to accuracy <span class="math notranslate nohighlight">\(\epsilon\)</span> in a suitable norm (discussed <a class="reference internal" href="#measuringerror"><span class="std std-ref">below</span></a>). Here, the <span class="math notranslate nohighlight">\(r\)</span> <em>DLR frequencies</em>
+<span class="math notranslate nohighlight">\(\omega_l\)</span> determining the <em>DLR basis functions</em> <span class="math notranslate nohighlight">\(K(\tau,\omega_l)\)</span>
+are carefully chosen (by a pivoted Gram-Schmidt procedure) depending only on
+<span class="math notranslate nohighlight">\(\Lambda\)</span> and <span class="math notranslate nohighlight">\(\epsilon\)</span>, but <em>not</em> on <span class="math notranslate nohighlight">\(G\)</span> itself. As for the
+closely related <a class="reference external" href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.96.035147" rel="noopener noreferrer" target="_blank">intermediate representation</a>
+(implemented, for example, in <a class="reference external" href="https://github.com/SpM-lab/sparse-ir" rel="noopener noreferrer" target="_blank">sparse-ir</a>), for which the basis functions are
+orthogonal but non-explicit, we have <span class="math notranslate nohighlight">\(r = \mathcal{O}(\log(\Lambda)
+\log(\epsilon^{-1}))\)</span>. Thus the DLR enables a highly efficient and high-order
+accurate discretization of all imaginary time Green’s functions, with a number
+of degrees of freedom independent of the specific structure of a given Green’s
+function (beyond its cutoff parameter <span class="math notranslate nohighlight">\(\Lambda\)</span>).</p>
+</div>
+<div class="section" id="constructing-a-dlr-expansion">
+<h2>Constructing a DLR expansion<a class="headerlink" href="#constructing-a-dlr-expansion" title="Permalink to this heading"></a></h2>
+<p>In practice, the <em>DLR coefficients</em> <span class="math notranslate nohighlight">\(\widehat{g}_l\)</span> must be determined
+from some samples of <span class="math notranslate nohighlight">\(G(\tau)\)</span>. This can be done by fitting to data, e.g.
+via ordinary least squares, or by <em>interpolation</em> at the <em>DLR imaginary time
+nodes</em> <span class="math notranslate nohighlight">\(\tau_k\)</span>. These are <span class="math notranslate nohighlight">\(r\)</span> imaginary time points which, given
+the DLR frequencies <span class="math notranslate nohighlight">\(\omega_l\)</span>, are also chosen by a pivoted Gram-Schmidt
+procedure. In particular, given the values <span class="math notranslate nohighlight">\(G(\tau_k)\)</span>, we can solve the
+<span class="math notranslate nohighlight">\(r \times r\)</span> linear system (or interpolation problem)</p>
+<div class="math notranslate nohighlight">
+\[G(\tau_k) = \sum_{l=1}^r K(\tau_k,\omega_l) \widehat{g}_l\]</div>
+<p>to obtain the DLR coefficients. <span class="math notranslate nohighlight">\(G(\tau)\)</span> can then be evaluated using its
+DLR expansion <span class="math notranslate nohighlight">\(\eqref{dlrexp}\)</span>.</p>
+</div>
+<div class="section" id="dlr-in-the-matsubara-frequency-domain">
+<h2>DLR in the Matsubara frequency domain<a class="headerlink" href="#dlr-in-the-matsubara-frequency-domain" title="Permalink to this heading"></a></h2>
+<p>Fourier transform of <span class="math notranslate nohighlight">\(\eqref{dlrexp}\)</span> yields</p>
+<div class="math notranslate nohighlight">
+\[\begin{equation}
+  G(i \nu_n) \approx \sum_{l=1}^r K(i \nu_n,\omega_l) \widehat{g}_l, \label{dlrexp_imfreq} \tag{2}
+\end{equation}\]</div>
+<p>so we see that the DLR expansion can be evaluated directly in imaginary time or
+imaginary frequency, i.e. the Fourier transform is performed analytically. As in
+imaginary time, the DLR coefficients can be obtained by solving the
+<span class="math notranslate nohighlight">\(r \times r\)</span> interpolation problem</p>
+<div class="math notranslate nohighlight">
+\[G(i \nu_{n_k}) = \sum_{l=1}^r K(i \nu_{n_k},\omega_l) \widehat{g}_l\]</div>
+<p>at the <span class="math notranslate nohighlight">\(r\)</span> <em>DLR imaginary frequency nodes</em> <span class="math notranslate nohighlight">\(i \nu_{n_k}\)</span>, whereupon
+<span class="math notranslate nohighlight">\(G(i \nu_n)\)</span> can be evaluated using <span class="math notranslate nohighlight">\(\eqref{dlrexp_imfreq}\)</span> (or
+<span class="math notranslate nohighlight">\(G(\tau)\)</span> can be evaluated using <span class="math notranslate nohighlight">\(\eqref{dlrexp}\)</span>).</p>
+</div>
+<div class="section" id="operations-in-the-dlr-basis">
+<h2>Operations in the DLR basis<a class="headerlink" href="#operations-in-the-dlr-basis" title="Permalink to this heading"></a></h2>
+<p>Since the DLR basis functions are known analytically, common linear
+operations can be straightforwardly performed by representing them in the DLR
+basis. These include</p>
+<ul class="simple">
+<li>Fourier transform: as explained above, one can switch between imaginary time
+and imaginary frequency representations via the DLR expansion, with no
+additional Fourier transform operation</li>
+<li>Products: in imaginary time or imaginary frequency, by simply multiplying the
+functions on the DLR grid, i.e. <span class="math notranslate nohighlight">\(H(\tau_k) = F(\tau_k) G(\tau_k)\)</span>,
+whereupon the DLR expansion of the result can be recovered</li>
+<li>Imaginary time convolution: this includes the full convolution
+<span class="math notranslate nohighlight">\(H(\tau) = \int_0^\beta F(\tau-\tau') G(\tau') \, d\tau'\)</span>, which requires using the
+periodicity/anti-periodicity condition, or the time-ordered convolution
+<span class="math notranslate nohighlight">\(H(\tau) = \int_0^\tau F(\tau-\tau') G(\tau') \, d\tau\)</span></li>
+<li>Linear functionals: e.g. inner products with a given function, evaluation at a point, etc…</li>
+</ul>
+<p>All such operations take the form of vectors/matrices/tensors acting on <span class="math notranslate nohighlight">\(r
+\times 1\)</span> vectors, which represent the DLR expansion of a Green’s function
+<span class="math notranslate nohighlight">\(G\)</span> (either the vector of DLR coefficients of <span class="math notranslate nohighlight">\(G\)</span>, or the vector of
+values of <span class="math notranslate nohighlight">\(G\)</span> at the DLR nodes). Common operations are implemented in
+<code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> in a user-friendly manner, and the implementation of new operations
+should be requested on the <a class="reference external" href="https://github.com/flatironinstitute/cppdlr/issues" rel="noopener noreferrer" target="_blank">GitHub issues page</a>.</p>
+</div>
+<div class="section" id="imaginary-time-point-format">
+<span id="relativeformat"></span><h2>Imaginary time point format<a class="headerlink" href="#imaginary-time-point-format" title="Permalink to this heading"></a></h2>
+<p>First, in <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> imaginary time points are scaled from the interval
+<span class="math notranslate nohighlight">\([0,\beta]\)</span> to the interval <span class="math notranslate nohighlight">\([0,1]\)</span>. This is because <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>
+works with dimensionless variables whenever possible, so in many functions it is
+unnecessary to specify the inverse temperature <span class="math notranslate nohighlight">\(\beta\)</span> explicitly.</p>
+<p>Second, <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> stores imaginary time points in a peculiar manner, called the
+<em>relative</em> time format.
+<strong>This is a subtle issue which ``cppdlr`` users should be aware of, in
+particular if one wants to supply imaginary time points at which to
+evaluate a DLR expansion.</strong> For the TLDR, skip to the <strong>guidelines</strong> below. For an even
+more detailed discussion of this issue than the one given here, see Appendix C
+of <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0010465522001771" rel="noopener noreferrer" target="_blank">this paper</a>.</p>
+<p>The relative time format works as follows. Points <span class="math notranslate nohighlight">\(\tau \in [0, 0.5]\)</span> are
+represented normally. However, instead of representing points <span class="math notranslate nohighlight">\(\tau \in
+(0.5,1)\)</span> directly, we instead store the number <span class="math notranslate nohighlight">\(\tau^* = \tau-1\)</span>. In other
+words, we store the negative distance of <span class="math notranslate nohighlight">\(\tau\)</span> to 1, rather than tau
+itself. Recovering <span class="math notranslate nohighlight">\(\tau\)</span> in the standard <em>absolute time format</em> is
+straightforward, and is implemented by the function <code class="docutils literal notranslate"><span class="pre">rel2abs</span></code>.</p>
+<p>The reason for this has to do with maintaining full relative accuracy in
+floating point arithmetic. To evaluate the kernel <span class="math notranslate nohighlight">\(K(\tau,\omega)\)</span>, we
+sometimes need to compute the value <span class="math notranslate nohighlight">\(1-\tau\)</span> for <span class="math notranslate nohighlight">\(\tau\)</span> very close to 1. If we
+work with tau directly, there is a loss of accuracy due to catastrophic
+cancellation, which begins to appear in extreme physical regimes and at
+very high requested accuracies. If we instead compute <span class="math notranslate nohighlight">\(\tau^*\)</span> to full relative accuracy and
+work with it directly rather than with <span class="math notranslate nohighlight">\(\tau\)</span>, for example by exploiting
+symmetries of <span class="math notranslate nohighlight">\(K(\tau,\omega)\)</span> to avoid ever evaluating <span class="math notranslate nohighlight">\(1-\tau\)</span>, we can
+maintain full relative accuracy.</p>
+<p>This annoyance is the price of maintaining full accuracy in floating point
+arithmic. But it is largely ignoreable if the loss of accuracy is not noticeable
+in your application, as will be the case for many users.</p>
+<p><strong>Simply follow these guidelines</strong>:</p>
+<ol class="arabic simple">
+<li>Use functions provided by <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> to carry out all imaginary time
+operations whenever possible. This will usually hide this technical
+complication.</li>
+<li>In a situation in which you want to provide a point <span class="math notranslate nohighlight">\(\tau\)</span>
+at which to evaluate a DLR, there are two options:<ul>
+<li>(The power user option) Compute <span class="math notranslate nohighlight">\(\tau^*\)</span>, defined above, to full relative accuracy, and provide this according to
+the instructions in the relevant functions, thereby maintaining full
+relative accuracy in calculations, or</li>
+<li>(The typical user option) If you don’t care about the (usually minor) digit
+loss which comes from ignoring this subtlety, simply convert your point
+<span class="math notranslate nohighlight">\(\tau\)</span> in the standard, absolute format (a point <span class="math notranslate nohighlight">\(\tau \in
+[0,1]\)</span>) to the relative format
+<span class="math notranslate nohighlight">\(\tau^*\)</span> defined above using the <code class="docutils literal notranslate"><span class="pre">abs2rel</span></code> function. Since the point will have
+started its life in the absolute format, converting it to relative format
+cannot recover full relative accuracy, but it still needs to be converted
+in order to be compatible with <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> subroutines.</li>
+</ul>
+</li>
+<li>If you happen to want to evaluate a Green’s function on an
+equispaced grid on <span class="math notranslate nohighlight">\([0,1]\)</span> in imaginary time, use the function <code class="docutils literal notranslate"><span class="pre">eqpts_rel</span></code>
+to generate this grid in the relative format.</li>
+</ol>
+</div>
+<div class="section" id="matsubara-frequency-point-format">
+<h2>Matsubara frequency point format<a class="headerlink" href="#matsubara-frequency-point-format" title="Permalink to this heading"></a></h2>
+<p>We define the Matsubara (or imaginary) frequency points as <span class="math notranslate nohighlight">\(i \nu_n = (2 n
++ 1) \pi i/\beta\)</span> for fermionic Green’s functions, and <span class="math notranslate nohighlight">\(i \nu_n = 2 n \pi
+i/\beta\)</span> for bosonic Green’s functions. In <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>, Matsubara frequency
+points are represented by specifying the integer <code class="docutils literal notranslate"><span class="pre">n</span></code>, the inverse temperature
+<span class="math notranslate nohighlight">\(\beta\)</span>, and whether the point is a fermionic or bosonic Matsubara
+frequency using the <code class="docutils literal notranslate"><span class="pre">statistic_t</span></code> specifier.</p>
+</div>
+<div class="section" id="measuring-error">
+<span id="measuringerror"></span><h2>Measuring error<a class="headerlink" href="#measuring-error" title="Permalink to this heading"></a></h2>
+<p>In what sense is the error of the DLR guaranteed to be less than
+<span class="math notranslate nohighlight">\(\epsilon\)</span>? Strictly speaking, if one obtains the DLR expansion by
+interpolation at the DLR nodes or by fitting on a finite number of grid points,
+there is no guarantee. However, in practice we observe very well-controlled errors, and we can give a more useful and practical answer. We consider the case of scalar-valued Green’s functions for simplicity. Let us define the <span class="math notranslate nohighlight">\(L^2(\tau)\)</span> norm as follows:</p>
+<div class="math notranslate nohighlight">
+\[||G||_{L^2(\tau)}^2 = \frac{1}{\beta} \int_0^\beta d\tau \, |G(\tau)|^2.\]</div>
+<p>By Parseval’s theorem, this is equal to the <span class="math notranslate nohighlight">\(l^2(i \nu_n)\)</span> norm:</p>
+<div class="math notranslate nohighlight">
+\[||G||_{l^2(i \nu_n)}^2 = \frac{1}{\beta^2} \sum_{n=-\infty}^\infty |G(i \nu_n)|^2.\]</div>
+<p>Ignoring errors at the level of machine precision, it can be shown that given an imaginary time Green’s function <span class="math notranslate nohighlight">\(G(\tau)\)</span>
+with spectral function <span class="math notranslate nohighlight">\(\rho(\omega)\)</span>, there exists a DLR expansion
+<span class="math notranslate nohighlight">\(G_{\text{DLR}}(\tau) \approx \sum_{l=1}^r K(\tau,\omega_l) \widehat{g}_l\)</span>
+such that</p>
+<div class="math notranslate nohighlight">
+\[||G - G_{\text{DLR}}||_{L^2(\tau)} = ||G - G_{\text{DLR}}||_{l^2(i \nu_n)} \leq ||\rho||_{L^1(\omega)} \epsilon.\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(||\rho||_{L^1(\omega)} = \int_{-\infty}^\infty d\omega \, |\rho(\omega)|\)</span>,
+which is typically <span class="math notranslate nohighlight">\(1\)</span>. Note: The inequality holds as long as
+the DLR frequencies <span class="math notranslate nohighlight">\(\omega_l\)</span> are constructed using the pivoted
+Gram-Schmidt procedure on a suitably fine discretization of <span class="math notranslate nohighlight">\(K(\tau,
+\omega)\)</span> with rows weighted by appropriate quadrature weights. The latter point
+is not discussed in the original reference on the DLR, but will be in an
+upcoming publication.</p>
+<p>This is an existence statement: can we actually find such a DLR expansion? Least
+squares fitting on a sufficiently fine imaginary time grid would yield a DLR
+expansion satisfying this error bound. However, in practice, we also find that
+interpolation at the DLR nodes is sufficient to produce an expansion of
+comparable quality, satisfying the bound, or very nearly so.</p>
+<p>We therefore recommend measuring error in either the <span class="math notranslate nohighlight">\(L^2(\tau)\)</span> or the
+<span class="math notranslate nohighlight">\(l^2(i \nu_n)\)</span> norm, as defined above. If one wishes to obtain a given
+accuracy in the <span class="math notranslate nohighlight">\(L^\infty\)</span> norm—that is, pointwise accuracy—in
+imaginary time or frequency, we would recommend decreasing <span class="math notranslate nohighlight">\(\epsilon\)</span>
+further.</p>
+</div>
+<div class="section" id="symmetrized-dlr-grids">
+<h2>Symmetrized DLR grids<a class="headerlink" href="#symmetrized-dlr-grids" title="Permalink to this heading"></a></h2>
+<p>By default, the DLR frequencies <span class="math notranslate nohighlight">\(\omega_l\)</span> are not chosen to be symmetrized
+about <span class="math notranslate nohighlight">\(\omega = 0\)</span>, nor are the DLR imaginary time nodes <span class="math notranslate nohighlight">\(\tau_k\)</span>
+chosen to be symmetrized about <span class="math notranslate nohighlight">\(\tau = \beta/2\)</span> or the imaginary frequency
+nodes about <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span>. Indeed, this would represent an additional
+constraint in the pivoted Gram-Schmidt procedure used to select the points, and
+is not necessary in most applications. However, in some cases, it might be
+desirable to have symmetric frequencies and grids, and <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> provides this
+functionality via symmetrization flags. Please see the <a class="reference internal" href="examples.html#listofothercapabilities"><span class="std std-ref">list of
+other cppdlr capabilities</span></a> section on the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples
+page</span></a> for a list of <cite>cppdlr</cite> tests which showcase this functionality.</p>
+<p>We make a note about symmetrization for bosonic Green’s functions. In this case,
+we always include <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span> as a DLR imaginary frequency node. Since
+we do not include the point <span class="math notranslate nohighlight">\(\omega = 0\)</span> in the <span class="math notranslate nohighlight">\(r\)</span> symmetrized DLR
+frequencies, <span class="math notranslate nohighlight">\(r\)</span> is even in this case, and the extra imaginary frequency
+grid points makes the number of DLR imaginary frequency nodes <span class="math notranslate nohighlight">\(r+1\)</span>. To
+obtain the DLR coefficients from samples of the Green’s function at the DLR
+imaginary frequency nodes, we therefore solve a slightly overdetermined
+(<span class="math notranslate nohighlight">\((r+1) \times r\)</span>, rather than <span class="math notranslate nohighlight">\(r \times r\)</span>) linear system using the
+least squares method.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 The Simons Foundation, Hugo U.R. Strand. Authors: J. Kaye, N. Wentzell, H. U. R. Strand.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
