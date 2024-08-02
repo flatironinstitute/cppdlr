@@ -2,6 +2,22 @@
 
 # Changelog
 
+## Version 1.1.1
+
+cppdlr version 1.1.1 is a patch-release that includes
+cmake build system improvements, continuous integration improvements,
+and a backward compatibilty fix.
+
+We thank all contributors: Hugo U.R. Strand, Nils Wentzell
+
+Find below an itemized list of changes in this release.
+
+* Synchronize ghactions workflow with main
+* Use nda 1.3.x branch by default
+* Fix issue with Doxygen output directory
+* simplified it2cf_zlu treatment in h5_read for bwd compat
+
+
 ## Version 1.1.0
 
 This update to cppdlr adds significant new functionality, including symmetrized DLR grids, and improvements to ensure accuracy of DLR expansions in L^2(tau) norm (both described in the updated documentation).
