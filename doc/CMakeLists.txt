@@ -46,10 +46,6 @@ endif()
 
 find_package(Doxygen REQUIRED)
 
-# Set input and output directories
-set(DOXYGEN_INPUT_DIR ${PROJECT_SOURCE_DIR}/c++)
-set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
-
 # Configure Doxyfile
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 
@@ -61,6 +57,7 @@ add_custom_target(doxygen ALL
   COMMENT "Generating Doxygen documentation"
   VERBATIM
 )
+add_dependencies(doxygen ${PROJECT_NAME}_docs_sphinx)
 
 # ---------------------------------
 # Install
