@@ -58,8 +58,8 @@ exponential functions [@kaye22_dlr]. The number of basis functions required in b
 
 The DLR's use of an explicit basis of simple functions makes many common operations,
 including interpolation, integration, Fourier transform, and convolution, simple and
-highly efficient. This has led to a variety of recent algorithmic advances, including in
-reducing the size of the Matsubara frequency mesh in dynamical mean-field theory
+highly efficient. This has led to a variety of recent algorithmic advances, including the
+reduction of the size of the Matsubara frequency mesh in dynamical mean-field theory
 calculations [@sheng23], stabilizing the calculation of the single-particle self-energy via the Dyson
 equation [@labollita23], improving the efficiency of the imaginary time discretization in the
 mixing Green's function of the Keldysh formalism [@kaye23_eqdyson; @blommel24], and accelerating the
