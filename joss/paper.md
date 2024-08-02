@@ -58,12 +58,12 @@ exponential functions [@kaye22_dlr]. The number of basis functions required in b
 
 The DLR's use of an explicit basis of simple functions makes many common operations,
 including interpolation, integration, Fourier transform, and convolution, simple and
-highly efficient. This has led to a variety of recent algorithmic advances, including the
-reduction of the size of the Matsubara frequency mesh in dynamical mean-field theory
-calculations [@sheng23], stabilizing the calculation of the single-particle self-energy via the Dyson
-equation [@labollita23], improving the efficiency of the imaginary time discretization in the
-mixing Green's function of the Keldysh formalism [@kaye23_eqdyson; @blommel24], and accelerating the
-evaluation of imaginary time Feynman diagrams [@kaye23_diagrams]. It has also
+highly efficient. This has led to a variety of recent algorithmic advances: compact Matsubara frequency meshes in dynamical mean-field theory
+calculations [@sheng23], a stable method to calculate the single-particle self-energy via the Dyson
+equation [@labollita23], an improved discretization of the
+mixing Green's function in the Keldysh formalism [@kaye23_eqdyson; @blommel24], a fast
+algorithm to evaluate imaginary time Feynman diagrams [@kaye23_diagrams], and compact 
+representations of three-point correlation functions [@kiese24]. It has also
 yielded immediate applications in computational physics, for example in low-temperature
 studies of superconductivity [@cai22; @hou24; @tanjaroonly23]. The DLR can be straightforwardly
 integrated into existing algorithms and codes, often yielding significant
