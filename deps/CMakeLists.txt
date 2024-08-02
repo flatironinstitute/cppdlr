@@ -59,8 +59,8 @@ external_dependency(GTest
 set(PythonSupport OFF)
 external_dependency(nda
   GIT_REPO https://github.com/TRIQS/nda
-  VERSION 1.2
-  GIT_TAG unstable
+  VERSION 1.3
+  GIT_TAG 1.3.x
 )
 
 # -- fmt --
