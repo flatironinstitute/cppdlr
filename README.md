@@ -1,6 +1,7 @@
 # `cppdlr`: Imaginary time calculations using the discrete Lehmann representation
 
 [![build](https://github.com/flatironinstitute/cppdlr/workflows/build/badge.svg?branch=main)](https://github.com/flatironinstitute/cppdlr/actions?query=workflow%3Abuild)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06297/status.svg)](https://doi.org/10.21105/joss.06297)
 
 Authors: [Jason Kaye](https://users.flatironinstitute.org/~jkaye/), [Nils
 Wentzell](https://github.com/Wentzell), and [Hugo U. R.
