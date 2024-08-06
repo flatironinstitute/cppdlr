@@ -1,0 +1,44 @@
+cff-version: "1.2.0"
+authors:
+- family-names: Kaye
+  given-names: Jason
+  orcid: "https://orcid.org/0000-0001-8045-6179"
+- family-names: Strand
+  given-names: Hugo U. R.
+  orcid: "https://orcid.org/0000-0002-7263-4403"
+- family-names: Wentzell
+  given-names: Nils
+  orcid: "https://orcid.org/0000-0003-3613-007X"
+contact:
+- family-names: Kaye
+  given-names: Jason
+  orcid: "https://orcid.org/0000-0001-8045-6179"
+doi: 10.5281/zenodo.13177024
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Kaye
+    given-names: Jason
+    orcid: "https://orcid.org/0000-0001-8045-6179"
+  - family-names: Strand
+    given-names: Hugo U. R.
+    orcid: "https://orcid.org/0000-0002-7263-4403"
+  - family-names: Wentzell
+    given-names: Nils
+    orcid: "https://orcid.org/0000-0003-3613-007X"
+  date-published: 2024-08-06
+  doi: 10.21105/joss.06297
+  issn: 2475-9066
+  issue: 100
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 6297
+  title: "cppdlr: Imaginary time calculations using the discrete Lehmann
+    representation"
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.06297"
+  volume: 9
+title: "cppdlr: Imaginary time calculations using the discrete Lehmann
+  representation"
