@@ -27,7 +27,9 @@ this, and cite the following references. Citations help to encourage the
 development and maintainence of open-source scientific software.
 
 - The original reference on the DLR: [J. Kaye, K. Chen, O. Parcollet, "Discrete Lehmann representation of imaginary time Green's functions", Phys. Rev. B, 105, 235115 (2022).](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.105.235115) \[[arXiv:2107.13094](https://arxiv.org/abs/2107.13094)\]
-- The companion paper to `cppdlr`: [J. Kaye, H. U. R. Strand, N. Wentzell, "cppdlr: Imaginary time calculations using the discrete Lehmann representation", arXiv:2404.02334 (2024).](https://arxiv.org/abs/2404.02334)
+- The companion paper to `cppdlr`: [J. Kaye, H. U. R. Strand, N. Wentzell, "cppdlr: Imaginary time calculations using the discrete Lehmann representation", J. Open Source Softw., 9(100), 6297 (2024).](https://joss.theoj.org/papers/10.21105/joss.06297)
+
+For the latter, a reference in BibTeX format can be found in the "About" section at the top right of this page.
 
 ## Contact
 
