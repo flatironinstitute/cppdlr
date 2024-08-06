@@ -19,11 +19,11 @@ authors:
     orcid: 0000-0003-3613-007X
     affiliation: 1
 affiliations:
- - name: Center for Computational Quantum Physics, Flatiron Institute, New York, NY, USA
+ - name: Center for Computational Quantum Physics, Flatiron Institute, New York, NY 10010, USA
    index: 1
- - name: Center for Computational Mathematics, Flatiron Institute, New York, NY, USA
+ - name: Center for Computational Mathematics, Flatiron Institute, New York, NY 10010, USA
    index: 2
- - name: School of Science and Technology, Örebro University, Örebro, Sweden
+ - name: School of Science and Technology, Örebro University, SE-701 82 Örebro, Sweden
    index: 3
  - name: Institute for Molecules and Materials, Radboud University, 6525 AJ Nijmegen, the Netherlands
    index: 4
