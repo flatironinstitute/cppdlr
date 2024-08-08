@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tconvolve_5finit_173',['tconvolve_init',['../classcppdlr_1_1imtime__ops.html#ae6116f42e1f17050404974d0d6d3d226',1,'cppdlr::imtime_ops']]]
+  ['serialize_174',['serialize',['../classcppdlr_1_1imfreq__ops.html#a349675523ed4fd9787887d3f5b7ff855',1,'cppdlr::imfreq_ops::serialize()'],['../classcppdlr_1_1imtime__ops.html#a6bcbeb52aea6d33a123b594c9e1e59a2',1,'cppdlr::imtime_ops::serialize()']]]
 ];

@@ -175,6 +175,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a47942235e7330cc6d392dc881d256f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">reflect_init</a> () const</td></tr>
 <tr class="memdesc:a3a47942235e7330cc6d392dc881d256f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization for reflection method.  <a href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">More...</a><br /></td></tr>
 <tr class="separator:a3a47942235e7330cc6d392dc881d256f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bcbeb52aea6d33a123b594c9e1e59a2"><td class="memTemplParams" colspan="2">template&lt;class Archive &gt; </td></tr>
+<tr class="memitem:a6bcbeb52aea6d33a123b594c9e1e59a2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a6bcbeb52aea6d33a123b594c9e1e59a2">serialize</a> (Archive &amp;ar)</td></tr>
+<tr class="separator:a6bcbeb52aea6d33a123b594c9e1e59a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -1214,6 +1217,34 @@ template&lt;nda::MemoryArray T&gt; </div>
 
 <p>Initialization for reflection method. </p>
 <p>Initialize matrix of the reflection G(tau) -&gt; G(beta - tau) acting on the values of the Green's function at the DLR imaginary time nodes. This matrix is required for the reflect method. It is called automatically the first time the reflect method is called, but it may also be called manually to avoid the additional overhead of the first call to reflect. </p>
+
+</div>
+</div>
+<a id="a6bcbeb52aea6d33a123b594c9e1e59a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bcbeb52aea6d33a123b594c9e1e59a2">&#9670;&nbsp;</a></span>serialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Archive &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppdlr::imtime_ops::serialize </td>
+          <td>(</td>
+          <td class="paramtype">Archive &amp;&#160;</td>
+          <td class="paramname"><em>ar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -69,7 +69,9 @@ void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d2
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6ce574cd38bdb5bee21d499710f2e8fa}{innerprod\+\_\+init}} () const
 \begin{DoxyCompactList}\small\item\em Initialization for inner product method. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a3a47942235e7330cc6d392dc881d256f}{reflect\+\_\+init}} () const
-\begin{DoxyCompactList}\small\item\em Initialization for reflection method. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Initialization for reflection method. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class Archive $>$ }\\void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6bcbeb52aea6d33a123b594c9e1e59a2}{serialize}} (Archive \&ar)
+\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -543,7 +545,14 @@ Values of g(beta -\/ t) at DLR imaginary time nodes
 
 Initialization for reflection method. 
 
-Initialize matrix of the reflection G(tau) -\/$>$ G(beta -\/ tau) acting on the values of the Green\textquotesingle{}s function at the DLR imaginary time nodes. This matrix is required for the reflect method. It is called automatically the first time the reflect method is called, but it may also be called manually to avoid the additional overhead of the first call to reflect. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}\label{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}} 
+Initialize matrix of the reflection G(tau) -\/$>$ G(beta -\/ tau) acting on the values of the Green\textquotesingle{}s function at the DLR imaginary time nodes. This matrix is required for the reflect method. It is called automatically the first time the reflect method is called, but it may also be called manually to avoid the additional overhead of the first call to reflect. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a6bcbeb52aea6d33a123b594c9e1e59a2}\label{classcppdlr_1_1imtime__ops_a6bcbeb52aea6d33a123b594c9e1e59a2}} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!serialize@{serialize}}
+\index{serialize@{serialize}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$class Archive $>$ \\
+void cppdlr\+::imtime\+\_\+ops\+::serialize (\begin{DoxyParamCaption}\item[{Archive \&}]{ar }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}\label{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!tconvolve\_init@{tconvolve\_init}}
 \index{tconvolve\_init@{tconvolve\_init}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{tconvolve\_init()}{tconvolve\_init()}}
