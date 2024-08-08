@@ -258,9 +258,15 @@ namespace cppdlr {
       nda::vector<int> piv;          ///< LU pivots (LAPACK format) of imaginary frequency vals -> coefs matrix
     } if2cf;
 
-    // -------------------- hdf5 -------------------
+    // -------------------- serialization -------------------
 
     public:
+    template <class Archive> void serialize(Archive &ar) { //
+      ar & lambda_ & statistic & r & niom & dlr_rf & dlr_if & cf2if & if2cf.lu & if2cf.piv;
+    }
+
+    // -------------------- hdf5 -------------------
+
     static std::string hdf5_format() { return "cppdlr::imfreq_ops"; }
 
     friend void h5_write(h5::group fg, std::string const &subgroup_name, imfreq_ops const &m) {

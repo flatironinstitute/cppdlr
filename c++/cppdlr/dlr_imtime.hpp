@@ -828,9 +828,15 @@ namespace cppdlr {
     // Array used for dlr_imtime::reflect
     mutable nda::matrix<double> refl; ///< Matrix of reflection
 
-    // -------------------- hdf5 -------------------
+    // -------------------- serialization -------------------
 
     public:
+    template <class Archive> void serialize(Archive &ar) { //
+      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
+    }
+
+    // -------------------- hdf5 -------------------
+
     static std::string hdf5_format() { return "cppdlr::imtime_ops"; }
 
     friend void h5_write(h5::group fg, std::string const &subgroup_name, imtime_ops const &m) {
