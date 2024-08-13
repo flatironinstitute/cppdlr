@@ -70,7 +70,9 @@ void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6ce574cd38bdb5bee21d499710f2e8
 \begin{DoxyCompactList}\small\item\em Initialization for inner product method. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a3a47942235e7330cc6d392dc881d256f}{reflect\+\_\+init}} () const
 \begin{DoxyCompactList}\small\item\em Initialization for reflection method. \end{DoxyCompactList}\item 
-{\footnotesize template$<$class Archive $>$ }\\void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6bcbeb52aea6d33a123b594c9e1e59a2}{serialize}} (Archive \&ar)
+void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_af958ce61d0c823b2a356b13c3fa10f3d}{serialize}} (auto \&ar) const
+\item 
+void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_aec5610238537886bb0c62c52c023f7b8}{deserialize}} (auto \&ar)
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -318,7 +320,20 @@ Values of h = f $\ast$ g on DLR imaginary time grid
 
 Initialization for convolution methods. 
 
-Initialize matrices required for the convolution methods. This method is called automatically the first time one of the relevant convolution methods is called, but it may also be called manually to avoid the additional overhead in the first convolution call. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a6a81a99b2858defa9513a395bd35e2bf}\label{classcppdlr_1_1imtime__ops_a6a81a99b2858defa9513a395bd35e2bf}} 
+Initialize matrices required for the convolution methods. This method is called automatically the first time one of the relevant convolution methods is called, but it may also be called manually to avoid the additional overhead in the first convolution call. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_aec5610238537886bb0c62c52c023f7b8}\label{classcppdlr_1_1imtime__ops_aec5610238537886bb0c62c52c023f7b8}} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!deserialize@{deserialize}}
+\index{deserialize@{deserialize}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{deserialize()}{deserialize()}}
+{\footnotesize\ttfamily void cppdlr\+::imtime\+\_\+ops\+::deserialize (\begin{DoxyParamCaption}\item[{auto \&}]{ar }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Deserialize an object from the archive. This will initialize all members. The archive parameter must support the operator\& to deserialize the members in the order they were serialized.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em ar} & Archive to deserialize from \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a6a81a99b2858defa9513a395bd35e2bf}\label{classcppdlr_1_1imtime__ops_a6a81a99b2858defa9513a395bd35e2bf}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!fitvals2coefs@{fitvals2coefs}}
 \index{fitvals2coefs@{fitvals2coefs}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{fitvals2coefs()}{fitvals2coefs()}}
@@ -545,13 +560,19 @@ Values of g(beta -\/ t) at DLR imaginary time nodes
 
 Initialization for reflection method. 
 
-Initialize matrix of the reflection G(tau) -\/$>$ G(beta -\/ tau) acting on the values of the Green\textquotesingle{}s function at the DLR imaginary time nodes. This matrix is required for the reflect method. It is called automatically the first time the reflect method is called, but it may also be called manually to avoid the additional overhead of the first call to reflect. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_a6bcbeb52aea6d33a123b594c9e1e59a2}\label{classcppdlr_1_1imtime__ops_a6bcbeb52aea6d33a123b594c9e1e59a2}} 
+Initialize matrix of the reflection G(tau) -\/$>$ G(beta -\/ tau) acting on the values of the Green\textquotesingle{}s function at the DLR imaginary time nodes. This matrix is required for the reflect method. It is called automatically the first time the reflect method is called, but it may also be called manually to avoid the additional overhead of the first call to reflect. \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_af958ce61d0c823b2a356b13c3fa10f3d}\label{classcppdlr_1_1imtime__ops_af958ce61d0c823b2a356b13c3fa10f3d}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!serialize@{serialize}}
 \index{serialize@{serialize}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
 \doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
-{\footnotesize\ttfamily template$<$class Archive $>$ \\
-void cppdlr\+::imtime\+\_\+ops\+::serialize (\begin{DoxyParamCaption}\item[{Archive \&}]{ar }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void cppdlr\+::imtime\+\_\+ops\+::serialize (\begin{DoxyParamCaption}\item[{auto \&}]{ar }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
+Serialize the object into an archive by serializing all its members. The archive parameter must support the operator\& to serialize each member.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em ar} & Archive to serialize into \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}\label{classcppdlr_1_1imtime__ops_ae6116f42e1f17050404974d0d6d3d226}} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!tconvolve\_init@{tconvolve\_init}}
 \index{tconvolve\_init@{tconvolve\_init}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}

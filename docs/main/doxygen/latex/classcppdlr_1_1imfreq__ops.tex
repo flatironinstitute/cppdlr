@@ -54,7 +54,9 @@ double \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0d
 \item 
 \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0fd9ccee5b7fd770e4e52051d1833f34}{get\+\_\+statistic}} () const
 \item 
-{\footnotesize template$<$class Archive $>$ }\\void \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a349675523ed4fd9787887d3f5b7ff855}{serialize}} (Archive \&ar)
+void \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}{serialize}} (auto \&ar) const
+\item 
+void \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}{deserialize}} (auto \&ar)
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -202,6 +204,19 @@ Values of G on DLR imaginary frequency grid
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
 \mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$T$>$ cppdlr\+::imfreq\+\_\+ops\+::coefs2vals (\begin{DoxyParamCaption}\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
+\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}\label{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}} 
+\index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!deserialize@{deserialize}}
+\index{deserialize@{deserialize}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
+\doxysubsubsection{\texorpdfstring{deserialize()}{deserialize()}}
+{\footnotesize\ttfamily void cppdlr\+::imfreq\+\_\+ops\+::deserialize (\begin{DoxyParamCaption}\item[{auto \&}]{ar }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Deserialize an object from the archive. This will initialize all members. The archive parameter must support the operator\& to deserialize the members in the order they were serialized.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em ar} & Archive to deserialize from \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a43d1a78f947dda418faf97b933575b25}\label{classcppdlr_1_1imfreq__ops_a43d1a78f947dda418faf97b933575b25}} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_cf2if@{get\_cf2if}}
 \index{get\_cf2if@{get\_cf2if}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
@@ -310,13 +325,19 @@ Get DLR rank.
 \begin{DoxyReturn}{Returns}
 DLR rank 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a349675523ed4fd9787887d3f5b7ff855}\label{classcppdlr_1_1imfreq__ops_a349675523ed4fd9787887d3f5b7ff855}} 
+\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}\label{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!serialize@{serialize}}
 \index{serialize@{serialize}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
-{\footnotesize\ttfamily template$<$class Archive $>$ \\
-void cppdlr\+::imfreq\+\_\+ops\+::serialize (\begin{DoxyParamCaption}\item[{Archive \&}]{ar }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily void cppdlr\+::imfreq\+\_\+ops\+::serialize (\begin{DoxyParamCaption}\item[{auto \&}]{ar }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
+Serialize the object into an archive by serializing all its members. The archive parameter must support the operator\& to serialize each member.
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em ar} & Archive to serialize into \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a88c5359e14d8dd6c764a34aa67bbc343}\label{classcppdlr_1_1imfreq__ops_a88c5359e14d8dd6c764a34aa67bbc343}} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!vals2coefs@{vals2coefs}}
 \index{vals2coefs@{vals2coefs}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}

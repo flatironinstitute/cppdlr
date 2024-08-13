@@ -175,9 +175,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a47942235e7330cc6d392dc881d256f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">reflect_init</a> () const</td></tr>
 <tr class="memdesc:a3a47942235e7330cc6d392dc881d256f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization for reflection method.  <a href="classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f">More...</a><br /></td></tr>
 <tr class="separator:a3a47942235e7330cc6d392dc881d256f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6bcbeb52aea6d33a123b594c9e1e59a2"><td class="memTemplParams" colspan="2">template&lt;class Archive &gt; </td></tr>
-<tr class="memitem:a6bcbeb52aea6d33a123b594c9e1e59a2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a6bcbeb52aea6d33a123b594c9e1e59a2">serialize</a> (Archive &amp;ar)</td></tr>
-<tr class="separator:a6bcbeb52aea6d33a123b594c9e1e59a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af958ce61d0c823b2a356b13c3fa10f3d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#af958ce61d0c823b2a356b13c3fa10f3d">serialize</a> (auto &amp;ar) const</td></tr>
+<tr class="separator:af958ce61d0c823b2a356b13c3fa10f3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec5610238537886bb0c62c52c023f7b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#aec5610238537886bb0c62c52c023f7b8">deserialize</a> (auto &amp;ar)</td></tr>
+<tr class="separator:aec5610238537886bb0c62c52c023f7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -693,6 +694,39 @@ template&lt;nda::MemoryMatrix Tf, nda::MemoryArray Tg, nda::Scalar Sf = nda::get
 
 <p>Initialization for convolution methods. </p>
 <p>Initialize matrices required for the convolution methods. This method is called automatically the first time one of the relevant convolution methods is called, but it may also be called manually to avoid the additional overhead in the first convolution call. </p>
+
+</div>
+</div>
+<a id="aec5610238537886bb0c62c52c023f7b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec5610238537886bb0c62c52c023f7b8">&#9670;&nbsp;</a></span>deserialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppdlr::imtime_ops::deserialize </td>
+          <td>(</td>
+          <td class="paramtype">auto &amp;&#160;</td>
+          <td class="paramname"><em>ar</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Deserialize an object from the archive. This will initialize all members. The archive parameter must support the operator&amp; to deserialize the members in the order they were serialized.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ar</td><td>Archive to deserialize from </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1220,13 +1254,11 @@ template&lt;nda::MemoryArray T&gt; </div>
 
 </div>
 </div>
-<a id="a6bcbeb52aea6d33a123b594c9e1e59a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6bcbeb52aea6d33a123b594c9e1e59a2">&#9670;&nbsp;</a></span>serialize()</h2>
+<a id="af958ce61d0c823b2a356b13c3fa10f3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af958ce61d0c823b2a356b13c3fa10f3d">&#9670;&nbsp;</a></span>serialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class Archive &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1234,9 +1266,9 @@ template&lt;class Archive &gt; </div>
         <tr>
           <td class="memname">void cppdlr::imtime_ops::serialize </td>
           <td>(</td>
-          <td class="paramtype">Archive &amp;&#160;</td>
+          <td class="paramtype">auto &amp;&#160;</td>
           <td class="paramname"><em>ar</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -1245,6 +1277,13 @@ template&lt;class Archive &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Serialize the object into an archive by serializing all its members. The archive parameter must support the operator&amp; to serialize each member.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ar</td><td>Archive to serialize into </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
