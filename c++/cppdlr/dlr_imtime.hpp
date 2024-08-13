@@ -831,7 +831,25 @@ namespace cppdlr {
     // -------------------- serialization -------------------
 
     public:
-    template <class Archive> void serialize(Archive &ar) { //
+
+    /**
+     * Serialize the object into an archive by serializing all its members.
+     * The archive parameter must support the operator& to serialize each member.
+     *
+     * @param[in] ar Archive to serialize into
+     */
+    void serialize(auto &ar) const {
+      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
+    }
+
+    /**
+     * Deserialize an object from the archive. This will initialize all members.
+     * The archive parameter must support the operator& to deserialize the members
+     * in the order they were serialized.
+     *
+     * @param[in] ar Archive to deserialize from
+     */
+    void deserialize(auto &ar) {
       ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
     }
 
