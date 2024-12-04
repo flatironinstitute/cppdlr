@@ -107,7 +107,7 @@ namespace cppdlr {
       if (r != g.shape(0)) throw std::runtime_error("First dim of g != DLR rank r.");
 
       // Make a copy of the data in Fortran Layout as required by getrs
-      auto gf = nda::array<get_value_t<T>, get_rank<T>, F_layout>(g);
+      auto gf = nda::array<nda::get_value_t<T>, nda::get_rank<T>, nda::F_layout>(g);
 
       // Reshape as matrix_view with r rows
       auto gfv = nda::reshape(gf, r, g.size() / r);
@@ -227,14 +227,14 @@ namespace cppdlr {
       // Get matrix for least squares fitting: columns are DLR basis functions
       // evaluating at data points t. Must built in Fortran layout for
       // compatibility with LAPACK.
-      auto kmat = nda::matrix<S, F_layout>(n, r); // Make sure matrix has same scalar type as g
+      auto kmat = nda::matrix<S, nda::F_layout>(n, r); // Make sure matrix has same scalar type as g
       for (int j = 0; j < r; ++j) {
         for (int i = 0; i < n; ++i) { kmat(i, j) = k_it(t(i), dlr_rf(j)); }
       }
 
       // Reshape g to matrix w/ first dimension n, and put in Fortran layout for
       // compatibility w/ LAPACK
-      auto g_rs = nda::matrix<S, F_layout>(nda::reshape(g, n, g.size() / n));
+      auto g_rs = nda::matrix<S, nda::F_layout>(nda::reshape(g, n, g.size() / n));
 
       // Solve least squares problem to obtain DLR coefficients
       auto s   = nda::vector<double>(r); // Singular values (not needed)

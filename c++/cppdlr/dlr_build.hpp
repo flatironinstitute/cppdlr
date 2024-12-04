@@ -18,10 +18,10 @@
 #include <nda/nda.hpp>
 #include "dlr_kernels.hpp"
 
-using namespace nda;
 
 namespace cppdlr {
-
+   
+  using dcomplex = std::complex<double>;
   /** 
   * @class fineparams
   * @brief Class containing parameters for fine composite Chebyshev grid

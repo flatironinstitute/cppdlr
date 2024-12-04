@@ -88,7 +88,7 @@ namespace cppdlr {
       if (niom != g.shape(0)) throw std::runtime_error("First dim of g != # DLR imaginary frequency nodes.");
 
       // Make a copy of the data in Fortran Layout as required by getrs
-      auto gf = nda::array<get_value_t<T>, get_rank<T>, F_layout>(g);
+      auto gf = nda::array<nda::get_value_t<T>, nda::get_rank<T>, nda::F_layout>(g);
 
       // Reshape as matrix_view with r rows
       auto gfv = nda::reshape(gf, niom, g.size() / niom);
@@ -101,7 +101,7 @@ namespace cppdlr {
         auto s       = nda::vector<double>(r); // Not needed
         double rcond = 0;                      // Not needed
         int rank     = 0;                      // Not needed
-        nda::lapack::gelss(nda::matrix<dcomplex, F_layout>(cf2if), gfv, s, rcond, rank);
+        nda::lapack::gelss(nda::matrix<dcomplex, nda::F_layout>(cf2if), gfv, s, rcond, rank);
       }
 
       return gf(nda::range(r), nda::ellipsis());
