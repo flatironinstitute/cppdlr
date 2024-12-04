@@ -19,6 +19,8 @@
 
 namespace cppdlr {
 
+  using dcomplex = std::complex<double>;
+
   /**
    * The Particle Statistic: Boson or Fermion
    */

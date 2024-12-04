@@ -19,9 +19,9 @@
 #include <nda/nda.hpp>
 #include <nda/blas.hpp>
 
-using namespace nda;
 
 namespace cppdlr {
+  using dcomplex = std::complex<double>;
 
   /** 
    * Class constructor for barycheb: barycentric Lagrange interpolation at
@@ -101,7 +101,7 @@ namespace cppdlr {
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
-  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = get_value_t<T>>
+  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs(T const &a, double eps) {
 
     auto _ = nda::range::all;
@@ -116,7 +116,7 @@ namespace cppdlr {
     // Compute norms of rows of input matrix, and rescale eps tolerance
     auto norms   = nda::vector<double>(m);
     double epssq = eps * eps;
-    for (int j = 0; j < m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }
+    for (int j = 0; j < m; ++j) { norms(j) = nda::real(nda::blas::dotc(aa(j, _), aa(j, _))); }
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -151,10 +151,10 @@ namespace cppdlr {
 
       // Orthogonalize current rows (now the chosen pivot row) against all
       // previously chosen rows
-      for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }
+      for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j, _)); }
 
       // Get norm of current row
-      nrm = real(blas::dotc(aa(j, _), aa(j, _)));
+      nrm = nda::real(nda::blas::dotc(aa(j, _), aa(j, _)));
       //nrm = nda::norm(aa(j, _));
 
       // Terminate if sufficiently small, and return previously selected rows
@@ -167,8 +167,8 @@ namespace cppdlr {
       // Orthogonalize remaining rows against current row
       for (int k = j + 1; k < m; ++k) {
         if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
-        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
-        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+        aa(k, _) = aa(k, _) - aa(j, _) * nda::blas::dotc(aa(j, _), aa(k, _));
+        norms(k) = nda::real(nda::blas::dotc(aa(k, _), aa(k, _)));
       }
     }
 
@@ -199,7 +199,7 @@ namespace cppdlr {
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
-  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = get_value_t<T>>
+  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, double eps) {
 
     auto _ = nda::range::all;
@@ -218,7 +218,7 @@ namespace cppdlr {
     // Compute norms of rows of input matrix, and rescale eps tolerance
     auto norms   = nda::vector<double>(m);
     double epssq = eps * eps;
-    for (int j = 0; j < m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }
+    for (int j = 0; j < m; ++j) { norms(j) = nda::real(nda::blas::dotc(aa(j, _), aa(j, _))); }
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -268,10 +268,10 @@ namespace cppdlr {
 
       // Orthogonalize current row (now the first chosen pivot row) against all
       // previously chosen rows
-      for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }
+      for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j, _)); }
 
       // Get norm of current row
-      nrm = real(blas::dotc(aa(j, _), aa(j, _)));
+      nrm = nda::real(nda::blas::dotc(aa(j, _), aa(j, _)));
 
       // Terminate if sufficiently small, and return previously selected rows
       // (not including current row)
@@ -283,23 +283,23 @@ namespace cppdlr {
       // Orthogonalize remaining rows against current row
       for (int k = j + 1; k < m; ++k) {
         if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
-        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
-        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+        aa(k, _) = aa(k, _) - aa(j, _) * nda::blas::dotc(aa(j, _), aa(k, _));
+        norms(k) = nda::real(nda::blas::dotc(aa(k, _), aa(k, _)));
       }
 
       // Orthogonalize current row (now the second chosen pivot row) against all
       // previously chosen rows
-      for (int k = 0; k < j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j + 1, _)); }
+      for (int k = 0; k < j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j + 1, _)); }
 
       // Normalize current row
-      nrm          = real(blas::dotc(aa(j + 1, _), aa(j + 1, _)));
+      nrm          = nda::real(nda::blas::dotc(aa(j + 1, _), aa(j + 1, _)));
       aa(j + 1, _) = aa(j + 1, _) * (1 / sqrt(nrm));
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 2; k < m; ++k) {
         if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
-        aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));
-        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+        aa(k, _) = aa(k, _) - aa(j + 1, _) * nda::blas::dotc(aa(j + 1, _), aa(k, _));
+        norms(k) = nda::real(nda::blas::dotc(aa(k, _), aa(k, _)));
       }
     }
 
@@ -332,7 +332,7 @@ namespace cppdlr {
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
-  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = get_value_t<T>>
+  template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, int r) {
 
     auto _ = nda::range::all;
@@ -360,7 +360,7 @@ namespace cppdlr {
 
     // Compute norms of rows of input matrix
     auto norms = nda::vector<double>(m);
-    for (int j = 0; j < m; ++j) { norms(j) = real(blas::dotc(aa(j, _), aa(j, _))); }
+    for (int j = 0; j < m; ++j) { norms(j) = nda::real(nda::blas::dotc(aa(j, _), aa(j, _))); }
 
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv = 0, jj = 0;
@@ -384,14 +384,14 @@ namespace cppdlr {
       //jpiv  = 0; // Index of pivot row
 
       // Normalize
-      nrm      = real(blas::dotc(aa(0, _), aa(0, _)));
+      nrm      = nda::real(nda::blas::dotc(aa(0, _), aa(0, _)));
       aa(0, _) = aa(0, _) * (1 / sqrt(nrm));
-      //aa(0, _) /= sqrt(real(blas::dotc(aa(0, _), aa(0, _))));
+      //aa(0, _) /= sqrt(nda::real(nda::blas::dotc(aa(0, _), aa(0, _))));
 
       // Orthogonalize remaining rows against current row
       for (int k = 1; k < m; ++k) {
-        aa(k, _) = aa(k, _) - aa(0, _) * blas::dotc(aa(0, _), aa(k, _));
-        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+        aa(k, _) = aa(k, _) - aa(0, _) * nda::blas::dotc(aa(0, _), aa(k, _));
+        norms(k) = nda::real(nda::blas::dotc(aa(k, _), aa(k, _)));
       }
     }
 
@@ -433,30 +433,30 @@ namespace cppdlr {
 
       // Orthogonalize current row (now the first chosen pivot row) against all
       // previously chosen rows
-      for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j, _)); }
+      for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j, _)); }
 
       // Normalize current row
-      nrm      = real(blas::dotc(aa(j, _), aa(j, _)));
+      nrm      = nda::real(nda::blas::dotc(aa(j, _), aa(j, _)));
       aa(j, _) = aa(j, _) * (1 / sqrt(nrm));
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 1; k < m; ++k) {
-        aa(k, _) = aa(k, _) - aa(j, _) * blas::dotc(aa(j, _), aa(k, _));
-        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+        aa(k, _) = aa(k, _) - aa(j, _) * nda::blas::dotc(aa(j, _), aa(k, _));
+        norms(k) = nda::real(nda::blas::dotc(aa(k, _), aa(k, _)));
       }
 
       // Orthogonalize current row (now the second chosen pivot row) against all
       // previously chosen rows
-      for (int k = 0; k < j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * blas::dotc(aa(k, _), aa(j + 1, _)); }
+      for (int k = 0; k < j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j + 1, _)); }
 
       // Normalize current row
-      nrm          = real(blas::dotc(aa(j + 1, _), aa(j + 1, _)));
+      nrm          = nda::real(nda::blas::dotc(aa(j + 1, _), aa(j + 1, _)));
       aa(j + 1, _) = aa(j + 1, _) * (1 / sqrt(nrm));
 
       // Orthogonalize remaining rows against current row
       for (int k = j + 2; k < m; ++k) {
-        aa(k, _) = aa(k, _) - aa(j + 1, _) * blas::dotc(aa(j + 1, _), aa(k, _));
-        norms(k) = real(blas::dotc(aa(k, _), aa(k, _)));
+        aa(k, _) = aa(k, _) - aa(j + 1, _) * nda::blas::dotc(aa(j + 1, _), aa(k, _));
+        norms(k) = nda::real(nda::blas::dotc(aa(k, _), aa(k, _)));
       }
     }
 
@@ -523,7 +523,7 @@ namespace cppdlr {
   /**
   * @brief Get real-valued type corresponding to type of given nda MemoryArray
   */
-  template <nda::MemoryArray T> using make_real_t = decltype(make_regular(real(std::declval<T>())));
+  template <nda::MemoryArray T> using make_real_t = decltype(make_regular(nda::real(std::declval<T>())));
 
   /**
   * @brief Get complex-valued type corresponding to type of given nda MemoryArray

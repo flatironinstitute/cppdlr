@@ -18,6 +18,7 @@
 #include <cppdlr/utils.hpp>
 
 using namespace cppdlr;
+using cppdlr::dcomplex;
 
 /**
  * Test arraymult function: double matrix times complex array
