@@ -451,6 +451,70 @@ namespace cppdlr {
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
     nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc, bool time_order = false) const {
 
+      int n, m;
+
+      if constexpr (T::rank == 1) { // Scalar-valued Green's function
+	n = r;
+	m = r;
+      } else if (T::rank == 3) { // Matrix-valued Green's function
+	n = r * fc.shape(1);
+	m = r * fc.shape(2);
+      } else {
+        throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
+      }
+
+      auto fconv = nda::matrix<S, nda::C_layout>(n, m); // Matrix of convolution by f
+      convmat_inplace(nda::matrix_view<S, nda::C_layout>(fconv), beta, statistic, fc, time_order);
+
+      return fconv;
+    }
+
+    /**
+    * @brief Compute matrix of convolution by an imaginary time Green's function
+    *
+    * The convolution of f and g is defined as h(t) = (f * g)(t) = int_0^beta
+    * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are
+    * used to define the Green's functions on (-beta, 0).  This method takes the
+    * DLR coefficients of f as input and returns the matrix of convolution by f.
+    * This matrix can be applied to the values of g on the DLR imaginary time
+    * grid, to produce the values of h on the DLR imaginary time grid.
+    *
+    * By specifying the @p time_order flag, this method can be used to compute
+    * the time-ordered convolution of f and g, defined as h(t) = (f * g)(t) =
+    * int_0^tau f(t-t') g(t') dt'.
+    *
+    * The convolution matrix is constructed using the method described in
+    * Appendix A of
+    *
+    * J. Kaye, H. U. R. Strand, D. Golez, "Decomposing imaginary time Feynman
+    * diagrams using separable basis functions: Anderson impurity model strong
+    * coupling expansion," arXiv:2307.08566 (2023).
+    *
+    * @param[out] fconv Convolution matrix from DLR coefficients to DLR grid
+    * @param[in] beta Inverse temperature
+    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] fc DLR coefficients of f
+    * @param[in] time_order Flag for ordinary (false or ORDINARY, default) or
+    * time-ordered (true or TIME_ORDERED) convolution
+    *
+    * \note Whereas the method imtime_ops::convolve takes the DLR coefficients
+    * of f and g as input and computes their convolution h directly, this method
+    * returns a matrix which should be applied to the DLR imaginary time grid values
+    * of g, rather than its DLR coefficients, in to order to obtain the
+    * convolution h. The purpose of this is to make the input and output
+    * representations of the convolution matrix equal, which is often convenient
+    * in practice.
+    *
+    * \note In the case of matrix-valued Green's functions, we think of the
+    * matrix of convolution by f as an r*norb x r*norb matrix, or a block r x r
+    * matrix of norb x norb blocks. Here r is the DLR rank and norb is the
+    * number of orbital indices. This matrix would then be applied to a Green's
+    * function g, represented as an r*norb x norb matrix, or a block r x 1
+    * matrix of norb x norb blocks.
+    * */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
+    void convmat_inplace(nda::matrix_view<S, nda::C_layout> fconv, double beta, statistic_t statistic, T const &fc, bool time_order = false) const {
+
       if (r != fc.shape(0)) throw std::runtime_error("First dim of input array must be equal to DLR rank r.");
 
       // TODO: implement bosonic case and remove
@@ -466,10 +530,9 @@ namespace cppdlr {
 
       if constexpr (T::rank == 1) { // Scalar-valued Green's function
 
-        // First construct convolution matrix from DLR coefficients to DLR grid
-        // values
-        auto fconv = nda::matrix<S>(r, r); // Matrix of convolution by f
-
+        if (fconv.shape(0) != r || fconv.shape(1) != r)
+          throw std::runtime_error("Matrix shape must be equal to DLR rank (r,r).");
+	
         // Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))
         for (int k = 0; k < r; ++k) {
           for (int l = 0; l < r; ++l) { fconv(k, l) = tcf2it_v(k, l) * fc(l); }
@@ -495,16 +558,16 @@ namespace cppdlr {
           nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv);
         }
 
-        return beta * fconv;
+        fconv *= beta;
 
       } else if (T::rank == 3) { // Matrix-valued Green's function
 
         int norb1 = fc.shape(1);
         int norb2 = fc.shape(2);
 
-        // First construct convolution matrix from DLR coefficients to DLR grid
-        // values
-        auto fconv    = nda::matrix<S>(r * norb1, r * norb2);    // Matrix of convolution by f
+        if (fconv.shape(0) != r*norb1 || fconv.shape(1) != r*norb2)
+          throw std::runtime_error("Matrix shape must be equal to DLR rank times norbs (r*norb1,r*norb2).");
+	
         auto fconv_rs = nda::reshape(fconv, r, norb1, r, norb2); // Array view to index into fconv for conevenience
 
         // Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))
@@ -547,7 +610,7 @@ namespace cppdlr {
           for (int k = 0; k < r; ++k) { fconv_rs(_, _, k, i) = fconvtmp_rs(_, _, i, k); }
         }
 
-        return beta * fconv;
+        fconv *= beta;
 
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
