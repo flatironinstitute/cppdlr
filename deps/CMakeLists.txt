@@ -48,14 +48,12 @@ else()
 endif()
 
 # -- GTest --
-if(NOT TARGET gtest)
 external_dependency(GTest
   GIT_REPO https://github.com/google/googletest
   GIT_TAG main
   BUILD_ALWAYS
   EXCLUDE_FROM_ALL
 )
-endif()
 
 # -- nda --
 set(PythonSupport OFF)
