@@ -191,6 +191,8 @@ requires (std::floating_point&lt;Ht&gt; || nda::MemoryMatrix&lt;Ht&gt;)</td></tr
 <tr class="memitem:adcede29d3876b4a265f09a56db33085d" id="r_adcede29d3876b4a265f09a56db33085d"><td class="memItemLeft" align="right" valign="top">std::tuple&lt; double, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#adcede29d3876b4a265f09a56db33085d">leg_eval</a> (int n, double x)</td></tr>
 <tr class="memdesc:adcede29d3876b4a265f09a56db33085d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate Legendre polynomial of degree n and its derivative.  <br /></td></tr>
 <tr class="separator:adcede29d3876b4a265f09a56db33085d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a767cf14e0aef568fefdb0386d255b510" id="r_a767cf14e0aef568fefdb0386d255b510"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a767cf14e0aef568fefdb0386d255b510">normsq</a> (nda::MemoryVector auto const &amp;v)</td></tr>
+<tr class="separator:a767cf14e0aef568fefdb0386d255b510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d0c839b446002a589c9cc22534967b6" id="r_a1d0c839b446002a589c9cc22534967b6"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArrayOfRank&lt; 2 &gt; T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:a1d0c839b446002a589c9cc22534967b6"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; typename T::regular_type, nda::vector&lt; double &gt;, nda::vector&lt; int &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a1d0c839b446002a589c9cc22534967b6">pivrgs</a> (T const &amp;a, double eps)</td></tr>
 <tr class="memdesc:a1d0c839b446002a589c9cc22534967b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rank-revealing pivoted reorthogonalized Gram-Schmidt.  <br /></td></tr>
@@ -203,7 +205,7 @@ requires (std::floating_point&lt;Ht&gt; || nda::MemoryMatrix&lt;Ht&gt;)</td></tr
 <tr class="memitem:ad64323a06309e2802fb97b93e3e24c2d"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; typename T::regular_type, nda::vector&lt; double &gt;, nda::vector&lt; int &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#ad64323a06309e2802fb97b93e3e24c2d">pivrgs_sym</a> (T const &amp;a, int r)</td></tr>
 <tr class="memdesc:ad64323a06309e2802fb97b93e3e24c2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Symmetrized pivoted reorthogonalized Gram-Schmidt with specified rank.  <br /></td></tr>
 <tr class="separator:ad64323a06309e2802fb97b93e3e24c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a623b3f78817239e2d1653be8972cc5f1" id="r_a623b3f78817239e2d1653be8972cc5f1"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;, nda::Scalar S = typename std::common_type&lt;Sa, Sb&gt;::type&gt; </td></tr>
+<tr class="memitem:a623b3f78817239e2d1653be8972cc5f1" id="r_a623b3f78817239e2d1653be8972cc5f1"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;, nda::Scalar S = std::common_type_t&lt;Sa, Sb&gt;&gt; </td></tr>
 <tr class="memitem:a623b3f78817239e2d1653be8972cc5f1"><td class="memTemplItemLeft" align="right" valign="top">nda::array&lt; S, Ta::rank+Tb::rank - 2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a623b3f78817239e2d1653be8972cc5f1">arraymult</a> (Ta const &amp;a, Tb const &amp;b)</td></tr>
 <tr class="memdesc:a623b3f78817239e2d1653be8972cc5f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contract the last dimension of an array a with the first dimension of an array b.  <br /></td></tr>
 <tr class="separator:a623b3f78817239e2d1653be8972cc5f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -478,7 +480,7 @@ template&lt;typename S &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;, nda::Scalar S = typename std::common_type&lt;Sa, Sb&gt;::type&gt; </div>
+template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;, nda::Scalar S = std::common_type_t&lt;Sa, Sb&gt;&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">nda::array&lt; S, Ta::rank+Tb::rank - 2 &gt; cppdlr::arraymult </td>
@@ -1520,6 +1522,32 @@ requires (std::floating_point&lt;Ht&gt; || nda::MemoryMatrix&lt;Ht&gt;)</div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Tuple of polynomial value Pn(x) and derivative Pn'(x) </dd></dl>
+
+</div>
+</div>
+<a id="a767cf14e0aef568fefdb0386d255b510" name="a767cf14e0aef568fefdb0386d255b510"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a767cf14e0aef568fefdb0386d255b510">&#9670;&#160;</a></span>normsq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">double cppdlr::normsq </td>
+          <td>(</td>
+          <td class="paramtype">nda::MemoryVector auto const &amp;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Calculate the squared norm of a vector</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>The input vector </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>x The squared norm of the vector </dd></dl>
 
 </div>
 </div>

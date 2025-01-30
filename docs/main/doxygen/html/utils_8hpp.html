@@ -119,6 +119,8 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a767cf14e0aef568fefdb0386d255b510" id="r_a767cf14e0aef568fefdb0386d255b510"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a767cf14e0aef568fefdb0386d255b510">cppdlr::normsq</a> (nda::MemoryVector auto const &amp;v)</td></tr>
+<tr class="separator:a767cf14e0aef568fefdb0386d255b510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa355c3aaf829296d7e5869eff98fedd1" id="r_aa355c3aaf829296d7e5869eff98fedd1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#aa355c3aaf829296d7e5869eff98fedd1">cppdlr::baryinterp</a> (nda::vector_const_view&lt; double &gt; x, nda::vector_const_view&lt; double &gt; w, nda::vector_const_view&lt; double &gt; f, double xeval)</td></tr>
 <tr class="memdesc:aa355c3aaf829296d7e5869eff98fedd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Barycentric Lagrange interpolation.  <br /></td></tr>
 <tr class="separator:aa355c3aaf829296d7e5869eff98fedd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,7 +151,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a791b659aaebe1e52cf12edb3b089b224" id="r_a791b659aaebe1e52cf12edb3b089b224"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a791b659aaebe1e52cf12edb3b089b224">cppdlr::abs2rel</a> (double t_abs)</td></tr>
 <tr class="memdesc:a791b659aaebe1e52cf12edb3b089b224"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert points on [0,1] from relative to absolute time format.    <br /></td></tr>
 <tr class="separator:a791b659aaebe1e52cf12edb3b089b224"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a623b3f78817239e2d1653be8972cc5f1" id="r_a623b3f78817239e2d1653be8972cc5f1"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;, nda::Scalar S = typename std::common_type&lt;Sa, Sb&gt;::type&gt; </td></tr>
+<tr class="memitem:a623b3f78817239e2d1653be8972cc5f1" id="r_a623b3f78817239e2d1653be8972cc5f1"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_value_t&lt;Ta&gt;, nda::Scalar Sb = nda::get_value_t&lt;Tb&gt;, nda::Scalar S = std::common_type_t&lt;Sa, Sb&gt;&gt; </td></tr>
 <tr class="memitem:a623b3f78817239e2d1653be8972cc5f1"><td class="memTemplItemLeft" align="right" valign="top">nda::array&lt; S, Ta::rank+Tb::rank - 2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a623b3f78817239e2d1653be8972cc5f1">cppdlr::arraymult</a> (Ta const &amp;a, Tb const &amp;b)</td></tr>
 <tr class="memdesc:a623b3f78817239e2d1653be8972cc5f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contract the last dimension of an array a with the first dimension of an array b.  <br /></td></tr>
 <tr class="separator:a623b3f78817239e2d1653be8972cc5f1"><td class="memSeparator" colspan="2">&#160;</td></tr>

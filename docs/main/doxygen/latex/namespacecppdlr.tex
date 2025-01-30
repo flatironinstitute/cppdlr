@@ -78,13 +78,15 @@ std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mb
 \begin{DoxyCompactList}\small\item\em Gauss-\/\+Legendre nodes and weights. \end{DoxyCompactList}\item 
 std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_adcede29d3876b4a265f09a56db33085d}{leg\+\_\+eval}} (int n, double x)
 \begin{DoxyCompactList}\small\item\em Evaluate Legendre polynomial of degree n and its derivative. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}} (nda\+::\+Memory\+Vector auto const \&v)
+\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a1d0c839b446002a589c9cc22534967b6}{pivrgs}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47}{pivrgs\+\_\+sym}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Symmetrized rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_ad64323a06309e2802fb97b93e3e24c2d}{pivrgs\+\_\+sym}} (T const \&a, int r)
 \begin{DoxyCompactList}\small\item\em Symmetrized pivoted reorthogonalized Gram-\/\+Schmidt with specified rank. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1}{arraymult}} (Ta const \&a, Tb const \&b)
+{\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = std\+::common\+\_\+type\+\_\+t$<$\+Sa, Sb$>$$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1}{arraymult}} (Ta const \&a, Tb const \&b)
 \begin{DoxyCompactList}\small\item\em Contract the last dimension of an array a with the first dimension of an array b. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename S $>$ }\\S \mbox{\hyperlink{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}{adapgl}} (std\+::function$<$ nda\+::array$<$ S, 1 $>$(nda\+::array$<$ double, 1 $>$)$>$ f, double a, double b, double tol, nda\+::vector$<$ double $>$ xgl, nda\+::vector$<$ double $>$ wgl)
 \begin{DoxyCompactList}\small\item\em Quick and dirty adaptive Gauss quadrature. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -264,7 +266,7 @@ This is a quick and dirty adaptive integration function, which tries to achieve 
 \index{cppdlr@{cppdlr}!arraymult@{arraymult}}
 \index{arraymult@{arraymult}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{arraymult()}{arraymult()}}
-{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ \\
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = std\+::common\+\_\+type\+\_\+t$<$\+Sa, Sb$>$$>$ \\
 nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ cppdlr\+::arraymult (\begin{DoxyParamCaption}\item[{Ta const \&}]{a,  }\item[{Tb const \&}]{b }\end{DoxyParamCaption})}
 
 
@@ -836,6 +838,22 @@ Uses Legendre three-\/term recurrence
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Tuple of polynomial value Pn(x) and derivative Pn\textquotesingle{}(x) 
+\end{DoxyReturn}
+\Hypertarget{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}\label{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510} 
+\index{cppdlr@{cppdlr}!normsq@{normsq}}
+\index{normsq@{normsq}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{normsq()}{normsq()}}
+{\footnotesize\ttfamily double cppdlr\+::normsq (\begin{DoxyParamCaption}\item[{nda\+::\+Memory\+Vector auto const \&}]{v }\end{DoxyParamCaption})}
+
+Calculate the squared norm of a vector
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & The input vector \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+x The squared norm of the vector 
 \end{DoxyReturn}
 \Hypertarget{namespacecppdlr_a1d0c839b446002a589c9cc22534967b6}\label{namespacecppdlr_a1d0c839b446002a589c9cc22534967b6} 
 \index{cppdlr@{cppdlr}!pivrgs@{pivrgs}}

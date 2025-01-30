@@ -29,6 +29,8 @@ namespace \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
+double \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{cppdlr\+::normsq}} (nda\+::\+Memory\+Vector auto const \&v)
+\item 
 double \mbox{\hyperlink{namespacecppdlr_aa355c3aaf829296d7e5869eff98fedd1}{cppdlr\+::baryinterp}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ x, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ f, double xeval)
 \begin{DoxyCompactList}\small\item\em Barycentric Lagrange interpolation. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a1d0c839b446002a589c9cc22534967b6}{cppdlr\+::pivrgs}} (T const \&a, double eps)
@@ -47,7 +49,7 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a103a8aae4c8af512d2
 \begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from absolute to relative time format. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{namespacecppdlr_a791b659aaebe1e52cf12edb3b089b224}{cppdlr\+::abs2rel}} (double t\+\_\+abs)
 \begin{DoxyCompactList}\small\item\em Convert points on \mbox{[}0,1\mbox{]} from relative to absolute time format.   \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = typename std\+::common\+\_\+type$<$\+Sa, Sb$>$\+::type$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1}{cppdlr\+::arraymult}} (Ta const \&a, Tb const \&b)
+{\footnotesize template$<$nda\+::\+Memory\+Array Ta, nda\+::\+Memory\+Array Tb, nda\+::\+Scalar Sa = nda\+::get\+\_\+value\+\_\+t$<$\+Ta$>$, nda\+::\+Scalar Sb = nda\+::get\+\_\+value\+\_\+t$<$\+Tb$>$, nda\+::\+Scalar S = std\+::common\+\_\+type\+\_\+t$<$\+Sa, Sb$>$$>$ }\\nda\+::array$<$ S, Ta\+::rank+Tb\+::rank -\/ 2 $>$ \mbox{\hyperlink{namespacecppdlr_a623b3f78817239e2d1653be8972cc5f1}{cppdlr\+::arraymult}} (Ta const \&a, Tb const \&b)
 \begin{DoxyCompactList}\small\item\em Contract the last dimension of an array a with the first dimension of an array b. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename S $>$ }\\S \mbox{\hyperlink{namespacecppdlr_a93826a1ab8ed29d304e0194fefd4e19c}{cppdlr\+::adapgl}} (std\+::function$<$ nda\+::array$<$ S, 1 $>$(nda\+::array$<$ double, 1 $>$)$>$ f, double a, double b, double tol, nda\+::vector$<$ double $>$ xgl, nda\+::vector$<$ double $>$ wgl)
 \begin{DoxyCompactList}\small\item\em Quick and dirty adaptive Gauss quadrature. \end{DoxyCompactList}\item 
