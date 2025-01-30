@@ -47,37 +47,48 @@ jobs:
       if: ${{ contains(matrix.os, 'ubuntu') }}
       run: >
         sudo apt-get update &&
+        sudo apt-get install lsb-release wget software-properties-common &&
         sudo apt-get install
         ccache
-        clang-15
-        g++-12
+        clang
+        g++
         hdf5-tools
         libblas-dev
-        libc++-15-dev
-        libc++abi-15-dev
-        libomp-15-dev
+        libc++-dev
+        libc++abi-dev
+        libomp-dev
         libhdf5-dev
         liblapack-dev
         libopenmpi-dev
         openmpi-bin
         openmpi-common
         openmpi-doc
+        pandoc
         python3
         python3-pip
-        doxygen &&
-        pip3 install myst-parser linkify-it-py &&
-        pip3 install sphinx==5.3.0 sphinx-rtd-theme
+        python3-sphinx
+        python3-sphinx-rtd-theme
+        python3-nbsphinx
+        python3-myst-parser
+        python3-linkify-it
+        doxygen
+
+    - name: Set up virtualenv
+      run: |
+        mkdir $HOME/.venv
+        python3 -m venv --system-site-packages $HOME/.venv/my_python
+        source $HOME/.venv/my_python/bin/activate
+        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+        echo "PATH=$PATH" >> $GITHUB_ENV
 
     - name: Install homebrew dependencies
       if: ${{ contains(matrix.os, 'macos') }}
       run: |
-        brew install ccache gcc@12 llvm hdf5 open-mpi openblas
-        mkdir $HOME/.venv
-        python3 -m venv $HOME/.venv/my_python
-        source $HOME/.venv/my_python/bin/activate
+        brew update
+        brew install ccache gcc llvm hdf5 open-mpi openblas
         pip install mako
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
+        echo "PYTHONPATH=$(brew --prefix llvm)/lib/python3.13/site-packages" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
       if: ${{ contains(matrix.cxx, 'clang') }}
