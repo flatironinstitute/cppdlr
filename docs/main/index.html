@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>cppdlr: Imaginary time calculations using the discrete Lehmann representation &mdash; cppdlr  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=f7f783a0" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -103,8 +100,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="cppdlr-imaginary-time-calculations-using-the-discrete-lehmann-representation">
-<span id="main"></span><h1><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>: Imaginary time calculations using the discrete Lehmann representation<a class="headerlink" href="#cppdlr-imaginary-time-calculations-using-the-discrete-lehmann-representation" title="Permalink to this heading"></a></h1>
+  <section id="cppdlr-imaginary-time-calculations-using-the-discrete-lehmann-representation">
+<span id="main"></span><h1><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>: Imaginary time calculations using the discrete Lehmann representation<a class="headerlink" href="#cppdlr-imaginary-time-calculations-using-the-discrete-lehmann-representation" title="Link to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> is a C++ library implementing the discrete Lehmann representation (DLR) of
 imaginary time single-particle Green’s functions and other imaginary time
 quantities, including standard operations. It can be downloaded <a class="reference external" href="https://github.com/flatironinstitute/cppdlr" rel="noopener noreferrer" target="_blank">from GitHub</a>.</p>
@@ -114,40 +111,40 @@ the use of C++ templating and the <a class="reference external" href="https://gi
 compatibility. This facilitates its use both in small-scale applications and in
 existing large-scale software projects such as the <a class="reference external" href="https://triqs.github.io" rel="noopener noreferrer" target="_blank">TRIQS library</a> for quantum many-body calculations, which has
 incorporated the DLR via <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>.</p>
-<div class="section" id="getting-started">
-<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h2>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ul class="simple">
-<li>Install the library by following the instructions on the <a class="reference internal" href="install.html#install"><span class="std std-ref">installation page</span></a>.</li>
-<li>If you are unfamiliar with the DLR, you can read the <a class="reference internal" href="background.html#background"><span class="std std-ref">background page</span></a> for a
+<li><p>Install the library by following the instructions on the <a class="reference internal" href="install.html#install"><span class="std std-ref">installation page</span></a>.</p></li>
+<li><p>If you are unfamiliar with the DLR, you can read the <a class="reference internal" href="background.html#background"><span class="std std-ref">background page</span></a> for a
 brief introduction, or the references below for more detail. If you are
 familiar with the DLR, you should still take a brief look at the
-<a class="reference internal" href="background.html#background"><span class="std std-ref">background page</span></a> for important information about the library.</li>
-<li>To begin using <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> in your application, the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples page</span></a> provides a
-good starting point.</li>
-<li>If you need more specific information about <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> classes and functions,
-take a look at the <a class="reference internal" href="documentation.html#documentation"><span class="std std-ref">reference documentation page</span></a>.</li>
+<a class="reference internal" href="background.html#background"><span class="std std-ref">background page</span></a> for important information about the library.</p></li>
+<li><p>To begin using <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> in your application, the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples page</span></a> provides a
+good starting point.</p></li>
+<li><p>If you need more specific information about <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> classes and functions,
+take a look at the <a class="reference internal" href="documentation.html#documentation"><span class="std std-ref">reference documentation page</span></a>.</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
 <p>If you use <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> in your software or published research works, please mention
 this, and cite the following references. Citations help to encourage the
 development and maintainence of open-source scientific software.</p>
 <ul class="simple">
-<li>The original reference on the DLR: <a class="reference external" href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.105.235115" rel="noopener noreferrer" target="_blank">J. Kaye, K. Chen, O. Parcollet, “Discrete Lehmann representation of imaginary time Green’s functions”, Phys. Rev. B, 105, 235115 (2022).</a>
-[<a class="reference external" href="https://arxiv.org/abs/2107.13094" rel="noopener noreferrer" target="_blank">arXiv:2107.13094</a>]</li>
-<li>The companion paper to <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>: <a class="reference external" href="https://arxiv.org/abs/2404.02334" rel="noopener noreferrer" target="_blank">J. Kaye, H. U. R. Strand, N. Wentzell, “cppdlr: Imaginary time calculations using the discrete Lehmann representation”, arXiv:2404.02334 (2024).</a></li>
+<li><p>The original reference on the DLR: <a class="reference external" href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.105.235115" rel="noopener noreferrer" target="_blank">J. Kaye, K. Chen, O. Parcollet, “Discrete Lehmann representation of imaginary time Green’s functions”, Phys. Rev. B, 105, 235115 (2022).</a>
+[<a class="reference external" href="https://arxiv.org/abs/2107.13094" rel="noopener noreferrer" target="_blank">arXiv:2107.13094</a>]</p></li>
+<li><p>The companion paper to <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code>: <a class="reference external" href="https://arxiv.org/abs/2404.02334" rel="noopener noreferrer" target="_blank">J. Kaye, H. U. R. Strand, N. Wentzell, “cppdlr: Imaginary time calculations using the discrete Lehmann representation”, arXiv:2404.02334 (2024).</a></p></li>
 </ul>
-</div>
-<div class="section" id="related-libraries">
-<span id="otherlibraries"></span><h2>Related libraries<a class="headerlink" href="#related-libraries" title="Permalink to this heading"></a></h2>
+</section>
+<section id="related-libraries">
+<span id="otherlibraries"></span><h2>Related libraries<a class="headerlink" href="#related-libraries" title="Link to this heading"></a></h2>
 <p>Libraries implementing the DLR are available in other languages:</p>
 <ul class="simple">
-<li>Python, via <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">pydlr</a></li>
-<li>Fortran, via <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">libdlr</a></li>
-<li>Julia, via <a class="reference external" href="https://github.com/numericaleft/Lehmann.jl" rel="noopener noreferrer" target="_blank">Lehmann.jl</a></li>
+<li><p>Python, via <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">pydlr</a></p></li>
+<li><p>Fortran, via <a class="reference external" href="https://github.com/jasonkaye/libdlr" rel="noopener noreferrer" target="_blank">libdlr</a></p></li>
+<li><p>Julia, via <a class="reference external" href="https://github.com/numericaleft/Lehmann.jl" rel="noopener noreferrer" target="_blank">Lehmann.jl</a></p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> is also used to implement the DLR in the <a class="reference external" href="https://triqs.github.io/triqs/latest/" rel="noopener noreferrer" target="_blank">Toolbox for Research on
 Interacting Quantum Systems (TRIQS)</a>.</p>
@@ -185,8 +182,8 @@ Interacting Quantum Systems (TRIQS)</a>.</p>
 <li class="toctree-l1"><a class="reference internal" href="issues.html">Issues and contributions</a></li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['nmax_184',['nmax',['../classcppdlr_1_1fineparams.html#a619b3c58649fcaa1914b31a80c5b2263',1,'cppdlr::fineparams']]],
-  ['nom_185',['nom',['../classcppdlr_1_1fineparams.html#a7d45c880ad388622d31945ef1f932b43',1,'cppdlr::fineparams']]],
-  ['npom_186',['npom',['../classcppdlr_1_1fineparams.html#ac0f50ae7582fa29d3810f1db5461772b',1,'cppdlr::fineparams']]],
-  ['npt_187',['npt',['../classcppdlr_1_1fineparams.html#af1cda9f262b1e8b7316a4577d391d5de',1,'cppdlr::fineparams']]],
-  ['nt_188',['nt',['../classcppdlr_1_1fineparams.html#af8eb17a1299f17a0adb564c152880eb1',1,'cppdlr::fineparams']]]
+  ['zlu_0',['zlu',['../classcppdlr_1_1imtime__ops.html#a4868c3d774292b4d3610ac3225682bc0',1,'cppdlr::imtime_ops']]]
 ];

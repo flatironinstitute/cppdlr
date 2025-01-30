@@ -1,5 +1,5 @@
-\hypertarget{classcppdlr_1_1imfreq__ops}{}\doxysection{cppdlr\+::imfreq\+\_\+ops Class Reference}
-\label{classcppdlr_1_1imfreq__ops}\index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
+\doxysection{cppdlr\+::imfreq\+\_\+ops Class Reference}
+\hypertarget{classcppdlr_1_1imfreq__ops}{}\label{classcppdlr_1_1imfreq__ops}\index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 
 
 Class responsible for all DLR imaginary frequency operations, including building imaginary frequency grid and transformations.  
@@ -9,11 +9,11 @@ Class responsible for all DLR imaginary frequency operations, including building
 
 {\ttfamily \#include $<$dlr\+\_\+imfreq.\+hpp$>$}
 
-\doxysubsection*{Public Member Functions}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065}{imfreq\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, bool symmetrize=false)
-\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573}{imfreq\+\_\+ops}} (double \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}}, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ dlr\+\_\+rf, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ dlr\+\_\+if, nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ cf2if, nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ if2cf\+\_\+lu, nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ if2cf\+\_\+piv)
 \item 
 \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aec1f430ef8442851ca0003bc89620feb}{imfreq\+\_\+ops}} ()=default
@@ -22,9 +22,9 @@ Class responsible for all DLR imaginary frequency operations, including building
 \begin{DoxyCompactList}\small\item\em Transform values of Green\textquotesingle{}s function G on DLR imaginary frequency grid to DLR coefficients. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T$>$ }\\T\+::regular\+\_\+type \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ab0c49ae76da53c29c1e48c46ca6a2ded}{vals2coefs}} (T const \&g) const
 \item 
-{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$ T $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a12b1549d7c53e5f536dc5968a20356ba}{coefs2vals}} (double beta, T const \&gc) const
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$ T $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a3179bf998af8b0a3c71fe7d333f0e44e}{coefs2vals}} (double beta, T const \&gc) const
 \begin{DoxyCompactList}\small\item\em Transform DLR coefficients of Green\textquotesingle{}s function G to values on DLR imaginary frequency grid. \end{DoxyCompactList}\item 
-{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$ T $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ad3f806ba92bf1598943fe610498aa1c8}{coefs2vals}} (T const \&gc) const
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$ T $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a4b37513f8cb287ea7033cc4d78f6157f}{coefs2vals}} (T const \&gc) const
 \item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\auto \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a2ac467d6a8903940482bad858896d52c}{coefs2eval}} (double beta, T const \&gc, int n) const
 \begin{DoxyCompactList}\small\item\em Evaluate DLR expansion of G, given by its DLR coefficients, at imaginary frequency point. \end{DoxyCompactList}\item 
@@ -34,19 +34,19 @@ nda\+::vector$<$ nda\+::dcomplex $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops
 \begin{DoxyCompactList}\small\item\em Get vector of evaluation of DLR expansion at an imaginary frequency point. \end{DoxyCompactList}\item 
 nda\+::vector$<$ nda\+::dcomplex $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0a39bab4f039eb81b2da6f78e69177c2}{build\+\_\+evalvec}} (int n) const
 \item 
-nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ab3fddfc41e106a4e9b80f6b8dcb0e52f}{get\+\_\+ifnodes}} () const
+nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ae506673619f451a5770a45e23438addd}{get\+\_\+ifnodes}} () const
 \begin{DoxyCompactList}\small\item\em Get DLR imaginary frequency nodes. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a304f7fb9f1cf9740e4234e3d71126a25}{get\+\_\+ifnodes}} (int i) const
 \item 
-nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a4db505e4e313e96940e9f5008cd9face}{get\+\_\+rfnodes}} () const
+nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aca169c622cfcfd82541f6696cdd19388}{get\+\_\+rfnodes}} () const
 \begin{DoxyCompactList}\small\item\em Get DLR real frequency nodes. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a9e188ecc36e120b8931b522120c78f00}{get\+\_\+rfnodes}} (int i) const
 \item 
-nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a43d1a78f947dda418faf97b933575b25}{get\+\_\+cf2if}} () const
+nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a457eeb4ca7f7e718434b51158a2b0aff}{get\+\_\+cf2if}} () const
 \begin{DoxyCompactList}\small\item\em Get transformation matrix from DLR coefficients to values at DLR imaginary frequency nodes. \end{DoxyCompactList}\item 
-nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a62337d2cfcbd54f972fc6c616fe6daa7}{get\+\_\+if2cf\+\_\+lu}} () const
+nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a755c41b862db97b9ec7ed03fe218dc5c}{get\+\_\+if2cf\+\_\+lu}} () const
 \begin{DoxyCompactList}\small\item\em Get LU factors of transformation matrix from DLR imaginary frequency values to coefficients. \end{DoxyCompactList}\item 
-nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a044db731d62ad4e4e029d5302195cf64}{get\+\_\+if2cf\+\_\+piv}} () const
+nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ad525907cef50ad06c20f2b00f26e1e0b}{get\+\_\+if2cf\+\_\+piv}} () const
 \begin{DoxyCompactList}\small\item\em Get LU pivots of transformation matrix from DLR imaginary frequency values to coefficients. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a06ed0bacc35deffd64fc67abeaa9734e}{rank}} () const
 \begin{DoxyCompactList}\small\item\em Get DLR rank. \end{DoxyCompactList}\item 
@@ -58,12 +58,12 @@ void \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a
 \item 
 void \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}{deserialize}} (auto \&ar)
 \end{DoxyCompactItemize}
-\doxysubsection*{Static Public Member Functions}
+\doxysubsubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 static std\+::string \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aff33a36f3899a2a0df835b5fbf988058}{hdf5\+\_\+format}} ()
 \end{DoxyCompactItemize}
-\doxysubsection*{Friends}
+\doxysubsubsection*{Friends}
 \begin{DoxyCompactItemize}
 \item 
 void \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0d4a3f4d48e09a37f1a91ffeac6e5544}{h5\+\_\+write}} (h5\+::group fg, std\+::string const \&subgroup\+\_\+name, \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}} const \&m)
@@ -81,7 +81,7 @@ First dimension of all Green\textquotesingle{}s function and coefficient arrays 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065}\label{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065}\label{classcppdlr_1_1imfreq__ops_a2296d91d2652b85462653f6147d95065} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!imfreq\_ops@{imfreq\_ops}}
 \index{imfreq\_ops@{imfreq\_ops}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{imfreq\_ops()}{imfreq\_ops()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
@@ -89,7 +89,7 @@ First dimension of all Green\textquotesingle{}s function and coefficient arrays 
 
 
 
-Constructor for \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}}. 
+Constructor for \doxylink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}. 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -103,15 +103,15 @@ Constructor for \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}}.
 \hline
 \end{DoxyParams}
 \begin{DoxyNote}{Note}
-In case Boson and SYM options are selected, we enforce that i$\ast$nu\+\_\+n=0 is chosen as a DLR imaginary frequency node. 
+In case Boson and SYM options are selected, we enforce that i\texorpdfstring{$\ast$}{*}nu\+\_\+n=0 is chosen as a DLR imaginary frequency node. 
 \end{DoxyNote}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573}\label{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573}\label{classcppdlr_1_1imfreq__ops_afc68ce6e34ea9a23e763f9b1919ea573} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!imfreq\_ops@{imfreq\_ops}}
 \index{imfreq\_ops@{imfreq\_ops}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{imfreq\_ops()}{imfreq\_ops()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
 {\footnotesize\ttfamily cppdlr\+::imfreq\+\_\+ops\+::imfreq\+\_\+ops (\begin{DoxyParamCaption}\item[{double}]{lambda,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{dlr\+\_\+rf,  }\item[{\mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}}}]{statistic,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ int $>$}]{dlr\+\_\+if,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$}]{cf2if,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$}]{if2cf\+\_\+lu,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ int $>$}]{if2cf\+\_\+piv }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_aec1f430ef8442851ca0003bc89620feb}\label{classcppdlr_1_1imfreq__ops_aec1f430ef8442851ca0003bc89620feb}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_aec1f430ef8442851ca0003bc89620feb}\label{classcppdlr_1_1imfreq__ops_aec1f430ef8442851ca0003bc89620feb} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!imfreq\_ops@{imfreq\_ops}}
 \index{imfreq\_ops@{imfreq\_ops}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{imfreq\_ops()}{imfreq\_ops()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
@@ -120,11 +120,11 @@ In case Boson and SYM options are selected, we enforce that i$\ast$nu\+\_\+n=0 i
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a0ecdd54a26f407c084529ed3a90f4cb5}\label{classcppdlr_1_1imfreq__ops_a0ecdd54a26f407c084529ed3a90f4cb5}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a0ecdd54a26f407c084529ed3a90f4cb5}\label{classcppdlr_1_1imfreq__ops_a0ecdd54a26f407c084529ed3a90f4cb5} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!build\_evalvec@{build\_evalvec}}
 \index{build\_evalvec@{build\_evalvec}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{build\_evalvec()}{build\_evalvec()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily nda\+::vector$<$ dcomplex $>$ cppdlr\+::imfreq\+\_\+ops\+::build\+\_\+evalvec (\begin{DoxyParamCaption}\item[{double}]{beta,  }\item[{int}]{n }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily nda\+::vector$<$ \mbox{\hyperlink{namespacecppdlr_a7b5392bb6f0a8155f1f19cab3bd042e9}{dcomplex}} $>$ cppdlr\+::imfreq\+\_\+ops\+::build\+\_\+evalvec (\begin{DoxyParamCaption}\item[{double}]{beta,  }\item[{int}]{n }\end{DoxyParamCaption}) const}
 
 
 
@@ -140,13 +140,13 @@ Get vector of evaluation of DLR expansion at an imaginary frequency point.
 \begin{DoxyReturn}{Returns}
 Vector of evaluation at Matsubara frequency with index {\ttfamily n} 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a0a39bab4f039eb81b2da6f78e69177c2}\label{classcppdlr_1_1imfreq__ops_a0a39bab4f039eb81b2da6f78e69177c2}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a0a39bab4f039eb81b2da6f78e69177c2}\label{classcppdlr_1_1imfreq__ops_a0a39bab4f039eb81b2da6f78e69177c2} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!build\_evalvec@{build\_evalvec}}
 \index{build\_evalvec@{build\_evalvec}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{build\_evalvec()}{build\_evalvec()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily nda\+::vector$<$ dcomplex $>$ cppdlr\+::imfreq\+\_\+ops\+::build\+\_\+evalvec (\begin{DoxyParamCaption}\item[{int}]{n }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily nda\+::vector$<$ \mbox{\hyperlink{namespacecppdlr_a7b5392bb6f0a8155f1f19cab3bd042e9}{dcomplex}} $>$ cppdlr\+::imfreq\+\_\+ops\+::build\+\_\+evalvec (\begin{DoxyParamCaption}\item[{int}]{n }\end{DoxyParamCaption}) const}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a2ac467d6a8903940482bad858896d52c}\label{classcppdlr_1_1imfreq__ops_a2ac467d6a8903940482bad858896d52c}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a2ac467d6a8903940482bad858896d52c}\label{classcppdlr_1_1imfreq__ops_a2ac467d6a8903940482bad858896d52c} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!coefs2eval@{coefs2eval}}
 \index{coefs2eval@{coefs2eval}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{coefs2eval()}{coefs2eval()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
@@ -169,19 +169,19 @@ Evaluate DLR expansion of G, given by its DLR coefficients, at imaginary frequen
 \begin{DoxyReturn}{Returns}
 Value of G at {\ttfamily iom} 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_ae8bc361ee298e53554c7c664e3cbf8be}\label{classcppdlr_1_1imfreq__ops_ae8bc361ee298e53554c7c664e3cbf8be}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_ae8bc361ee298e53554c7c664e3cbf8be}\label{classcppdlr_1_1imfreq__ops_ae8bc361ee298e53554c7c664e3cbf8be} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!coefs2eval@{coefs2eval}}
 \index{coefs2eval@{coefs2eval}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{coefs2eval()}{coefs2eval()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
 auto cppdlr\+::imfreq\+\_\+ops\+::coefs2eval (\begin{DoxyParamCaption}\item[{T const \&}]{gc,  }\item[{int}]{n }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a12b1549d7c53e5f536dc5968a20356ba}\label{classcppdlr_1_1imfreq__ops_a12b1549d7c53e5f536dc5968a20356ba}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a3179bf998af8b0a3c71fe7d333f0e44e}\label{classcppdlr_1_1imfreq__ops_a3179bf998af8b0a3c71fe7d333f0e44e} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!coefs2vals@{coefs2vals}}
 \index{coefs2vals@{coefs2vals}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{coefs2vals()}{coefs2vals()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$T$>$ cppdlr\+::imfreq\+\_\+ops\+::coefs2vals (\begin{DoxyParamCaption}\item[{double}]{beta,  }\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$ T $>$ cppdlr\+::imfreq\+\_\+ops\+::coefs2vals (\begin{DoxyParamCaption}\item[{double}]{beta,  }\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -197,14 +197,14 @@ Transform DLR coefficients of Green\textquotesingle{}s function G to values on D
 \begin{DoxyReturn}{Returns}
 Values of G on DLR imaginary frequency grid 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_ad3f806ba92bf1598943fe610498aa1c8}\label{classcppdlr_1_1imfreq__ops_ad3f806ba92bf1598943fe610498aa1c8}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a4b37513f8cb287ea7033cc4d78f6157f}\label{classcppdlr_1_1imfreq__ops_a4b37513f8cb287ea7033cc4d78f6157f} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!coefs2vals@{coefs2vals}}
 \index{coefs2vals@{coefs2vals}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{coefs2vals()}{coefs2vals()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
-\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$T$>$ cppdlr\+::imfreq\+\_\+ops\+::coefs2vals (\begin{DoxyParamCaption}\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\hyperlink{namespacecppdlr_af7426dd83d2c831f6ae3fa9b8e6172ad}{make\+\_\+cplx\+\_\+t}}$<$ T $>$ cppdlr\+::imfreq\+\_\+ops\+::coefs2vals (\begin{DoxyParamCaption}\item[{T const \&}]{gc }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}\label{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}\label{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!deserialize@{deserialize}}
 \index{deserialize@{deserialize}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{deserialize()}{deserialize()}}
@@ -217,11 +217,11 @@ Deserialize an object from the archive. This will initialize all members. The ar
 \mbox{\texttt{ in}}  & {\em ar} & Archive to deserialize from \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a43d1a78f947dda418faf97b933575b25}\label{classcppdlr_1_1imfreq__ops_a43d1a78f947dda418faf97b933575b25}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a457eeb4ca7f7e718434b51158a2b0aff}\label{classcppdlr_1_1imfreq__ops_a457eeb4ca7f7e718434b51158a2b0aff} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_cf2if@{get\_cf2if}}
 \index{get\_cf2if@{get\_cf2if}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_cf2if()}{get\_cf2if()}}
-{\footnotesize\ttfamily nda\+::matrix\+\_\+const\+\_\+view$<$nda\+::dcomplex$>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+cf2if (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+cf2if (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -230,11 +230,11 @@ Get transformation matrix from DLR coefficients to values at DLR imaginary frequ
 \begin{DoxyReturn}{Returns}
 Transformation matrix 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a62337d2cfcbd54f972fc6c616fe6daa7}\label{classcppdlr_1_1imfreq__ops_a62337d2cfcbd54f972fc6c616fe6daa7}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a755c41b862db97b9ec7ed03fe218dc5c}\label{classcppdlr_1_1imfreq__ops_a755c41b862db97b9ec7ed03fe218dc5c} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_if2cf\_lu@{get\_if2cf\_lu}}
 \index{get\_if2cf\_lu@{get\_if2cf\_lu}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_if2cf\_lu()}{get\_if2cf\_lu()}}
-{\footnotesize\ttfamily nda\+::matrix\+\_\+const\+\_\+view$<$nda\+::dcomplex$>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+if2cf\+\_\+lu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily nda\+::matrix\+\_\+const\+\_\+view$<$ nda\+::dcomplex $>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+if2cf\+\_\+lu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -243,11 +243,11 @@ Get LU factors of transformation matrix from DLR imaginary frequency values to c
 \begin{DoxyReturn}{Returns}
 LU factors 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a044db731d62ad4e4e029d5302195cf64}\label{classcppdlr_1_1imfreq__ops_a044db731d62ad4e4e029d5302195cf64}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_ad525907cef50ad06c20f2b00f26e1e0b}\label{classcppdlr_1_1imfreq__ops_ad525907cef50ad06c20f2b00f26e1e0b} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_if2cf\_piv@{get\_if2cf\_piv}}
 \index{get\_if2cf\_piv@{get\_if2cf\_piv}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_if2cf\_piv()}{get\_if2cf\_piv()}}
-{\footnotesize\ttfamily nda\+::vector\+\_\+const\+\_\+view$<$int$>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+if2cf\+\_\+piv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+if2cf\+\_\+piv (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -256,11 +256,11 @@ Get LU pivots of transformation matrix from DLR imaginary frequency values to co
 \begin{DoxyReturn}{Returns}
 LU pivots 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_ab3fddfc41e106a4e9b80f6b8dcb0e52f}\label{classcppdlr_1_1imfreq__ops_ab3fddfc41e106a4e9b80f6b8dcb0e52f}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_ae506673619f451a5770a45e23438addd}\label{classcppdlr_1_1imfreq__ops_ae506673619f451a5770a45e23438addd} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_ifnodes@{get\_ifnodes}}
 \index{get\_ifnodes@{get\_ifnodes}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_ifnodes()}{get\_ifnodes()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily nda\+::vector\+\_\+const\+\_\+view$<$int$>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+ifnodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily nda\+::vector\+\_\+const\+\_\+view$<$ int $>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+ifnodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -269,17 +269,17 @@ Get DLR imaginary frequency nodes.
 \begin{DoxyReturn}{Returns}
 DLR imaginary frequency nodes 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a304f7fb9f1cf9740e4234e3d71126a25}\label{classcppdlr_1_1imfreq__ops_a304f7fb9f1cf9740e4234e3d71126a25}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a304f7fb9f1cf9740e4234e3d71126a25}\label{classcppdlr_1_1imfreq__ops_a304f7fb9f1cf9740e4234e3d71126a25} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_ifnodes@{get\_ifnodes}}
 \index{get\_ifnodes@{get\_ifnodes}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_ifnodes()}{get\_ifnodes()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily int cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+ifnodes (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a4db505e4e313e96940e9f5008cd9face}\label{classcppdlr_1_1imfreq__ops_a4db505e4e313e96940e9f5008cd9face}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_aca169c622cfcfd82541f6696cdd19388}\label{classcppdlr_1_1imfreq__ops_aca169c622cfcfd82541f6696cdd19388} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_rfnodes@{get\_rfnodes}}
 \index{get\_rfnodes@{get\_rfnodes}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_rfnodes()}{get\_rfnodes()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily nda\+::vector\+\_\+const\+\_\+view$<$double$>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+rfnodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+{\footnotesize\ttfamily nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+rfnodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -288,31 +288,31 @@ Get DLR real frequency nodes.
 \begin{DoxyReturn}{Returns}
 DLR real frequency nodes 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a9e188ecc36e120b8931b522120c78f00}\label{classcppdlr_1_1imfreq__ops_a9e188ecc36e120b8931b522120c78f00}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a9e188ecc36e120b8931b522120c78f00}\label{classcppdlr_1_1imfreq__ops_a9e188ecc36e120b8931b522120c78f00} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_rfnodes@{get\_rfnodes}}
 \index{get\_rfnodes@{get\_rfnodes}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_rfnodes()}{get\_rfnodes()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily double cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+rfnodes (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a0fd9ccee5b7fd770e4e52051d1833f34}\label{classcppdlr_1_1imfreq__ops_a0fd9ccee5b7fd770e4e52051d1833f34}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a0fd9ccee5b7fd770e4e52051d1833f34}\label{classcppdlr_1_1imfreq__ops_a0fd9ccee5b7fd770e4e52051d1833f34} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!get\_statistic@{get\_statistic}}
 \index{get\_statistic@{get\_statistic}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{get\_statistic()}{get\_statistic()}}
 {\footnotesize\ttfamily \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} cppdlr\+::imfreq\+\_\+ops\+::get\+\_\+statistic (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_aff33a36f3899a2a0df835b5fbf988058}\label{classcppdlr_1_1imfreq__ops_aff33a36f3899a2a0df835b5fbf988058}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_aff33a36f3899a2a0df835b5fbf988058}\label{classcppdlr_1_1imfreq__ops_aff33a36f3899a2a0df835b5fbf988058} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!hdf5\_format@{hdf5\_format}}
 \index{hdf5\_format@{hdf5\_format}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{hdf5\_format()}{hdf5\_format()}}
 {\footnotesize\ttfamily static std\+::string cppdlr\+::imfreq\+\_\+ops\+::hdf5\+\_\+format (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}\label{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}\label{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!lambda@{lambda}}
 \index{lambda@{lambda}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{lambda()}{lambda()}}
 {\footnotesize\ttfamily double cppdlr\+::imfreq\+\_\+ops\+::lambda (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a06ed0bacc35deffd64fc67abeaa9734e}\label{classcppdlr_1_1imfreq__ops_a06ed0bacc35deffd64fc67abeaa9734e}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a06ed0bacc35deffd64fc67abeaa9734e}\label{classcppdlr_1_1imfreq__ops_a06ed0bacc35deffd64fc67abeaa9734e} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!rank@{rank}}
 \index{rank@{rank}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{rank()}{rank()}}
@@ -325,7 +325,7 @@ Get DLR rank.
 \begin{DoxyReturn}{Returns}
 DLR rank 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}\label{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}\label{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!serialize@{serialize}}
 \index{serialize@{serialize}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
@@ -338,7 +338,7 @@ Serialize the object into an archive by serializing all its members. The archive
 \mbox{\texttt{ in}}  & {\em ar} & Archive to serialize into \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a88c5359e14d8dd6c764a34aa67bbc343}\label{classcppdlr_1_1imfreq__ops_a88c5359e14d8dd6c764a34aa67bbc343}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a88c5359e14d8dd6c764a34aa67bbc343}\label{classcppdlr_1_1imfreq__ops_a88c5359e14d8dd6c764a34aa67bbc343} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!vals2coefs@{vals2coefs}}
 \index{vals2coefs@{vals2coefs}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{vals2coefs()}{vals2coefs()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
@@ -359,7 +359,7 @@ Transform values of Green\textquotesingle{}s function G on DLR imaginary frequen
 \begin{DoxyReturn}{Returns}
 DLR coefficients of G 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_ab0c49ae76da53c29c1e48c46ca6a2ded}\label{classcppdlr_1_1imfreq__ops_ab0c49ae76da53c29c1e48c46ca6a2ded}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_ab0c49ae76da53c29c1e48c46ca6a2ded}\label{classcppdlr_1_1imfreq__ops_ab0c49ae76da53c29c1e48c46ca6a2ded} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!vals2coefs@{vals2coefs}}
 \index{vals2coefs@{vals2coefs}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{vals2coefs()}{vals2coefs()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
@@ -368,14 +368,14 @@ T\+::regular\+\_\+type cppdlr\+::imfreq\+\_\+ops\+::vals2coefs (\begin{DoxyParam
 
 
 
-\doxysubsection{Friends And Related Function Documentation}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a578823db4f32e29062e6ce9f96ebcbb0}\label{classcppdlr_1_1imfreq__ops_a578823db4f32e29062e6ce9f96ebcbb0}} 
+\doxysubsection{Friends And Related Symbol Documentation}
+\Hypertarget{classcppdlr_1_1imfreq__ops_a578823db4f32e29062e6ce9f96ebcbb0}\label{classcppdlr_1_1imfreq__ops_a578823db4f32e29062e6ce9f96ebcbb0} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!h5\_read@{h5\_read}}
 \index{h5\_read@{h5\_read}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{h5\_read}{h5\_read}}
 {\footnotesize\ttfamily void h5\+\_\+read (\begin{DoxyParamCaption}\item[{h5\+::group}]{fg,  }\item[{std\+::string const \&}]{subgroup\+\_\+name,  }\item[{\mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}} \&}]{m }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a0d4a3f4d48e09a37f1a91ffeac6e5544}\label{classcppdlr_1_1imfreq__ops_a0d4a3f4d48e09a37f1a91ffeac6e5544}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a0d4a3f4d48e09a37f1a91ffeac6e5544}\label{classcppdlr_1_1imfreq__ops_a0d4a3f4d48e09a37f1a91ffeac6e5544} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!h5\_write@{h5\_write}}
 \index{h5\_write@{h5\_write}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{h5\_write}{h5\_write}}
@@ -384,7 +384,7 @@ T\+::regular\+\_\+type cppdlr\+::imfreq\+\_\+ops\+::vals2coefs (\begin{DoxyParam
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_ab341ff5cf8732f06074c1c034ab3eaeb}\label{classcppdlr_1_1imfreq__ops_ab341ff5cf8732f06074c1c034ab3eaeb}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_ab341ff5cf8732f06074c1c034ab3eaeb}\label{classcppdlr_1_1imfreq__ops_ab341ff5cf8732f06074c1c034ab3eaeb} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!lu@{lu}}
 \index{lu@{lu}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{lu}{lu}}
@@ -392,9 +392,9 @@ T\+::regular\+\_\+type cppdlr\+::imfreq\+\_\+ops\+::vals2coefs (\begin{DoxyParam
 
 
 
-LU factors (LAPACK format) of imaginary frequency vals -\/$>$ coefs matrix. 
+LU factors (LAPACK format) of imaginary frequency vals -\/\texorpdfstring{$>$}{>} coefs matrix. 
 
-\mbox{\Hypertarget{classcppdlr_1_1imfreq__ops_a4ed57fa49cb30dbe0f9b895cae2042c8}\label{classcppdlr_1_1imfreq__ops_a4ed57fa49cb30dbe0f9b895cae2042c8}} 
+\Hypertarget{classcppdlr_1_1imfreq__ops_a4ed57fa49cb30dbe0f9b895cae2042c8}\label{classcppdlr_1_1imfreq__ops_a4ed57fa49cb30dbe0f9b895cae2042c8} 
 \index{cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}!piv@{piv}}
 \index{piv@{piv}!cppdlr::imfreq\_ops@{cppdlr::imfreq\_ops}}
 \doxysubsubsection{\texorpdfstring{piv}{piv}}
@@ -402,7 +402,7 @@ LU factors (LAPACK format) of imaginary frequency vals -\/$>$ coefs matrix.
 
 
 
-LU pivots (LAPACK format) of imaginary frequency vals -\/$>$ coefs matrix. 
+LU pivots (LAPACK format) of imaginary frequency vals -\/\texorpdfstring{$>$}{>} coefs matrix. 
 
 
 

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['lambda_181',['lambda',['../classcppdlr_1_1fineparams.html#a7bc467b8180e0b3980debe9700026b4c',1,'cppdlr::fineparams']]],
-  ['lu_182',['lu',['../classcppdlr_1_1imfreq__ops.html#ab341ff5cf8732f06074c1c034ab3eaeb',1,'cppdlr::imfreq_ops::lu()'],['../classcppdlr_1_1imtime__ops.html#a83e9085aca345c3bf889ae006f0fdb3d',1,'cppdlr::imtime_ops::lu()']]]
+  ['p_0',['p',['../classcppdlr_1_1fineparams.html#a232cba7c7f76e2aa385980da3850ae25',1,'cppdlr::fineparams']]],
+  ['piv_1',['piv',['../classcppdlr_1_1imfreq__ops.html#a4ed57fa49cb30dbe0f9b895cae2042c8',1,'cppdlr::imfreq_ops::piv'],['../classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389',1,'cppdlr::imtime_ops::piv']]]
 ];
