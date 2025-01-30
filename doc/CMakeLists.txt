@@ -12,7 +12,7 @@ foreach(example ${ExampleList})
   get_filename_component(d ${example} DIRECTORY)
   add_executable(${PROJECT_NAME}_doc_${f} EXCLUDE_FROM_ALL ${example})
   set_property(TARGET ${PROJECT_NAME}_doc_${f} PROPERTY RUNTIME_OUTPUT_DIRECTORY ${d})
-  add_custom_command(TARGET ${PROJECT_NAME}_doc_${f}
+  add_custom_command(TARGET ${PROJECT_NAME}_doc_${f} POST_BUILD
    COMMAND ${PROJECT_NAME}_doc_${f} > ${CMAKE_CURRENT_SOURCE_DIR}/${d}/${f}.output 2>/dev/null
    WORKING_DIRECTORY ${d}
   )
@@ -29,7 +29,7 @@ endif()
 # Sphinx has internal caching, always run it
 add_custom_target(${PROJECT_NAME}_docs_sphinx ALL)
 add_custom_command(
-  TARGET ${PROJECT_NAME}_docs_sphinx
+  TARGET ${PROJECT_NAME}_docs_sphinx POST_BUILD
   COMMAND PYTHONPATH=${PROJECT_BINARY_DIR}/python:${h5_BINARY_DIR}/python:$ENV{PYTHONPATH} ${SPHINXBUILD_EXECUTABLE} -c . -j auto -b html ${CMAKE_CURRENT_SOURCE_DIR} html
 )
 
