@@ -471,6 +471,7 @@ namespace cppdlr {
 
     /**
     * @brief Compute matrix of convolution by an imaginary time Green's function
+    * in place
     *
     * The convolution of f and g is defined as h(t) = (f * g)(t) = int_0^beta
     * f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are
@@ -499,8 +500,8 @@ namespace cppdlr {
     *
     * \note This function builds the matrix of convolution, in place, in the
     * provided matrix `fconv`. This makes it possible to control the memory
-    * allocation externally. If this is not a concern, we advice using the
-    * `covmat(...)` function instead (of `convmat_inplace(...)`).
+    * allocation externally. If this is not a concern, we advise using the
+    * `convmat(...)` function instead of `convmat_inplace(...)`.
     *
     * \note Whereas the method imtime_ops::convolve takes the DLR coefficients
     * of f and g as input and computes their convolution h directly, this method
