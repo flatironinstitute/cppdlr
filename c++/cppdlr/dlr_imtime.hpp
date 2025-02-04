@@ -490,12 +490,17 @@ namespace cppdlr {
     * diagrams using separable basis functions: Anderson impurity model strong
     * coupling expansion," arXiv:2307.08566 (2023).
     *
-    * @param[out] fconv Convolution matrix from DLR coefficients to DLR grid
+    * @param[in/out] fconv Convolution matrix from DLR coefficients to DLR grid
     * @param[in] beta Inverse temperature
     * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
     * @param[in] fc DLR coefficients of f
     * @param[in] time_order Flag for ordinary (false or ORDINARY, default) or
     * time-ordered (true or TIME_ORDERED) convolution
+    *
+    * \note This function builds the matrix of convolution, in place, in the
+    * provided matrix `fconv`. This makes it possible to control the memory
+    * allocation externally. If this is not a concern, we advice using the
+    * `covmat(...)` function instead (of `convmat_inplace(...)`).
     *
     * \note Whereas the method imtime_ops::convolve takes the DLR coefficients
     * of f and g as input and computes their convolution h directly, this method
