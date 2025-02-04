@@ -135,6 +135,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6c0a93f188f4522b2389e9a7fcbf9783"><td class="memTemplItemLeft" align="right" valign="top">nda::matrix&lt; S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a6c0a93f188f4522b2389e9a7fcbf9783">convmat</a> (double beta, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T const &amp;fc, bool time_order=false) const</td></tr>
 <tr class="memdesc:a6c0a93f188f4522b2389e9a7fcbf9783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute matrix of convolution by an imaginary time Green's function.  <br /></td></tr>
 <tr class="separator:a6c0a93f188f4522b2389e9a7fcbf9783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f48c8e4b3164985af73fba0fd28b002" id="r_a9f48c8e4b3164985af73fba0fd28b002"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:a9f48c8e4b3164985af73fba0fd28b002"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a9f48c8e4b3164985af73fba0fd28b002">convmat_inplace</a> (nda::matrix_view&lt; S, nda::C_layout &gt; fconv, double beta, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T const &amp;fc, bool time_order=false) const</td></tr>
+<tr class="memdesc:a9f48c8e4b3164985af73fba0fd28b002"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute matrix of convolution by an imaginary time Green's function in place.  <br /></td></tr>
+<tr class="separator:a9f48c8e4b3164985af73fba0fd28b002"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaa4303e1ee0897417308f380bb75de8" id="r_aaaa4303e1ee0897417308f380bb75de8"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:aaaa4303e1ee0897417308f380bb75de8"><td class="memTemplItemLeft" align="right" valign="top">S&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#aaaa4303e1ee0897417308f380bb75de8">innerprod</a> (T const &amp;fc, T const &amp;gc) const</td></tr>
 <tr class="memdesc:aaaa4303e1ee0897417308f380bb75de8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute inner product of two imaginary time Green's functions.  <br /></td></tr>
@@ -549,6 +553,85 @@ coupling expansion," arXiv:2307.08566 (2023).</p>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Matrix of convolution by f</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Whereas the method <a class="el" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c" title="Compute convolution of two imaginary time Green&#39;s functions.">imtime_ops::convolve</a> takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.</dd>
+<dd>
+In the case of matrix-valued Green's functions, we think of the matrix of convolution by f as an r*norb x r*norb matrix, or a block r x r matrix of norb x norb blocks. Here r is the DLR rank and norb is the number of orbital indices. This matrix would then be applied to a Green's function g, represented as an r*norb x norb matrix, or a block r x 1 matrix of norb x norb blocks. </dd></dl>
+
+</div>
+</div>
+<a id="a9f48c8e4b3164985af73fba0fd28b002" name="a9f48c8e4b3164985af73fba0fd28b002"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f48c8e4b3164985af73fba0fd28b002">&#9670;&#160;</a></span>convmat_inplace()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppdlr::imtime_ops::convmat_inplace </td>
+          <td>(</td>
+          <td class="paramtype">nda::matrix_view&lt; S, nda::C_layout &gt;&#160;</td>
+          <td class="paramname"><em>fconv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>beta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>&#160;</td>
+          <td class="paramname"><em>statistic</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T const &amp;&#160;</td>
+          <td class="paramname"><em>fc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>time_order</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compute matrix of convolution by an imaginary time Green's function in place. </p>
+<p>The convolution of f and g is defined as h(t) = (f * g)(t) = int_0^beta f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are used to define the Green's functions on (-beta, 0). This method takes the DLR coefficients of f as input and returns the matrix of convolution by f. This matrix can be applied to the values of g on the DLR imaginary time grid, to produce the values of h on the DLR imaginary time grid.</p>
+<p>By specifying the <code>time_order</code> flag, this method can be used to compute the time-ordered convolution of f and g, defined as h(t) = (f * g)(t) = int_0^tau f(t-t') g(t') dt'.</p>
+<p>The convolution matrix is constructed using the method described in Appendix A of</p>
+<p>J. Kaye, H. U. R. Strand, D. Golez, "Decomposing imaginary time Feynman
+diagrams using separable basis functions: Anderson impurity model strong
+coupling expansion," arXiv:2307.08566 (2023).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">[in/out]</td><td>fconv Convolution matrix from DLR coefficients to DLR grid </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">beta</td><td>Inverse temperature </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">statistic</td><td>Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">fc</td><td>DLR coefficients of f </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">time_order</td><td>Flag for ordinary (false or ORDINARY, default) or time-ordered (true or TIME_ORDERED) convolution</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This function builds the matrix of convolution, in place, in the provided matrix <code>fconv</code>. This makes it possible to control the memory allocation externally. If this is not a concern, we advise using the <code>convmat(...)</code> function instead of <code>convmat_inplace(...)</code>.</dd>
+<dd>
+Whereas the method <a class="el" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c" title="Compute convolution of two imaginary time Green&#39;s functions.">imtime_ops::convolve</a> takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.</dd>
 <dd>
 In the case of matrix-valued Green's functions, we think of the matrix of convolution by f as an r*norb x r*norb matrix, or a block r x r matrix of norb x norb blocks. Here r is the DLR rank and norb is the number of orbital indices. This matrix would then be applied to a Green's function g, represented as an r*norb x norb matrix, or a block r x 1 matrix of norb x norb blocks. </dd></dl>
 

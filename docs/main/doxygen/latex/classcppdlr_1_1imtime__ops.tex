@@ -38,6 +38,8 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a318b0b4
 \begin{DoxyCompactList}\small\item\em Compute convolution of two imaginary time Green\textquotesingle{}s functions, given matrix of convolution by one of them. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\nda\+::matrix$<$ S $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6c0a93f188f4522b2389e9a7fcbf9783}{convmat}} (double beta, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, T const \&fc, bool time\+\_\+order=false) const
 \begin{DoxyCompactList}\small\item\em Compute matrix of convolution by an imaginary time Green\textquotesingle{}s function. \end{DoxyCompactList}\item 
+{\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\void \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a9f48c8e4b3164985af73fba0fd28b002}{convmat\+\_\+inplace}} (nda\+::matrix\+\_\+view$<$ S, nda\+::\+C\+\_\+layout $>$ fconv, double beta, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic, T const \&fc, bool time\+\_\+order=false) const
+\begin{DoxyCompactList}\small\item\em Compute matrix of convolution by an imaginary time Green\textquotesingle{}s function in place. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\S \mbox{\hyperlink{classcppdlr_1_1imtime__ops_aaaa4303e1ee0897417308f380bb75de8}{innerprod}} (T const \&fc, T const \&gc) const
 \begin{DoxyCompactList}\small\item\em Compute inner product of two imaginary time Green\textquotesingle{}s functions. \end{DoxyCompactList}\item 
 nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae20e69067cc04e37fe8448e8d1088776}{get\+\_\+itnodes}} () const
@@ -246,6 +248,45 @@ J. Kaye, H. U. R. Strand, D. Golez, "{}\+Decomposing imaginary time Feynman diag
 Matrix of convolution by f
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
+Whereas the method \doxylink{classcppdlr_1_1imtime__ops_a4f018cf316547b2879d9a2dd76a4b80c}{imtime\+\_\+ops\+::convolve} takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.
+
+In the case of matrix-\/valued Green\textquotesingle{}s functions, we think of the matrix of convolution by f as an r\texorpdfstring{$\ast$}{*}norb x r\texorpdfstring{$\ast$}{*}norb matrix, or a block r x r matrix of norb x norb blocks. Here r is the DLR rank and norb is the number of orbital indices. This matrix would then be applied to a Green\textquotesingle{}s function g, represented as an r\texorpdfstring{$\ast$}{*}norb x norb matrix, or a block r x 1 matrix of norb x norb blocks. 
+\end{DoxyNote}
+\Hypertarget{classcppdlr_1_1imtime__ops_a9f48c8e4b3164985af73fba0fd28b002}\label{classcppdlr_1_1imtime__ops_a9f48c8e4b3164985af73fba0fd28b002} 
+\index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!convmat\_inplace@{convmat\_inplace}}
+\index{convmat\_inplace@{convmat\_inplace}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}
+\doxysubsubsection{\texorpdfstring{convmat\_inplace()}{convmat\_inplace()}}
+{\footnotesize\ttfamily template$<$nda\+::\+Memory\+Array T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ \\
+void cppdlr\+::imtime\+\_\+ops\+::convmat\+\_\+inplace (\begin{DoxyParamCaption}\item[{nda\+::matrix\+\_\+view$<$ S, nda\+::\+C\+\_\+layout $>$}]{fconv,  }\item[{double}]{beta,  }\item[{\mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}}}]{statistic,  }\item[{T const \&}]{fc,  }\item[{bool}]{time\+\_\+order = {\ttfamily false} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute matrix of convolution by an imaginary time Green\textquotesingle{}s function in place. 
+
+The convolution of f and g is defined as h(t) = (f \texorpdfstring{$\ast$}{*} g)(t) = int\+\_\+0\texorpdfstring{$^\wedge$}{\string^}beta f(t-\/t\textquotesingle{}) g(t\textquotesingle{}) dt\textquotesingle{}, where fermionic/bosonic antiperiodicity/periodicity are used to define the Green\textquotesingle{}s functions on (-\/beta, 0). This method takes the DLR coefficients of f as input and returns the matrix of convolution by f. This matrix can be applied to the values of g on the DLR imaginary time grid, to produce the values of h on the DLR imaginary time grid.
+
+By specifying the {\ttfamily time\+\_\+order} flag, this method can be used to compute the time-\/ordered convolution of f and g, defined as h(t) = (f \texorpdfstring{$\ast$}{*} g)(t) = int\+\_\+0\texorpdfstring{$^\wedge$}{\string^}tau f(t-\/t\textquotesingle{}) g(t\textquotesingle{}) dt\textquotesingle{}.
+
+The convolution matrix is constructed using the method described in Appendix A of
+
+J. Kaye, H. U. R. Strand, D. Golez, "{}\+Decomposing imaginary time Feynman diagrams using separable basis functions\+: Anderson impurity model strong coupling expansion,"{} ar\+Xiv\+:2307.\+08566 (2023).
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em \mbox{[}in/out\mbox{]}} & fconv Convolution matrix from DLR coefficients to DLR grid \\
+\hline
+\mbox{\texttt{ in}}  & {\em beta} & Inverse temperature \\
+\hline
+\mbox{\texttt{ in}}  & {\em statistic} & Fermionic ("{}\+Fermion"{} or 0) or bosonic ("{}\+Boson"{} or 1) \\
+\hline
+\mbox{\texttt{ in}}  & {\em fc} & DLR coefficients of f \\
+\hline
+\mbox{\texttt{ in}}  & {\em time\+\_\+order} & Flag for ordinary (false or ORDINARY, default) or time-\/ordered (true or TIME\+\_\+\+ORDERED) convolution\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function builds the matrix of convolution, in place, in the provided matrix {\ttfamily fconv}. This makes it possible to control the memory allocation externally. If this is not a concern, we advise using the {\ttfamily convmat(...)} function instead of {\ttfamily convmat\+\_\+inplace(...)}.
+
 Whereas the method \doxylink{classcppdlr_1_1imtime__ops_a4f018cf316547b2879d9a2dd76a4b80c}{imtime\+\_\+ops\+::convolve} takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.
 
 In the case of matrix-\/valued Green\textquotesingle{}s functions, we think of the matrix of convolution by f as an r\texorpdfstring{$\ast$}{*}norb x r\texorpdfstring{$\ast$}{*}norb matrix, or a block r x r matrix of norb x norb blocks. Here r is the DLR rank and norb is the number of orbital indices. This matrix would then be applied to a Green\textquotesingle{}s function g, represented as an r\texorpdfstring{$\ast$}{*}norb x norb matrix, or a block r x 1 matrix of norb x norb blocks. 
