@@ -103,11 +103,6 @@ jobs:
       run: |
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
 
-    - name: Add clang LDFLAGS for macos to link against brew's libc++
-      if: ${{ contains(matrix.os, 'macos') && contains(matrix.cxx, 'clang') }}
-      run: |
-        echo 'LDFLAGS="-L$(brew --prefix llvm)/lib/c++ -L$(brew --prefix llvm)/lib -lunwind"' >> $GITHUB_ENV
-
     - name: Build & Install TRIQS
       env:
         CC: ${{ matrix.cc }}
