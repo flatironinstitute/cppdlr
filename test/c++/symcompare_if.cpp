@@ -60,14 +60,14 @@ int main() {
   int nmaxtst = 10000; // # imag time test points
 
   int norb = 2; // Orbital dimensions
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
   auto dlr_rf     = build_dlr_rf(lambda, eps);
   auto dlr_rf_sym = build_dlr_rf(lambda, eps, SYM);
 
-  int r    = dlr_rf.size();
+  int r = dlr_rf.size();
 
   // Get DLR imaginary frequency object
   auto ifops     = imfreq_ops(lambda, dlr_rf, statistic);
@@ -76,7 +76,7 @@ int main() {
   // Sample Green's function G at DLR imaginary frequency nodes
   auto const &dlr_if     = ifops.get_ifnodes();
   auto const &dlr_if_sym = ifops_sym.get_ifnodes();
-  int niomsym = dlr_if_sym.size();
+  int niomsym            = dlr_if_sym.size();
 
   auto g     = nda::array<dcomplex, 3>(r, norb, norb);
   auto g_sym = nda::array<dcomplex, 3>(niomsym, norb, norb);
@@ -88,20 +88,20 @@ int main() {
   auto gc_sym = ifops_sym.vals2coefs(beta, g_sym);
 
   // Compute error in imaginary frequency
-  auto gtru     = nda::matrix<dcomplex>(norb, norb);
-  auto gtst     = nda::matrix<dcomplex>(norb, norb);
-  auto gtst_sym = nda::matrix<dcomplex>(norb, norb);
+  auto gtru      = nda::matrix<dcomplex>(norb, norb);
+  auto gtst      = nda::matrix<dcomplex>(norb, norb);
+  auto gtst_sym  = nda::matrix<dcomplex>(norb, norb);
   double errlinf = 0, errl2 = 0, errlinf_sym = 0, errl2_sym = 0;
   for (int n = -nmaxtst; n < nmaxtst; ++n) {
-    gtru = gfun(norb, beta, n, statistic);
-    gtst     = ifops.coefs2eval(beta, gc, n);
-    gtst_sym = ifops_sym.coefs2eval(beta, gc_sym, n);
+    gtru        = gfun(norb, beta, n, statistic);
+    gtst        = ifops.coefs2eval(beta, gc, n);
+    gtst_sym    = ifops_sym.coefs2eval(beta, gc_sym, n);
     errlinf     = std::max(errlinf, max_element(abs(gtru - gtst)));
     errlinf_sym = std::max(errlinf_sym, max_element(abs(gtru - gtst_sym)));
     errl2 += pow(frobenius_norm(gtru - gtst), 2);
     errl2_sym += pow(frobenius_norm(gtru - gtst_sym), 2);
   }
-  errl2 = sqrt(errl2) / beta;
+  errl2     = sqrt(errl2) / beta;
   errl2_sym = sqrt(errl2_sym) / beta;
 
   // Print results

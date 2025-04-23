@@ -454,11 +454,11 @@ namespace cppdlr {
       int n, m;
 
       if constexpr (T::rank == 1) { // Scalar-valued Green's function
-	n = r;
-	m = r;
+        n = r;
+        m = r;
       } else if (T::rank == 3) { // Matrix-valued Green's function
-	n = r * fc.shape(1);
-	m = r * fc.shape(2);
+        n = r * fc.shape(1);
+        m = r * fc.shape(2);
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
       }
@@ -536,9 +536,8 @@ namespace cppdlr {
 
       if constexpr (T::rank == 1) { // Scalar-valued Green's function
 
-        if (fconv.shape(0) != r || fconv.shape(1) != r)
-          throw std::runtime_error("Matrix shape must be equal to DLR rank (r,r).");
-	
+        if (fconv.shape(0) != r || fconv.shape(1) != r) throw std::runtime_error("Matrix shape must be equal to DLR rank (r,r).");
+
         // Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))
         for (int k = 0; k < r; ++k) {
           for (int l = 0; l < r; ++l) { fconv(k, l) = tcf2it_v(k, l) * fc(l); }
@@ -571,9 +570,9 @@ namespace cppdlr {
         int norb1 = fc.shape(1);
         int norb2 = fc.shape(2);
 
-        if (fconv.shape(0) != r*norb1 || fconv.shape(1) != r*norb2)
+        if (fconv.shape(0) != r * norb1 || fconv.shape(1) != r * norb2)
           throw std::runtime_error("Matrix shape must be equal to DLR rank times norbs (r*norb1,r*norb2).");
-	
+
         auto fconv_rs = nda::reshape(fconv, r, norb1, r, norb2); // Array view to index into fconv for conevenience
 
         // Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))
@@ -900,7 +899,6 @@ namespace cppdlr {
     // -------------------- serialization -------------------
 
     public:
-
     /**
      * Serialize the object into an archive by serializing all its members.
      * The archive parameter must support the operator& to serialize each member.

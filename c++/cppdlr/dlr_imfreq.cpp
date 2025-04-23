@@ -23,12 +23,12 @@ namespace cppdlr {
 
   imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize)
      : lambda_(lambda), statistic(statistic), r(dlr_rf.size()), dlr_rf(dlr_rf) {
-    
+
     // Get # DLR imaginary frequency nodes; for symmetrized bosonic case, this
     // is DLR rank + 1, otherwise it is DLR rank
-    niom = (statistic == Boson && symmetrize) ? r + 1 : r;
-    dlr_if   = nda::vector<int>(niom);
-    cf2if    = nda::matrix<dcomplex>(niom, r);
+    niom   = (statistic == Boson && symmetrize) ? r + 1 : r;
+    dlr_if = nda::vector<int>(niom);
+    cf2if  = nda::matrix<dcomplex>(niom, r);
 
     // Get analytic continuation kernel at DLR frequencies, up to imaginary
     // frequency cutoff

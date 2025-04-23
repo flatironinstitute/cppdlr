@@ -10,8 +10,8 @@ using namespace nda;
 */
 int main() {
 
-  auto lambda    = nda::vector<double>({1e1, 1e2, 1e3, 1e4, 1e5, 1e6});
-  double eps     = 1e-10;   // DLR tolerance
+  auto lambda = nda::vector<double>({1e1, 1e2, 1e3, 1e4, 1e5, 1e6});
+  double eps  = 1e-10; // DLR tolerance
 
   for (int i = 0; i < lambda.size(); ++i) {
 

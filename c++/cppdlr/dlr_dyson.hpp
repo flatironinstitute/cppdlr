@@ -86,7 +86,7 @@ namespace cppdlr {
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
     */
-    dyson_it(double beta, imtime_ops itops, Ht const &h, bool time_order) : dyson_it(beta, itops, h, 0, time_order){};
+    dyson_it(double beta, imtime_ops itops, Ht const &h, bool time_order) : dyson_it(beta, itops, h, 0, time_order) {};
 
     /**
     * @brief Solve Dyson equation for given self-energy
@@ -118,11 +118,11 @@ namespace cppdlr {
       nda::lapack::getrf(sysmat, ipiv);
 
       // Solve Dyson equation
-      auto g    = Tg(sig.shape());                                                    // Declare Green's function
-      g         = rhs;                                                                // Get right hand side of Dyson equation
+      auto g    = Tg(sig.shape());                                                         // Declare Green's function
+      g         = rhs;                                                                     // Get right hand side of Dyson equation
       auto g_rs = nda::matrix_view<nda::get_value_t<Tg>>(nda::reshape(g, norb, r * norb)); // Reshape g to be compatible w/ LAPACK
-      nda::lapack::getrs(sysmat, g_rs, ipiv);                                         // Back solve
-      if constexpr (std::floating_point<Ht>) {                                        // If h is scalar, g is scalar-valued
+      nda::lapack::getrs(sysmat, g_rs, ipiv);                                              // Back solve
+      if constexpr (std::floating_point<Ht>) {                                             // If h is scalar, g is scalar-valued
         return g;
       } else { // Otherwise, g is matrix-valued, and need to transpose some indices after solve to undo LAPACK formatting
         return permuted_indices_view<nda::encode<3>({2, 0, 1})>(g);

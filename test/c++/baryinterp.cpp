@@ -25,7 +25,7 @@ TEST(barycheb, interp) {
 
   barycheb mybarycheb(n);
 
-  auto& x = mybarycheb.getnodes();
+  auto &x = mybarycheb.getnodes();
 
   nda::vector<double> f(n);
 
@@ -33,7 +33,7 @@ TEST(barycheb, interp) {
 
   double xeval = 0.378492;
 
-  auto val1 = mybarycheb.interp(xeval,f);
+  auto val1 = mybarycheb.interp(xeval, f);
   auto val2 = std::cos(xeval);
 
   EXPECT_NEAR(val1, val2, 1.0e-14);
@@ -45,7 +45,7 @@ TEST(baryleg, interp) {
 
   baryleg mybaryleg(n);
 
-  auto& x = mybaryleg.getnodes();
+  auto &x = mybaryleg.getnodes();
 
   nda::vector<double> f(n);
 
@@ -53,7 +53,7 @@ TEST(baryleg, interp) {
 
   double xeval = 0.378492;
 
-  auto val1 = mybaryleg.interp(xeval,f);
+  auto val1 = mybaryleg.interp(xeval, f);
   auto val2 = std::cos(xeval);
 
   EXPECT_NEAR(val1, val2, 1.0e-14);

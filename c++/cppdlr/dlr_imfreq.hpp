@@ -261,7 +261,6 @@ namespace cppdlr {
     // -------------------- serialization -------------------
 
     public:
-
     /**
      * Serialize the object into an archive by serializing all its members.
      * The archive parameter must support the operator& to serialize each member.

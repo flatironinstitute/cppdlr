@@ -50,8 +50,8 @@ nda::matrix<double> gfun(int norb, double beta, double t) {
 */
 int main() {
 
-  double lambda  = 1000;  // DLR cutoff
-  double eps     = 1e-10; // DLR tolerance
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
 
   double beta = 1000;  // Inverse temperature
   int ntst    = 10000; // # imag time test points
@@ -88,20 +88,20 @@ int main() {
   auto ttst = eqptsrel(ntst);
 
   // Compute error in imaginary time
-  auto gtru     = nda::matrix<double>(norb, norb);
-  auto gtst     = nda::matrix<double>(norb, norb);
-  auto gtst_sym = nda::matrix<double>(norb, norb);
+  auto gtru      = nda::matrix<double>(norb, norb);
+  auto gtst      = nda::matrix<double>(norb, norb);
+  auto gtst_sym  = nda::matrix<double>(norb, norb);
   double errlinf = 0, errl2 = 0, errlinf_sym = 0, errl2_sym = 0;
   for (int i = 0; i < ntst; ++i) {
-    gtru = gfun(norb, beta, ttst(i));
-    gtst     = itops.coefs2eval(gc, ttst(i));
-    gtst_sym = itops_sym.coefs2eval(gc_sym, ttst(i));
+    gtru        = gfun(norb, beta, ttst(i));
+    gtst        = itops.coefs2eval(gc, ttst(i));
+    gtst_sym    = itops_sym.coefs2eval(gc_sym, ttst(i));
     errlinf     = std::max(errlinf, max_element(abs(gtru - gtst)));
     errlinf_sym = std::max(errlinf_sym, max_element(abs(gtru - gtst_sym)));
     errl2 += pow(frobenius_norm(gtru - gtst), 2);
     errl2_sym += pow(frobenius_norm(gtru - gtst_sym), 2);
   }
-  errl2 = sqrt(errl2 / ntst);
+  errl2     = sqrt(errl2 / ntst);
   errl2_sym = sqrt(errl2_sym / ntst);
 
   // Print results

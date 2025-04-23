@@ -125,7 +125,7 @@ TEST(imfreq_ops, interp_matrix) {
   int nmaxtst = 10000; // # imag freq test points
 
   int norb = 2; // Orbital dimensions
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
@@ -196,7 +196,7 @@ TEST(imfreq_ops, interp_scalar) {
 
   double beta = 1000; // Inverse temperature
   int nmaxtst = 5000; // # imag time test points
-  
+
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
   // Get DLR frequencies
@@ -347,7 +347,7 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
 
   // Obtain DLR imaginary frequency nodes
   auto const &dlr_if = ifops.get_ifnodes();
-  int niom = dlr_if.size();
+  int niom           = dlr_if.size();
 
   // Verify symmetry
   EXPECT_EQ(max_element(abs(2 * dlr_if(range((niom - 1) / 2)) + 2 * dlr_if(range(niom - 1, (niom - 1) / 2, -1)))), 0);

@@ -21,7 +21,7 @@ using namespace cppdlr;
 
 TEST(eqptsrel, eqptsrel_test) {
 
-  int n = 4;
+  int n      = 4;
   auto t     = eqptsrel(n);
   auto ttrue = nda::vector<double>(n);
   ttrue(0)   = 0;

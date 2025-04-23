@@ -18,7 +18,6 @@
 #include <nda/nda.hpp>
 #include "dlr_kernels.hpp"
 
-
 namespace cppdlr {
 
   /** 

@@ -19,7 +19,6 @@
 #include <nda/nda.hpp>
 #include <nda/blas.hpp>
 
-
 namespace cppdlr {
   using dcomplex = std::complex<double>;
 

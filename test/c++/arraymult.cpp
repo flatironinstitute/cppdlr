@@ -58,7 +58,6 @@ TEST(arraymult, matrix_array) {
   // Get arraymult result and compare
   auto c = arraymult(a, b);
   EXPECT_LT(max_element(abs(ctrue - c)), 1e-14);
-
 }
 
 /**
