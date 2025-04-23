@@ -28,8 +28,6 @@ using namespace nda;
  */
 TEST(pivrgs, pivrgs_real) {
 
-  auto _ = nda::range::all;
-
   // Matrix size and rank cutoff tolerance
   int m      = 50;
   int n      = 40;
@@ -106,8 +104,6 @@ TEST(pivrgs, pivrgs_real) {
  * matrix
  */
 TEST(pivrgs, pivrgs_cplx) {
-
-  auto _ = nda::range::all;
 
   // Matrix size and rank cutoff tolerance
   int m      = 50;

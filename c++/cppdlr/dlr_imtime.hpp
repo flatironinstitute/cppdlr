@@ -27,8 +27,6 @@
 
 namespace cppdlr {
 
-  static constexpr auto _ = nda::range::all;
-
   /**
   * Option for ordinary or time-ordered convolution 
   */

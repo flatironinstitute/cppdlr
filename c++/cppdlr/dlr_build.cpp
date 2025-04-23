@@ -20,7 +20,7 @@
 #include <numbers>
 
 using namespace std;
-using namespace nda;
+using nda::range;
 
 using std::numbers::pi;
 
@@ -163,8 +163,6 @@ namespace cppdlr {
 
   std::tuple<double, double> geterr_k_it(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
                                          nda::matrix_const_view<double> kmat) {
-
-    auto _ = range::all;
 
     int nt   = fine.nt;
     int nom  = fine.nom;

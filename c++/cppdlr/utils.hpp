@@ -22,6 +22,8 @@
 namespace cppdlr {
   using dcomplex = std::complex<double>;
 
+  static constexpr auto _ = nda::range::all;
+
   /**
    * Calculate the squared norm of a vector
    *
