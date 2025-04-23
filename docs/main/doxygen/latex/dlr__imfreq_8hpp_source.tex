@@ -175,54 +175,53 @@
 \DoxyCodeLine{00261\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ serialization\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
 \DoxyCodeLine{00262\ }
 \DoxyCodeLine{00263\ \ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00264\ }
-\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}{serialize}}(\textcolor{keyword}{auto}\ \&ar)\textcolor{keyword}{\ const\ }\{\ ar\ \&\ lambda\_\ \&\ statistic\ \&\ r\ \&\ niom\ \&\ dlr\_rf\ \&\ dlr\_if\ \&\ cf2if\ \&\ if2cf.lu\ \&\ if2cf.piv;\ \}}
-\DoxyCodeLine{00272\ }
-\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}{deserialize}}(\textcolor{keyword}{auto}\ \&ar)\ \{\ ar\ \&\ lambda\_\ \&\ statistic\ \&\ r\ \&\ niom\ \&\ dlr\_rf\ \&\ dlr\_if\ \&\ cf2if\ \&\ if2cf.lu\ \&\ if2cf.piv;\ \}}
-\DoxyCodeLine{00281\ }
-\DoxyCodeLine{00282\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ hdf5\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
-\DoxyCodeLine{00283\ }
-\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aff33a36f3899a2a0df835b5fbf988058}{hdf5\_format}}()\ \{\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}cppdlr::imfreq\_ops"{}};\ \}}
-\DoxyCodeLine{00285\ }
-\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0d4a3f4d48e09a37f1a91ffeac6e5544}{h5\_write}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\_ops}}\ \textcolor{keyword}{const}\ \&m)\ \{}
-\DoxyCodeLine{00287\ }
-\DoxyCodeLine{00288\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.create\_group(subgroup\_name);}
-\DoxyCodeLine{00289\ \ \ \ \ \ \ write\_hdf5\_format\_as\_string(gr,\ \textcolor{stringliteral}{"{}cppdlr::imfreq\_ops"{}});}
-\DoxyCodeLine{00290\ }
-\DoxyCodeLine{00291\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}lambda"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}}());}
-\DoxyCodeLine{00292\ \ \ \ \ \ \ h5::write<int>(gr,\ \textcolor{stringliteral}{"{}statistic"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0fd9ccee5b7fd770e4e52051d1833f34}{get\_statistic}}());}
-\DoxyCodeLine{00293\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}rf"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aca169c622cfcfd82541f6696cdd19388}{get\_rfnodes}}());}
-\DoxyCodeLine{00294\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}if"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ae506673619f451a5770a45e23438addd}{get\_ifnodes}}());}
-\DoxyCodeLine{00295\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}cf2if"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a457eeb4ca7f7e718434b51158a2b0aff}{get\_cf2if}}());}
-\DoxyCodeLine{00296\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}if2cf\_lu"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a755c41b862db97b9ec7ed03fe218dc5c}{get\_if2cf\_lu}}());}
-\DoxyCodeLine{00297\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}if2cf\_piv"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ad525907cef50ad06c20f2b00f26e1e0b}{get\_if2cf\_piv}}());}
-\DoxyCodeLine{00298\ \ \ \ \ \}}
-\DoxyCodeLine{00299\ }
-\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a578823db4f32e29062e6ce9f96ebcbb0}{h5\_read}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\_ops}}\ \&m)\ \{}
-\DoxyCodeLine{00301\ }
-\DoxyCodeLine{00302\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.open\_group(subgroup\_name);}
-\DoxyCodeLine{00303\ \ \ \ \ \ \ assert\_hdf5\_format\_as\_string(gr,\ \textcolor{stringliteral}{"{}cppdlr::imfreq\_ops"{}},\ \textcolor{keyword}{true});}
-\DoxyCodeLine{00304\ }
-\DoxyCodeLine{00305\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}};}
-\DoxyCodeLine{00306\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\_t}}\ statistic\_;}
-\DoxyCodeLine{00307\ \ \ \ \ \ \ nda::vector<double>\ rf;}
-\DoxyCodeLine{00308\ \ \ \ \ \ \ nda::vector<int>\ if\_;}
-\DoxyCodeLine{00309\ \ \ \ \ \ \ nda::matrix<nda::dcomplex>\ cf2if\_;}
-\DoxyCodeLine{00310\ \ \ \ \ \ \ nda::matrix<nda::dcomplex>\ if2cf\_lu;}
-\DoxyCodeLine{00311\ \ \ \ \ \ \ nda::vector<int>\ if2cf\_piv;}
-\DoxyCodeLine{00312\ }
-\DoxyCodeLine{00313\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}lambda"{}},\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}});}
-\DoxyCodeLine{00314\ \ \ \ \ \ \ statistic\_\ =\ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\_t}}(h5::read<int>(gr,\ \textcolor{stringliteral}{"{}statistic"{}}));}
-\DoxyCodeLine{00315\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}rf"{}},\ rf);}
-\DoxyCodeLine{00316\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}if"{}},\ if\_);}
-\DoxyCodeLine{00317\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}cf2if"{}},\ cf2if\_);}
-\DoxyCodeLine{00318\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}if2cf\_lu"{}},\ if2cf\_lu);}
-\DoxyCodeLine{00319\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}if2cf\_piv"{}},\ if2cf\_piv);}
-\DoxyCodeLine{00320\ }
-\DoxyCodeLine{00321\ \ \ \ \ \ \ m\ =\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aec1f430ef8442851ca0003bc89620feb}{imfreq\_ops}}(\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}},\ rf,\ statistic\_,\ if\_,\ cf2if\_,\ if2cf\_lu,\ if2cf\_piv);}
-\DoxyCodeLine{00322\ \ \ \ \ \}}
-\DoxyCodeLine{00323\ \ \ \};}
-\DoxyCodeLine{00324\ }
-\DoxyCodeLine{00325\ \}\ \textcolor{comment}{//\ namespace\ cppdlr}}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a569cc24457f43b8de76e1496a6793a0d}{serialize}}(\textcolor{keyword}{auto}\ \&ar)\textcolor{keyword}{\ const\ }\{\ ar\ \&\ lambda\_\ \&\ statistic\ \&\ r\ \&\ niom\ \&\ dlr\_rf\ \&\ dlr\_if\ \&\ cf2if\ \&\ if2cf.lu\ \&\ if2cf.piv;\ \}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0908de840f70cbbd92341c85c5917fd2}{deserialize}}(\textcolor{keyword}{auto}\ \&ar)\ \{\ ar\ \&\ lambda\_\ \&\ statistic\ \&\ r\ \&\ niom\ \&\ dlr\_rf\ \&\ dlr\_if\ \&\ cf2if\ \&\ if2cf.lu\ \&\ if2cf.piv;\ \}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ hdf5\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aff33a36f3899a2a0df835b5fbf988058}{hdf5\_format}}()\ \{\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}cppdlr::imfreq\_ops"{}};\ \}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0d4a3f4d48e09a37f1a91ffeac6e5544}{h5\_write}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\_ops}}\ \textcolor{keyword}{const}\ \&m)\ \{}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.create\_group(subgroup\_name);}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ write\_hdf5\_format\_as\_string(gr,\ \textcolor{stringliteral}{"{}cppdlr::imfreq\_ops"{}});}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}lambda"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}}());}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ h5::write<int>(gr,\ \textcolor{stringliteral}{"{}statistic"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0fd9ccee5b7fd770e4e52051d1833f34}{get\_statistic}}());}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}rf"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aca169c622cfcfd82541f6696cdd19388}{get\_rfnodes}}());}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}if"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ae506673619f451a5770a45e23438addd}{get\_ifnodes}}());}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}cf2if"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a457eeb4ca7f7e718434b51158a2b0aff}{get\_cf2if}}());}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}if2cf\_lu"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a755c41b862db97b9ec7ed03fe218dc5c}{get\_if2cf\_lu}}());}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}if2cf\_piv"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_ad525907cef50ad06c20f2b00f26e1e0b}{get\_if2cf\_piv}}());}
+\DoxyCodeLine{00297\ \ \ \ \ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a578823db4f32e29062e6ce9f96ebcbb0}{h5\_read}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops}{imfreq\_ops}}\ \&m)\ \{}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.open\_group(subgroup\_name);}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ assert\_hdf5\_format\_as\_string(gr,\ \textcolor{stringliteral}{"{}cppdlr::imfreq\_ops"{}},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}};}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\_t}}\ statistic\_;}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ nda::vector<double>\ rf;}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ nda::vector<int>\ if\_;}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ nda::matrix<nda::dcomplex>\ cf2if\_;}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ nda::matrix<nda::dcomplex>\ if2cf\_lu;}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ nda::vector<int>\ if2cf\_piv;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}lambda"{}},\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}});}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ statistic\_\ =\ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\_t}}(h5::read<int>(gr,\ \textcolor{stringliteral}{"{}statistic"{}}));}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}rf"{}},\ rf);}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}if"{}},\ if\_);}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}cf2if"{}},\ cf2if\_);}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}if2cf\_lu"{}},\ if2cf\_lu);}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ h5::read(gr,\ \textcolor{stringliteral}{"{}if2cf\_piv"{}},\ if2cf\_piv);}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ m\ =\ \mbox{\hyperlink{classcppdlr_1_1imfreq__ops_aec1f430ef8442851ca0003bc89620feb}{imfreq\_ops}}(\mbox{\hyperlink{classcppdlr_1_1imfreq__ops_a0b95a2d9da812c7f894c16d9ab0de27c}{lambda}},\ rf,\ statistic\_,\ if\_,\ cf2if\_,\ if2cf\_lu,\ if2cf\_piv);}
+\DoxyCodeLine{00321\ \ \ \ \ \}}
+\DoxyCodeLine{00322\ \ \ \};}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \}\ \textcolor{comment}{//\ namespace\ cppdlr}}
 
 \end{DoxyCode}
