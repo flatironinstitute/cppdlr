@@ -113,8 +113,6 @@ namespace cppdlr {
   template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs(T const &a, double eps) {
 
-    auto _ = nda::range::all;
-
     // Copy input data
     auto aa = make_regular(a);
 
@@ -201,8 +199,6 @@ namespace cppdlr {
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
   template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, double eps) {
-
-    auto _ = nda::range::all;
 
     // Get matrix dimensions
     auto [m, n] = a.shape();
@@ -318,8 +314,6 @@ namespace cppdlr {
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
   template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, int r) {
-
-    auto _ = nda::range::all;
 
     // Get matrix dimensions
     auto [m, n] = a.shape();
