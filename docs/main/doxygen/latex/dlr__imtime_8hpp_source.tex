@@ -547,46 +547,44 @@
 \DoxyCodeLine{00898\ }
 \DoxyCodeLine{00899\ \ \ \ \ \textcolor{keyword}{public}:}
 \DoxyCodeLine{00906\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_af958ce61d0c823b2a356b13c3fa10f3d}{serialize}}(\textcolor{keyword}{auto}\ \&ar)\textcolor{keyword}{\ const\ }\{}
-\DoxyCodeLine{00907\ \ \ \ \ \ \ ar\ \&\ lambda\_\ \&\ r\ \&\ dlr\_rf\ \&\ dlr\_it\ \&\ cf2it\ \&\ it2cf.lu\ \&\ it2cf.zlu\ \&\ it2cf.piv\ \&\ hilb\ \&\ tcf2it\ \&\ thilb\ \&\ ttcf2it\ \&\ ipmat\ \&\ refl;}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ ar\ \&lambda\_\ \&r\ \&dlr\_rf\ \&dlr\_it\ \&cf2it\ \&it2cf.lu\ \&it2cf.zlu\ \&it2cf.piv\ \&hilb\ \&tcf2it\ \&thilb\ \&ttcf2it\ \&ipmat\ \&refl;}
 \DoxyCodeLine{00908\ \ \ \ \ \}}
 \DoxyCodeLine{00909\ }
-\DoxyCodeLine{00917\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_aec5610238537886bb0c62c52c023f7b8}{deserialize}}(\textcolor{keyword}{auto}\ \&ar)\ \{}
-\DoxyCodeLine{00918\ \ \ \ \ \ \ ar\ \&\ lambda\_\ \&\ r\ \&\ dlr\_rf\ \&\ dlr\_it\ \&\ cf2it\ \&\ it2cf.lu\ \&\ it2cf.zlu\ \&\ it2cf.piv\ \&\ hilb\ \&\ tcf2it\ \&\ thilb\ \&\ ttcf2it\ \&\ ipmat\ \&\ refl;}
-\DoxyCodeLine{00919\ \ \ \ \ \}}
+\DoxyCodeLine{00917\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_aec5610238537886bb0c62c52c023f7b8}{deserialize}}(\textcolor{keyword}{auto}\ \&ar)\ \{\ ar\ \&lambda\_\ \&r\ \&dlr\_rf\ \&dlr\_it\ \&cf2it\ \&it2cf.lu\ \&it2cf.zlu\ \&it2cf.piv\ \&hilb\ \&tcf2it\ \&thilb\ \&ttcf2it\ \&ipmat\ \&refl;\ \}}
+\DoxyCodeLine{00918\ }
+\DoxyCodeLine{00919\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ hdf5\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
 \DoxyCodeLine{00920\ }
-\DoxyCodeLine{00921\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ hdf5\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00921\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a649d9f6c3d257661818c3f473f49f57a}{hdf5\_format}}()\ \{\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}cppdlr::imtime\_ops"{}};\ \}}
 \DoxyCodeLine{00922\ }
-\DoxyCodeLine{00923\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a649d9f6c3d257661818c3f473f49f57a}{hdf5\_format}}()\ \{\ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}cppdlr::imtime\_ops"{}};\ \}}
+\DoxyCodeLine{00923\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a0eec6aaaea35d7bba7e92951a0de76db}{h5\_write}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\_ops}}\ \textcolor{keyword}{const}\ \&m)\ \{}
 \DoxyCodeLine{00924\ }
-\DoxyCodeLine{00925\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a0eec6aaaea35d7bba7e92951a0de76db}{h5\_write}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\_ops}}\ \textcolor{keyword}{const}\ \&m)\ \{}
-\DoxyCodeLine{00926\ }
-\DoxyCodeLine{00927\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.create\_group(subgroup\_name);}
-\DoxyCodeLine{00928\ \ \ \ \ \ \ write\_hdf5\_format(gr,\ m);}
-\DoxyCodeLine{00929\ }
-\DoxyCodeLine{00930\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}lambda"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}());}
-\DoxyCodeLine{00931\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}rf"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae5f9dc847c716f5d8b0ea92d56777263}{get\_rfnodes}}());}
-\DoxyCodeLine{00932\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}it"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae20e69067cc04e37fe8448e8d1088776}{get\_itnodes}}());}
-\DoxyCodeLine{00933\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}cf2it"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6cb8521ca54bb5efa1464693679185ba}{get\_cf2it}}());}
-\DoxyCodeLine{00934\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}it2cf\_lu"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a44acd4cd20cbe95632534891644f1806}{get\_it2cf\_lu}}());}
-\DoxyCodeLine{00935\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}it2cf\_piv"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a44d6669d27cdd0f51d74fa2d7b2885de}{get\_it2cf\_piv}}());}
-\DoxyCodeLine{00936\ \ \ \ \ \}}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.create\_group(subgroup\_name);}
+\DoxyCodeLine{00926\ \ \ \ \ \ \ write\_hdf5\_format(gr,\ m);}
+\DoxyCodeLine{00927\ }
+\DoxyCodeLine{00928\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}lambda"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}());}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}rf"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae5f9dc847c716f5d8b0ea92d56777263}{get\_rfnodes}}());}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}it"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_ae20e69067cc04e37fe8448e8d1088776}{get\_itnodes}}());}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}cf2it"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a6cb8521ca54bb5efa1464693679185ba}{get\_cf2it}}());}
+\DoxyCodeLine{00932\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}it2cf\_lu"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a44acd4cd20cbe95632534891644f1806}{get\_it2cf\_lu}}());}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ h5::write(gr,\ \textcolor{stringliteral}{"{}it2cf\_piv"{}},\ m.\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a44d6669d27cdd0f51d74fa2d7b2885de}{get\_it2cf\_piv}}());}
+\DoxyCodeLine{00934\ \ \ \ \ \}}
+\DoxyCodeLine{00935\ }
+\DoxyCodeLine{00936\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a02e5f8519e54734a74b94226d10e082d}{h5\_read}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\_ops}}\ \&m)\ \{}
 \DoxyCodeLine{00937\ }
-\DoxyCodeLine{00938\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a02e5f8519e54734a74b94226d10e082d}{h5\_read}}(h5::group\ fg,\ std::string\ \textcolor{keyword}{const}\ \&subgroup\_name,\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\_ops}}\ \&m)\ \{}
-\DoxyCodeLine{00939\ }
-\DoxyCodeLine{00940\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.open\_group(subgroup\_name);}
-\DoxyCodeLine{00941\ \ \ \ \ \ \ assert\_hdf5\_format(gr,\ m);}
-\DoxyCodeLine{00942\ }
-\DoxyCodeLine{00943\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}\ \ \ \ =\ h5::read<double>(gr,\ \textcolor{stringliteral}{"{}lambda"{}});}
-\DoxyCodeLine{00944\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ rf\ \ \ \ \ \ \ \ =\ h5::read<nda::vector<double>>(gr,\ \textcolor{stringliteral}{"{}rf"{}});}
-\DoxyCodeLine{00945\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ \ \ \ \ \ \ \ =\ h5::read<nda::vector<double>>(gr,\ \textcolor{stringliteral}{"{}it"{}});}
-\DoxyCodeLine{00946\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ cf2it\_\ \ \ \ =\ h5::read<nda::matrix<double>>(gr,\ \textcolor{stringliteral}{"{}cf2it"{}});}
-\DoxyCodeLine{00947\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it2cf\_lu\ \ =\ h5::read<nda::matrix<double>>(gr,\ \textcolor{stringliteral}{"{}it2cf\_lu"{}});}
-\DoxyCodeLine{00948\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it2cf\_piv\ =\ h5::read<nda::vector<int>>(gr,\ \textcolor{stringliteral}{"{}it2cf\_piv"{}});}
-\DoxyCodeLine{00949\ }
-\DoxyCodeLine{00950\ \ \ \ \ \ \ m\ =\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a8da78cf54d39d48d2be19ad1f146b03c}{imtime\_ops}}(\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}},\ rf,\ it,\ cf2it\_,\ it2cf\_lu,\ it2cf\_piv);}
-\DoxyCodeLine{00951\ \ \ \ \ \}}
-\DoxyCodeLine{00952\ \ \ \};}
-\DoxyCodeLine{00953\ }
-\DoxyCodeLine{00954\ \}\ \textcolor{comment}{//\ namespace\ cppdlr}}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ h5::group\ gr\ =\ fg.open\_group(subgroup\_name);}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ assert\_hdf5\_format(gr,\ m);}
+\DoxyCodeLine{00940\ }
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}}\ \ \ \ =\ h5::read<double>(gr,\ \textcolor{stringliteral}{"{}lambda"{}});}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ rf\ \ \ \ \ \ \ \ =\ h5::read<nda::vector<double>>(gr,\ \textcolor{stringliteral}{"{}rf"{}});}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it\ \ \ \ \ \ \ \ =\ h5::read<nda::vector<double>>(gr,\ \textcolor{stringliteral}{"{}it"{}});}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ cf2it\_\ \ \ \ =\ h5::read<nda::matrix<double>>(gr,\ \textcolor{stringliteral}{"{}cf2it"{}});}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it2cf\_lu\ \ =\ h5::read<nda::matrix<double>>(gr,\ \textcolor{stringliteral}{"{}it2cf\_lu"{}});}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ it2cf\_piv\ =\ h5::read<nda::vector<int>>(gr,\ \textcolor{stringliteral}{"{}it2cf\_piv"{}});}
+\DoxyCodeLine{00947\ }
+\DoxyCodeLine{00948\ \ \ \ \ \ \ m\ =\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops_a8da78cf54d39d48d2be19ad1f146b03c}{imtime\_ops}}(\mbox{\hyperlink{classcppdlr_1_1imtime__ops_a401521dedc309ca12c1ec345da983c80}{lambda}},\ rf,\ it,\ cf2it\_,\ it2cf\_lu,\ it2cf\_piv);}
+\DoxyCodeLine{00949\ \ \ \ \ \}}
+\DoxyCodeLine{00950\ \ \ \};}
+\DoxyCodeLine{00951\ }
+\DoxyCodeLine{00952\ \}\ \textcolor{comment}{//\ namespace\ cppdlr}}
 
 \end{DoxyCode}
