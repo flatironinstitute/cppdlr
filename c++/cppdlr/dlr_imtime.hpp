@@ -295,7 +295,7 @@ namespace cppdlr {
     * coupling expansion," arXiv:2307.08566 (2023).
     *
     * @param[in] beta Inverse temperature
-    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] statistic Fermionic ("Fermion" or 1) or bosonic ("Boson" or 0)
     * @param[in] fc DLR coefficients of f
     * @param[in] gc DLR coefficients of g
     * @param[in] time_order Flag for ordinary (false or ORDINARY, default) or
@@ -424,7 +424,7 @@ namespace cppdlr {
     * coupling expansion," arXiv:2307.08566 (2023).
     *
     * @param[in] beta Inverse temperature
-    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] statistic Fermionic ("Fermion" or 1) or bosonic ("Boson" or 0)
     * @param[in] fc DLR coefficients of f
     * @param[in] time_order Flag for ordinary (false or ORDINARY, default) or
     * time-ordered (true or TIME_ORDERED) convolution
@@ -491,7 +491,7 @@ namespace cppdlr {
     *
     * @param[in/out] fconv Convolution matrix from DLR coefficients to DLR grid
     * @param[in] beta Inverse temperature
-    * @param[in] statistic Fermionic ("Fermion" or 0) or bosonic ("Boson" or 1)
+    * @param[in] statistic Fermionic ("Fermion" or 1) or bosonic ("Boson" or 0)
     * @param[in] fc DLR coefficients of f
     * @param[in] time_order Flag for ordinary (false or ORDINARY, default) or
     * time-ordered (true or TIME_ORDERED) convolution
@@ -904,7 +904,7 @@ namespace cppdlr {
      * @param[in] ar Archive to serialize into
      */
     void serialize(auto &ar) const {
-      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
+      ar &lambda_ &r &dlr_rf &dlr_it &cf2it &it2cf.lu &it2cf.zlu &it2cf.piv &hilb &tcf2it &thilb &ttcf2it &ipmat &refl;
     }
 
     /**
@@ -914,9 +914,7 @@ namespace cppdlr {
      *
      * @param[in] ar Archive to deserialize from
      */
-    void deserialize(auto &ar) {
-      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
-    }
+    void deserialize(auto &ar) { ar &lambda_ &r &dlr_rf &dlr_it &cf2it &it2cf.lu &it2cf.zlu &it2cf.piv &hilb &tcf2it &thilb &ttcf2it &ipmat &refl; }
 
     // -------------------- hdf5 -------------------
 
