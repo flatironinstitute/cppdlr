@@ -62,7 +62,7 @@ namespace cppdlr {
       auto g0c = itops_ptr->vals2coefs(g0);               // DLR coefficients of free Green's function
 
       // Get matrix of convolution by free Green's function
-      g0mat = itops_ptr->convmat(beta, Fermion, g0c, time_order);
+      g0mat = itops_ptr->convmat(beta, g0c, time_order);
 
       // Get right hand side of Dyson equation
       if constexpr (std::floating_point<Ht>) { // If h is real scalar, rhs is a vector
@@ -86,7 +86,7 @@ namespace cppdlr {
     * \note Hamiltonian must either be a symmetric matrix, a Hermitian matrix,
     * or a real scalar.
     */
-    dyson_it(double beta, imtime_ops itops, Ht const &h, bool time_order) : dyson_it(beta, itops, h, 0, time_order) {};
+    dyson_it(double beta, imtime_ops itops, Ht const &h, bool time_order) : dyson_it(beta, itops, h, 0, time_order){};
 
     /**
     * @brief Solve Dyson equation for given self-energy
@@ -111,7 +111,7 @@ namespace cppdlr {
       // Obtain Dyson equation system matrix I - G0 * Sig, where G0 and Sig are the
       // matrices of convolution by the free Green's function and self-energy,
       // respectively.
-      auto sysmat = make_regular(nda::eye<double>(r * norb) - g0mat * itops_ptr->convmat(beta, Fermion, sigc, time_order));
+      auto sysmat = make_regular(nda::eye<double>(r * norb) - g0mat * itops_ptr->convmat(beta, sigc, time_order));
 
       // Factorize system matrix
       auto ipiv = nda::vector<int>(r * norb);
