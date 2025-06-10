@@ -632,84 +632,84 @@ TEST(imtime_ops, convolve_scalar_cmplx) {
 */
 TEST(imtime_ops, convolve_matrix_real) {
 
-  double lambda = 1000;  // DLR cutoff
+  double lambda = 10;    // DLR cutoff
   double eps    = 1e-12; // DLR tolerance
 
-  double beta = 1000;  // Inverse temperature
-  int ntst    = 10000; // # imag time test points
+  double beta = 10;  // Inverse temperature
+  int ntst    = 100; // # imag time test points
 
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
-  int norb = 2; // Orbital dimensions
+  int norb2 = 2; // Orbital dimensions
+  for (int norb1 = 2; norb1 <= 3; ++norb1) {
+    std::cout << fmt::format("norb1 = {}, norb2 = {}\n", norb1, norb2);
 
-  // Specify frequency of single exponentials to be used for f and g
-  double omf = 0.1234, omg = -0.5678;
+    // Specify frequency of single exponentials to be used for f and g
+    double omf = 0.1234, omg = -0.5678;
 
-  // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps);
+    // Get DLR frequencies
+    auto dlr_rf = build_dlr_rf(lambda, eps);
 
-  // Get DLR imaginary time object
-  auto itops = imtime_ops(lambda, dlr_rf);
+    // Get DLR imaginary time object
+    auto itops = imtime_ops(lambda, dlr_rf);
 
-  // Sample Green's function G at DLR imaginary time nodes
-  int r = itops.rank();
-  // [Q] Is this correct or just auto?
-  auto const &dlr_it = itops.get_itnodes();
-  auto f             = nda::array<double, 3>(r, norb, norb);
-  auto g             = nda::array<double, 3>(r, norb, norb);
-  for (int i = 0; i < r; ++i) { f(i, _, _) = k_it(dlr_it(i), omf, beta) / sqrt(1.0 * norb); };
-  for (int i = 0; i < r; ++i) { g(i, _, _) = k_it(dlr_it(i), omg, beta) / sqrt(1.0 * norb); };
+    // Sample Green's function G at DLR imaginary time nodes
+    int r = itops.rank();
+    // [Q] Is this correct or just auto?
+    auto const &dlr_it = itops.get_itnodes();
+    auto f             = nda::array<double, 3>(r, norb1, norb2);
+    auto g             = nda::array<double, 3>(r, norb2, norb2);
+    for (int i = 0; i < r; ++i) { f(i, _, _) = k_it(dlr_it(i), omf, beta) / sqrt(1.0 * norb2); };
+    for (int i = 0; i < r; ++i) { g(i, _, _) = k_it(dlr_it(i), omg, beta) / sqrt(1.0 * norb2); };
 
-  // Get DLR coefficients of f and g
-  auto fc = itops.vals2coefs(f);
-  auto gc = itops.vals2coefs(g);
+    // Get DLR coefficients of f and g
+    auto fc = itops.vals2coefs(f);
+    auto gc = itops.vals2coefs(g);
 
-  // Get convolution and time-ordered convolution of f and g directly
-  auto h  = itops.convolve(beta, Fermion, fc, gc);
-  auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
+    // Get convolution and time-ordered convolution of f and g directly
+    auto h  = itops.convolve(beta, Fermion, fc, gc);
+    auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
 
-  // Get convolution and time-ordered convolution of f and g by first forming
-  // matrix of convolution by f and then applying it to g
-  auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
-  auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
+    auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
+    auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
 
-  // Check that the two methods give the same result
-  EXPECT_LT(max_element(abs(h - h2)), 1e-14);
-  EXPECT_LT(max_element(abs(ht - ht2)), 1e-14);
+    // Check that the two methods give the same result
+    EXPECT_LT(max_element(abs(h - h2)), 1e-14);
+    EXPECT_LT(max_element(abs(ht - ht2)), 1e-14);
 
-  // Check error of convolution and time-ordered convolution
+    // Check error of convolution and time-ordered convolution
+    auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
+    auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
 
-  auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
-  auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
+    // Get test points in relative format
+    auto ttst = eqptsrel(ntst);
 
-  // Get test points in relative format
-  auto ttst = eqptsrel(ntst);
+    // Compute error in imaginary time
+    auto htru      = nda::array<double, 2>(norb1, norb2);
+    auto htst      = nda::array<double, 2>(norb1, norb2);
+    auto httru     = nda::array<double, 2>(norb1, norb2);
+    auto httst     = nda::array<double, 2>(norb1, norb2);
+    double errlinf = 0, errl2 = 0, errtlinf = 0, errtl2 = 0;
+    for (int i = 0; i < ntst; ++i) {
+      htru     = (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf);                                               // Exact result
+      httru    = (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta)) / (omf - omg); // Exact result
+      htst     = itops.coefs2eval(hc, ttst(i));
+      httst    = itops.coefs2eval(htc, ttst(i));
+      errlinf  = std::max(errlinf, max_element(abs(htru - htst)));
+      errtlinf = std::max(errtlinf, max_element(abs(httru - httst)));
+      errl2 += pow(frobenius_norm(htru - htst), 2);
+      errtl2 += pow(frobenius_norm(httru - httst), 2);
+    }
+    errl2  = sqrt(errl2 / ntst);
+    errtl2 = sqrt(errtl2 / ntst);
 
-  // Compute error in imaginary time
-  auto gtru      = nda::array<double, 2>(norb, norb);
-  auto gtst      = nda::array<double, 2>(norb, norb);
-  auto gttru     = nda::array<double, 2>(norb, norb);
-  auto gttst     = nda::array<double, 2>(norb, norb);
-  double errlinf = 0, errl2 = 0, errtlinf = 0, errtl2 = 0;
-  for (int i = 0; i < ntst; ++i) {
-    gtru     = (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf);                                               // Exact result
-    gttru    = (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta)) / (omf - omg); // Exact result
-    gtst     = itops.coefs2eval(hc, ttst(i));
-    gttst    = itops.coefs2eval(htc, ttst(i));
-    errlinf  = std::max(errlinf, max_element(abs(gtru - gtst)));
-    errtlinf = std::max(errtlinf, max_element(abs(gttru - gttst)));
-    errl2 += pow(frobenius_norm(gtru - gtst), 2);
-    errtl2 += pow(frobenius_norm(gttru - gttst), 2);
+    EXPECT_LT(errlinf, 23 * eps);
+    EXPECT_LT(errl2, 7 * eps);
+    EXPECT_LT(errtlinf, 23 * eps);
+    EXPECT_LT(errtl2, 6 * eps);
+    std::cout << fmt::format("Ordinary convolution: L^inf err = {:e}, L^2 err = {:e}\n", errlinf, errl2);
+    std::cout << fmt::format("Time-ordered convolution: L^inf err = {:e}, L^2 err = {:e}\n", errtlinf, errtl2);
   }
-  errl2  = sqrt(errl2 / ntst);
-  errtl2 = sqrt(errtl2 / ntst);
-
-  EXPECT_LT(errlinf, 23 * eps);
-  EXPECT_LT(errl2, 7 * eps);
-  EXPECT_LT(errtlinf, 23 * eps);
-  EXPECT_LT(errtl2, 6 * eps);
-  std::cout << fmt::format("Ordinary convolution: L^inf err = {:e}, L^2 err = {:e}\n", errlinf, errl2);
-  std::cout << fmt::format("Time-ordered convolution: L^inf err = {:e}, L^2 err = {:e}\n", errtlinf, errtl2);
 }
 
 /**
@@ -730,76 +730,79 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
 
   std::cout << fmt::format("eps = {:e}, Lambda = {:e}\n", eps, lambda);
 
-  int norb = 2; // Orbital dimensions
+  int norb2 = 2; // Orbital dimensions
+  for (int norb1 = 2; norb1 <= 3; ++norb1) {
+    std::cout << fmt::format("norb1 = {}, norb2 = {}\n", norb1, norb2);
 
-  // Specify frequency of single exponentials to be used for f and g
-  double omf = 0.1234, omg = -0.5678;
+    // Specify frequency of single exponentials to be used for f and g
+    double omf = 0.1234, omg = -0.5678;
 
-  // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps);
+    // Get DLR frequencies
+    auto dlr_rf = build_dlr_rf(lambda, eps);
 
-  // Get DLR imaginary time object
-  auto itops = imtime_ops(lambda, dlr_rf);
+    // Get DLR imaginary time object
+    auto itops = imtime_ops(lambda, dlr_rf);
 
-  // Sample Green's function G at DLR imaginary time nodes
-  int r = itops.rank();
-  // [Q] Is this correct or just auto?
-  auto const &dlr_it      = itops.get_itnodes();
-  auto f                  = nda::array<dcomplex, 3>(r, norb, norb);
-  auto g                  = nda::array<dcomplex, 3>(r, norb, norb);
-  std::complex<double> c1 = (1.0 + 2.0i) / 3.0, c2 = (2.0 + 1.0i) / 3.0;
-  for (int i = 0; i < r; ++i) { f(i, _, _) = c1 * k_it(dlr_it(i), omf, beta) / sqrt(1.0 * norb); };
-  for (int i = 0; i < r; ++i) { g(i, _, _) = c2 * k_it(dlr_it(i), omg, beta) / sqrt(1.0 * norb); };
+    // Sample Green's function G at DLR imaginary time nodes
+    int r = itops.rank();
+    // [Q] Is this correct or just auto?
+    auto const &dlr_it      = itops.get_itnodes();
+    auto f                  = nda::array<dcomplex, 3>(r, norb1, norb2);
+    auto g                  = nda::array<dcomplex, 3>(r, norb2, norb2);
+    std::complex<double> c1 = (1.0 + 2.0i) / 3.0, c2 = (2.0 + 1.0i) / 3.0;
+    for (int i = 0; i < r; ++i) { f(i, _, _) = c1 * k_it(dlr_it(i), omf, beta) / sqrt(1.0 * norb2); };
+    for (int i = 0; i < r; ++i) { g(i, _, _) = c2 * k_it(dlr_it(i), omg, beta) / sqrt(1.0 * norb2); };
 
-  // Get DLR coefficients of f and g
-  auto fc = itops.vals2coefs(f);
-  auto gc = itops.vals2coefs(g);
+    // Get DLR coefficients of f and g
+    auto fc = itops.vals2coefs(f);
+    auto gc = itops.vals2coefs(g);
 
-  // Get convolution and time-ordered convolution of f and g directly
-  auto h  = itops.convolve(beta, Fermion, fc, gc);
-  auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
+    // Get convolution and time-ordered convolution of f and g directly
+    auto h  = itops.convolve(beta, Fermion, fc, gc);
+    auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
 
-  // Get convolution and time-ordered convolution of f and g by first forming
-  // matrix of convolution by f and then applying it to g
-  auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
-  auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
+    // Get convolution and time-ordered convolution of f and g by first forming
+    // matrix of convolution by f and then applying it to g
+    auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
+    auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
 
-  // Check that the two methods give the same result
-  EXPECT_LT(max_element(abs(h - h2)), 1e-14);
-  EXPECT_LT(max_element(abs(ht - ht2)), 1e-14);
+    // Check that the two methods give the same result
+    EXPECT_LT(max_element(abs(h - h2)), 1e-14);
+    EXPECT_LT(max_element(abs(ht - ht2)), 1e-14);
 
-  // Check error of convolution and time-ordered convolution
+    // Check error of convolution and time-ordered convolution
 
-  auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
-  auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
+    auto hc  = itops.vals2coefs(h);  // DLR coefficients of h
+    auto htc = itops.vals2coefs(ht); // DLR coefficients of ht
 
-  // Get test points in relative format
-  auto ttst = eqptsrel(ntst);
+    // Get test points in relative format
+    auto ttst = eqptsrel(ntst);
 
-  // Compute error in imaginary time
-  auto gtru      = nda::array<dcomplex, 2>(norb, norb);
-  auto gtst      = nda::array<dcomplex, 2>(norb, norb);
-  auto gttru     = nda::array<dcomplex, 2>(norb, norb);
-  auto gttst     = nda::array<dcomplex, 2>(norb, norb);
-  double errlinf = 0, errl2 = 0, errtlinf = 0, errtl2 = 0;
-  for (int i = 0; i < ntst; ++i) {
-    gtru = c1 * c2 * (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf); // Exact result
-    gttru =
-       c1 * c2 * (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta)) / (omf - omg); // Exact result
-    gtst    = itops.coefs2eval(hc, ttst(i));
-    gttst   = itops.coefs2eval(htc, ttst(i));
-    errlinf = std::max(errlinf, max_element(abs(gtru - gtst)));
-    errl2 += pow(frobenius_norm(gtru - gtst), 2);
-    errtlinf = std::max(errtlinf, max_element(abs(gttru - gttst)));
-    errtl2 += pow(frobenius_norm(gttru - gttst), 2);
+    // Compute error in imaginary time
+    auto htru      = nda::array<dcomplex, 2>(norb1, norb2);
+    auto htst      = nda::array<dcomplex, 2>(norb1, norb2);
+    auto httru     = nda::array<dcomplex, 2>(norb1, norb2);
+    auto httst     = nda::array<dcomplex, 2>(norb1, norb2);
+    double errlinf = 0, errl2 = 0, errtlinf = 0, errtl2 = 0;
+    for (int i = 0; i < ntst; ++i) {
+      htru = c1 * c2 * (k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta)) / (omg - omf); // Exact result
+      httru =
+         c1 * c2 * (k_it(0.0, omf, beta) * k_it(ttst(i), omg, beta) - k_it(ttst(i), omf, beta) * k_it(0.0, omg, beta)) / (omf - omg); // Exact result
+      htst    = itops.coefs2eval(hc, ttst(i));
+      httst   = itops.coefs2eval(htc, ttst(i));
+      errlinf = std::max(errlinf, max_element(abs(htru - htst)));
+      errl2 += pow(frobenius_norm(htru - htst), 2);
+      errtlinf = std::max(errtlinf, max_element(abs(httru - httst)));
+      errtl2 += pow(frobenius_norm(httru - httst), 2);
+    }
+
+    EXPECT_LT(errlinf, 13 * eps);
+    EXPECT_LT(errl2, 2 * eps);
+    EXPECT_LT(errtlinf, 13 * eps);
+    EXPECT_LT(errtl2, 2 * eps);
+    std::cout << fmt::format("Ordinary convolution: L^inf err = {:e}, L^2 err = {:e}\n", errlinf, errl2);
+    std::cout << fmt::format("Time-ordered convolution: L^inf err = {:e}, L^2 err = {:e}\n", errtlinf, errtl2);
   }
-
-  EXPECT_LT(errlinf, 13 * eps);
-  EXPECT_LT(errl2, 2 * eps);
-  EXPECT_LT(errtlinf, 13 * eps);
-  EXPECT_LT(errtl2, 2 * eps);
-  std::cout << fmt::format("Ordinary convolution: L^inf err = {:e}, L^2 err = {:e}\n", errlinf, errl2);
-  std::cout << fmt::format("Time-ordered convolution: L^inf err = {:e}, L^2 err = {:e}\n", errtlinf, errtl2);
 }
 
 /**
