@@ -307,7 +307,6 @@ namespace cppdlr {
     typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc, bool time_order = false) const {
 
       if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
-      if (fc.shape() != gc.shape()) throw std::runtime_error("Input arrays must have the same shape.");
 
       // TODO: implement bosonic case and remove
       if (statistic == 0) throw std::runtime_error("imtime_ops::convolve not yet implemented for bosonic Green's functions.");
@@ -335,17 +334,19 @@ namespace cppdlr {
 
       } else if (T::rank == 3) { // Matrix-valued Green's function
 
+        if (fc.shape(2) != gc.shape(1)) throw std::runtime_error("Input array dimensions incompatible.");
+
         // Diagonal contribution
-        auto fcgc = nda::array<S, 3>(fc.shape()); // Product of coefficients of f and g
-        for (int i = 0; i < r; ++i) { fcgc(i, _, _) = matmul(fc(i, _, _), gc(i, _, _)); }
-        auto h = arraymult(tcf2it_v, fcgc);
+        auto tmp = nda::array<S, 3>(r, fc.shape(1), gc.shape(2));                        // m x p temporary array
+        for (int i = 0; i < r; ++i) { tmp(i, _, _) = matmul(fc(i, _, _), gc(i, _, _)); } // Product of coefficients of f and g
+        auto h = arraymult(tcf2it_v, tmp);
 
         // Off-diagonal contribution
-        auto tmp1 = arraymult(hilb_v, fc);
-        auto tmp2 = arraymult(hilb_v, gc);
-        for (int i = 0; i < r; ++i) { tmp1(i, _, _) = matmul(tmp1(i, _, _), gc(i, _, _)) + matmul(fc(i, _, _), tmp2(i, _, _)); }
+        for (int i = 0; i < r; ++i) {
+          tmp(i, _, _) = matmul(arraymult(hilb_v, fc)(i, _, _), gc(i, _, _)) + matmul(fc(i, _, _), arraymult(hilb_v, gc)(i, _, _));
+        }
 
-        return beta * (h + arraymult(cf2it, tmp1));
+        return beta * (h + arraymult(cf2it, tmp));
 
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
