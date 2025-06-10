@@ -388,13 +388,14 @@ namespace cppdlr {
 
       } else if (Tg::rank == 3) { // Matrix-valued Green's function
 
-        if (fconv.shape(1) != g.shape(0) * g.shape(1)) throw std::runtime_error("Input array dimensions incompatible.");
+        if (fconv.shape(1) != r * g.shape(1)) throw std::runtime_error("Input array dimensions incompatible.");
 
-        int norb1 = g.shape(1);
-        int norb2 = g.shape(2);
+        int norb1 = fconv.shape(0) / r;
+        int norb2 = g.shape(1);
+        int norb3 = g.shape(2);
 
-        auto h                       = nda::array<S, 3>(r, norb1, norb2);
-        reshape(h, r * norb1, norb2) = matmul(fconv, reshape(g, r * norb1, norb2));
+        auto h                       = nda::array<S, 3>(r, norb1, norb3);
+        reshape(h, r * norb1, norb3) = matmul(fconv, reshape(g, r * norb2, norb3));
 
         return h;
 
@@ -441,11 +442,11 @@ namespace cppdlr {
     * in practice.
     *
     * \note In the case of matrix-valued Green's functions, we think of the
-    * matrix of convolution by f as an r*norb x r*norb matrix, or a block r x r
-    * matrix of norb x norb blocks. Here r is the DLR rank and norb is the
-    * number of orbital indices. This matrix would then be applied to a Green's
-    * function g, represented as an r*norb x norb matrix, or a block r x 1
-    * matrix of norb x norb blocks.
+    * matrix of convolution by f as an r*norb1 x r*norb2 matrix, or a block r x
+    * r matrix of norb1 x norb2 blocks. Here r is the DLR rank and norb1, norb2
+    * are the number of row and column orbital indices, respectively. This
+    * matrix would then be applied to a Green's function g, represented as an
+    * r*norb2 x r*norb3 matrix, or a block r x 1 matrix of norb2 x norb3 blocks.
     * */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
     nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc, bool time_order = false) const {
@@ -511,11 +512,11 @@ namespace cppdlr {
     * in practice.
     *
     * \note In the case of matrix-valued Green's functions, we think of the
-    * matrix of convolution by f as an r*norb x r*norb matrix, or a block r x r
-    * matrix of norb x norb blocks. Here r is the DLR rank and norb is the
-    * number of orbital indices. This matrix would then be applied to a Green's
-    * function g, represented as an r*norb x norb matrix, or a block r x 1
-    * matrix of norb x norb blocks.
+    * matrix of convolution by f as an r*norb1 x r*norb2 matrix, or a block r x
+    * r matrix of norb1 x norb2 blocks. Here r is the DLR rank and norb1, norb2
+    * are the number of row and column orbital indices, respectively. This
+    * matrix would then be applied to a Green's function g, represented as an
+    * r*norb2 x r*norb3 matrix, or a block r x 1 matrix of norb2 x norb3 blocks.
     * */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
     void convmat_inplace(nda::matrix_view<S, nda::C_layout> fconv, double beta, statistic_t statistic, T const &fc, bool time_order = false) const {
@@ -572,7 +573,7 @@ namespace cppdlr {
         if (fconv.shape(0) != r * norb1 || fconv.shape(1) != r * norb2)
           throw std::runtime_error("Matrix shape must be equal to DLR rank times norbs (r*norb1,r*norb2).");
 
-        auto fconv_rs = nda::reshape(fconv, r, norb1, r, norb2); // Array view to index into fconv for conevenience
+        auto fconv_rs = nda::reshape(fconv, r, norb1, r, norb2); // Array view to index into fconv for convenience
 
         // Diagonal contribution (given by diag(tau_k) * K(tau_k, om_l) * diag(fc_l))
         for (int k = 0; k < r; ++k) {
