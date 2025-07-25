@@ -35,7 +35,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       /* construct a Dockerfile for this base */
       sh """
       ( echo "FROM flatironjenkins/triqs:${triqsBranch}-${env.STAGE_NAME}" ; sed '0,/^FROM /d' Dockerfile ) > Dockerfile.${env.STAGE_NAME}
-        ln -f Dockerfile.${env.STAGE_NAME} Dockerfile
+        cp -f Dockerfile.${env.STAGE_NAME} Dockerfile
       """
       archiveArtifacts(artifacts: "Dockerfile.${env.STAGE_NAME}")
       /* build and tag */
