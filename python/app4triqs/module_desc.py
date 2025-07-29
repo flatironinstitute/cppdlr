@@ -1,11 +1,12 @@
 # Generated automatically using the command :
-# c++2py ../../c++/app4triqs/app4triqs.hpp -p --members_read_only -N app4triqs -a app4triqs -m app4triqs_module -o app4triqs_module --moduledoc="The app4triqs python module" -C triqs --cxxflags="-std=c++17" --target_file_only
+# c++2py ../../c++/app4triqs/app4triqs.hpp -p --members_read_only -N app4triqs -a app4triqs -m module -o module --moduledoc="The app4triqs python module" -C triqs --cxxflags="-std=c++20" --target_file_only
 from cpp2py.wrap_generator import *
 
 # The module
-module = module_(full_name = "app4triqs_module", doc = r"The app4triqs python module", app_name = "app4triqs")
+module = module_(full_name = "module", doc = r"The app4triqs python module", app_name = "app4triqs")
 
 # Imports
+module.add_imports(*['h5._h5py'])
 
 # Add here all includes
 module.add_include("app4triqs/app4triqs.hpp")

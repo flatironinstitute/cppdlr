@@ -59,7 +59,9 @@ namespace app4triqs {
     friend void h5_read(h5::group grp, std::string subgroup_name, toto &m);
 
     /// Serialization
+    CPP2PY_IGNORE
     void serialize(auto &ar) const { ar &i; }
+    CPP2PY_IGNORE
     void deserialize(auto &ar) { ar &i; }
   };
 
