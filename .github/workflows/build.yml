@@ -98,7 +98,7 @@ jobs:
       if: ${{ contains(matrix.os, 'macos') }}
       run: |
         brew update
-        brew install ccache ninja gcc llvm boost fftw hdf5 open-mpi openblas
+        brew install ccache gcc llvm boost fftw hdf5 open-mpi openblas
         pip install mako numpy scipy mpi4py
         pip install -r requirements.txt
         echo "PATH=$(brew --prefix llvm)/bin:$(brew --prefix gcc)/bin:$PATH" >> $GITHUB_ENV
