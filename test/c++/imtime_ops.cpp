@@ -492,13 +492,13 @@ TEST(imtime_ops, convolve_scalar_real) {
   auto gc = itops.vals2coefs(g);
 
   // Get convolution and time-ordered convolution of f and g directly
-  auto h  = itops.convolve(beta, Fermion, fc, gc);
-  auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
+  auto h  = itops.convolve(beta, fc, gc);
+  auto ht = itops.convolve(beta, fc, gc, TIME_ORDERED);
 
   // Get convolution and time-ordered convolution of f and g by first forming
   // matrix of convolution by f and then applying it to g
-  auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
-  auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
+  auto h2  = itops.convolve(itops.convmat(beta, fc), g);
+  auto ht2 = itops.convolve(itops.convmat(beta, fc, TIME_ORDERED), g);
 
   // Check that the two methods give the same result
   EXPECT_LT(max_element(abs(h - h2)), 1e-14);
@@ -577,13 +577,13 @@ TEST(imtime_ops, convolve_scalar_cmplx) {
   auto gc = itops.vals2coefs(g);
 
   // Get convolution and time-ordered convolution of f and g directly
-  auto h  = itops.convolve(beta, Fermion, fc, gc);
-  auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
+  auto h  = itops.convolve(beta, fc, gc);
+  auto ht = itops.convolve(beta, fc, gc, TIME_ORDERED);
 
   // Get convolution and time-ordered convolution of f and g by first forming
   // matrix of convolution by f and then applying it to g
-  auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
-  auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
+  auto h2  = itops.convolve(itops.convmat(beta, fc), g);
+  auto ht2 = itops.convolve(itops.convmat(beta, fc, TIME_ORDERED), g);
 
   // Check that the two methods give the same result
   EXPECT_LT(max_element(abs(h - h2)), 1e-14);
@@ -667,11 +667,11 @@ TEST(imtime_ops, convolve_matrix_real) {
     auto gc = itops.vals2coefs(g);
 
     // Get convolution and time-ordered convolution of f and g directly
-    auto h  = itops.convolve(beta, Fermion, fc, gc);
-    auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
+    auto h  = itops.convolve(beta, fc, gc);
+    auto ht = itops.convolve(beta, fc, gc, TIME_ORDERED);
 
-    auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
-    auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
+    auto h2  = itops.convolve(itops.convmat(beta, fc), g);
+    auto ht2 = itops.convolve(itops.convmat(beta, fc, TIME_ORDERED), g);
 
     // Check that the two methods give the same result
     EXPECT_LT(max_element(abs(h - h2)), 1e-14);
@@ -758,13 +758,13 @@ TEST(imtime_ops, convolve_matrix_cmplx) {
     auto gc = itops.vals2coefs(g);
 
     // Get convolution and time-ordered convolution of f and g directly
-    auto h  = itops.convolve(beta, Fermion, fc, gc);
-    auto ht = itops.convolve(beta, Fermion, fc, gc, TIME_ORDERED);
+    auto h  = itops.convolve(beta, fc, gc);
+    auto ht = itops.convolve(beta, fc, gc, TIME_ORDERED);
 
     // Get convolution and time-ordered convolution of f and g by first forming
     // matrix of convolution by f and then applying it to g
-    auto h2  = itops.convolve(itops.convmat(beta, Fermion, fc), g);
-    auto ht2 = itops.convolve(itops.convmat(beta, Fermion, fc, TIME_ORDERED), g);
+    auto h2  = itops.convolve(itops.convmat(beta, fc), g);
+    auto ht2 = itops.convolve(itops.convmat(beta, fc, TIME_ORDERED), g);
 
     // Check that the two methods give the same result
     EXPECT_LT(max_element(abs(h - h2)), 1e-14);

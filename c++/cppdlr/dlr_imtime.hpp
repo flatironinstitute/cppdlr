@@ -304,12 +304,9 @@ namespace cppdlr {
     * @return Values of h = f * g on DLR imaginary time grid
     * */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
-    typename T::regular_type convolve(double beta, statistic_t statistic, T const &fc, T const &gc, bool time_order = false) const {
+    typename T::regular_type convolve(double beta, T const &fc, T const &gc, bool time_order = false) const {
 
       if (r != fc.shape(0) || r != gc.shape(0)) throw std::runtime_error("First dim of input arrays must be equal to DLR rank r.");
-
-      // TODO: implement bosonic case and remove
-      if (statistic == 0) throw std::runtime_error("imtime_ops::convolve not yet implemented for bosonic Green's functions.");
 
       // Initialize convolution, if it hasn't been done already
       if (!time_order & hilb.empty()) { convolve_init(); }
@@ -351,6 +348,22 @@ namespace cppdlr {
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
       }
+    }
+
+    /**
+    * @brief Deprecated overload of convolve method
+    *
+    * This version includes an unused extra parameter for backward
+    * compatibility.
+    *
+    * @deprecated Use convolve(beta, fc, gc, time_order) instead; this works for
+    * both fermionic and bosonic functions.
+    */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
+    [[deprecated("Use convolve(beta, fc, gc, time_order) instead.")]] typename T::regular_type
+    convolve(double beta, statistic_t statistic, T const &fc, T const &gc, bool time_order = false) const {
+      (void)statistic; // Unused parameter, kept for backward compatibility
+      return convolve(beta, fc, gc, time_order);
     }
 
     /** 
@@ -449,7 +462,7 @@ namespace cppdlr {
     * r*norb2 x r*norb3 matrix, or a block r x 1 matrix of norb2 x norb3 blocks.
     * */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
-    nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc, bool time_order = false) const {
+    nda::matrix<S> convmat(double beta, T const &fc, bool time_order = false) const {
 
       int n, m;
 
@@ -464,9 +477,25 @@ namespace cppdlr {
       }
 
       auto fconv = nda::matrix<S, nda::C_layout>(n, m); // Matrix of convolution by f
-      convmat_inplace(nda::matrix_view<S, nda::C_layout>(fconv), beta, statistic, fc, time_order);
+      convmat_inplace(nda::matrix_view<S, nda::C_layout>(fconv), beta, fc, time_order);
 
       return fconv;
+    }
+
+    /**
+    * @brief Deprecated overload of convmat method
+    *
+    * This version includes an unused extra parameter for backward
+    * compatibility.
+    *
+    * @deprecated Use convmat(beta, fc, time_order) instead; this works for both
+    * fermionic and bosonic functions.
+    */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
+    [[deprecated("Use convmat(beta, fc, time_order) instead.")]] nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc,
+                                                                                        bool time_order = false) const {
+      (void)statistic; // Unused parameter, kept for backward compatibility
+      return convmat(beta, fc, time_order);
     }
 
     /**
@@ -519,12 +548,9 @@ namespace cppdlr {
     * r*norb2 x r*norb3 matrix, or a block r x 1 matrix of norb2 x norb3 blocks.
     * */
     template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
-    void convmat_inplace(nda::matrix_view<S, nda::C_layout> fconv, double beta, statistic_t statistic, T const &fc, bool time_order = false) const {
+    void convmat_inplace(nda::matrix_view<S, nda::C_layout> fconv, double beta, T const &fc, bool time_order = false) const {
 
       if (r != fc.shape(0)) throw std::runtime_error("First dim of input array must be equal to DLR rank r.");
-
-      // TODO: implement bosonic case and remove
-      if (statistic == 0) throw std::runtime_error("imtime_ops::convmat not yet implemented for bosonic Green's functions.");
 
       // Initialize convolution, if it hasn't been done already
       if (!time_order & hilb.empty()) { convolve_init(); }
@@ -620,6 +646,22 @@ namespace cppdlr {
       } else {
         throw std::runtime_error("Input arrays must be rank 1 (scalar-valued Green's function) or 3 (matrix-valued Green's function).");
       }
+    }
+
+    /**
+    * @brief Deprecated overload of convmat_inplace method
+    *
+    * This version includes an unused extra parameter for backward
+    * compatibility.
+    *
+    * @deprecated Use convmat_inplace(fconv, beta, fc, time_order) instead; this
+    * works for both fermionic and bosonic functions.
+    */
+    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
+    [[deprecated("Use convmat_inplace(fconv, beta, fc, time_order) instead.")]] void
+    convmat_inplace(nda::matrix_view<S, nda::C_layout> fconv, double beta, statistic_t statistic, T const &fc, bool time_order = false) const {
+      (void)statistic; // Unused parameter, kept for backward compatibility
+      return convmat_inplace(fconv, beta, fc, time_order);
     }
 
     /** 
