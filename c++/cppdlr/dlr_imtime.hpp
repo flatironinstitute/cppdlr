@@ -359,10 +359,9 @@ namespace cppdlr {
     * @deprecated Use convolve(beta, fc, gc, time_order) instead; this works for
     * both fermionic and bosonic functions.
     */
-    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
-    [[deprecated("Use convolve(beta, fc, gc, time_order) instead.")]] typename T::regular_type
-    convolve(double beta, statistic_t statistic, T const &fc, T const &gc, bool time_order = false) const {
-      (void)statistic; // Unused parameter, kept for backward compatibility
+    template <nda::MemoryArray T>
+    [[deprecated("Use convolve(beta, fc, gc, time_order) instead.")]]
+    auto convolve(double beta, [[maybe_unused]] statistic_t statistic, T const &fc, T const &gc, bool time_order = false) const {
       return convolve(beta, fc, gc, time_order);
     }
 
@@ -491,10 +490,9 @@ namespace cppdlr {
     * @deprecated Use convmat(beta, fc, time_order) instead; this works for both
     * fermionic and bosonic functions.
     */
-    template <nda::MemoryArray T, nda::Scalar S = nda::get_value_t<T>>
-    [[deprecated("Use convmat(beta, fc, time_order) instead.")]] nda::matrix<S> convmat(double beta, statistic_t statistic, T const &fc,
-                                                                                        bool time_order = false) const {
-      (void)statistic; // Unused parameter, kept for backward compatibility
+    template <nda::MemoryArray T>
+    [[deprecated("Use convmat(beta, fc, time_order) instead.")]] auto convmat(double beta, [[maybe_unused]] statistic_t statistic, T const &fc,
+                                                                              bool time_order = false) const {
       return convmat(beta, fc, time_order);
     }
 
