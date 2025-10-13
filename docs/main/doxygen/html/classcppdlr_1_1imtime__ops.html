@@ -123,21 +123,33 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0ee9bfed6fc9facf2d25cea9868a3af6"><td class="memTemplItemLeft" align="right" valign="top">T::regular_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6">reflect</a> (T const &amp;g) const</td></tr>
 <tr class="memdesc:a0ee9bfed6fc9facf2d25cea9868a3af6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute reflection of imaginary time Green's function.  <br /></td></tr>
 <tr class="separator:a0ee9bfed6fc9facf2d25cea9868a3af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f018cf316547b2879d9a2dd76a4b80c" id="r_a4f018cf316547b2879d9a2dd76a4b80c"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
-<tr class="memitem:a4f018cf316547b2879d9a2dd76a4b80c"><td class="memTemplItemLeft" align="right" valign="top">T::regular_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c">convolve</a> (double beta, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T const &amp;fc, T const &amp;gc, bool time_order=false) const</td></tr>
-<tr class="memdesc:a4f018cf316547b2879d9a2dd76a4b80c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute convolution of two imaginary time Green's functions.  <br /></td></tr>
-<tr class="separator:a4f018cf316547b2879d9a2dd76a4b80c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbf464d1761e4c366166b4bb26f2b9cb" id="r_adbf464d1761e4c366166b4bb26f2b9cb"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:adbf464d1761e4c366166b4bb26f2b9cb"><td class="memTemplItemLeft" align="right" valign="top">T::regular_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#adbf464d1761e4c366166b4bb26f2b9cb">convolve</a> (double beta, T const &amp;fc, T const &amp;gc, bool time_order=false) const</td></tr>
+<tr class="memdesc:adbf464d1761e4c366166b4bb26f2b9cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute convolution of two imaginary time Green's functions.  <br /></td></tr>
+<tr class="separator:adbf464d1761e4c366166b4bb26f2b9cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f85a500e7581631c164287ff5a75329" id="r_a2f85a500e7581631c164287ff5a75329"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T&gt; </td></tr>
+<tr class="memitem:a2f85a500e7581631c164287ff5a75329"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a2f85a500e7581631c164287ff5a75329">convolve</a> (double beta, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T const &amp;fc, T const &amp;gc, bool time_order=false) const</td></tr>
+<tr class="memdesc:a2f85a500e7581631c164287ff5a75329"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated overload of convolve method.  <br /></td></tr>
+<tr class="separator:a2f85a500e7581631c164287ff5a75329"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87b3e21ae66c97691a4580335795f77f" id="r_a87b3e21ae66c97691a4580335795f77f"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryMatrix Tf, nda::MemoryArray Tg, nda::Scalar Sf = nda::get_value_t&lt;Tf&gt;, nda::Scalar Sg = nda::get_value_t&lt;Tg&gt;, nda::Scalar S = typename std::common_type&lt;Sf, Sg&gt;::type&gt; </td></tr>
 <tr class="memitem:a87b3e21ae66c97691a4580335795f77f"><td class="memTemplItemLeft" align="right" valign="top">Tg::regular_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f">convolve</a> (Tf const &amp;fconv, Tg const &amp;g) const</td></tr>
 <tr class="memdesc:a87b3e21ae66c97691a4580335795f77f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute convolution of two imaginary time Green's functions, given matrix of convolution by one of them.  <br /></td></tr>
 <tr class="separator:a87b3e21ae66c97691a4580335795f77f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c0a93f188f4522b2389e9a7fcbf9783" id="r_a6c0a93f188f4522b2389e9a7fcbf9783"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
-<tr class="memitem:a6c0a93f188f4522b2389e9a7fcbf9783"><td class="memTemplItemLeft" align="right" valign="top">nda::matrix&lt; S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a6c0a93f188f4522b2389e9a7fcbf9783">convmat</a> (double beta, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T const &amp;fc, bool time_order=false) const</td></tr>
-<tr class="memdesc:a6c0a93f188f4522b2389e9a7fcbf9783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute matrix of convolution by an imaginary time Green's function.  <br /></td></tr>
-<tr class="separator:a6c0a93f188f4522b2389e9a7fcbf9783"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac344326d87caaabff268ca47e0f8427" id="r_aac344326d87caaabff268ca47e0f8427"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:aac344326d87caaabff268ca47e0f8427"><td class="memTemplItemLeft" align="right" valign="top">nda::matrix&lt; S &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#aac344326d87caaabff268ca47e0f8427">convmat</a> (double beta, T const &amp;fc, bool time_order=false) const</td></tr>
+<tr class="memdesc:aac344326d87caaabff268ca47e0f8427"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute matrix of convolution by an imaginary time Green's function.  <br /></td></tr>
+<tr class="separator:aac344326d87caaabff268ca47e0f8427"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a689f31f5920a60448f6c6421a2aec48d" id="r_a689f31f5920a60448f6c6421a2aec48d"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T&gt; </td></tr>
+<tr class="memitem:a689f31f5920a60448f6c6421a2aec48d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a689f31f5920a60448f6c6421a2aec48d">convmat</a> (double beta, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T const &amp;fc, bool time_order=false) const</td></tr>
+<tr class="memdesc:a689f31f5920a60448f6c6421a2aec48d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated overload of convmat method.  <br /></td></tr>
+<tr class="separator:a689f31f5920a60448f6c6421a2aec48d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadebc7d1f47b8f8497c2cca4b0711b69" id="r_aadebc7d1f47b8f8497c2cca4b0711b69"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:aadebc7d1f47b8f8497c2cca4b0711b69"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#aadebc7d1f47b8f8497c2cca4b0711b69">convmat_inplace</a> (nda::matrix_view&lt; S, nda::C_layout &gt; fconv, double beta, T const &amp;fc, bool time_order=false) const</td></tr>
+<tr class="memdesc:aadebc7d1f47b8f8497c2cca4b0711b69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute matrix of convolution by an imaginary time Green's function in place.  <br /></td></tr>
+<tr class="separator:aadebc7d1f47b8f8497c2cca4b0711b69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f48c8e4b3164985af73fba0fd28b002" id="r_a9f48c8e4b3164985af73fba0fd28b002"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:a9f48c8e4b3164985af73fba0fd28b002"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#a9f48c8e4b3164985af73fba0fd28b002">convmat_inplace</a> (nda::matrix_view&lt; S, nda::C_layout &gt; fconv, double beta, <a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a> statistic, T const &amp;fc, bool time_order=false) const</td></tr>
-<tr class="memdesc:a9f48c8e4b3164985af73fba0fd28b002"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute matrix of convolution by an imaginary time Green's function in place.  <br /></td></tr>
+<tr class="memdesc:a9f48c8e4b3164985af73fba0fd28b002"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated overload of convmat_inplace method.  <br /></td></tr>
 <tr class="separator:a9f48c8e4b3164985af73fba0fd28b002"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaa4303e1ee0897417308f380bb75de8" id="r_aaaa4303e1ee0897417308f380bb75de8"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:aaaa4303e1ee0897417308f380bb75de8"><td class="memTemplItemLeft" align="right" valign="top">S&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classcppdlr_1_1imtime__ops.html#aaaa4303e1ee0897417308f380bb75de8">innerprod</a> (T const &amp;fc, T const &amp;gc) const</td></tr>
@@ -487,8 +499,62 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
 
 </div>
 </div>
-<a id="a6c0a93f188f4522b2389e9a7fcbf9783" name="a6c0a93f188f4522b2389e9a7fcbf9783"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c0a93f188f4522b2389e9a7fcbf9783">&#9670;&#160;</a></span>convmat()</h2>
+<a id="a689f31f5920a60448f6c6421a2aec48d" name="a689f31f5920a60448f6c6421a2aec48d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a689f31f5920a60448f6c6421a2aec48d">&#9670;&#160;</a></span>convmat() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;nda::MemoryArray T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cppdlr::imtime_ops::convmat </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>beta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>&#160;</td>
+          <td class="paramname"><em>statistic</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T const &amp;&#160;</td>
+          <td class="paramname"><em>fc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>time_order</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Deprecated overload of convmat method. </p>
+<p>This version includes an unused extra parameter for backward compatibility.</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use convmat(beta, fc, time_order) instead; this works for both fermionic and bosonic functions. </dd></dl>
+
+</div>
+</div>
+<a id="aac344326d87caaabff268ca47e0f8427" name="aac344326d87caaabff268ca47e0f8427"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac344326d87caaabff268ca47e0f8427">&#9670;&#160;</a></span>convmat() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -503,12 +569,6 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>beta</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>&#160;</td>
-          <td class="paramname"><em>statistic</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -552,14 +612,14 @@ coupling expansion," arXiv:2307.08566 (2023).</p>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Matrix of convolution by f</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Whereas the method <a class="el" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c" title="Compute convolution of two imaginary time Green&#39;s functions.">imtime_ops::convolve</a> takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.</dd>
+<dl class="section note"><dt>Note</dt><dd>Whereas the method <a class="el" href="classcppdlr_1_1imtime__ops.html#adbf464d1761e4c366166b4bb26f2b9cb" title="Compute convolution of two imaginary time Green&#39;s functions.">imtime_ops::convolve</a> takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.</dd>
 <dd>
 In the case of matrix-valued Green's functions, we think of the matrix of convolution by f as an r*norb1 x r*norb2 matrix, or a block r x r matrix of norb1 x norb2 blocks. Here r is the DLR rank and norb1, norb2 are the number of row and column orbital indices, respectively. This matrix would then be applied to a Green's function g, represented as an r*norb2 x r*norb3 matrix, or a block r x 1 matrix of norb2 x norb3 blocks. </dd></dl>
 
 </div>
 </div>
 <a id="a9f48c8e4b3164985af73fba0fd28b002" name="a9f48c8e4b3164985af73fba0fd28b002"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f48c8e4b3164985af73fba0fd28b002">&#9670;&#160;</a></span>convmat_inplace()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f48c8e4b3164985af73fba0fd28b002">&#9670;&#160;</a></span>convmat_inplace() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -612,6 +672,60 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
 </table>
 </div><div class="memdoc">
 
+<p>Deprecated overload of convmat_inplace method. </p>
+<p>This version includes an unused extra parameter for backward compatibility.</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000003">Deprecated:</a></b></dt><dd>Use convmat_inplace(fconv, beta, fc, time_order) instead; this works for both fermionic and bosonic functions. </dd></dl>
+
+</div>
+</div>
+<a id="aadebc7d1f47b8f8497c2cca4b0711b69" name="aadebc7d1f47b8f8497c2cca4b0711b69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadebc7d1f47b8f8497c2cca4b0711b69">&#9670;&#160;</a></span>convmat_inplace() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppdlr::imtime_ops::convmat_inplace </td>
+          <td>(</td>
+          <td class="paramtype">nda::matrix_view&lt; S, nda::C_layout &gt;&#160;</td>
+          <td class="paramname"><em>fconv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>beta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T const &amp;&#160;</td>
+          <td class="paramname"><em>fc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>time_order</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 <p>Compute matrix of convolution by an imaginary time Green's function in place. </p>
 <p>The convolution of f and g is defined as h(t) = (f * g)(t) = int_0^beta f(t-t') g(t') dt', where fermionic/bosonic antiperiodicity/periodicity are used to define the Green's functions on (-beta, 0). This method takes the DLR coefficients of f as input and returns the matrix of convolution by f. This matrix can be applied to the values of g on the DLR imaginary time grid, to produce the values of h on the DLR imaginary time grid.</p>
 <p>By specifying the <code>time_order</code> flag, this method can be used to compute the time-ordered convolution of f and g, defined as h(t) = (f * g)(t) = int_0^tau f(t-t') g(t') dt'.</p>
@@ -631,14 +745,74 @@ coupling expansion," arXiv:2307.08566 (2023).</p>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This function builds the matrix of convolution, in place, in the provided matrix <code>fconv</code>. This makes it possible to control the memory allocation externally. If this is not a concern, we advise using the <code>convmat(...)</code> function instead of <code>convmat_inplace(...)</code>.</dd>
 <dd>
-Whereas the method <a class="el" href="classcppdlr_1_1imtime__ops.html#a4f018cf316547b2879d9a2dd76a4b80c" title="Compute convolution of two imaginary time Green&#39;s functions.">imtime_ops::convolve</a> takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.</dd>
+Whereas the method <a class="el" href="classcppdlr_1_1imtime__ops.html#adbf464d1761e4c366166b4bb26f2b9cb" title="Compute convolution of two imaginary time Green&#39;s functions.">imtime_ops::convolve</a> takes the DLR coefficients of f and g as input and computes their convolution h directly, this method returns a matrix which should be applied to the DLR imaginary time grid values of g, rather than its DLR coefficients, in to order to obtain the convolution h. The purpose of this is to make the input and output representations of the convolution matrix equal, which is often convenient in practice.</dd>
 <dd>
 In the case of matrix-valued Green's functions, we think of the matrix of convolution by f as an r*norb1 x r*norb2 matrix, or a block r x r matrix of norb1 x norb2 blocks. Here r is the DLR rank and norb1, norb2 are the number of row and column orbital indices, respectively. This matrix would then be applied to a Green's function g, represented as an r*norb2 x r*norb3 matrix, or a block r x 1 matrix of norb2 x norb3 blocks. </dd></dl>
 
 </div>
 </div>
-<a id="a4f018cf316547b2879d9a2dd76a4b80c" name="a4f018cf316547b2879d9a2dd76a4b80c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f018cf316547b2879d9a2dd76a4b80c">&#9670;&#160;</a></span>convolve() <span class="overload">[1/2]</span></h2>
+<a id="a2f85a500e7581631c164287ff5a75329" name="a2f85a500e7581631c164287ff5a75329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f85a500e7581631c164287ff5a75329">&#9670;&#160;</a></span>convolve() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;nda::MemoryArray T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cppdlr::imtime_ops::convolve </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>beta</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>&#160;</td>
+          <td class="paramname"><em>statistic</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T const &amp;&#160;</td>
+          <td class="paramname"><em>fc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T const &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>time_order</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Deprecated overload of convolve method. </p>
+<p>This version includes an unused extra parameter for backward compatibility.</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd>Use convolve(beta, fc, gc, time_order) instead; this works for both fermionic and bosonic functions. </dd></dl>
+
+</div>
+</div>
+<a id="adbf464d1761e4c366166b4bb26f2b9cb" name="adbf464d1761e4c366166b4bb26f2b9cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbf464d1761e4c366166b4bb26f2b9cb">&#9670;&#160;</a></span>convolve() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -653,12 +827,6 @@ template&lt;nda::MemoryArray T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>beta</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435">statistic_t</a>&#160;</td>
-          <td class="paramname"><em>statistic</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -713,7 +881,7 @@ coupling expansion," arXiv:2307.08566 (2023).</p>
 </div>
 </div>
 <a id="a87b3e21ae66c97691a4580335795f77f" name="a87b3e21ae66c97691a4580335795f77f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87b3e21ae66c97691a4580335795f77f">&#9670;&#160;</a></span>convolve() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a87b3e21ae66c97691a4580335795f77f">&#9670;&#160;</a></span>convolve() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

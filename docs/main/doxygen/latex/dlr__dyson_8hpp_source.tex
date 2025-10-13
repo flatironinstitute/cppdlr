@@ -48,7 +48,7 @@
 \DoxyCodeLine{00062\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ g0c\ =\ itops\_ptr-\/>vals2coefs(g0);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DLR\ coefficients\ of\ free\ Green's\ function}}
 \DoxyCodeLine{00063\ }
 \DoxyCodeLine{00064\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ matrix\ of\ convolution\ by\ free\ Green's\ function}}
-\DoxyCodeLine{00065\ \ \ \ \ \ \ g0mat\ =\ itops\_ptr-\/>convmat(beta,\ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee}{Fermion}},\ g0c,\ time\_order);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ g0mat\ =\ itops\_ptr-\/>convmat(beta,\ g0c,\ time\_order);}
 \DoxyCodeLine{00066\ }
 \DoxyCodeLine{00067\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ right\ hand\ side\ of\ Dyson\ equation}}
 \DoxyCodeLine{00068\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (std::floating\_point<Ht>)\ \{\ \textcolor{comment}{//\ If\ h\ is\ real\ scalar,\ rhs\ is\ a\ vector}}
@@ -61,7 +61,7 @@
 \DoxyCodeLine{00075\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{00076\ \ \ \ \ \}}
 \DoxyCodeLine{00077\ }
-\DoxyCodeLine{00089\ \ \ \ \ \mbox{\hyperlink{classcppdlr_1_1dyson__it_ac13a90181eaf068f3d403186d8f55de3}{dyson\_it}}(\textcolor{keywordtype}{double}\ beta,\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\_ops}}\ itops,\ Ht\ \textcolor{keyword}{const}\ \&h,\ \textcolor{keywordtype}{bool}\ time\_order)\ :\ \mbox{\hyperlink{classcppdlr_1_1dyson__it}{dyson\_it}}(beta,\ itops,\ h,\ 0,\ time\_order)\ \{\};}
+\DoxyCodeLine{00089\ \ \ \ \ \mbox{\hyperlink{classcppdlr_1_1dyson__it_ac13a90181eaf068f3d403186d8f55de3}{dyson\_it}}(\textcolor{keywordtype}{double}\ beta,\ \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\_ops}}\ itops,\ Ht\ \textcolor{keyword}{const}\ \&h,\ \textcolor{keywordtype}{bool}\ time\_order)\ :\ \mbox{\hyperlink{classcppdlr_1_1dyson__it}{dyson\_it}}(beta,\ itops,\ h,\ 0,\ time\_order)\{\};}
 \DoxyCodeLine{00090\ }
 \DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ Tsig\ is\ type\ of\ sig.\ Tg\ is\ type\ of\ Green's}}
 \DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ function,\ which\ is\ of\ type\ Tsig,\ with\ scalar\ type\ replaced\ by\ the\ common}}
@@ -75,7 +75,7 @@
 \DoxyCodeLine{00111\ \ \ \ \ \ \ \textcolor{comment}{//\ Obtain\ Dyson\ equation\ system\ matrix\ I\ -\/\ G0\ *\ Sig,\ where\ G0\ and\ Sig\ are\ the}}
 \DoxyCodeLine{00112\ \ \ \ \ \ \ \textcolor{comment}{//\ matrices\ of\ convolution\ by\ the\ free\ Green's\ function\ and\ self-\/energy,}}
 \DoxyCodeLine{00113\ \ \ \ \ \ \ \textcolor{comment}{//\ respectively.}}
-\DoxyCodeLine{00114\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ sysmat\ =\ make\_regular(nda::eye<double>(r\ *\ norb)\ -\/\ g0mat\ *\ itops\_ptr-\/>convmat(beta,\ \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435ac01c1699bb87ec8268ee33f7f20d84ee}{Fermion}},\ sigc,\ time\_order));}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ sysmat\ =\ make\_regular(nda::eye<double>(r\ *\ norb)\ -\/\ g0mat\ *\ itops\_ptr-\/>convmat(beta,\ sigc,\ time\_order));}
 \DoxyCodeLine{00115\ }
 \DoxyCodeLine{00116\ \ \ \ \ \ \ \textcolor{comment}{//\ Factorize\ system\ matrix}}
 \DoxyCodeLine{00117\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ipiv\ =\ nda::vector<int>(r\ *\ norb);}
