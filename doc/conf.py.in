@@ -82,6 +82,11 @@ htmlhelp_basename = '@PROJECT_NAME@doc'
 
 intersphinx_mapping = {'python': ('https://docs.python.org/3.8', None)}
 
+# numpydoc options
+numpydoc_show_class_members = False
+numpydoc_show_inherited_class_members = False
+numpydoc_class_members_toctree = False
+
 # open links in new tab instead of same window
 from sphinx.writers.html import HTMLTranslator
 from docutils import nodes
