@@ -22,6 +22,9 @@
 namespace cppdlr {
   using dcomplex = std::complex<double>;
 
+  using nda::linalg::matmul;
+  using nda::linalg::matvecmul;
+
   static constexpr auto _ = nda::range::all;
 
   /**
