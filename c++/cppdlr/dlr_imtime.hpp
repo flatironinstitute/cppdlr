@@ -580,11 +580,12 @@ namespace cppdlr {
         fconv += matmul(cf2it, tmp2);
 
         // Then precompose with DLR grid values to DLR coefficients matrix
-        if constexpr (nda::is_complex_v<S>) {                         // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(transpose(it2cf.zlu), fconv, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        if constexpr (nda::is_complex_v<S>) { // getrs requires matrix and rhs to have same value type
+          nda::lapack::getrs(transpose(it2cf.zlu), transpose(fconv),
+                             it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(transpose(it2cf.lu), fconv, it2cf.piv);
+          nda::lapack::getrs(transpose(it2cf.lu), transpose(fconv), it2cf.piv);
         }
 
         fconv *= beta;
@@ -627,11 +628,12 @@ namespace cppdlr {
         }
 
         // Do the solve
-        if constexpr (nda::is_complex_v<S>) {                            // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(transpose(it2cf.zlu), fconvtmp, it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
+        if constexpr (nda::is_complex_v<S>) { // getrs requires matrix and rhs to have same value type
+          nda::lapack::getrs(transpose(it2cf.zlu), transpose(fconvtmp),
+                             it2cf.piv); // Note: lapack effectively tranposes fconv by fortran reordering here
         } else {
           // getrs requires matrix and rhs to have same value type
-          nda::lapack::getrs(transpose(it2cf.lu), fconvtmp, it2cf.piv);
+          nda::lapack::getrs(transpose(it2cf.lu), transpose(fconvtmp), it2cf.piv);
         }
 
         // Transpose back
@@ -903,7 +905,7 @@ namespace cppdlr {
       }
 
       // Precompose with DLR values to coefficients matrix
-      nda::lapack::getrs(transpose(it2cf.lu), refl, it2cf.piv); // Lapack effectively transposes refl by fortran reordering here
+      nda::lapack::getrs(transpose(it2cf.lu), transpose(refl), it2cf.piv); // Lapack effectively transposes refl by fortran reordering here
     }
 
     private:
@@ -946,7 +948,7 @@ namespace cppdlr {
      * @param[in] ar Archive to serialize into
      */
     void serialize(auto &ar) const {
-      ar &lambda_ &r &dlr_rf &dlr_it &cf2it &it2cf.lu &it2cf.zlu &it2cf.piv &hilb &tcf2it &thilb &ttcf2it &ipmat &refl;
+      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
     }
 
     /**
@@ -956,7 +958,9 @@ namespace cppdlr {
      *
      * @param[in] ar Archive to deserialize from
      */
-    void deserialize(auto &ar) { ar &lambda_ &r &dlr_rf &dlr_it &cf2it &it2cf.lu &it2cf.zlu &it2cf.piv &hilb &tcf2it &thilb &ttcf2it &ipmat &refl; }
+    void deserialize(auto &ar) {
+      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
+    }
 
     // -------------------- hdf5 -------------------
 

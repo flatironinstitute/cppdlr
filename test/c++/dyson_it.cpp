@@ -62,7 +62,7 @@ TEST(dyson_it, dyson_vs_ed_real) {
   // Get random nxn Hamiltonian w/ eigenvalues in [-1 1]
   auto a         = nda::matrix<double>(nda::rand<double>(std::array<int, 2>({n, n}))); // Random matrix
   a              = (a + transpose(a)) / 2;                                             // Make symmetric
-  auto [eval, u] = nda::linalg::eigenelements(a);                                      // Random orthogonal matrix
+  auto [eval, u] = nda::linalg::eigh(a);                                               // Random orthogonal matrix
   eval           = -1 + 2 * nda::rand<double>(std::array<int, 1>({n}));                // Random eigenvalues in [-1,1]
   auto h         = matmul(matmul(u, nda::diag(eval)), transpose(conj(u)));             // Random symmetric matrix
 
@@ -151,7 +151,7 @@ TEST(dyson_it, dyson_vs_ed_cmplx) {
   // Get random nxn Hamiltonian w/ eigenvalues in [-1 1]
   auto a = nda::matrix<dcomplex>(nda::rand<double>(std::array<int, 2>({n, n})) + 1i * nda::rand<double>(std::array<int, 2>({n, n}))); // Random matrix
   a      = (a + transpose(conj(a))) / 2;                                   // Make Hermitian
-  auto [eval, u] = nda::linalg::eigenelements(a);                          // Random unitary matrix
+  auto [eval, u] = nda::linalg::eigh(a);                                   // Random unitary matrix
   eval           = -1 + 2 * nda::rand<double>(std::array<int, 1>({n}));    // Random eigenvalues in [-1,1]
   auto h         = matmul(matmul(u, nda::diag(eval)), transpose(conj(u))); // Random Hermitian matrix
 
