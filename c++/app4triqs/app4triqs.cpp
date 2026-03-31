@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief Implementation details for app4triqs.hpp
+ */
+
 #include <cmath>
 #include "./app4triqs.hpp"
 

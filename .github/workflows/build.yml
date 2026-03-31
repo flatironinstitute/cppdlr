@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
-    branches: [ unstable, '[0-9]+.[0-9]+.x' ]
+    branches: [ unstable, clair, '[0-9]+.[0-9]+.x' ]
   pull_request:
-    branches: [ unstable, '[0-9]+.[0-9]+.x' ]
+    branches: [ unstable, clair, '[0-9]+.[0-9]+.x' ]
   workflow_call:
   workflow_dispatch:
 
@@ -25,8 +25,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os:  [ubuntu-24.04, macos-15]
-        cxx: [g++, clang++]
+        include:
+          - { os: ubuntu-24.04, cxx: clang++-20, clang_cxx: clang++-20 }
+          - { os: ubuntu-24.04, cxx: g++, clang_cxx: clang++-20 }
+          - { os: macos-15, cxx: clang++, clang_cxx: clang++ }
+          - { os: macos-15, cxx: g++-15, clang_cxx: clang++ }
 
     runs-on: ${{ matrix.os }}
 
@@ -40,13 +43,8 @@ jobs:
         restore-keys: |
           ccache-${{ matrix.os }}-${{ matrix.cxx }}-
 
-    - name: Set cxx variables
-      run: |
-        if [[ ${{ matrix.os }} == 'macos-15' && ${{ matrix.cxx }} == 'g++' ]]; then
-          echo "CXX=g++-15" >> $GITHUB_ENV
-        else
-          echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
-        fi
+    - name: Set compiler
+      run: echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
 
     - name: Install ubuntu dependencies
       if: ${{ contains(matrix.os, 'ubuntu') }}
@@ -57,16 +55,17 @@ jobs:
         ccache
         cmake
         ninja-build
-        clang
-        clang-tools
+        clang-20
+        clang-tools-20
         g++
         gfortran
         hdf5-tools
         libboost-dev
-        libclang-dev
-        libc++-dev
-        libc++abi-dev
-        libomp-dev
+        llvm-20-dev
+        libclang-20-dev
+        libomp-20-dev
+        libc++-20-dev
+        libc++abi-20-dev
         libfftw3-dev
         libgfortran5
         libgmp-dev
@@ -76,7 +75,7 @@ jobs:
         openmpi-bin
         openmpi-common
         openmpi-doc
-        python3-clang
+        python3-clang-20
         python3-dev
         python3-mako
         python3-matplotlib
@@ -107,9 +106,21 @@ jobs:
         echo "LDFLAGS=-L$(brew --prefix libomp)/lib -L$(brew --prefix llvm)/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind" >> $GITHUB_ENV
 
     - name: Add clang CXXFLAGS
-      if: ${{ matrix.cxx == 'clang++' }}
+      if: ${{ contains(matrix.cxx, 'clang') }}
       run: |
         echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
+
+    - name: Build & Install clair
+      env:
+        CXX: ${{ matrix.clang_cxx }}
+        CXXFLAGS: ""
+      run: |
+        git clone https://github.com/flatironinstitute/clair --branch unstable
+        cmake -S clair -B clair/build -G Ninja \
+          -DPython_EXECUTABLE=$VIRTUAL_ENV/bin/python \
+          -DBuild_Tests=OFF \
+          -DCMAKE_INSTALL_PREFIX=$HOME/install
+        cmake --build clair/build --target install --verbose
 
     - name: Build & Install TRIQS
       env:

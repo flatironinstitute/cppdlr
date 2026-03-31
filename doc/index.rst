@@ -6,7 +6,7 @@ app4triqs
 .. sidebar:: app4triqs |PROJECT_VERSION|
 
    This is the homepage of app4triqs |PROJECT_VERSION|.
-   For changes see the :ref:`changelog page <changelog>`.
+   For changes see the :doc:`changelog page <ChangeLog>`.
       
       .. image:: _static/logo_github.png
          :width: 75%
@@ -29,5 +29,5 @@ Learn how to use app4triqs in the :ref:`documentation`.
    install
    documentation
    issues
-   ChangeLog.md
+   ChangeLog
    about

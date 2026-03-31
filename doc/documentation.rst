@@ -13,10 +13,7 @@ Documentation
 C++ reference manual
 ====================
 
-.. toctree::
-   :maxdepth: 5
-
-   cpp2rst_generated/contents
+The C++ reference manual can be found `here <./doxygen/index.html>`_.
 
 Python reference manual
 =======================
