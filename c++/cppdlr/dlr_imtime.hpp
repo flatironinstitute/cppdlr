@@ -995,4 +995,18 @@ namespace cppdlr {
     }
   };
 
+  class imfreq_ops;
+
+  /**
+  * @brief Build matrix mapping DLR imaginary time grid values to DLR
+  * imaginary frequency grid values
+  *
+  * @param[in] itops DLR imaginary time operations object
+  * @param[in] ifops DLR imaginary frequency operations object
+  *
+  * @return Matrix mapping imaginary time grid values to imaginary frequency
+  * grid values (without beta factor)
+  */
+  nda::matrix<dcomplex> build_it2if(imtime_ops const &itops, imfreq_ops const &ifops);
+
 } // namespace cppdlr

@@ -15,6 +15,7 @@
 // Authors: Nils Wentzell, Jason Kaye
 
 #include "dlr_imfreq.hpp"
+#include "dlr_imtime.hpp"
 #include "cppdlr/dlr_kernels.hpp"
 
 using namespace nda;
@@ -68,6 +69,21 @@ namespace cppdlr {
     for (int l = 0; l < r; ++l) { kvec(l) = k_if(n, dlr_rf(l), statistic); }
 
     return kvec;
+  }
+
+  nda::matrix<dcomplex> build_if2it(imfreq_ops const &ifops, imtime_ops const &itops) {
+
+    // Copy cf2it into output matrix (cast to complex)
+    auto if2it = nda::matrix<dcomplex>(itops.get_cf2it());
+
+    // Get (copies of) LU factors of cf2if
+    auto lu  = nda::matrix<dcomplex>(ifops.get_if2cf_lu());
+    auto piv = nda::vector<int>(ifops.get_if2cf_piv());
+
+    // Solve cf2if^T C^T = cf2it^T to obtain C = cf2it * cf2if^{-1}
+    lapack::getrs(nda::transpose(lu), nda::transpose(if2it), piv);
+
+    return if2it;
   }
 
 } // namespace cppdlr
