@@ -146,6 +146,12 @@ requires (std::floating_point&lt;Ht&gt; || nda::MemoryMatrix&lt;Ht&gt;)</td></tr
 <tr class="memitem:a4b753b1a7de53aff215a230206908e6d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a4b753b1a7de53aff215a230206908e6d">free_gf</a> (double beta, <a class="el" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> const &amp;itops, Ht const &amp;h, bool time_order)</td></tr>
 <tr class="memdesc:a4b753b1a7de53aff215a230206908e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute free-particle imaginary time Green's function for a given Hamiltonian.  <br /></td></tr>
 <tr class="separator:a4b753b1a7de53aff215a230206908e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a7a1e02824dc3fde4cb8618fa2e1463" id="r_a2a7a1e02824dc3fde4cb8618fa2e1463"><td class="memItemLeft" align="right" valign="top">nda::matrix&lt; <a class="el" href="namespacecppdlr.html#a7b5392bb6f0a8155f1f19cab3bd042e9">dcomplex</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a2a7a1e02824dc3fde4cb8618fa2e1463">build_if2it</a> (<a class="el" href="classcppdlr_1_1imfreq__ops.html">imfreq_ops</a> const &amp;ifops, <a class="el" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> const &amp;itops)</td></tr>
+<tr class="memdesc:a2a7a1e02824dc3fde4cb8618fa2e1463"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build matrix mapping DLR imaginary frequency grid values to DLR imaginary time grid values.  <br /></td></tr>
+<tr class="separator:a2a7a1e02824dc3fde4cb8618fa2e1463"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ed3d6913053f78b949261e92c980f51" id="r_a5ed3d6913053f78b949261e92c980f51"><td class="memItemLeft" align="right" valign="top">nda::matrix&lt; <a class="el" href="namespacecppdlr.html#a7b5392bb6f0a8155f1f19cab3bd042e9">dcomplex</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a5ed3d6913053f78b949261e92c980f51">build_it2if</a> (<a class="el" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> const &amp;itops, <a class="el" href="classcppdlr_1_1imfreq__ops.html">imfreq_ops</a> const &amp;ifops)</td></tr>
+<tr class="memdesc:a5ed3d6913053f78b949261e92c980f51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build matrix mapping DLR imaginary time grid values to DLR imaginary frequency grid values.  <br /></td></tr>
+<tr class="separator:a5ed3d6913053f78b949261e92c980f51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc9726e02898098dfff8448f02f5b3c6" id="r_afc9726e02898098dfff8448f02f5b3c6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#afc9726e02898098dfff8448f02f5b3c6">k_it</a> (double t, double om)</td></tr>
 <tr class="memdesc:afc9726e02898098dfff8448f02f5b3c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate analytic continuation kernel in imaginary time (relative time format) using dimensionless variables (beta = 1)  <br /></td></tr>
 <tr class="separator:afc9726e02898098dfff8448f02f5b3c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -647,6 +653,82 @@ template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>DLR frequencies </dd></dl>
+
+</div>
+</div>
+<a id="a2a7a1e02824dc3fde4cb8618fa2e1463" name="a2a7a1e02824dc3fde4cb8618fa2e1463"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a7a1e02824dc3fde4cb8618fa2e1463">&#9670;&#160;</a></span>build_if2it()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nda::matrix&lt; <a class="el" href="namespacecppdlr.html#a7b5392bb6f0a8155f1f19cab3bd042e9">dcomplex</a> &gt; cppdlr::build_if2it </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcppdlr_1_1imfreq__ops.html">imfreq_ops</a> const &amp;&#160;</td>
+          <td class="paramname"><em>ifops</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> const &amp;&#160;</td>
+          <td class="paramname"><em>itops</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Build matrix mapping DLR imaginary frequency grid values to DLR imaginary time grid values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ifops</td><td>DLR imaginary frequency operations object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">itops</td><td>DLR imaginary time operations object</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Matrix mapping imaginary frequency grid values to imaginary time grid values (without 1/beta factor) </dd></dl>
+
+</div>
+</div>
+<a id="a5ed3d6913053f78b949261e92c980f51" name="a5ed3d6913053f78b949261e92c980f51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ed3d6913053f78b949261e92c980f51">&#9670;&#160;</a></span>build_it2if()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">nda::matrix&lt; <a class="el" href="namespacecppdlr.html#a7b5392bb6f0a8155f1f19cab3bd042e9">dcomplex</a> &gt; cppdlr::build_it2if </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classcppdlr_1_1imtime__ops.html">imtime_ops</a> const &amp;&#160;</td>
+          <td class="paramname"><em>itops</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classcppdlr_1_1imfreq__ops.html">imfreq_ops</a> const &amp;&#160;</td>
+          <td class="paramname"><em>ifops</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Build matrix mapping DLR imaginary time grid values to DLR imaginary frequency grid values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">itops</td><td>DLR imaginary time operations object </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ifops</td><td>DLR imaginary frequency operations object</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Matrix mapping imaginary time grid values to imaginary frequency grid values (without beta factor) </dd></dl>
 
 </div>
 </div>
