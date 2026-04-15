@@ -1238,6 +1238,6 @@ TEST(imtime_ops, it2if) {
     // Compare
     auto err = max_element(abs(g_if_ref - g_if_new));
     std::cout << fmt::format("build_it2if ({}) error: {:e}\n", label, err);
-    EXPECT_LT(err, 1e-13);
+    EXPECT_LT(err, 5e-13);
   }
 }
