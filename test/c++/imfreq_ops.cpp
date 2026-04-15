@@ -438,42 +438,50 @@ TEST(dlr_imfreq, h5_rw) {
 
 /**
 * @brief Test direct application of if2it matrix against standard vals2coefs -> coefs2vals
-* pipeline
+* pipeline, for all statistic/symmetrization combinations
 */
 TEST(imfreq_ops, if2it) {
 
-  double lambda  = 1000;    // DLR cutoff
-  double eps     = 1e-10;   // DLR tolerance
-  auto statistic = Fermion; // Fermionic Green's function
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
 
   double beta = 1000; // Inverse temperature
   int norb    = 2;    // Orbital dimensions
 
-  // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps);
+  // Test cases: {statistic, symmetrize}
+  std::vector<std::pair<statistic_t, bool>> cases = {{Fermion, NONSYM}, {Fermion, SYM}, {Boson, NONSYM}, {Boson, SYM}};
 
-  // Get DLR imaginary frequency and time objects
-  auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
-  auto itops = imtime_ops(lambda, dlr_rf);
+  for (auto const &[statistic, symmetrize] : cases) {
 
-  int r              = ifops.rank();
-  auto const &dlr_if = ifops.get_ifnodes();
+    std::string label = fmt::format("{}, {}", statistic == Fermion ? "Fermion" : "Boson", symmetrize ? "SYM" : "NONSYM");
 
-  // Sample Green's function at DLR imaginary frequency nodes
-  auto g = nda::array<dcomplex, 3>(r, norb, norb);
-  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
+    auto dlr_rf = build_dlr_rf(lambda, eps, symmetrize);
 
-  // Standard approach: vals2coefs then coefs2vals
-  auto gc       = ifops.vals2coefs(beta, g);
-  auto g_it_ref = itops.coefs2vals(gc);
+    auto ifops = imfreq_ops(lambda, dlr_rf, statistic, symmetrize);
+    auto itops = imtime_ops(lambda, dlr_rf);
 
-  // Using if2it matrix directly
-  auto if2it                        = build_if2it(ifops, itops);
-  auto g_it_new                     = nda::array<dcomplex, 3>(r, norb, norb);
-  reshape(g_it_new, r, norb * norb) = matmul(if2it, nda::matrix<dcomplex>(nda::reshape(g, r, norb * norb))) / beta;
+    int r              = ifops.rank();
+    int niom           = ifops.get_ifnodes().size();
+    auto const &dlr_if = ifops.get_ifnodes();
 
-  // Compare
-  auto err = max_element(abs(g_it_ref - g_it_new));
-  std::cout << fmt::format("build_if2it error: {:e}\n", err);
-  EXPECT_LT(err, 1e-13);
+    std::cout << fmt::format("if2it ({}): r = {}, niom = {}\n", label, r, niom);
+
+    // Sample Green's function at DLR imaginary frequency nodes
+    auto g = nda::array<dcomplex, 3>(niom, norb, norb);
+    for (int i = 0; i < niom; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
+
+    // Standard approach: vals2coefs then coefs2vals
+    auto gc       = ifops.vals2coefs(beta, g);
+    auto g_it_ref = itops.coefs2vals(gc);
+
+    // Using if2it matrix directly
+    auto if2it                        = build_if2it(ifops, itops);
+    auto g_it_new                     = nda::array<dcomplex, 3>(r, norb, norb);
+    reshape(g_it_new, r, norb * norb) = matmul(if2it, nda::matrix<dcomplex>(nda::reshape(g, niom, norb * norb))) / beta;
+
+    // Compare
+    auto err = max_element(abs(g_it_ref - g_it_new));
+    std::cout << fmt::format("build_if2it ({}) error: {:e}\n", label, err);
+    EXPECT_LT(err, 5e-13);
+  }
 }

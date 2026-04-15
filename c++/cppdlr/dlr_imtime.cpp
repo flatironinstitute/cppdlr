@@ -76,8 +76,8 @@ namespace cppdlr {
     auto it2if = nda::matrix<dcomplex>(ifops.get_cf2if());
 
     // Get (copies of) LU factors of cf2it
-    auto zlu = nda::matrix<dcomplex>(itops.get_it2cf_zlu());
-    auto piv = nda::vector<int>(itops.get_it2cf_piv());
+    auto zlu = itops.get_it2cf_zlu();
+    auto piv = itops.get_it2cf_piv();
 
     // Solve cf2it^T C^T = cf2if^T to obtain C = cf2if * cf2it^{-1}
     lapack::getrs(nda::transpose(zlu), nda::transpose(it2if), piv);

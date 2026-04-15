@@ -73,17 +73,35 @@ namespace cppdlr {
 
   nda::matrix<dcomplex> build_if2it(imfreq_ops const &ifops, imtime_ops const &itops) {
 
-    // Copy cf2it into output matrix (cast to complex)
-    auto if2it = nda::matrix<dcomplex>(itops.get_cf2it());
+    int r    = itops.rank();
+    int niom = ifops.get_ifnodes().size();
 
-    // Get (copies of) LU factors of cf2if
-    auto lu  = nda::matrix<dcomplex>(ifops.get_if2cf_lu());
-    auto piv = nda::vector<int>(ifops.get_if2cf_piv());
+    if (niom == r) {
+      // Square case: use LU solve
+      auto if2it = nda::matrix<dcomplex>(itops.get_cf2it());
 
-    // Solve cf2if^T C^T = cf2it^T to obtain C = cf2it * cf2if^{-1}
-    lapack::getrs(nda::transpose(lu), nda::transpose(if2it), piv);
+      auto lu  = nda::matrix<dcomplex>(ifops.get_if2cf_lu());
+      auto piv = ifops.get_if2cf_piv();
 
-    return if2it;
+      // Solve cf2if^T C^T = cf2it^T to obtain C = cf2it * cf2if^{-1}
+      lapack::getrs(nda::transpose(lu), nda::transpose(if2it), piv);
+
+      return if2it;
+    } else {
+      // Non-square case (niom > r): use least squares solve
+      // Solve cf2if^T C^T = cf2it^T to obtain C = cf2it * cf2if^+
+      auto A                            = nda::matrix<dcomplex, nda::F_layout>(nda::transpose(ifops.get_cf2if())); // r x niom
+      auto B                            = nda::matrix<dcomplex, nda::F_layout>(niom, r);                           // niom x r
+      B                                 = 0;
+      B(nda::range(r), nda::range::all) = nda::transpose(itops.get_cf2it());
+
+      auto s       = nda::vector<double>(r);
+      double rcond = 0;
+      int rank     = 0;
+      lapack::gelss(A, B, s, rcond, rank);
+
+      return nda::transpose(B);
+    }
   }
 
 } // namespace cppdlr
