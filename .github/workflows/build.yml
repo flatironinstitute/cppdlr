@@ -31,7 +31,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - uses: actions/cache/restore@v4
       with:
@@ -86,13 +86,12 @@ jobs:
         python3-scipy
         python3-ipython
 
-    - name: Set up virtualenv
+    - name: Set up Python venv
       run: |
-        mkdir -p $HOME/.venv
+        # --system-site-packages exposes apt- (Linux) / brew- (macOS) installed mpi4py/numpy/scipy
         python3 -m venv --system-site-packages $HOME/.venv/my_python
-        source $HOME/.venv/my_python/bin/activate
-        echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
-        echo "PATH=$PATH" >> $GITHUB_ENV
+        echo "VIRTUAL_ENV=$HOME/.venv/my_python" >> $GITHUB_ENV
+        echo "$HOME/.venv/my_python/bin"         >> $GITHUB_PATH
 
     - name: Install homebrew dependencies
       if: ${{ contains(matrix.os, 'macos') }}
@@ -118,7 +117,10 @@ jobs:
       run: |
         git ls-remote --exit-code --heads https://github.com/TRIQS/triqs "$TRIQS_BRANCH" > /dev/null 2>&1 || TRIQS_BRANCH=unstable
         git clone https://github.com/TRIQS/triqs --branch "$TRIQS_BRANCH"
-        cmake -S triqs -B triqs/build -G Ninja -DBuild_Tests=OFF -DCMAKE_INSTALL_PREFIX=$HOME/install
+        cmake -S triqs -B triqs/build -G Ninja \
+          -DPython_EXECUTABLE=$VIRTUAL_ENV/bin/python \
+          -DBuild_Tests=OFF \
+          -DCMAKE_INSTALL_PREFIX=$HOME/install
         cmake --build triqs/build --target install --verbose
 
     - name: Build app4triqs
