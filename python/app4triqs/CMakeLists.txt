@@ -13,9 +13,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.py DESTINATION ${PYTHON_LIB_DE
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${TRIQS_PYTHON_LIB_DEST_ROOT} FILES_MATCHING PATTERN "*.py")
 
 option(Update_Python_Bindings "Optionally update the C++ Python bindings in the source directory using clair-c2py" ON)
-if(Update_Python_Bindings)
-  find_program(clair-c2py clair-c2py REQUIRED)
-endif()
 
 # Add an interface target for all Python modules
 add_library(${PROJECT_NAME}_python_modules INTERFACE)
@@ -38,17 +35,10 @@ foreach(module_src ${module_sources})
   add_dependencies(${PROJECT_NAME}_python_modules ${module_name})
 
   if(Update_Python_Bindings)
-    set(wrap_cxx "${CMAKE_CURRENT_SOURCE_DIR}/${module_name}.wrap.cxx")
-    set(depfile "${CMAKE_CURRENT_BINARY_DIR}/${module_name}.cpp.d")
-
-    add_custom_command(
-      OUTPUT ${wrap_cxx} ${depfile}
-      COMMAND ${clair-c2py} -p ${PROJECT_BINARY_DIR} --generate-depfile ${depfile} ${module_src}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      DEPFILE ${depfile}
-    )
-
-    add_custom_target(wrap_gen_${module_name} DEPENDS ${wrap_cxx})
-    add_dependencies(${module_name} wrap_gen_${module_name})
+    if(module_dir)
+      clair_c2py_generate_bindings(${module_name} DIR ${module_dir})
+    else()
+      clair_c2py_generate_bindings(${module_name})
+    endif()
   endif()
 endforeach()
