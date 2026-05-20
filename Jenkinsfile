@@ -26,6 +26,9 @@ def platforms = [:]
 /****************** linux builds (in docker) */
 /* Each platform must have a corresponding Dockerfile.PLATFORM in triqs/packaging */
 def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize"]
+/* Platforms that regenerate the Python bindings via clair-c2py.
+   All others are built with -DUpdate_Python_Bindings=OFF. */
+def regenPlatforms = ["ubuntu-clang"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
   def platform = dockerPlatforms[i]
@@ -39,13 +42,12 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       """
       archiveArtifacts(artifacts: "Dockerfile.${env.STAGE_NAME}")
       /* build and tag */
-      def args = ''
+      def regen = regenPlatforms.contains(platform)
+      def args = regen ? '' : '-DUpdate_Python_Bindings=OFF'
       if (platform == documentationPlatform)
-        args = "-DBuild_Documentation=ON ${args}"
-      if (platform == "ubuntu-clang")
-        args = "-DUpdate_Python_Bindings=ON ${args}"
-      if (platform == "sanitize")
-        args = "-DASAN=ON -DUBSAN=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ${args}"
+        args += ' -DBuild_Documentation=ON'
+      else if (platform == "sanitize")
+        args += ' -DASAN=ON -DUBSAN=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo'
       def img = docker.build("flatironjenkins/${dockerName}:${env.BRANCH_NAME}-${env.STAGE_NAME}", "--build-arg APPNAME=${projectName} --build-arg BUILD_ID=${env.BUILD_TAG} --build-arg CMAKE_ARGS='${args}' .")
       catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
         img.inside("--shm-size=4gb") {
@@ -97,7 +99,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
         deleteDir()
         /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
         sh "pip3 install -U -r $srcDir/requirements.txt"
-        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir"
+        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir -DUpdate_Python_Bindings=OFF"
         sh "make -j2 || make -j1 VERBOSE=1"
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"
