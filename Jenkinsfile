@@ -43,7 +43,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       archiveArtifacts(artifacts: "Dockerfile.${env.STAGE_NAME}")
       /* build and tag */
       def regen = regenPlatforms.contains(platform)
-      def args = regen ? '' : '-DUpdate_Python_Bindings=OFF'
+      def args = regen ? '-DUpdate_Python_Bindings=ON' : '-DUpdate_Python_Bindings=OFF'
       if (platform == documentationPlatform)
         args += ' -DBuild_Documentation=ON'
       else if (platform == "sanitize")
