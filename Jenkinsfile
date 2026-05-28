@@ -27,7 +27,7 @@ def platforms = [:]
 /* Each platform must have a corresponding Dockerfile.PLATFORM in triqs/packaging */
 def dockerPlatforms = ["ubuntu-clang", "ubuntu-gcc", "ubuntu-intel", "sanitize"]
 /* Platforms that regenerate the Python bindings via clair-c2py.
-   All others are built with -DUpdate_Python_Bindings=OFF. */
+   All others use the default (OFF) from c2py. */
 def regenPlatforms = ["ubuntu-clang"]
 /* .each is currently broken in jenkins */
 for (int i = 0; i < dockerPlatforms.size(); i++) {
@@ -43,7 +43,7 @@ for (int i = 0; i < dockerPlatforms.size(); i++) {
       archiveArtifacts(artifacts: "Dockerfile.${env.STAGE_NAME}")
       /* build and tag */
       def regen = regenPlatforms.contains(platform)
-      def args = regen ? '-DUpdate_Python_Bindings=ON' : '-DUpdate_Python_Bindings=OFF'
+      def args = regen ? '-DUpdate_Python_Bindings=ON' : ''
       if (platform == documentationPlatform)
         args += ' -DBuild_Documentation=ON'
       else if (platform == "sanitize")
@@ -99,7 +99,7 @@ for (int i = 0; i < osxPlatforms.size(); i++) {
         deleteDir()
         /* note: this is installing into the parent (triqs) venv (install dir), which is thus shared among apps and so not be completely safe */
         sh "pip3 install -U -r $srcDir/requirements.txt"
-        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir -DUpdate_Python_Bindings=OFF"
+        sh "cmake $srcDir -DCMAKE_INSTALL_PREFIX=$installDir -DTRIQS_ROOT=$triqsDir"
         sh "make -j2 || make -j1 VERBOSE=1"
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') { try {
           sh "make test CTEST_OUTPUT_ON_FAILURE=1"

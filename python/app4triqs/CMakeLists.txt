@@ -12,8 +12,6 @@ set(PYTHON_LIB_DEST ${TRIQS_PYTHON_LIB_DEST_ROOT}/${PROJECT_NAME})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/version.py DESTINATION ${PYTHON_LIB_DEST})
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} DESTINATION ${TRIQS_PYTHON_LIB_DEST_ROOT} FILES_MATCHING PATTERN "*.py")
 
-option(Update_Python_Bindings "Optionally update the C++ Python bindings in the source directory using clair-c2py" ON)
-
 # Add an interface target for all Python modules
 add_library(${PROJECT_NAME}_python_modules INTERFACE)
 
@@ -23,22 +21,10 @@ foreach(module_src ${module_sources})
   get_filename_component(module_name ${module_src} NAME_WE)
   get_filename_component(module_dir ${module_src} DIRECTORY)
 
-  Python_add_library(${module_name} MODULE ${module_src})
-  set_target_properties(${module_name} PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${module_dir}
-    CXX_VISIBILITY_PRESET hidden
-    VISIBILITY_INLINES_HIDDEN ON
-  )
+  c2py_add_module(${module_name}
+    DIR ${module_dir}
+    LINK_LIBRARIES ${PROJECT_NAME}_c ${PROJECT_NAME}_warnings triqs_py)
   add_library(${PROJECT_NAME}::${module_name} ALIAS ${module_name})
-  target_link_libraries(${module_name} PRIVATE ${PROJECT_NAME}_c ${PROJECT_NAME}_warnings triqs_py c2py::c2py)
-  install(TARGETS ${module_name} DESTINATION ${PYTHON_LIB_DEST}/${module_dir})
   add_dependencies(${PROJECT_NAME}_python_modules ${module_name})
-
-  if(Update_Python_Bindings)
-    if(module_dir)
-      clair_c2py_generate_bindings(${module_name} DIR ${module_dir})
-    else()
-      clair_c2py_generate_bindings(${module_name})
-    endif()
-  endif()
+  install(TARGETS ${module_name} DESTINATION ${PYTHON_LIB_DEST}/${module_dir})
 endforeach()
