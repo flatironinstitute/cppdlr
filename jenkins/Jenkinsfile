@@ -18,8 +18,8 @@ properties([
     upstream(
       threshold: 'SUCCESS',
       upstreamProjects: triqsProject
-    )
-  ] : [])
+    ), githubPush()
+  ] : [githubPush()])
 ])
 
 def installBase = "/mnt/triqs"
