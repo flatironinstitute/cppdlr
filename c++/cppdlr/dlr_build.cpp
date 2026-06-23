@@ -17,6 +17,7 @@
 #include "dlr_build.hpp"
 #include "utils.hpp"
 #include "dlr_kernels.hpp"
+#include <algorithm>
 #include <numbers>
 
 using namespace std;
@@ -279,6 +280,14 @@ namespace cppdlr {
 
     auto omega = nda::vector<double>(r);
     for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
+
+    // Sign-canonicalize for deterministic grid selection: orient the grid so that the
+    // most positive frequency is the one with the largest absolute value.
+    // This helps with reproducibility across different BLAS backends.
+    if (std::abs(nda::min_element(omega)) > std::abs(nda::max_element(omega))) {
+      omega *= -1;
+      std::ranges::reverse(omega);
+    }
 
     return omega;
   }
