@@ -2,6 +2,32 @@
 
 # Changelog
 
+## Version 1.3.0
+
+This update contains additional functionality, bug fixes, and build system improvements.
+
+We thank all contributors: Thomas Hahn, Alexander Hampel, Jason Kaye, Henri Menke, Dylan Simon, Hugo U. R. Strand, Nils Wentzell, Yang Yu
+
+### New features
+* Add free functions `build_it2if` and `build_if2it` to construct the matrices mapping DLR imaginary time grid values to imaginary frequency grid values and vice versa
+* Add `imtime_ops::convmat_inplace` builder, splitting `convmat` into separate allocation and in-place construction steps (#13)
+* Support non-square matrix-valued Green's functions in `imtime_ops::convolve`
+* Add serialization and deserialization support to `imfreq_ops` and `imtime_ops`
+
+### Bug fixes
+* Fix bug in the imaginary frequency to imaginary time matrix in the bosonic, symmetrized case
+
+### Other changes
+* Sign-canonicalize the DLR real-frequency and imaginary-frequency grids for deterministic grid selection
+* Deprecate the redundant `statistic` parameter in `convolve`, `convmat`, and `convmat_inplace`; the new signatures omit it (#17)
+* Update to account for interface changes in nda and remove `using namespace nda`
+* Bump bundled `fmt` to version 12.0.0
+* Various CMake fixes (`link_directories` for the `cppdlr_c` target, doc-build custom commands)
+* Modernize and synchronize GitHub Actions and Jenkins CI configuration
+* Add JOSS citation information and banner to the README
+* Documentation and test tolerance updates
+
+
 ## Version 1.2.0
 
 This update contains minor additional functionality, bug fixes, and optimizations.
