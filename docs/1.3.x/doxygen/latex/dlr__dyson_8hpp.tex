@@ -1,0 +1,27 @@
+\doxysection{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/dlr\+\_\+dyson.hpp File Reference}
+\hypertarget{dlr__dyson_8hpp}{}\label{dlr__dyson_8hpp}\index{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/dlr\_dyson.hpp@{/home/runner/work/cppdlr/cppdlr/c++/cppdlr/dlr\_dyson.hpp}}
+{\ttfamily \#include "{}nda/layout\+\_\+transforms.\+hpp"{}}\newline
+{\ttfamily \#include $<$nda/nda.\+hpp$>$}\newline
+{\ttfamily \#include $<$cppdlr/dlr\+\_\+imtime.\+hpp$>$}\newline
+{\ttfamily \#include $<$cppdlr/dlr\+\_\+kernels.\+hpp$>$}\newline
+{\ttfamily \#include $<$nda/linalg/eigh.\+hpp$>$}\newline
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classcppdlr_1_1dyson__it}{cppdlr\+::dyson\+\_\+it$<$ Ht, Sh $>$}}
+\begin{DoxyCompactList}\small\item\em Class for solving Dyson equation in imaginary time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespacecppdlr}{cppdlr}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)}\\auto \mbox{\hyperlink{namespacecppdlr_a02424caf43ace0c3330b2fa03f706400}{cppdlr\+::free\+\_\+gf}} (double beta, \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&itops, Ht const \&h, double mu=0, bool time\+\_\+order=false)
+\begin{DoxyCompactList}\small\item\em Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Ht $>$ \newline
+requires (std\+::floating\+\_\+point$<$Ht$>$ \texorpdfstring{$\vert$}{|}\texorpdfstring{$\vert$}{|} nda\+::\+Memory\+Matrix$<$Ht$>$)}\\auto \mbox{\hyperlink{namespacecppdlr_a4b753b1a7de53aff215a230206908e6d}{cppdlr\+::free\+\_\+gf}} (double beta, \mbox{\hyperlink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}} const \&itops, Ht const \&h, bool time\+\_\+order)
+\begin{DoxyCompactList}\small\item\em Compute free-\/particle imaginary time Green\textquotesingle{}s function for a given Hamiltonian. \end{DoxyCompactList}\end{DoxyCompactItemize}

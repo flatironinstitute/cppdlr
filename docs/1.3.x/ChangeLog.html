@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Changelog &mdash; cppdlr  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=f7f783a0" />
+
+  
+  
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #7E588A" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            cppdlr
+          </a>
+              <div class="version">
+                1.3.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installation-steps">Installation steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#versions">Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#custom-cmake-options">Custom CMake options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#compiling-with-clang">Compiling with clang</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#note-for-macos-users">Note for MacOS users</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-green-s-functions-and-the-lehmann-representation">Imaginary time Green’s functions and the Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#discrete-lehmann-representation">Discrete Lehmann representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#constructing-a-dlr-expansion">Constructing a DLR expansion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#dlr-in-the-matsubara-frequency-domain">DLR in the Matsubara frequency domain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#operations-in-the-dlr-basis">Operations in the DLR basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#imaginary-time-point-format">Imaginary time point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#matsubara-frequency-point-format">Matsubara frequency point format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#measuring-error">Measuring error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="background.html#symmetrized-dlr-grids">Symmetrized DLR grids</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#example-form-a-dlr-expansion-via-interpolation-and-evaluate-it-in-imaginary-time-and-frequency">Example: form a DLR expansion via interpolation, and evaluate it in imaginary time and frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-examples">List of examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#list-of-other-cppdlr-capabilities">List of other <code class="docutils literal notranslate"><span class="pre">cppdlr</span></code> capabilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Reference documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Issues and contributions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #7E588A" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cppdlr</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Changelog</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ChangeLog.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="changelog">
+<span id="id1"></span><h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<section id="version-1-3-0">
+<h2>Version 1.3.0<a class="headerlink" href="#version-1-3-0" title="Link to this heading"></a></h2>
+<p>This update contains additional functionality, bug fixes, and build system improvements.</p>
+<p>We thank all contributors: Thomas Hahn, Alexander Hampel, Jason Kaye, Henri Menke, Dylan Simon, Hugo U. R. Strand, Nils Wentzell, Yang Yu</p>
+<section id="new-features">
+<h3>New features<a class="headerlink" href="#new-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Add free functions <code class="docutils literal notranslate"><span class="pre">build_it2if</span></code> and <code class="docutils literal notranslate"><span class="pre">build_if2it</span></code> to construct the matrices mapping DLR imaginary time grid values to imaginary frequency grid values and vice versa</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">imtime_ops::convmat_inplace</span></code> builder, splitting <code class="docutils literal notranslate"><span class="pre">convmat</span></code> into separate allocation and in-place construction steps (#13)</p></li>
+<li><p>Support non-square matrix-valued Green’s functions in <code class="docutils literal notranslate"><span class="pre">imtime_ops::convolve</span></code></p></li>
+<li><p>Add serialization and deserialization support to <code class="docutils literal notranslate"><span class="pre">imfreq_ops</span></code> and <code class="docutils literal notranslate"><span class="pre">imtime_ops</span></code></p></li>
+</ul>
+</section>
+<section id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Fix bug in the imaginary frequency to imaginary time matrix in the bosonic, symmetrized case</p></li>
+</ul>
+</section>
+<section id="other-changes">
+<h3>Other changes<a class="headerlink" href="#other-changes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Sign-canonicalize the DLR real-frequency and imaginary-frequency grids for deterministic grid selection</p></li>
+<li><p>Deprecate the redundant <code class="docutils literal notranslate"><span class="pre">statistic</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">convolve</span></code>, <code class="docutils literal notranslate"><span class="pre">convmat</span></code>, and <code class="docutils literal notranslate"><span class="pre">convmat_inplace</span></code>; the new signatures omit it (#17)</p></li>
+<li><p>Update to account for interface changes in nda and remove <code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">namespace</span> <span class="pre">nda</span></code></p></li>
+<li><p>Bump bundled <code class="docutils literal notranslate"><span class="pre">fmt</span></code> to version 12.0.0</p></li>
+<li><p>Various CMake fixes (<code class="docutils literal notranslate"><span class="pre">link_directories</span></code> for the <code class="docutils literal notranslate"><span class="pre">cppdlr_c</span></code> target, doc-build custom commands)</p></li>
+<li><p>Modernize and synchronize GitHub Actions and Jenkins CI configuration</p></li>
+<li><p>Add JOSS citation information and banner to the README</p></li>
+<li><p>Documentation and test tolerance updates</p></li>
+</ul>
+</section>
+</section>
+<section id="version-1-2-0">
+<h2>Version 1.2.0<a class="headerlink" href="#version-1-2-0" title="Link to this heading"></a></h2>
+<p>This update contains minor additional functionality, bug fixes, and optimizations.</p>
+<p>We thank all contributors: Jason Kaye, Hugo U. R. Strand, Nils Wentzell</p>
+<section id="id2">
+<h3>New features<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Added imtime_ops::get_ipmat function to expose matrix of imaginary time inner product</p></li>
+<li><p>Implemented transpose of values -&gt; coefficients operation in imtime_ops::vals2coefs</p></li>
+</ul>
+</section>
+<section id="optimizations">
+<h3>Optimizations<a class="headerlink" href="#optimizations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>imtime_ops::inner_prod function can return double, rather than always complex double</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>Other changes<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Test tolerance adjustments</p></li>
+<li><p>Minor documentation updates</p></li>
+</ul>
+</section>
+</section>
+<section id="version-1-1-1">
+<h2>Version 1.1.1<a class="headerlink" href="#version-1-1-1" title="Link to this heading"></a></h2>
+<p>cppdlr version 1.1.1 is a patch-release that includes
+cmake build system improvements, continuous integration improvements,
+and a backward compatibilty fix.</p>
+<p>We thank all contributors: Hugo U.R. Strand, Nils Wentzell</p>
+<p>Find below an itemized list of changes in this release.</p>
+<ul class="simple">
+<li><p>Synchronize ghactions workflow with main</p></li>
+<li><p>Use nda 1.3.x branch by default</p></li>
+<li><p>Fix issue with Doxygen output directory</p></li>
+<li><p>simplified it2cf_zlu treatment in h5_read for bwd compat</p></li>
+</ul>
+</section>
+<section id="version-1-1-0">
+<h2>Version 1.1.0<a class="headerlink" href="#version-1-1-0" title="Link to this heading"></a></h2>
+<p>This update to cppdlr adds significant new functionality, including symmetrized DLR grids, and improvements to ensure accuracy of DLR expansions in L^2(tau) norm (both described in the updated documentation).</p>
+<p>We thank all contributors: Thomas Hahn, Alexander Hampel, Jason Kaye, Henri Menke, Hugo U. R. Strand, Nils Wentzell</p>
+<section id="id4">
+<h3>New features<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Symmetrized DLR grids, w/ tests to compare symmetrized/non-symmetrized grids</p></li>
+<li><p>Documentation updates: symmetrized grids, discussion of error</p></li>
+<li><p>Imaginary time quadrature weighting for DLR frequency selection to ensure accuracy in L^2(tau) norm, updated tests accordingly</p></li>
+<li><p>Function to compute imaginary time inner products of DLR expansions</p></li>
+<li><p>Program to print DLR ranks for various Lambda</p></li>
+<li><p>Tests to interpolate in imag time and measure error in imag freq, and vice versa</p></li>
+<li><p>Unit tests print errors via fmt</p></li>
+<li><p>Implementation of symmetrized pivoted Gram-Schmidt with tolerance or rank specified</p></li>
+<li><p>Print warning if user chooses epsilon dangerously small</p></li>
+<li><p>Expose fermionic and bosonic Matsubara frequency kernels to user directly</p></li>
+</ul>
+</section>
+<section id="id5">
+<h3>Bug fixes<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Fixed bosonic kernel at i*om_n=0</p></li>
+<li><p>Fixed bug involving non-contiguous views in vals2coefs implementations</p></li>
+<li><p>Fixed bug in error checking of fine discretization of imag time kernel in geterr_k_it</p></li>
+<li><p>Fixed uninitialized niom value in dlr_imfreq constructor</p></li>
+<li><p>Fixed range bug in imtime_ops.interp_matrix_sym_bos</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>Optimizations<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Make complex copy of <a class="reference external" href="http://it2cf.lu" rel="noopener noreferrer" target="_blank">it2cf.lu</a> in imtime_ops constructor to avoid on-the-fly copies</p></li>
+<li><p>imtime_ops::convolve optimizations; use nda::matmul when possible</p></li>
+</ul>
+</section>
+<section id="id7">
+<h3>Other changes<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Various code simplifications</p></li>
+<li><p>Test tolerance adjustments</p></li>
+<li><p>References to cppdlr preprint in documentation and readme</p></li>
+<li><p>Merge latest changes of app4triqs skeleton</p></li>
+<li><p>Add ubuntu-intel build to jenkins</p></li>
+</ul>
+</section>
+</section>
+<section id="version-1-0-0">
+<h2>Version 1.0.0<a class="headerlink" href="#version-1-0-0" title="Link to this heading"></a></h2>
+<p>This is the initial release of cppdlr, a C++ library implementing the discrete Lehmann representation of imaginary time Green’s functions.</p>
+<p>We thank all contributors: Thomas Hahn, Jason Kaye, Hugo U. R. Strand, Nils Wentzell</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023 The Simons Foundation, Hugo U.R. Strand. Authors: J. Kaye, N. Wentzell, H. U. R. Strand.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
