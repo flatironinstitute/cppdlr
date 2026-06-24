@@ -7,7 +7,7 @@
 imaginary time single-particle Green's functions and other imaginary time
 quantities, including standard operations. It can be downloaded `from GitHub <https://github.com/flatironinstitute/cppdlr>`_.
 
-The DLR has been implemented in other programming languages (see the :ref:`related libraries<otherlibraries>` below). 
+The DLR has been implemented in other programming languages (see the :ref:`related libraries<otherlibraries>` below).
 ``cppdlr`` offers a particularly simple high-level user interface, enabled by
 the use of C++ templating and the `nda library <https://github.com/TRIQS/nda>`_ for array types and BLAS/LAPACK
 compatibility. This facilitates its use both in small-scale applications and in
