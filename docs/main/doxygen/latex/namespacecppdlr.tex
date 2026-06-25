@@ -84,6 +84,8 @@ std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_adcede29d387
 \begin{DoxyCompactList}\small\item\em Evaluate Legendre polynomial of degree n and its derivative. \end{DoxyCompactList}\item 
 double \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}} (nda\+::\+Memory\+Vector auto const \&v)
 \item 
+{\footnotesize template$<$typename V $>$ }\\bool \mbox{\hyperlink{namespacecppdlr_a721215e26c8f2e4de53d07f34c517823}{flip\+\_\+to\+\_\+mirror}} (V const \&piv, long mirror\+\_\+max)
+\begin{DoxyCompactList}\small\item\em Decide whether a selected DLR node set should be flipped to its mirror image. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_a1d0c839b446002a589c9cc22534967b6}{pivrgs}} (T const \&a, double eps)
 \begin{DoxyCompactList}\small\item\em Rank-\/revealing pivoted reorthogonalized Gram-\/\+Schmidt. \end{DoxyCompactList}\item 
 {\footnotesize template$<$nda\+::\+Memory\+Array\+Of\+Rank$<$ 2 $>$ T, nda\+::\+Scalar S = nda\+::get\+\_\+value\+\_\+t$<$\+T$>$$>$ }\\std\+::tuple$<$ typename T\+::regular\+\_\+type, nda\+::vector$<$ double $>$, nda\+::vector$<$ int $>$ $>$ \mbox{\hyperlink{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47}{pivrgs\+\_\+sym}} (T const \&a, double eps)
@@ -578,6 +580,29 @@ Get grid of equispaced points on \mbox{[}0,1\mbox{]} in relative time format.
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 Vector of equispaced points on \mbox{[}0,1\mbox{]} in relative time format 
+\end{DoxyReturn}
+\Hypertarget{namespacecppdlr_a721215e26c8f2e4de53d07f34c517823}\label{namespacecppdlr_a721215e26c8f2e4de53d07f34c517823} 
+\index{cppdlr@{cppdlr}!flip\_to\_mirror@{flip\_to\_mirror}}
+\index{flip\_to\_mirror@{flip\_to\_mirror}!cppdlr@{cppdlr}}
+\doxysubsubsection{\texorpdfstring{flip\_to\_mirror()}{flip\_to\_mirror()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+bool cppdlr\+::flip\+\_\+to\+\_\+mirror (\begin{DoxyParamCaption}\item[{V const \&}]{piv,  }\item[{long}]{mirror\+\_\+max }\end{DoxyParamCaption})}
+
+
+
+Decide whether a selected DLR node set should be flipped to its mirror image. 
+
+Node selection is degenerate under the kernel\textquotesingle{}s mirror symmetry (index p \texorpdfstring{$<$}{<}-\/\texorpdfstring{$>$}{>} mirror\+\_\+max -\/ p), so the pivoted Gram-\/\+Schmidt may pick either orientation depending on BLAS backend or compiler. For reproducibility, always keep the orientation whose ascending index sequence compares smaller element-\/by-\/element (flipping to the mirror when it is the smaller of the two).
+
+
+\begin{DoxyParams}{Parameters}
+{\em piv} & Selected indices, sorted in ascending order. \\
+\hline
+{\em mirror\+\_\+max} & Index p is mirrored to mirror\+\_\+max -\/ p. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true iff the mirror set is lexicographically smaller (the caller should flip). 
 \end{DoxyReturn}
 \Hypertarget{namespacecppdlr_a4b753b1a7de53aff215a230206908e6d}\label{namespacecppdlr_a4b753b1a7de53aff215a230206908e6d} 
 \index{cppdlr@{cppdlr}!free\_gf@{free\_gf}}
