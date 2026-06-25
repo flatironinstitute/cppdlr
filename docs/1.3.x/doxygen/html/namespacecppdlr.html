@@ -199,6 +199,10 @@ requires (std::floating_point&lt;Ht&gt; || nda::MemoryMatrix&lt;Ht&gt;)</td></tr
 <tr class="separator:adcede29d3876b4a265f09a56db33085d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a767cf14e0aef568fefdb0386d255b510" id="r_a767cf14e0aef568fefdb0386d255b510"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a767cf14e0aef568fefdb0386d255b510">normsq</a> (nda::MemoryVector auto const &amp;v)</td></tr>
 <tr class="separator:a767cf14e0aef568fefdb0386d255b510"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a721215e26c8f2e4de53d07f34c517823" id="r_a721215e26c8f2e4de53d07f34c517823"><td class="memTemplParams" colspan="2">template&lt;typename V &gt; </td></tr>
+<tr class="memitem:a721215e26c8f2e4de53d07f34c517823"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a721215e26c8f2e4de53d07f34c517823">flip_to_mirror</a> (V const &amp;piv, long mirror_max)</td></tr>
+<tr class="memdesc:a721215e26c8f2e4de53d07f34c517823"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decide whether a selected DLR node set should be flipped to its mirror image.  <br /></td></tr>
+<tr class="separator:a721215e26c8f2e4de53d07f34c517823"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d0c839b446002a589c9cc22534967b6" id="r_a1d0c839b446002a589c9cc22534967b6"><td class="memTemplParams" colspan="2">template&lt;nda::MemoryArrayOfRank&lt; 2 &gt; T, nda::Scalar S = nda::get_value_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:a1d0c839b446002a589c9cc22534967b6"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; typename T::regular_type, nda::vector&lt; double &gt;, nda::vector&lt; int &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacecppdlr.html#a1d0c839b446002a589c9cc22534967b6">pivrgs</a> (T const &amp;a, double eps)</td></tr>
 <tr class="memdesc:a1d0c839b446002a589c9cc22534967b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rank-revealing pivoted reorthogonalized Gram-Schmidt.  <br /></td></tr>
@@ -1060,6 +1064,47 @@ template&lt;nda::MemoryArray Ta, nda::MemoryArray Tb, nda::Scalar Sa = nda::get_
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Vector of equispaced points on [0,1] in relative time format </dd></dl>
+
+</div>
+</div>
+<a id="a721215e26c8f2e4de53d07f34c517823" name="a721215e26c8f2e4de53d07f34c517823"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a721215e26c8f2e4de53d07f34c517823">&#9670;&#160;</a></span>flip_to_mirror()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename V &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppdlr::flip_to_mirror </td>
+          <td>(</td>
+          <td class="paramtype">V const &amp;&#160;</td>
+          <td class="paramname"><em>piv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long&#160;</td>
+          <td class="paramname"><em>mirror_max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Decide whether a selected DLR node set should be flipped to its mirror image. </p>
+<p>Node selection is degenerate under the kernel's mirror symmetry (index p &lt;-&gt; mirror_max - p), so the pivoted Gram-Schmidt may pick either orientation depending on BLAS backend or compiler. For reproducibility, always keep the orientation whose ascending index sequence compares smaller element-by-element (flipping to the mirror when it is the smaller of the two).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">piv</td><td>Selected indices, sorted in ascending order. </td></tr>
+    <tr><td class="paramname">mirror_max</td><td>Index p is mirrored to mirror_max - p. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true iff the mirror set is lexicographically smaller (the caller should flip). </dd></dl>
 
 </div>
 </div>
