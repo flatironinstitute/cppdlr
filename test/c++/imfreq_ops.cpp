@@ -26,6 +26,7 @@
 #include <cppdlr/cppdlr.hpp>
 #include <nda/gtest_tools.hpp>
 #include <fmt/format.h>
+#include <random>
 
 using namespace cppdlr;
 using namespace nda;
@@ -484,4 +485,59 @@ TEST(imfreq_ops, if2it) {
     std::cout << fmt::format("build_if2it ({}) error: {:e}\n", label, err);
     EXPECT_LT(err, 5e-13);
   }
+}
+
+// FAILING reproducer of the symmetrized-DLR conditioning issue that breaks the
+// tprf DLR Eliashberg solver. The symmetric grid places a near-degenerate
+// +/-delta pole pair around omega=0, which ill-conditions the DLR fit. A
+// DLR-built operator is then no longer linear on non-spectral inputs -- exactly
+// the vectors the tprf eigensolver (ARPACK) feeds it. EXPECTED TO FAIL here;
+// passes with the self-symmetric-fixed-point fix. See issue_summary.md.
+TEST(imfreq_ops, symmetrized_operator_linearity) {
+
+  double beta = 2.0, lambda = 10.0, eps = 1e-8; // tprf DLR Eliashberg parameters
+
+  // Relative additivity residual |M(a+b) - M(a) - M(b)| of one tprf Eliashberg
+  // matvec M (eliashberg_product_fft, single k-point + scalar target). M is
+  // exactly linear in delta, so a faithful operator gives ~0.
+  auto residual = [&](bool symmetrize) {
+    auto rf    = build_dlr_rf(lambda, eps, symmetrize);
+    int r      = rf.size();
+    auto itops = imtime_ops(lambda, rf, symmetrize);
+    auto ifops = imfreq_ops(lambda, rf, Fermion, symmetrize);
+    int niom   = ifops.get_ifnodes().size();
+
+    // Fixed (delta-independent) operator data: the G*G bubble as DLR coefficients
+    // and the dynamic interaction in imaginary time. These keep M linear in delta.
+    auto gg = nda::vector<dcomplex>(r), gam = nda::vector<dcomplex>(r);
+    for (int i = 0; i < r; ++i) {
+      gg(i)  = 0.5 + 0.25 * std::cos(3.0 * i);
+      gam(i) = 0.5 + 0.25 * std::cos(2.0 * i);
+    }
+
+    auto M = [&](nda::vector<dcomplex> d) {                          // the cppdlr calls tprf makes:
+      auto ft = itops.convolve(beta, gg, ifops.vals2coefs(beta, d)); // F = (G*G) (*) delta, in tau
+      auto F  = ifops.coefs2vals(beta, itops.vals2coefs(ft));        //   -> back to imfreq
+      auto Ft = itops.coefs2vals(ifops.vals2coefs(beta, F));         // fourier_wr_to_tr: imfreq -> imtime
+      for (int i = 0; i < Ft.size(); ++i) Ft(i) *= gam(i);           // multiply by Gamma(tau)
+      return ifops.coefs2vals(beta, itops.vals2coefs(Ft));           // fourier_tr_to_wr: imtime -> imfreq
+    };
+
+    std::mt19937 gen(12345); // fixed seed: deterministic
+    std::normal_distribution<double> dist(0.0, 1.0);
+    auto a = nda::vector<dcomplex>(niom), b = nda::vector<dcomplex>(niom);
+    for (int i = 0; i < niom; ++i) {
+      a(i) = dcomplex(dist(gen), dist(gen)); // non-spectral (random) inputs, like the ARPACK iterates
+      b(i) = dcomplex(dist(gen), dist(gen));
+    }
+    auto Ma = M(a), Mb = M(b), Mab = M(make_regular(a + b));
+    return max_element(abs(Mab - Ma - Mb)) / (max_element(abs(Ma)) + max_element(abs(Mb)));
+  };
+
+  double res_nonsym = residual(NONSYM), res_sym = residual(SYM);
+  std::cout << fmt::format("Eliashberg operator linearity residual: nonsym = {:.1e}, sym = {:.1e}\n", res_nonsym, res_sym);
+
+  // On the symmetric grid the operator is ~10000x less linear here (sym ~7e-5 vs
+  // nonsym ~6e-9): a manifestly non-linear operator, which derails ARPACK.
+  EXPECT_LT(res_sym, 5 * res_nonsym);
 }
