@@ -35,7 +35,29 @@ namespace cppdlr {
    */
   double normsq(nda::MemoryVector auto const &v) { return nda::real(nda::blas::dotc(v, v)); }
 
-  /** 
+  /**
+   * @brief Decide whether a selected DLR node set should be flipped to its mirror image.
+   *
+   * Node selection is degenerate under the kernel's mirror symmetry (index p <-> mirror_max - p),
+   * so the pivoted Gram-Schmidt may pick either orientation depending on BLAS backend or compiler.
+   * For reproducibility, always keep the orientation whose ascending index sequence compares smaller
+   * element-by-element (flipping to the mirror when it is the smaller of the two).
+   *
+   * @param piv Selected indices, sorted in ascending order.
+   * @param mirror_max Index p is mirrored to mirror_max - p.
+   * @return true iff the mirror set is lexicographically smaller (the caller should flip).
+   */
+  template <typename V> bool flip_to_mirror(V const &piv, long mirror_max) {
+    long r = piv.size();
+    for (long i = 0; i < r; ++i) {
+      auto a = piv(i);                      // original set, ascending
+      auto b = mirror_max - piv(r - 1 - i); // mirror set, ascending
+      if (a != b) return b < a;             // first difference decides; flip iff mirror is smaller
+    }
+    return false; // symmetric set: orientations coincide, no flip
+  }
+
+  /**
    * Class constructor for barycheb: barycentric Lagrange interpolation at
    * Chebyshev nodes.
    *

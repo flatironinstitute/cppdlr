@@ -40,16 +40,12 @@ namespace cppdlr {
     auto [q, norms, piv] = (symmetrize ? pivrgs_sym(kmat, niom) : pivrgs(kmat, 1e-100));
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
 
-    // Sign-canonicalize for deterministic grid selection (see build_dlr_rf): orient the node
-    // set so its most positive Matsubara frequency has the largest absolute value, flipping
-    // nu_n -> -nu_n (row p -> max_piv - p) otherwise. No effect on grid quality.
-    long min_if = nda::min_element(piv) - nmax; // index n of the most negative selected node
-    long max_if = nda::max_element(piv) - nmax; // index n of the most positive selected node
-    long nu_off = (statistic == Fermion);       // Matsubara frequency is 2n+1 (Fermion) / 2n (Boson)
-    if (std::abs(2 * max_if + nu_off) < std::abs(2 * min_if + nu_off)) {
-      int max_piv = static_cast<int>(kmat.extent(0)) - 1; // mirror row of p under nu_n -> -nu_n
-      for (auto &p : piv) p = max_piv - p;                // ascending -> descending,
-      std::ranges::reverse(piv);                          // so reverse restores ascending order
+    // Sign-canonicalize for reproducible grid selection: the Matsubara node set is degenerate with
+    // its mirror under nu_n -> -nu_n (row p -> max_piv - p). See flip_to_mirror.
+    int max_piv = static_cast<int>(kmat.extent(0)) - 1; // mirror row of p under nu_n -> -nu_n
+    if (flip_to_mirror(piv, max_piv)) {
+      for (auto &p : piv) p = max_piv - p; // ascending -> descending,
+      std::ranges::reverse(piv);           // so reverse restores ascending order
     }
 
     for (int i = 0; i < niom; ++i) { dlr_if(i) = piv(i) - nmax; }

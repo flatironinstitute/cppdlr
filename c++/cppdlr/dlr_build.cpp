@@ -281,10 +281,9 @@ namespace cppdlr {
     auto omega = nda::vector<double>(r);
     for (int i = 0; i < r; ++i) { omega(i) = om(piv(i)); }
 
-    // Sign-canonicalize for deterministic grid selection: orient the grid so that the
-    // most positive frequency is the one with the largest absolute value.
-    // This helps with reproducibility across different BLAS backends.
-    if (std::abs(nda::min_element(omega)) > std::abs(nda::max_element(omega))) {
+    // Sign-canonicalize for reproducible grid selection: the fine grid is mirror-symmetric
+    // (om(nf-1-j) = -om(j)), so a grid and its mirror om -> -om are degenerate. See flip_to_mirror.
+    if (flip_to_mirror(piv, om.size() - 1)) {
       omega *= -1;
       std::ranges::reverse(omega);
     }
