@@ -67,7 +67,8 @@ int main() {
   auto dlr_rf     = build_dlr_rf(lambda, eps);
   auto dlr_rf_sym = build_dlr_rf(lambda, eps, SYM);
 
-  int r = dlr_rf.size();
+  int r    = dlr_rf.size();
+  int rsym = dlr_rf_sym.size();
 
   // Get DLR imaginary frequency object
   auto ifops     = imfreq_ops(lambda, dlr_rf, statistic);
@@ -106,5 +107,5 @@ int main() {
 
   // Print results
   std::cout << fmt::format("Unsymmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", r, errl2, errlinf);
-  std::cout << fmt::format("Symmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", r, errl2_sym, errlinf_sym);
+  std::cout << fmt::format("Symmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", rsym, errl2_sym, errlinf_sym);
 }
