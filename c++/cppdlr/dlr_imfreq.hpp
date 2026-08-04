@@ -47,8 +47,9 @@ namespace cppdlr {
     * @param[in] symmetrize NONSYM or false for non-symmetrized DLR frequencies,
     * SYM or true for symmetrized
     *
-    * @note In case Boson and SYM options are selected, we enforce that i*nu_n=0 is
-    * chosen as a DLR imaginary frequency node.
+    * @note With SYM the DLR rank r is odd. Boson includes the self-symmetric node
+    * i*nu_n=0, giving a square niom = r. Fermion has no such node, so it uses
+    * niom = r + 1 mirror pairs and an over-determined map, inverted by least squares.
     */
     imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize = false);
 
@@ -245,7 +246,7 @@ namespace cppdlr {
     double lambda_;                   ///< Energy cutoff divided by temperature
     statistic_t statistic;            ///< Particle statistic: Fermion or Boson
     int r;                            ///< DLR rank
-    int niom;                         ///< # DLR imaginary freq nodes (different from r in symmetrized bosonic case)
+    int niom;                         ///< # DLR imaginary freq nodes (= r + 1 in the symmetrized fermionic case, else = r)
     nda::vector<double> dlr_rf;       ///< DLR frequencies
     nda::vector<int> dlr_if;          ///< DLR imaginary frequency nodes
     nda::matrix<nda::dcomplex> cf2if; /// Transformation matrix from DLR coefficients to values at DLR imaginary frequency nodes

@@ -308,12 +308,25 @@ functionality via symmetrization flags. Please see the :ref:`list of
 other cppdlr capabilities<listofothercapabilities>` section on the :ref:`examples
 page<examples>` for a list of `cppdlr` tests which showcase this functionality.
 
-We make a note about symmetrization for bosonic Green's functions. In this case,
-we always include :math:`i \nu_n = 0` as a DLR imaginary frequency node. Since
-we do not include the point :math:`\omega = 0` in the :math:`r` symmetrized DLR
-frequencies, :math:`r` is even in this case, and the extra imaginary frequency
-grid points makes the number of DLR imaginary frequency nodes :math:`r+1`. To
-obtain the DLR coefficients from samples of the Green's function at the DLR
-imaginary frequency nodes, we therefore solve a slightly overdetermined
+A symmetrized grid includes its self-symmetric fixed point---the point which is
+its own mirror image---as a single self-paired node: :math:`\omega = 0` among the
+DLR frequencies, and :math:`\tau = \beta/2` among the DLR imaginary time nodes.
+The symmetrized DLR rank :math:`r` is therefore odd. Selecting nodes in mirror
+pairs alone would instead force the frequency grid onto a nearly degenerate pair
+:math:`\pm \delta` straddling :math:`\omega = 0`, whose kernel columns are nearly
+parallel, badly ill-conditioning the DLR fit matrices.
+
+We make a note about the symmetrized imaginary frequency grids. In the bosonic
+case, :math:`i \nu_n = 0` is the self-symmetric Matsubara frequency, and is
+included as the central node; there are then :math:`r` DLR imaginary frequency
+nodes, and the values-to-coefficients map is a square :math:`r \times r` linear
+system. In the fermionic case there is no self-symmetric Matsubara frequency,
+since :math:`\nu_n = (2n+1) \pi / \beta` never vanishes, so a symmetrized
+fermionic grid consists of mirror pairs only and we use :math:`r+1` imaginary
+frequency nodes. To obtain the DLR coefficients from samples of the Green's
+function at these nodes, we therefore solve a slightly overdetermined
 (:math:`(r+1) \times r`, rather than :math:`r \times r`) linear system using the
-least squares method.
+least squares method. Consequently, evaluating the resulting expansion back at
+the DLR imaginary frequency nodes recovers the samples to a relative accuracy of
+order :math:`\epsilon` in general, rather than to machine precision as in the
+square case.

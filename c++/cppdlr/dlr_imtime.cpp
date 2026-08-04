@@ -27,6 +27,10 @@ namespace cppdlr {
 
   imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize) : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
+    // The symmetrized selection always takes the self-paired tau=beta/2 node plus
+    // mirror pairs, so it can only produce an odd number of nodes.
+    if (symmetrize && r % 2 == 0) throw std::runtime_error("Symmetrized DLR frequency grid must have odd rank.");
+
     dlr_it    = nda::vector<double>(r);
     cf2it     = nda::matrix<double>(r, r);
     it2cf.lu  = nda::matrix<double>(r, r);
@@ -35,7 +39,7 @@ namespace cppdlr {
     // Get discretization of analytic continuation kernel on fine grid in
     // imaginary time, at DLR frequencies
     auto fine   = fineparams(lambda);
-    auto [t, w] = build_it_fine(fine);
+    auto [t, w] = build_it_fine(fine, symmetrize);
     auto kmat   = build_k_it(t, dlr_rf);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes

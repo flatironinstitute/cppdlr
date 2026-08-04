@@ -25,9 +25,11 @@ namespace cppdlr {
   imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize)
      : lambda_(lambda), statistic(statistic), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
-    // Get # DLR imaginary frequency nodes; for symmetrized bosonic case, this
-    // is DLR rank + 1, otherwise it is DLR rank
-    niom   = (statistic == Boson && symmetrize) ? r + 1 : r;
+    // # DLR imaginary frequency nodes. The symmetrized grid is mirror-symmetric
+    // about i*nu=0. The bosonic grid contains the self-paired node n=0, so niom = r,
+    // which is odd. The fermionic grid has no self-paired node, so it consists of
+    // mirror pairs only and needs the even niom = r + 1.
+    niom   = (symmetrize && statistic == Fermion) ? r + 1 : r;
     dlr_if = nda::vector<int>(niom);
     cf2if  = nda::matrix<dcomplex>(niom, r);
 
@@ -55,9 +57,9 @@ namespace cppdlr {
       for (int j = 0; j < r; ++j) { cf2if(i, j) = kmat(piv(i), j); }
     }
 
-    if (!(symmetrize && statistic == Boson)) {
-      // Prepare imaginary time values to coefficients transformation by computing
-      // LU factors of coefficient to imaginary time matrix
+    if (niom == r) {
+      // Square case: LU factors invert cf2if. The over-determined case stores no
+      // factors and uses a least-squares solve instead (see vals2coefs).
       if2cf.lu  = nda::matrix<dcomplex>(cf2if);
       if2cf.piv = nda::vector<int>(r);
       lapack::getrf(if2cf.lu, if2cf.piv);

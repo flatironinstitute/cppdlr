@@ -51,6 +51,10 @@ namespace cppdlr {
     * @param[in] dlr_rf DLR frequencies
     * @param[in] symmetrize NONSYM or false for non-symmetrized DLR frequencies,
     * SYM or true for symmetrized
+    *
+    * @note With SYM the nodes are mirror-symmetric about tau=beta/2, which is
+    * itself included as a self-paired node. SYM therefore requires @p dlr_rf of odd
+    * rank, as built by build_dlr_rf with SYM, and throws otherwise.
     */
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize);
 

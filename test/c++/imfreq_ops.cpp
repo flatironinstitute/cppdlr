@@ -262,26 +262,38 @@ TEST(imfreq_ops, interp_matrix_sym_fer) {
   auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
 
-  // Verify symmetry
-  EXPECT_EQ(max_element(abs(dlr_rf(range(r / 2)) + dlr_rf(range(r - 1, r / 2 - 1, -1)))), 0);
+  // Verify DLR rank is odd, with omega=0 as the central self-paired node and the
+  // remaining frequencies in mirror pairs about it
+  EXPECT_EQ(r % 2, 1);
+  EXPECT_EQ(dlr_rf((r - 1) / 2), 0.0);
+  for (int j = 0; j < r / 2; ++j) { EXPECT_EQ(dlr_rf(j), -dlr_rf(r - 1 - j)); }
 
   // Get DLR imaginary frequency object
   auto ifops = imfreq_ops(lambda, dlr_rf, statistic, SYM);
 
   // Sample Green's function G at DLR imaginary frequency nodes
   auto const &dlr_if = ifops.get_ifnodes();
+  int niom           = dlr_if.size();
 
-  // Verify symmetry
-  EXPECT_EQ(max_element(abs(2 * dlr_if(range(r / 2)) + 1 + 2 * dlr_if(range(r - 1, r / 2 - 1, -1)) + 1)), 0);
+  // The fermionic Matsubara grid has no self-symmetric frequency, so it consists of
+  // mirror pairs only and uses the even niom = r + 1 rather than the odd r.
+  EXPECT_EQ(niom, r + 1);
 
-  auto g = nda::array<dcomplex, 3>(r, norb, norb);
-  for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
+  // Verify symmetry: each mirror pair satisfies nu_n + nu_n' = 0, i.e. n + n' = -1
+  for (int i = 0; i < niom / 2; ++i) { EXPECT_EQ(dlr_if(i) + dlr_if(niom - 1 - i), -1); }
+
+  auto g = nda::array<dcomplex, 3>(niom, norb, norb);
+  for (int i = 0; i < niom; ++i) { g(i, _, _) = gfun(norb, beta, dlr_if(i), statistic); }
 
   // DLR coefficients of G
   auto gc = ifops.vals2coefs(beta, g);
 
-  // Check that G can be recovered at imaginary frequency nodes
-  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 3e-13);
+  // Check that G can be recovered at imaginary frequency nodes. The fermionic
+  // symmetric grid has no self-symmetric frequency, so it is over-determined
+  // (niom = r + 1) and vals2coefs is a least-squares fit rather than an exact
+  // interpolation; recovery is therefore accurate to the DLR tolerance eps, not
+  // machine precision.
+  EXPECT_LT(max_element(abs(ifops.coefs2vals(beta, gc) - g)), 10 * eps);
 
   // Compute error in imaginary frequency
   auto gtru      = nda::matrix<dcomplex>(norb, norb);
@@ -400,21 +412,11 @@ TEST(imfreq_ops, interp_matrix_sym_bos) {
   std::cout << fmt::format("Imag time: L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
-TEST(dlr_imfreq, h5_rw) {
+// Write ifops to an HDF5 file, read it back, and check that every stored member
+// survives the round trip
+static void check_h5_roundtrip(imfreq_ops const &ifops, std::string const &filename) {
 
-  double lambda  = 1000;    // DLR cutoff
-  double eps     = 1e-10;   // DLR tolerance
-  auto statistic = Fermion; // Fermionic Green's function
-
-  // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps);
-
-  // Get DLR imaginary frequency object
-  auto ifops = imfreq_ops(lambda, dlr_rf, statistic);
-
-  auto filename = "data_imfreq_ops_h5_rw.h5";
-  auto name     = "ifops";
-
+  auto name = "ifops";
   {
     h5::file file(filename, 'w');
     h5::write(file, name, ifops);
@@ -426,7 +428,6 @@ TEST(dlr_imfreq, h5_rw) {
     h5::read(file, name, ifops_ref);
   }
 
-  // Check equal
   EXPECT_EQ(ifops.lambda(), ifops_ref.lambda());
   EXPECT_EQ(ifops.rank(), ifops_ref.rank());
   EXPECT_EQ_ARRAY(ifops.get_rfnodes(), ifops_ref.get_rfnodes());
@@ -434,6 +435,36 @@ TEST(dlr_imfreq, h5_rw) {
   EXPECT_EQ_ARRAY(ifops.get_cf2if(), ifops_ref.get_cf2if());
   EXPECT_EQ_ARRAY(ifops.get_if2cf_lu(), ifops_ref.get_if2cf_lu());
   EXPECT_EQ_ARRAY(ifops.get_if2cf_piv(), ifops_ref.get_if2cf_piv());
+}
+
+TEST(dlr_imfreq, h5_rw) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+
+  check_h5_roundtrip(imfreq_ops(lambda, dlr_rf, Fermion), "data_imfreq_ops_h5_rw.h5");
+}
+
+/**
+* @brief Test HDF5 round-trip for symmetrized DLR imaginary frequency objects.
+*
+* The symmetrized fermionic grid is over-determined (niom = r + 1), so no
+* if2cf LU factorization is stored (get_if2cf_lu/piv are empty); this checks
+* that the empty factors serialize and deserialize cleanly.
+*/
+TEST(dlr_imfreq, h5_rw_sym) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
+
+  for (auto statistic : {Fermion, Boson}) {
+    SCOPED_TRACE(statistic == Fermion ? "Fermion" : "Boson");
+    check_h5_roundtrip(imfreq_ops(lambda, dlr_rf, statistic, SYM), "data_imfreq_ops_h5_rw_sym.h5");
+  }
 }
 
 /**

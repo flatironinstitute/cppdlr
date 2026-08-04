@@ -49,23 +49,27 @@ namespace cppdlr {
   * @brief Build fine composite Chebyshev grid in real frequency 
   *
   * @param[in] fine Fine grid parameters
+  * @param[in] symmetrize If true, include omega=0, making the grid odd-sized and
+  * mirror-symmetric about it.
   *
   * @return Fine real frequency grid
   */
-  nda::vector<double> build_rf_fine(fineparams const &fine);
+  nda::vector<double> build_rf_fine(fineparams const &fine, bool symmetrize = false);
 
   /**
   * @brief Get fine composite Legendre grid in imaginary time and corresponding
   * square root quadrature weights
   *
   * @param[in] fine Fine grid parameters
+  * @param[in] symmetrize If true, include tau=beta/2 (relative t=0.5) with zero
+  * quadrature weight, making the grid odd-sized and mirror-symmetric about it.
   *
   * @return Tuple containing fine imaginary time grid and corresponding square
   * root quadrature weights
   *
   * \note Fine imaginary time grid is given in relative format 
   */
-  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams const &fine);
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams const &fine, bool symmetrize = false);
 
   /**
   * @brief Get imaginary time discretization of analytic continuation kernel
@@ -152,6 +156,10 @@ namespace cppdlr {
   *
   * @return DLR frequencies
   *
+  * @note With SYM the DLR frequencies are mirror-symmetric about omega=0, which is
+  * itself included as a self-paired node, so the rank is odd. Without it a
+  * symmetric grid needs a near-degenerate pole pair straddling zero, which
+  * ill-conditions the DLR fit.
   */
   nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize);
 
