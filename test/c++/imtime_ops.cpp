@@ -870,6 +870,18 @@ TEST(imtime_ops, refl_matrix) {
   std::cout << fmt::format("Imag time: L^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
 }
 
+// Check that a symmetrized DLR node set is mirror-symmetric about its center, the
+// self-symmetric fixed point of the grid (@p center is 0 for frequencies, 0.5 for
+// imaginary times). In both conventions the mirror of a node is its negation.
+static void check_sym_nodes(nda::vector_const_view<double> x, double center) {
+
+  int r = x.size();
+
+  EXPECT_EQ(r % 2, 1);
+  EXPECT_EQ(x((r - 1) / 2), center);
+  for (int j = 0; j < r / 2; ++j) { EXPECT_EQ(x(j), -x(r - 1 - j)); }
+}
+
 /**
 * @brief Test symmetrized DLR interpolation and evaluation for fermionic
 * matrix-valued Green's function
@@ -891,11 +903,8 @@ TEST(imtime_ops, interp_matrix_sym_fer) {
   auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
 
-  // Verify DLR rank is even
-  EXPECT_EQ(r % 2, 0);
-
-  // Verify symmetry
-  EXPECT_EQ(max_element(abs(dlr_rf(range(r / 2)) + dlr_rf(range(r - 1, r / 2 - 1, -1)))), 0);
+  // Verify the DLR frequencies are mirror-symmetric about the omega=0 node
+  check_sym_nodes(dlr_rf, 0.0);
 
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf, SYM);
@@ -903,8 +912,8 @@ TEST(imtime_ops, interp_matrix_sym_fer) {
   // Sample Green's function G at DLR imaginary time nodes
   auto const &dlr_it = itops.get_itnodes();
 
-  // Verify symmetry
-  EXPECT_EQ(max_element(abs(dlr_it(range(r / 2)) + dlr_it(range(r - 1, r / 2 - 1, -1)))), 0);
+  // Verify the DLR imaginary time nodes are mirror-symmetric about tau=beta/2
+  check_sym_nodes(dlr_it, 0.5);
 
   auto g = nda::array<double, 3>(r, norb, norb);
   for (int i = 0; i < r; ++i) { g(i, _, _) = gfun(norb, beta, dlr_it(i)); }
@@ -974,11 +983,8 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
   int r       = dlr_rf.size();
 
-  // Verify DLR rank is even
-  EXPECT_EQ(r % 2, 0);
-
-  // Verify symmetry
-  EXPECT_EQ(max_element(abs(dlr_rf(range(r / 2)) + dlr_rf(range(r - 1, r / 2 - 1, -1)))), 0);
+  // Verify the DLR frequencies are mirror-symmetric about the omega=0 node
+  check_sym_nodes(dlr_rf, 0.0);
 
   // Get DLR imaginary time object
   auto itops = imtime_ops(lambda, dlr_rf, SYM);
@@ -986,8 +992,8 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   // Obtain DLR imaginary time nodes
   auto const &dlr_it = itops.get_itnodes();
 
-  // Verify symmetry
-  EXPECT_EQ(max_element(abs(dlr_it(range(r / 2)) + dlr_it(range(r - 1, r / 2 - 1, -1)))), 0); // r even
+  // Verify the DLR imaginary time nodes are mirror-symmetric about tau=beta/2
+  check_sym_nodes(dlr_it, 0.5);
 
   // Sample Green's function at DLR nodes
   auto g = nda::array<double, 3>(r, norb, norb);
@@ -1035,6 +1041,25 @@ TEST(imtime_ops, interp_matrix_sym_bos) {
   EXPECT_LT(errlinf, 100 * eps);
   EXPECT_LT(errl2, eps);
   std::cout << fmt::format("Imag freq: l^2 err = {:e}, L^inf err = {:e}\n", errl2, errlinf);
+}
+
+/**
+* @brief Test that the SYM constructor rejects a DLR frequency grid of even rank
+*
+* The symmetrized selection takes the self-paired tau=beta/2 node plus mirror
+* pairs, so an even-rank input has no valid symmetrized selection.
+*/
+TEST(imtime_ops, sym_requires_odd_rank) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  // Trim a non-symmetrized grid to even rank
+  auto dlr_rf = build_dlr_rf(lambda, eps);
+  int r       = dlr_rf.size() - dlr_rf.size() % 2;
+
+  EXPECT_THROW(imtime_ops(lambda, dlr_rf(range(r)), SYM), std::runtime_error);
+  EXPECT_NO_THROW(imtime_ops(lambda, dlr_rf(range(r)), NONSYM));
 }
 
 /**

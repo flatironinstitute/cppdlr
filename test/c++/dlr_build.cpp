@@ -60,3 +60,44 @@ TEST(dlr_build, get_kfine) {
 
   std::cout << fmt::format("Max imag time err = {:e}, Max freq err = {:e}\n", errt, errom);
 }
+
+/**
+* @brief Test that the symmetric DLR construction includes the self-symmetric fixed
+* points, omega=0 and tau=beta/2, and leaves the non-symmetric grids unchanged.
+*/
+TEST(dlr_build, symmetric_fixed_points) {
+
+  double eps = 1e-10;
+
+  for (double lambda : {10.0, 100.0, 1000.0}) {
+    auto dlr_rf = build_dlr_rf(lambda, eps, SYM);
+    long r      = dlr_rf.size();
+
+    // Symmetric rank is odd, with omega=0 as the central self-paired node
+    EXPECT_EQ(r % 2, 1);
+    EXPECT_DOUBLE_EQ(dlr_rf((r - 1) / 2), 0.0);
+
+    // Grid is mirror-symmetric about omega=0: omega_j = -omega_{r-1-j}, exactly, since
+    // the negative half of the fine grid is built by negating the positive half
+    for (int j = 0; j < r / 2; ++j) { EXPECT_EQ(dlr_rf(j), -dlr_rf(r - 1 - j)); }
+  }
+
+  // Symmetric fine grids: omega=0 and tau=beta/2 (relative t=0.5) are present as
+  // central nodes, with one extra point relative to the even default grid.
+  fineparams fine(100.0);
+
+  auto om_sym = build_rf_fine(fine, SYM);
+  EXPECT_EQ(om_sym.size(), fine.nom + 1);
+  EXPECT_DOUBLE_EQ(om_sym(fine.nom / 2), 0.0);
+
+  auto [t_sym, w_sym] = build_it_fine(fine, SYM);
+  EXPECT_EQ(t_sym.size(), fine.nt + 1);
+  EXPECT_DOUBLE_EQ(t_sym(fine.nt / 2), 0.5);
+  EXPECT_DOUBLE_EQ(w_sym(fine.nt / 2), 0.0);
+
+  // Non-symmetric grids are unchanged (even count, no central fixed-point node)
+  auto [t_non, w_non] = build_it_fine(fine);
+  EXPECT_EQ(build_rf_fine(fine).size(), fine.nom);
+  EXPECT_EQ(t_non.size(), fine.nt);
+  EXPECT_EQ(w_non.size(), fine.nt);
+}

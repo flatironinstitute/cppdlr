@@ -42,7 +42,7 @@ namespace cppdlr {
     if (p <= 0) throw std::runtime_error("Choose p > 0.");
   }
 
-  nda::vector<double> build_rf_fine(fineparams const &fine) {
+  nda::vector<double> build_rf_fine(fineparams const &fine, bool symmetrize) {
 
     int p    = fine.p;
     int npom = fine.npom;
@@ -50,9 +50,13 @@ namespace cppdlr {
     auto bc = barycheb(p);             // Get barycheb object for Chebyshev nodes
     auto xc = (bc.getnodes() + 1) / 2; // Cheb nodes on [0,1]
 
-    // Real frequency grid points
+    // Real frequency grid points, mirror-symmetric about zero: om(j) = -om(n-1-j).
+    // The symmetric case additionally includes omega=0, which is its own mirror.
 
-    auto om = nda::vector<double>(fine.nom);
+    int nhalf = npom * p;                       // # points on (0,lambda)
+    int upper = symmetrize ? nhalf + 1 : nhalf; // first index of the positive half
+    int ntot  = upper + nhalf;                  // Total # points
+    auto om   = nda::vector<double>(ntot);
 
     double a = 0, b = 0;
 
@@ -60,18 +64,22 @@ namespace cppdlr {
 
     for (int i = 0; i < npom; ++i) {
       b                                             = fine.lambda / pow(2.0, npom - i - 1);
-      om(range((npom + i) * p, (npom + i + 1) * p)) = a + (b - a) * xc;
+      om(range(upper + i * p, upper + (i + 1) * p)) = a + (b - a) * xc;
       a                                             = b;
     }
 
-    // Points on (-lambda,0)
+    // Central point omega=0, its own mirror
 
-    om(range(0, npom * p)) = -om(range(2 * npom * p - 1, npom * p - 1, -1));
+    if (symmetrize) om(nhalf) = 0.0;
+
+    // Points on (-lambda,0): mirror of the positive half
+
+    om(range(0, nhalf)) = -om(range(ntot - 1, upper - 1, -1));
 
     return om;
   }
 
-  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams const &fine) {
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams const &fine, bool symmetrize) {
 
     int p   = fine.p;
     int npt = fine.npt;
@@ -79,10 +87,16 @@ namespace cppdlr {
     auto [xgl, wgl] = gaussquad(p);  // Gauss-Legendre nodes and weights on [-1,1]
     xgl             = (xgl + 1) / 2; // Transform to [0,1]
 
-    // Imaginary time grid points
+    // Imaginary time grid points, mirror-symmetric about beta/2: t(i) = -t(n-1-i) in
+    // relative format. The symmetric case additionally includes tau=beta/2, its own
+    // mirror since k_it(0.5,om) = k_it(-0.5,om), with zero quadrature weight so the
+    // quadrature rule is unchanged.
 
-    auto t = nda::vector<double>(fine.nt);
-    auto w = nda::vector<double>(fine.nt);
+    int nhalf = npt * p;                        // # points on (0,1/2)
+    int upper = symmetrize ? nhalf + 1 : nhalf; // first index of the (1/2,1) half
+    int ntot  = upper + nhalf;                  // Total # points
+    auto t    = nda::vector<double>(ntot);
+    auto w    = nda::vector<double>(ntot);
 
     double a = 0, b = 0;
 
@@ -95,10 +109,17 @@ namespace cppdlr {
       a                            = b;
     }
 
-    // Points on (1/2,1) in relative format
+    // Central point tau=beta/2, carrying no quadrature weight
 
-    t(range(npt * p, 2 * npt * p)) = -t(range(npt * p - 1, -1, -1));
-    w(range(npt * p, 2 * npt * p)) = w(range(npt * p - 1, -1, -1));
+    if (symmetrize) {
+      t(nhalf) = 0.5;
+      w(nhalf) = 0.0;
+    }
+
+    // Points on (1/2,1) in relative format: mirror of the first half
+
+    t(range(upper, ntot)) = -t(range(nhalf - 1, -1, -1));
+    w(range(upper, ntot)) = w(range(nhalf - 1, -1, -1));
 
     return {t, w};
   }
@@ -262,8 +283,8 @@ namespace cppdlr {
     auto fine = fineparams(lambda);
 
     // Get fine grids in frequency and imaginary time
-    auto [t, w] = build_it_fine(fine);
-    auto om     = build_rf_fine(fine);
+    auto [t, w] = build_it_fine(fine, symmetrize);
+    auto om     = build_rf_fine(fine, symmetrize);
 
     // Get discretization of analytic continuation kernel on fine grids (the K
     // matrix), weighted in the time variable by the square root of the
