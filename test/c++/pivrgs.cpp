@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 #include <cppdlr/utils.hpp>
 #include <cmath>
+#include <vector>
 #include <nda/blas.hpp>
 
 using namespace cppdlr;
@@ -97,6 +98,61 @@ TEST(pivrgs, pivrgs_real) {
   EXPECT_EQ(pivthin.size(), r);
   EXPECT_EQ(pivthin, arange(r));
   EXPECT_LE(frobenius_norm(q - qthin), 1e-14);
+}
+
+/**
+ * Test that the eps-cutoff symmetrized Gram-Schmidt pivrgs_sym handles an odd
+ * number of rows: no throw, the central row (m-1)/2 is selected as a
+ * self-paired pivot giving an odd rank, the remaining pivots come in mirror
+ * pairs, and the returned rows are orthonormal.
+ */
+TEST(pivrgs, pivrgs_sym_odd) {
+
+  int m      = 51; // Odd number of rows
+  int n      = 40;
+  double eps = 1e-6;
+
+  // Random matrix with rapidly decaying column norms, so numerically low-rank
+  auto a = nda::matrix<double>::rand(m, n);
+  for (int j = 0; j < n; ++j) { a(_, j) *= pow(2.0, -j); }
+
+  // Symmetrized pivoted Gram-Schmidt with eps cutoff (must not throw for odd m)
+  auto [q, norms, piv] = pivrgs_sym(a, eps);
+  int r                = norms.size();
+
+  // Rank is odd, and below the number of columns
+  EXPECT_EQ(r % 2, 1);
+  EXPECT_LT(r, n);
+
+  // The central row (m-1)/2, its own mirror, is selected as the first pivot
+  EXPECT_EQ(piv(0), (m - 1) / 2);
+
+  // The remaining pivots come in mirror pairs: i selected => m-1-i selected
+  auto selected = std::vector<bool>(m, false);
+  for (auto p : piv) { selected[p] = true; }
+  for (auto p : piv) { EXPECT_TRUE(selected[m - 1 - p]); }
+
+  // Returned rows are orthonormal to near double precision
+  EXPECT_LE(frobenius_norm(eye<double>(r) - q * transpose(q)), 1e-13);
+}
+
+/**
+ * Test that the eps-cutoff pivrgs_sym rejects an odd-row matrix whose middle row
+ * is negligible. That row is a forced pivot rather than one chosen by norm, so
+ * there is no symmetrized basis of odd rank, however large the other rows are.
+ */
+TEST(pivrgs, pivrgs_sym_negligible_middle_row) {
+
+  int m      = 51; // Odd number of rows
+  int n      = 40;
+  double eps = 1e-6;
+
+  auto a = nda::matrix<double>::rand(m, n);
+  for (int j = 0; j < n; ++j) { a(_, j) *= pow(2.0, -j); }
+  EXPECT_NO_THROW(pivrgs_sym(a, eps));
+
+  a((m - 1) / 2, _) = 0;
+  EXPECT_THROW(pivrgs_sym(a, eps), std::runtime_error);
 }
 
 /**

@@ -218,7 +218,11 @@ namespace cppdlr {
    *
    * \note The symmetrization condition is that if A(i,:), the ith row of A, is
    * selected as a pivot, then A(m-i-1,:) is also selected as a pivot. Here, m
-   * is the row dimension of A, and A is zero-indexed. m must be even.
+   * is the row dimension of A, and A is zero-indexed. If m is odd, the middle row
+   * (index (m-1)/2) is its own symmetric partner, and is automatically selected as
+   * the first pivot, so that the epsilon-rank is odd. Since that pivot is forced,
+   * the middle row must itself be above the @p eps tolerance; otherwise there is no
+   * symmetrized basis of odd rank, and an exception is thrown.
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
@@ -226,15 +230,22 @@ namespace cppdlr {
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, double eps) {
 
     // Get matrix dimensions
-    auto [m, n] = a.shape();
-    int maxrnk  = std::min(m, n);
+    auto [m, n]   = a.shape();
+    int maxrnk    = std::min(m, n);
+    int nprs      = m / 2;          // Number of mirror pairs of rows
+    bool hasmid   = (m % 2 == 1);   // If m is odd, the middle row is its own mirror
+    int firstpair = hasmid ? 1 : 0; // Row where the first mirror pair begins
 
-    if (m % 2 != 0) { throw std::runtime_error("Input matrix must have even number of rows."); }
+    // Order rows to make symmetric rows adjacent, putting the middle row first
+    // if m is odd: piv = [(m-1)/2,] 0, m-1, 1, m-2, ...
+    auto piv = nda::arange(0, m);
+    if (hasmid) { piv(0) = (m - 1) / 2; }
+    piv(nda::range(firstpair, m, 2))     = nda::arange(0, nprs);
+    piv(nda::range(firstpair + 1, m, 2)) = nda::arange(m - 1, m - 1 - nprs, -1);
 
-    // Copy input data, re-ordering rows to make symmetric rows adjacent.
-    auto aa                    = typename T::regular_type(m, n);
-    aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
-    aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
+    // Copy input data in this order
+    auto aa = typename T::regular_type(m, n);
+    for (int j = 0; j < m; ++j) { aa(j, _) = a(piv(j), _); }
 
     // Compute norms of rows of input matrix, and rescale eps tolerance
     auto norms   = nda::vector<double>(m);
@@ -242,17 +253,32 @@ namespace cppdlr {
     for (int j = 0; j < m; ++j) { norms(j) = normsq(aa(j, _)); }
 
     // Begin pivoted double Gram-Schmidt procedure
-    int jpiv                 = 0;
-    double nrm               = 0;
-    auto piv                 = nda::arange(0, m);
-    piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); // Re-order pivots to match re-ordered input matrix
-    piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);
+    int jpiv   = 0;
+    double nrm = 0;
 
-    if (maxrnk % 2 != 0) { // If n < m and n is odd, decrease maxrnk to maintain symmetry
-      maxrnk -= 1;
+    // maxrnk must have the same parity as m, since rows are selected in pairs,
+    // preceded by the middle row if m is odd
+    if (maxrnk % 2 != m % 2) { maxrnk -= 1; }
+
+    // Choose the middle row (now the first row) as the first pivot. It is forced
+    // rather than chosen by norm, so a negligible middle row says nothing about the
+    // remaining rows: reporting an epsilon-rank of zero would be wrong, and no
+    // symmetrized basis of odd rank exists.
+    if (hasmid) {
+      if (norms(0) <= epssq) { throw std::runtime_error("Middle row of input matrix must be above the eps tolerance, since it is a forced pivot."); }
+
+      // Normalize middle row
+      aa(0, _) /= sqrt(norms(0));
+
+      // Orthogonalize remaining rows against middle row
+      for (int k = 1; k < m; ++k) {
+        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
+        aa(k, _) = aa(k, _) - aa(0, _) * nda::blas::dotc(aa(0, _), aa(k, _));
+        norms(k) = normsq(aa(k, _));
+      }
     }
 
-    for (int j = 0; j < maxrnk; j += 2) {
+    for (int j = firstpair; j < maxrnk; j += 2) {
 
       // Find next pair of pivots
       jpiv = j;
@@ -334,6 +360,11 @@ namespace cppdlr {
    * is the row dimension of A, and A is zero-indexed. A can have an odd number of
    * rows if and only if @p r is odd, and in this case the middle row (index
    * (m-1)/2) of A is automatically selected as a pivot.
+   *
+   * \note @p r may be as large as n+1, in which case the last selected row is
+   * linearly dependent and only the pivots are meaningful. This is needed for a
+   * matrix with no self-symmetric row, which can only reach an odd rank n by
+   * selecting n+1 mirror-paired rows.
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
@@ -346,7 +377,6 @@ namespace cppdlr {
     if (m % 2 == 1 && r % 2 == 0) { throw std::runtime_error("If input matrix has odd number of rows, r must be odd."); }
     if (r % 2 == 1 && m % 2 == 0) { throw std::runtime_error("If r is odd, input matrix must have odd number of rows."); }
     if (r > m || r > n + 1) { throw std::runtime_error("r must be less than or equal to min(m,n+1)."); }
-    if (r == n + 1 && (n % 2 == 1 || n > m)) { throw std::runtime_error("If r = n+1, n must be even and less than or equal to m."); }
 
     // Copy input data, re-ordering rows to make symmetric rows adjacent. If m
     // odd, put middle row first.
