@@ -106,5 +106,5 @@ int main() {
 
   // Print results
   std::cout << fmt::format("Unsymmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", r, errl2, errlinf);
-  std::cout << fmt::format("Symmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", r, errl2_sym, errlinf_sym);
+  std::cout << fmt::format("Symmetrized DLR: rank = {}, L^2(tau) err = {:e}, L^inf(tau) err = {:e}\n", rsym, errl2_sym, errlinf_sym);
 }
