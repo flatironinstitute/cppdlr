@@ -349,7 +349,7 @@ namespace cppdlr {
     if (r == n + 1 && (n % 2 == 1 || n > m)) { throw std::runtime_error("If r = n+1, n must be even and less than or equal to m."); }
 
     // Copy input data, re-ordering rows to make symmetric rows adjacent. If m
-    // odd, put middle row at the end.
+    // odd, put middle row first.
     auto aa = typename T::regular_type(m, n);
     if (m % 2 == 0) {
       aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
@@ -358,7 +358,6 @@ namespace cppdlr {
       aa(0, _)                   = a((m - 1) / 2, _);
       aa(nda::range(1, m, 2), _) = a(nda::range(0, (m - 1) / 2), _);
       aa(nda::range(2, m, 2), _) = a(nda::range(m - 1, (m - 1) / 2, -1), _);
-      //aa(m - 1, _)                   = a((m - 1) / 2, _);
     }
 
     // Compute norms of rows of input matrix
@@ -376,10 +375,9 @@ namespace cppdlr {
       piv(0)                   = (m - 1) / 2;
       piv(nda::range(1, m, 2)) = nda::arange(0, (m - 1) / 2);
       piv(nda::range(2, m, 2)) = nda::arange(m - 1, (m - 1) / 2, -1);
-      //piv(m - 1)                   = (m - 1) / 2;
     }
 
-    // If m odd, first choose middle row (now last row) as first pivot
+    // If m odd, first choose middle row (now the first row) as first pivot
 
     if (m % 2 == 1) {
       // Normalize
