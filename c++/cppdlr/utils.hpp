@@ -392,9 +392,9 @@ namespace cppdlr {
       }
     }
 
-    int jstrt = (m % 2 == 1) ? 1 : 0;
+    int firstpair = (m % 2 == 1) ? 1 : 0; // Row where the first mirror pair begins
     // Then proceed with pivoted GS algorithm as normal
-    for (int j = jstrt; j < r; j += 2) {
+    for (int j = firstpair; j < r; j += 2) {
 
       // Find next pair of pivots
       jpiv = j;
