@@ -229,8 +229,10 @@ namespace cppdlr {
   template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, double eps) {
 
-    // Get matrix dimensions
-    auto [m, n]   = a.shape();
+    // Get matrix dimensions. Not a structured binding, since clang before 19 cannot
+    // capture one in the normalize_and_project lambda below when OpenMP is enabled.
+    long m        = a.extent(0);
+    long n        = a.extent(1);
     int maxrnk    = std::min(m, n);
     int nprs      = m / 2;          // Number of mirror pairs of rows
     bool hasmid   = (m % 2 == 1);   // If m is odd, the middle row is its own mirror
@@ -252,9 +254,16 @@ namespace cppdlr {
     double epssq = eps * eps;
     for (int j = 0; j < m; ++j) { norms(j) = normsq(aa(j, _)); }
 
-    // Begin pivoted double Gram-Schmidt procedure
-    int jpiv   = 0;
-    double nrm = 0;
+    // Normalize row j, given its squared norm, and orthogonalize the rows after it
+    // against it, updating their norms
+    auto normalize_and_project = [&](int j, double nrmsq) {
+      aa(j, _) /= sqrt(nrmsq);
+      for (int k = j + 1; k < m; ++k) {
+        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
+        aa(k, _) = aa(k, _) - aa(j, _) * nda::blas::dotc(aa(j, _), aa(k, _));
+        norms(k) = normsq(aa(k, _));
+      }
+    };
 
     // maxrnk must have the same parity as m, since rows are selected in pairs,
     // preceded by the middle row if m is odd
@@ -266,17 +275,12 @@ namespace cppdlr {
     // symmetrized basis of odd rank exists.
     if (hasmid) {
       if (norms(0) <= epssq) { throw std::runtime_error("Middle row of input matrix must be above the eps tolerance, since it is a forced pivot."); }
-
-      // Normalize middle row
-      aa(0, _) /= sqrt(norms(0));
-
-      // Orthogonalize remaining rows against middle row
-      for (int k = 1; k < m; ++k) {
-        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
-        aa(k, _) = aa(k, _) - aa(0, _) * nda::blas::dotc(aa(0, _), aa(k, _));
-        norms(k) = normsq(aa(k, _));
-      }
+      normalize_and_project(0, norms(0));
     }
+
+    // Begin pivoted double Gram-Schmidt procedure
+    int jpiv   = 0;
+    double nrm = 0;
 
     for (int j = firstpair; j < maxrnk; j += 2) {
 
@@ -309,29 +313,13 @@ namespace cppdlr {
       // (not including current row)
       if (nrm <= epssq) { return {aa(nda::range(0, j), _), norms(nda::range(0, j)), piv(nda::range(0, j))}; };
 
-      // Normalize current row
-      aa(j, _) /= sqrt(nrm);
-
-      // Orthogonalize remaining rows against current row
-      for (int k = j + 1; k < m; ++k) {
-        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
-        aa(k, _) = aa(k, _) - aa(j, _) * nda::blas::dotc(aa(j, _), aa(k, _));
-        norms(k) = normsq(aa(k, _));
-      }
+      normalize_and_project(j, nrm);
 
       // Orthogonalize current row (now the second chosen pivot row) against all
       // previously chosen rows
       for (int k = 0; k < j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j + 1, _)); }
 
-      // Normalize current row
-      aa(j + 1, _) /= sqrt(normsq(aa(j + 1, _)));
-
-      // Orthogonalize remaining rows against current row
-      for (int k = j + 2; k < m; ++k) {
-        if (norms(k) <= epssq) { continue; } // Can skip rows with norm less than tolerance
-        aa(k, _) = aa(k, _) - aa(j + 1, _) * nda::blas::dotc(aa(j + 1, _), aa(k, _));
-        norms(k) = normsq(aa(k, _));
-      }
+      normalize_and_project(j + 1, normsq(aa(j + 1, _)));
     }
 
     return {aa(nda::range(maxrnk), _), norms(nda::range(maxrnk)), piv(nda::range(maxrnk))};
@@ -371,8 +359,10 @@ namespace cppdlr {
   template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, int r) {
 
-    // Get matrix dimensions
-    auto [m, n] = a.shape();
+    // Get matrix dimensions. Not a structured binding, since clang before 19 cannot
+    // capture one in the normalize_and_project lambda below when OpenMP is enabled.
+    long m = a.extent(0);
+    long n = a.extent(1);
 
     if (m % 2 == 1 && r % 2 == 0) { throw std::runtime_error("If input matrix has odd number of rows, r must be odd."); }
     if (r % 2 == 1 && m % 2 == 0) { throw std::runtime_error("If r is odd, input matrix must have odd number of rows."); }
@@ -397,24 +387,23 @@ namespace cppdlr {
     auto norms = nda::vector<double>(m);
     for (int j = 0; j < m; ++j) { norms(j) = normsq(aa(j, _)); }
 
+    // Normalize row j and orthogonalize the rows after it against it, updating
+    // their norms
+    auto normalize_and_project = [&](int j) {
+      aa(j, _) /= sqrt(normsq(aa(j, _)));
+      for (int k = j + 1; k < m; ++k) {
+        aa(k, _) = aa(k, _) - aa(j, _) * nda::blas::dotc(aa(j, _), aa(k, _));
+        norms(k) = normsq(aa(k, _));
+      }
+    };
+
+    // If m odd, first choose middle row (now the first row) as first pivot
+    if (hasmid) { normalize_and_project(0); }
+
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv   = 0;
     double nrm = 0;
 
-    // If m odd, first choose middle row (now the first row) as first pivot
-
-    if (hasmid) {
-      // Normalize
-      aa(0, _) /= sqrt(normsq(aa(0, _)));
-
-      // Orthogonalize remaining rows against current row
-      for (int k = 1; k < m; ++k) {
-        aa(k, _) = aa(k, _) - aa(0, _) * nda::blas::dotc(aa(0, _), aa(k, _));
-        norms(k) = normsq(aa(k, _));
-      }
-    }
-
-    // Then proceed with pivoted GS algorithm as normal
     for (int j = firstpair; j < r; j += 2) {
 
       // Find next pair of pivots
@@ -439,27 +428,13 @@ namespace cppdlr {
       // previously chosen rows
       for (int k = 0; k < j; ++k) { aa(j, _) = aa(j, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j, _)); }
 
-      // Normalize current row
-      aa(j, _) /= sqrt(normsq(aa(j, _)));
-
-      // Orthogonalize remaining rows against current row
-      for (int k = j + 1; k < m; ++k) {
-        aa(k, _) = aa(k, _) - aa(j, _) * nda::blas::dotc(aa(j, _), aa(k, _));
-        norms(k) = normsq(aa(k, _));
-      }
+      normalize_and_project(j);
 
       // Orthogonalize current row (now the second chosen pivot row) against all
       // previously chosen rows
       for (int k = 0; k < j + 1; ++k) { aa(j + 1, _) = aa(j + 1, _) - aa(k, _) * nda::blas::dotc(aa(k, _), aa(j + 1, _)); }
 
-      // Normalize current row
-      aa(j + 1, _) /= sqrt(normsq(aa(j + 1, _)));
-
-      // Orthogonalize remaining rows against current row
-      for (int k = j + 2; k < m; ++k) {
-        aa(k, _) = aa(k, _) - aa(j + 1, _) * nda::blas::dotc(aa(j + 1, _), aa(k, _));
-        norms(k) = normsq(aa(k, _));
-      }
+      normalize_and_project(j + 1);
     }
 
     return {aa(nda::range(r), _), norms(nda::range(r)), piv(nda::range(r))};
