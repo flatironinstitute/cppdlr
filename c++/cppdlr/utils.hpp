@@ -378,17 +378,20 @@ namespace cppdlr {
     if (r % 2 == 1 && m % 2 == 0) { throw std::runtime_error("If r is odd, input matrix must have odd number of rows."); }
     if (r > m || r > n + 1) { throw std::runtime_error("r must be less than or equal to min(m,n+1)."); }
 
-    // Copy input data, re-ordering rows to make symmetric rows adjacent. If m
-    // odd, put middle row first.
+    int nprs      = m / 2;          // Number of mirror pairs of rows
+    bool hasmid   = (m % 2 == 1);   // If m is odd, the middle row is its own mirror
+    int firstpair = hasmid ? 1 : 0; // Row where the first mirror pair begins
+
+    // Order rows to make symmetric rows adjacent, putting the middle row first
+    // if m is odd: piv = [(m-1)/2,] 0, m-1, 1, m-2, ...
+    auto piv = nda::arange(0, m);
+    if (hasmid) { piv(0) = (m - 1) / 2; }
+    piv(nda::range(firstpair, m, 2))     = nda::arange(0, nprs);
+    piv(nda::range(firstpair + 1, m, 2)) = nda::arange(m - 1, m - 1 - nprs, -1);
+
+    // Copy input data in this order
     auto aa = typename T::regular_type(m, n);
-    if (m % 2 == 0) {
-      aa(nda::range(0, m, 2), _) = a(nda::range(0, m / 2), _);
-      aa(nda::range(1, m, 2), _) = a(nda::range(m - 1, m / 2 - 1, -1), _);
-    } else {
-      aa(0, _)                   = a((m - 1) / 2, _);
-      aa(nda::range(1, m, 2), _) = a(nda::range(0, (m - 1) / 2), _);
-      aa(nda::range(2, m, 2), _) = a(nda::range(m - 1, (m - 1) / 2, -1), _);
-    }
+    for (int j = 0; j < m; ++j) { aa(j, _) = a(piv(j), _); }
 
     // Compute norms of rows of input matrix
     auto norms = nda::vector<double>(m);
@@ -397,19 +400,10 @@ namespace cppdlr {
     // Begin pivoted double Gram-Schmidt procedure
     int jpiv   = 0;
     double nrm = 0;
-    auto piv   = nda::arange(0, m);
-    if (m % 2 == 0) {
-      piv(nda::range(0, m, 2)) = nda::arange(0, m / 2); // Re-order pivots to match re-ordered input matrix
-      piv(nda::range(1, m, 2)) = nda::arange(m - 1, m / 2 - 1, -1);
-    } else {
-      piv(0)                   = (m - 1) / 2;
-      piv(nda::range(1, m, 2)) = nda::arange(0, (m - 1) / 2);
-      piv(nda::range(2, m, 2)) = nda::arange(m - 1, (m - 1) / 2, -1);
-    }
 
     // If m odd, first choose middle row (now the first row) as first pivot
 
-    if (m % 2 == 1) {
+    if (hasmid) {
       // Normalize
       aa(0, _) /= sqrt(normsq(aa(0, _)));
 
@@ -420,7 +414,6 @@ namespace cppdlr {
       }
     }
 
-    int firstpair = (m % 2 == 1) ? 1 : 0; // Row where the first mirror pair begins
     // Then proceed with pivoted GS algorithm as normal
     for (int j = firstpair; j < r; j += 2) {
 
