@@ -42,7 +42,7 @@ namespace cppdlr {
     if (p <= 0) throw std::runtime_error("Choose p > 0.");
   }
 
-  nda::vector<double> build_rf_fine(fineparams &fine) {
+  nda::vector<double> build_rf_fine(fineparams const &fine) {
 
     int p    = fine.p;
     int npom = fine.npom;
@@ -71,7 +71,7 @@ namespace cppdlr {
     return om;
   }
 
-  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams &fine) {
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams const &fine) {
 
     int p   = fine.p;
     int npt = fine.npt;
@@ -161,7 +161,7 @@ namespace cppdlr {
     return kvec;
   }
 
-  std::tuple<double, double> geterr_k_it(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
+  std::tuple<double, double> geterr_k_it(fineparams const &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
                                          nda::matrix_const_view<double> kmat) {
 
     int nt   = fine.nt;

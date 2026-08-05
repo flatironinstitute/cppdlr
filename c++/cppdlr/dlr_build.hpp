@@ -52,7 +52,7 @@ namespace cppdlr {
   *
   * @return Fine real frequency grid
   */
-  nda::vector<double> build_rf_fine(fineparams &fine);
+  nda::vector<double> build_rf_fine(fineparams const &fine);
 
   /**
   * @brief Get fine composite Legendre grid in imaginary time and corresponding
@@ -65,7 +65,7 @@ namespace cppdlr {
   *
   * \note Fine imaginary time grid is given in relative format 
   */
-  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams &fine);
+  std::tuple<nda::vector<double>, nda::vector<double>> build_it_fine(fineparams const &fine);
 
   /**
   * @brief Get imaginary time discretization of analytic continuation kernel
@@ -134,7 +134,7 @@ namespace cppdlr {
   * \note \p kmat should be computed using the function get_kfine with composite
   * Chebyshev grids produced by get_omfine and get_tfine
   */
-  std::tuple<double, double> geterr_k_it(fineparams &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
+  std::tuple<double, double> geterr_k_it(fineparams const &fine, nda::vector_const_view<double> t, nda::vector_const_view<double> om,
                                          nda::matrix_const_view<double> kmat);
 
   /**
