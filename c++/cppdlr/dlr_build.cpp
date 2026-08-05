@@ -58,7 +58,6 @@ namespace cppdlr {
 
     // Points on (0,lambda)
 
-    a = 0.0;
     for (int i = 0; i < npom; ++i) {
       b                                             = fine.lambda / pow(2.0, npom - i - 1);
       om(range((npom + i) * p, (npom + i + 1) * p)) = a + (b - a) * xc;
