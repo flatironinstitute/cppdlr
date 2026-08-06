@@ -67,6 +67,6 @@ external_dependency(nda
 set(FMT_INSTALL OFF)
 external_dependency(fmt
   GIT_REPO https://github.com/fmtlib/fmt
-  GIT_TAG 12.0.0
+  GIT_TAG 12.2.0
   EXCLUDE_FROM_ALL
 )
