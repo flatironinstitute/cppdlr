@@ -63,9 +63,10 @@ external_dependency(nda
   GIT_TAG unstable
 )
 
-# -- fmt --
-set(FMT_INSTALL ON)
+# -- fmt -- (used by the test suite only)
+set(FMT_INSTALL OFF)
 external_dependency(fmt
   GIT_REPO https://github.com/fmtlib/fmt
   GIT_TAG 12.0.0
+  EXCLUDE_FROM_ALL
 )

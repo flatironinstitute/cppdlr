@@ -22,7 +22,6 @@ function(find_dep)
   endif()
 endfunction()
 find_dep(nda 1.2)
-find_dep(fmt)
 
 # Include the exported targets of this project
 include(@CMAKE_INSTALL_FULL_LIBDIR@/cmake/@PROJECT_NAME@/@PROJECT_NAME@-targets.cmake)
