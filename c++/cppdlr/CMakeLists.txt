@@ -15,6 +15,11 @@ target_include_directories(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:${PROJECT_
 target_include_directories(${PROJECT_NAME}_c SYSTEM INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>)
 target_link_directories(${PROJECT_NAME}_c PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 target_link_directories(${PROJECT_NAME}_c INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_LIBDIR}>)
+# Our own definitions are never interposed at runtime, so let the compiler call
+# them directly instead of through the PLT. ELF only, Mach-O has no preemption.
+target_compile_options(${PROJECT_NAME}_c PRIVATE
+  $<$<AND:$<PLATFORM_ID:Linux>,$<CXX_COMPILER_ID:GNU,Clang,IntelLLVM>>:-fno-semantic-interposition>
+)
 target_compile_definitions(${PROJECT_NAME}_c PUBLIC
 				CPPDLR_GIT_HASH=${PROJECT_GIT_HASH}
 				$<$<CONFIG:Debug>:CPPDLR_DEBUG>
