@@ -67,8 +67,22 @@ namespace cppdlr {
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf);
 
     imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, nda::vector_const_view<double> dlr_it, nda::matrix_const_view<double> cf2it,
+               nda::matrix_const_view<double> it2cf_lu, nda::vector_const_view<int> it2cf_piv, nda::vector_const_view<int> dlr_it_idx,
+               bool symmetrize)
+       : lambda_(lambda),
+         symmetrize_(symmetrize),
+         r(dlr_rf.size()),
+         dlr_rf(dlr_rf),
+         dlr_it(dlr_it),
+         dlr_it_idx(dlr_it_idx),
+         cf2it(cf2it),
+         it2cf{it2cf_lu, it2cf_lu, it2cf_piv} {};
+
+    imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, nda::vector_const_view<double> dlr_it, nda::matrix_const_view<double> cf2it,
                nda::matrix_const_view<double> it2cf_lu, nda::vector_const_view<int> it2cf_piv)
-       : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf), dlr_it(dlr_it), cf2it(cf2it), it2cf{it2cf_lu, it2cf_lu, it2cf_piv} {};
+       : imtime_ops(lambda, dlr_rf, dlr_it, cf2it, it2cf_lu, it2cf_piv, recover_itnode_idx(lambda, dlr_it), NONSYM) {
+      check_unsymmetrized(dlr_rf); // this signature predates the symmetrize flag
+    };
 
     imtime_ops() = default;
 
@@ -721,6 +735,19 @@ namespace cppdlr {
     nda::vector_const_view<double> get_itnodes() const { return dlr_it; };
     double get_itnodes(int i) const { return dlr_it(i); };
 
+    /**
+    * @brief Get indices of the DLR imaginary time nodes in the fine imaginary time
+    * grid built with this object's symmetrize option
+    *
+    * @return Indices of the DLR imaginary time nodes in the fine grid
+    *
+    * @note The nodes are exact copies of the fine grid points they index, so the
+    * indices, together with is_symmetrized, identify the node set exactly, e.g. for
+    * hashing or comparing grids across toolchains.
+    */
+    nda::vector_const_view<int> get_itnodes_idx() const { return dlr_it_idx; };
+    int get_itnodes_idx(int i) const { return dlr_it_idx(i); };
+
     /** Access DLR imaginary real frequency nodes*/
     /**
     * @brief Get DLR real frequency nodes
@@ -766,6 +793,9 @@ namespace cppdlr {
     */
     int rank() const { return r; }
     double lambda() const { return lambda_; }
+
+    /** Whether this object was built with symmetrized DLR grids, SYM/true or NONSYM/false */
+    bool is_symmetrized() const { return symmetrize_; }
 
     /**
     * @brief Get inner product matrix
@@ -914,10 +944,12 @@ namespace cppdlr {
 
     private:
     double lambda_;
-    int r;                      ///< DLR rank
-    nda::vector<double> dlr_rf; ///< DLR frequencies
-    nda::vector<double> dlr_it; ///< DLR imaginary time nodes
-    nda::matrix<double> cf2it;  ///< Transformation matrix from DLR coefficients to values at DLR imaginary time nodes
+    bool symmetrize_ = false;    ///< Whether the DLR grids are symmetrized
+    int r;                       ///< DLR rank
+    nda::vector<double> dlr_rf;  ///< DLR frequencies
+    nda::vector<double> dlr_it;  ///< DLR imaginary time nodes
+    nda::vector<int> dlr_it_idx; ///< Indices of the DLR imaginary time nodes in the fine time grid
+    nda::matrix<double> cf2it;   ///< Transformation matrix from DLR coefficients to values at DLR imaginary time nodes
 
     /**
     * @brief Struct for transformation from DLR imaginary time values to coefficients
@@ -952,7 +984,8 @@ namespace cppdlr {
      * @param[in] ar Archive to serialize into
      */
     void serialize(auto &ar) const {
-      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
+      ar & lambda_ & symmetrize_ & r & dlr_rf & dlr_it & dlr_it_idx & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it
+         & ipmat & refl;
     }
 
     /**
@@ -963,7 +996,8 @@ namespace cppdlr {
      * @param[in] ar Archive to deserialize from
      */
     void deserialize(auto &ar) {
-      ar & lambda_ & r & dlr_rf & dlr_it & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it & ipmat & refl;
+      ar & lambda_ & symmetrize_ & r & dlr_rf & dlr_it & dlr_it_idx & cf2it & it2cf.lu & it2cf.zlu & it2cf.piv & hilb & tcf2it & thilb & ttcf2it
+         & ipmat & refl;
     }
 
     // -------------------- hdf5 -------------------
@@ -981,6 +1015,8 @@ namespace cppdlr {
       h5::write(gr, "cf2it", m.get_cf2it());
       h5::write(gr, "it2cf_lu", m.get_it2cf_lu());
       h5::write(gr, "it2cf_piv", m.get_it2cf_piv());
+      h5::write(gr, "it_idx", m.get_itnodes_idx());
+      h5::write(gr, "symmetrize", m.is_symmetrized());
     }
 
     friend void h5_read(h5::group fg, std::string const &subgroup_name, imtime_ops &m) {
@@ -995,7 +1031,17 @@ namespace cppdlr {
       auto it2cf_lu  = h5::read<nda::matrix<double>>(gr, "it2cf_lu");
       auto it2cf_piv = h5::read<nda::vector<int>>(gr, "it2cf_piv");
 
-      m = imtime_ops(lambda, rf, it, cf2it_, it2cf_lu, it2cf_piv);
+      // Both datasets were introduced in cppdlr 1.4.0; an archive without them holds an unsymmetrized grid
+      bool symmetrize = NONSYM;
+      auto it_idx     = nda::vector<int>{};
+      if (h5::try_read(gr, "symmetrize", symmetrize)) {
+        h5::read(gr, "it_idx", it_idx);
+      } else {
+        check_unsymmetrized(rf);
+        it_idx = recover_itnode_idx(lambda, it);
+      }
+
+      m = imtime_ops(lambda, rf, it, cf2it_, it2cf_lu, it2cf_piv, it_idx, symmetrize);
     }
   };
 

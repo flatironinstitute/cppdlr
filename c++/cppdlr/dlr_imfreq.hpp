@@ -57,8 +57,10 @@ namespace cppdlr {
                nda::vector_const_view<int> dlr_if,                                          //
                nda::matrix_const_view<nda::dcomplex> cf2if,                                 //
                nda::matrix_const_view<nda::dcomplex> if2cf_lu,                              //
-               nda::vector_const_view<int> if2cf_piv)
+               nda::vector_const_view<int> if2cf_piv,                                       //
+               bool symmetrize)
        : lambda_(lambda),
+         symmetrize_(symmetrize),
          statistic(statistic),
          r(cf2if.extent(1)),
          niom(dlr_if.size()),
@@ -66,6 +68,15 @@ namespace cppdlr {
          dlr_if(dlr_if),
          cf2if(cf2if),
          if2cf{if2cf_lu, if2cf_piv} {};
+
+    imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, //
+               nda::vector_const_view<int> dlr_if,                                          //
+               nda::matrix_const_view<nda::dcomplex> cf2if,                                 //
+               nda::matrix_const_view<nda::dcomplex> if2cf_lu,                              //
+               nda::vector_const_view<int> if2cf_piv)
+       : imfreq_ops(lambda, dlr_rf, statistic, dlr_if, cf2if, if2cf_lu, if2cf_piv, NONSYM) {
+      check_unsymmetrized(dlr_rf); // this signature predates the symmetrize flag
+    };
 
     imfreq_ops() = default;
 
@@ -242,8 +253,12 @@ namespace cppdlr {
     double lambda() const { return lambda_; }
     statistic_t get_statistic() const { return statistic; }
 
+    /** Whether this object was built with symmetrized DLR grids, SYM/true or NONSYM/false */
+    bool is_symmetrized() const { return symmetrize_; }
+
     private:
     double lambda_;                   ///< Energy cutoff divided by temperature
+    bool symmetrize_ = false;         ///< Whether the DLR grids are symmetrized
     statistic_t statistic;            ///< Particle statistic: Fermion or Boson
     int r;                            ///< DLR rank
     int niom;                         ///< # DLR imaginary freq nodes (= r + 1 in the symmetrized fermionic case, else = r)
@@ -268,7 +283,7 @@ namespace cppdlr {
      *
      * @param[in] ar Archive to serialize into
      */
-    void serialize(auto &ar) const { ar & lambda_ & statistic & r & niom & dlr_rf & dlr_if & cf2if & if2cf.lu & if2cf.piv; }
+    void serialize(auto &ar) const { ar & lambda_ & symmetrize_ & statistic & r & niom & dlr_rf & dlr_if & cf2if & if2cf.lu & if2cf.piv; }
 
     /**
      * Deserialize an object from the archive. This will initialize all members.
@@ -277,7 +292,7 @@ namespace cppdlr {
      *
      * @param[in] ar Archive to deserialize from
      */
-    void deserialize(auto &ar) { ar & lambda_ & statistic & r & niom & dlr_rf & dlr_if & cf2if & if2cf.lu & if2cf.piv; }
+    void deserialize(auto &ar) { ar & lambda_ & symmetrize_ & statistic & r & niom & dlr_rf & dlr_if & cf2if & if2cf.lu & if2cf.piv; }
 
     // -------------------- hdf5 -------------------
 
@@ -295,6 +310,7 @@ namespace cppdlr {
       h5::write(gr, "cf2if", m.get_cf2if());
       h5::write(gr, "if2cf_lu", m.get_if2cf_lu());
       h5::write(gr, "if2cf_piv", m.get_if2cf_piv());
+      h5::write(gr, "symmetrize", m.is_symmetrized());
     }
 
     friend void h5_read(h5::group fg, std::string const &subgroup_name, imfreq_ops &m) {
@@ -318,7 +334,11 @@ namespace cppdlr {
       h5::read(gr, "if2cf_lu", if2cf_lu);
       h5::read(gr, "if2cf_piv", if2cf_piv);
 
-      m = imfreq_ops(lambda, rf, statistic_, if_, cf2if_, if2cf_lu, if2cf_piv);
+      // Archives written before the symmetrization option was stored hold an unsymmetrized grid
+      bool symmetrize = NONSYM;
+      if (not h5::try_read(gr, "symmetrize", symmetrize)) check_unsymmetrized(rf);
+
+      m = imfreq_ops(lambda, rf, statistic_, if_, cf2if_, if2cf_lu, if2cf_piv, symmetrize);
     }
   };
 

@@ -2,6 +2,20 @@
 
 # Changelog
 
+## Version 1.4.0
+
+### New features
+* Add `imtime_ops::get_itnodes_idx` accessor exposing the indices of the DLR imaginary time nodes in the fine time grid. Being integers, they identify the node set exactly and are therefore suited for fingerprinting the grid across toolchains, e.g. for hashing
+* Add free function `recover_itnode_idx` reconstructing those indices from the nodes alone
+* `imtime_ops` and `imfreq_ops` retain the `symmetrize` option they were constructed with, exposed via the new `is_symmetrized` accessor
+* Add free function `check_unsymmetrized`, rejecting a mirror-symmetric DLR frequency grid
+
+### Other changes
+* `imtime_ops` h5 archives carry the new `it_idx` dataset. Archives written without it are still read, with the indices recovered via `recover_itnode_idx`
+* `imtime_ops` and `imfreq_ops` h5 archives carry the new `symmetrize` dataset. Archives written without it are read as unsymmetrized
+* Symmetrized DLR grids from cppdlr <= 1.3.0 are rejected. Their pair-only selection is mirror-symmetric about `omega=0` without containing it, so its imaginary time nodes lie on today's unsymmetrized fine grid, and reporting their indices would fingerprint the grid against one the `symmetrize` flag does not name. Reading such an archive, or passing such a grid to the constructors predating the flag, now throws via `check_unsymmetrized`
+
+
 ## Version 1.3.0
 
 This update contains additional functionality, bug fixes, and build system improvements.
