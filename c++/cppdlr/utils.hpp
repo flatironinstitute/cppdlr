@@ -128,9 +128,9 @@ namespace cppdlr {
    * @param eps Rank cutoff tolerance
    *
    * @return Tuple of (1) matrix whose rows form orthogonal basis of
-   * row space of @p a to @p eps tolerance, (2) vector with entry n given by the
-   * squared l2 norm of the orthogonal complement of nth selected row with
-   * respect to subspace spanned by first n-1 selected rows, (3) vector of
+   * row space of @p a to @p eps tolerance, (2) vector with entry k given by the
+   * squared l2 norm of the orthogonal complement of kth selected row with
+   * respect to subspace spanned by first k-1 selected rows, (3) vector of
    * pivots
    */
 
@@ -211,9 +211,9 @@ namespace cppdlr {
    * @param eps Rank cutoff tolerance
    *
    * @return Tuple of (1) matrix whose rows form orthogonal basis of
-   * row space of @p a to @p eps tolerance, (2) vector with entry n given by the
-   * squared l2 norm of the orthogonal complement of nth selected row with
-   * respect to subspace spanned by first n-1 selected rows, (3) vector of
+   * row space of @p a to @p eps tolerance, (2) vector with entry k given by the
+   * squared l2 norm of the orthogonal complement of kth selected row with
+   * respect to subspace spanned by first k-1 selected rows, (3) vector of
    * pivots
    *
    * \note The symmetrization condition is that if A(i,:), the ith row of A, is
@@ -229,8 +229,8 @@ namespace cppdlr {
   template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, double eps) {
 
-    // Get matrix dimensions. Not a structured binding, since clang before 19 cannot
-    // capture one in the normalize_and_project lambda below when OpenMP is enabled.
+    // Deliberately not `auto [m, n] = a.shape()`: clang < 19 with -fopenmp rejects
+    // capturing a structured binding in the normalize_and_project lambda below.
     long m        = a.extent(0);
     long n        = a.extent(1);
     int maxrnk    = std::min(m, n);
@@ -338,9 +338,9 @@ namespace cppdlr {
    * @param r   Rank cutoff
    *
    * @return Tuple of (1) matrix whose rows are leading @p r vectors in
-   * orthogonal basis of row space of @p a, (2) vector with entry n given by the
-   * squared l2 norm of the orthogonal complement of nth selected row with
-   * respect to subspace spanned by first n-1 selected rows, (3) vector of
+   * orthogonal basis of row space of @p a, (2) vector with entry k given by the
+   * squared l2 norm of the orthogonal complement of kth selected row with
+   * respect to subspace spanned by first k-1 selected rows, (3) vector of
    * pivots
    *
    * \note The symmetrization condition is that if A(i,:), the ith row of A, is
@@ -349,18 +349,22 @@ namespace cppdlr {
    * rows if and only if @p r is odd, and in this case the middle row (index
    * (m-1)/2) of A is automatically selected as a pivot.
    *
-   * \note @p r may be as large as n+1, in which case the last selected row is
-   * linearly dependent and only the pivots are meaningful. This is needed for a
-   * matrix with no self-symmetric row, which can only reach an odd rank n by
-   * selecting n+1 mirror-paired rows.
+   * \note @p r may be as large as n+1, where n is the column dimension of A --
+   * one more than the largest meaningful rank. Mirror-paired rows are selected two
+   * at a time, so if A has no self-symmetric row (m even) the number of selected
+   * rows is even, and spanning a row space of odd dimension n requires selecting
+   * n+1 rows. The last of these is linearly dependent on the others, so its basis
+   * vector and its entry of the returned norms vector are meaningless; only the
+   * pivots should be used. The symmetrized fermionic Matsubara grid is constructed
+   * this way; see imfreq_ops.
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
   template <nda::MemoryArrayOfRank<2> T, nda::Scalar S = nda::get_value_t<T>>
   std::tuple<typename T::regular_type, nda::vector<double>, nda::vector<int>> pivrgs_sym(T const &a, int r) {
 
-    // Get matrix dimensions. Not a structured binding, since clang before 19 cannot
-    // capture one in the normalize_and_project lambda below when OpenMP is enabled.
+    // Deliberately not `auto [m, n] = a.shape()`: clang < 19 with -fopenmp rejects
+    // capturing a structured binding in the normalize_and_project lambda below.
     long m = a.extent(0);
     long n = a.extent(1);
 
