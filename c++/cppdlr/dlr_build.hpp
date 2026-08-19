@@ -61,7 +61,7 @@ namespace cppdlr {
   * square root quadrature weights
   *
   * @param[in] fine Fine grid parameters
-  * @param[in] symmetrize If true, include tau=beta/2 (relative t=0.5) with zero
+  * @param[in] symmetrize If true, include tau=beta/2 with zero
   * quadrature weight, making the grid odd-sized and mirror-symmetric about it.
   *
   * @return Tuple containing fine imaginary time grid and corresponding square
@@ -157,9 +157,7 @@ namespace cppdlr {
   * @return DLR frequencies
   *
   * @note With SYM the DLR frequencies are mirror-symmetric about omega=0, which is
-  * itself included as a self-paired node, so the rank is odd. Without it a
-  * symmetric grid needs a near-degenerate pole pair straddling zero, which
-  * ill-conditions the DLR fit.
+  * itself included as a self-paired node, so the rank is odd.
   */
   nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize);
 

@@ -311,10 +311,7 @@ page<examples>` for a list of `cppdlr` tests which showcase this functionality.
 A symmetrized grid includes its self-symmetric fixed point---the point which is
 its own mirror image---as a single self-paired node: :math:`\omega = 0` among the
 DLR frequencies, and :math:`\tau = \beta/2` among the DLR imaginary time nodes.
-The symmetrized DLR rank :math:`r` is therefore odd. Selecting nodes in mirror
-pairs alone would instead force the frequency grid onto a nearly degenerate pair
-:math:`\pm \delta` straddling :math:`\omega = 0`, whose kernel columns are nearly
-parallel, badly ill-conditioning the DLR fit matrices.
+The symmetrized DLR rank :math:`r` is therefore odd.
 
 We make a note about the symmetrized imaginary frequency grids. In the bosonic
 case, :math:`i \nu_n = 0` is the self-symmetric Matsubara frequency, and is
