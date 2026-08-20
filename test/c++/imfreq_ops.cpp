@@ -430,6 +430,7 @@ static void check_h5_roundtrip(imfreq_ops const &ifops, std::string const &filen
 
   EXPECT_EQ(ifops.lambda(), ifops_ref.lambda());
   EXPECT_EQ(ifops.rank(), ifops_ref.rank());
+  EXPECT_EQ(ifops.is_symmetrized(), ifops_ref.is_symmetrized());
   EXPECT_EQ_ARRAY(ifops.get_rfnodes(), ifops_ref.get_rfnodes());
   EXPECT_EQ_ARRAY(ifops.get_ifnodes(), ifops_ref.get_ifnodes());
   EXPECT_EQ_ARRAY(ifops.get_cf2if(), ifops_ref.get_cf2if());

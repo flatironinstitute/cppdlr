@@ -313,4 +313,30 @@ namespace cppdlr {
 
   nda::vector<double> build_dlr_rf(double lambda, double eps) { return build_dlr_rf(lambda, eps, NONSYM); }
 
+  nda::vector<int> recover_itnode_idx(double lambda, nda::vector_const_view<double> dlr_it) {
+
+    int r      = dlr_it.size();
+    auto t     = std::get<0>(build_it_fine(fineparams(lambda), NONSYM));
+    auto igrid = nda::range(t.size());
+    auto idx   = nda::vector<int>(r);
+
+    // Nearest-neighbor match: stored nodes may differ from the grid in the last few digits
+    for (int l = 0; l < r; ++l) {
+      auto dist = [&](long i) { return std::abs(t(i) - dlr_it(l)); };
+      idx(l)    = *std::ranges::min_element(igrid, {}, dist);
+      if (dist(idx(l)) > 1e-12) throw std::runtime_error("Could not match the DLR imaginary time nodes to the fine grid for the given lambda.");
+    }
+
+    return idx;
+  }
+
+  void check_unsymmetrized(nda::vector_const_view<double> dlr_rf) {
+
+    int r            = dlr_rf.size();
+    auto is_mirrored = [&](long i) { return dlr_rf(i) == -dlr_rf(r - 1 - i); };
+
+    if (std::ranges::all_of(range(r), is_mirrored))
+      throw std::runtime_error("Mirror-symmetric DLR frequency grid: symmetrized grids from cppdlr <= 1.3.0 are no longer supported.");
+  }
+
 } // namespace cppdlr

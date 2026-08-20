@@ -101,3 +101,26 @@ TEST(dlr_build, symmetric_fixed_points) {
   EXPECT_EQ(t_non.size(), fine.nt);
   EXPECT_EQ(w_non.size(), fine.nt);
 }
+
+/**
+* @brief Test the unsymmetrized check guarding the paths that predate the stored
+* symmetrize flag
+*/
+TEST(dlr_build, check_unsymmetrized) {
+
+  double eps = 1e-10;
+
+  for (double lambda : {10.0, 100.0, 1000.0, 10000.0}) {
+    EXPECT_NO_THROW(check_unsymmetrized(build_dlr_rf(lambda, eps)));
+    EXPECT_THROW(check_unsymmetrized(build_dlr_rf(lambda, eps, SYM)), std::runtime_error);
+  }
+
+  // Symmetrized grids from cppdlr <= 1.3.0 contain mirror pairs only, hence have even
+  // rank. Mimic one by dropping omega=0 from a symmetrized grid.
+  auto rf = build_dlr_rf(1000.0, eps, SYM);
+  int r   = rf.size();
+  EXPECT_EQ(rf(r / 2), 0.0);
+
+  auto rf_legacy = nda::concatenate(rf(nda::range(0, r / 2)), rf(nda::range(r / 2 + 1, r)));
+  EXPECT_THROW(check_unsymmetrized(rf_legacy), std::runtime_error);
+}

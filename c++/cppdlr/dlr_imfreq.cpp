@@ -23,7 +23,7 @@ using namespace nda;
 namespace cppdlr {
 
   imfreq_ops::imfreq_ops(double lambda, nda::vector_const_view<double> dlr_rf, statistic_t statistic, bool symmetrize)
-     : lambda_(lambda), statistic(statistic), r(dlr_rf.size()), dlr_rf(dlr_rf) {
+     : lambda_(lambda), symmetrize_(symmetrize), statistic(statistic), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     // # DLR imaginary frequency nodes. The symmetrized grid is mirror-symmetric
     // about i*nu=0. The bosonic grid contains the self-paired node n=0, so niom = r,

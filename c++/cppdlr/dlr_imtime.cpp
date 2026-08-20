@@ -25,7 +25,8 @@ using namespace nda;
 
 namespace cppdlr {
 
-  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize) : lambda_(lambda), r(dlr_rf.size()), dlr_rf(dlr_rf) {
+  imtime_ops::imtime_ops(double lambda, nda::vector_const_view<double> dlr_rf, bool symmetrize)
+     : lambda_(lambda), symmetrize_(symmetrize), r(dlr_rf.size()), dlr_rf(dlr_rf) {
 
     // The symmetrized selection always takes the self-paired tau=beta/2 node plus
     // mirror pairs, so it can only produce an odd number of nodes.
@@ -45,6 +46,7 @@ namespace cppdlr {
     // Pivoted Gram-Schmidt to obtain DLR imaginary time nodes
     auto [q, norms, piv] = (symmetrize ? pivrgs_sym(kmat, 1e-100) : pivrgs(kmat, 1e-100));
     std::sort(piv.begin(), piv.end()); // Sort pivots in ascending order
+    dlr_it_idx = piv;                  // Integer identity of the node set, see get_itnodes_idx
     for (int i = 0; i < r; ++i) { dlr_it(i) = t(piv(i)); }
 
     // Obtain coefficients to imaginary time values transformation matrix

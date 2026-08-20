@@ -173,4 +173,28 @@ namespace cppdlr {
   */
   nda::vector<double> build_dlr_rf(double lambda, double eps);
 
+  /**
+  * @brief Recover the indices of the DLR imaginary time nodes in the unsymmetrized
+  * fine imaginary time grid
+  *
+  * @param[in] lambda DLR cutoff parameter
+  * @param[in] dlr_it DLR imaginary time nodes
+  *
+  * @return Indices of the DLR imaginary time nodes in the fine grid
+  *
+  * @note Nodes are matched to their nearest fine grid point; throws if a node is
+  * further than 1e-12 from the grid.
+  */
+  nda::vector<int> recover_itnode_idx(double lambda, nda::vector_const_view<double> dlr_it);
+
+  /**
+  * @brief Throw if the given DLR frequency grid is mirror-symmetric about omega=0
+  *
+  * Guards the code paths predating the stored symmetrize flag against symmetrized
+  * grids, including the pair-only grids of cppdlr <= 1.3.0.
+  *
+  * @param[in] dlr_rf DLR frequencies
+  */
+  void check_unsymmetrized(nda::vector_const_view<double> dlr_rf);
+
 } // namespace cppdlr

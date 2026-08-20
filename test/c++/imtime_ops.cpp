@@ -1181,20 +1181,11 @@ TEST(dlr_imtime, vals2coefs_transpose) {
   EXPECT_LT(abs(inttst2 - inttru), 5 * eps);
 }
 
-TEST(dlr_imtime, h5_rw) {
+// Write itops to an HDF5 file, read it back, and check that every stored member
+// survives the round trip
+static void check_h5_roundtrip(imtime_ops const &itops, std::string const &filename) {
 
-  double lambda = 1000;  // DLR cutoff
-  double eps    = 1e-10; // DLR tolerance
-
-  // Get DLR frequencies
-  auto dlr_rf = build_dlr_rf(lambda, eps);
-
-  // Get DLR imaginary time object
-  auto itops = imtime_ops(lambda, dlr_rf);
-
-  auto filename = "data_imtime_ops_h5_rw.h5";
-  auto name     = "itops";
-
+  auto name = "itops";
   {
     h5::file file(filename, 'w');
     h5::write(file, name, itops);
@@ -1206,15 +1197,108 @@ TEST(dlr_imtime, h5_rw) {
     h5::read(file, name, itops_ref);
   }
 
-  // Check equal
   EXPECT_EQ(itops.lambda(), itops_ref.lambda());
   EXPECT_EQ(itops.rank(), itops_ref.rank());
+  EXPECT_EQ(itops.is_symmetrized(), itops_ref.is_symmetrized());
   EXPECT_EQ_ARRAY(itops.get_rfnodes(), itops_ref.get_rfnodes());
   EXPECT_EQ_ARRAY(itops.get_itnodes(), itops_ref.get_itnodes());
   EXPECT_EQ_ARRAY(itops.get_cf2it(), itops_ref.get_cf2it());
   EXPECT_EQ_ARRAY(itops.get_it2cf_lu(), itops_ref.get_it2cf_lu());
   EXPECT_EQ_ARRAY(itops.get_it2cf_zlu(), itops_ref.get_it2cf_zlu());
   EXPECT_EQ_ARRAY(itops.get_it2cf_piv(), itops_ref.get_it2cf_piv());
+  EXPECT_EQ_ARRAY(itops.get_itnodes_idx(), itops_ref.get_itnodes_idx());
+}
+
+TEST(dlr_imtime, h5_rw) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  check_h5_roundtrip(imtime_ops(lambda, build_dlr_rf(lambda, eps)), "data_imtime_ops_h5_rw.h5");
+}
+
+TEST(dlr_imtime, h5_rw_sym) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  check_h5_roundtrip(imtime_ops(lambda, build_dlr_rf(lambda, eps, SYM), SYM), "data_imtime_ops_h5_rw_sym.h5");
+}
+
+/**
+* @brief Test that an archive predating the symmetrize and it_idx datasets reads
+* back with both recovered. Only unsymmetrized: legacy symmetrized grids are
+* rejected on read, see dlr_build.check_unsymmetrized.
+*/
+TEST(dlr_imtime, h5_read_legacy) {
+
+  double lambda = 1000;  // DLR cutoff
+  double eps    = 1e-10; // DLR tolerance
+
+  auto filename = "data_imtime_ops_h5_read_legacy.h5";
+  auto name     = "itops";
+
+  auto itops = imtime_ops(lambda, build_dlr_rf(lambda, eps));
+
+  {
+    h5::file file(filename, 'w');
+    h5::write(file, name, itops);
+  }
+
+  // Strip the datasets a legacy archive would not have
+  {
+    h5::file file(filename, 'a');
+    auto gr = h5::group(file).open_group(name);
+    gr.unlink("symmetrize");
+    gr.unlink("it_idx");
+  }
+
+  imtime_ops itops_ref;
+  {
+    h5::file file(filename, 'r');
+    h5::read(file, name, itops_ref);
+  }
+
+  EXPECT_EQ(itops_ref.is_symmetrized(), NONSYM);
+  EXPECT_EQ_ARRAY(itops_ref.get_itnodes_idx(), itops.get_itnodes_idx());
+}
+
+/**
+* @brief Test that the stored fine grid indices of the DLR imaginary time nodes
+* identify the nodes exactly
+*/
+TEST(imtime_ops, itnodes_idx) {
+
+  double eps = 1e-10; // DLR tolerance
+
+  for (auto lambda : {100.0, 1000.0}) {
+    for (auto symmetrize : {SYM, NONSYM}) {
+
+      auto itops = imtime_ops(lambda, build_dlr_rf(lambda, eps, symmetrize), symmetrize);
+      auto idx   = itops.get_itnodes_idx();
+
+      EXPECT_EQ(idx.size(), itops.rank());
+      for (int i = 1; i < idx.size(); ++i) { EXPECT_LT(idx(i - 1), idx(i)); }
+
+      // The nodes are copies of fine grid entries, so equality is exact
+      auto [t, w] = build_it_fine(fineparams(lambda), symmetrize);
+      for (int i = 0; i < idx.size(); ++i) { EXPECT_EQ(t(idx(i)), itops.get_itnodes(i)); }
+    }
+  }
+}
+
+/**
+* @brief Test recovery of the fine grid indices from the nodes alone, as done for
+* archives predating the it_idx dataset
+*/
+TEST(imtime_ops, recover_itnode_idx) {
+
+  double eps = 1e-10; // DLR tolerance
+
+  for (auto lambda : {100.0, 1000.0}) {
+    auto itops = imtime_ops(lambda, build_dlr_rf(lambda, eps));
+    EXPECT_EQ_ARRAY(recover_itnode_idx(lambda, itops.get_itnodes()), itops.get_itnodes_idx());
+  }
 }
 
 /**
