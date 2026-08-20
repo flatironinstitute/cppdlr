@@ -315,10 +315,10 @@ namespace cppdlr {
 
   nda::vector<int> recover_itnode_idx(double lambda, nda::vector_const_view<double> dlr_it) {
 
-    int r       = dlr_it.size();
-    auto [t, w] = build_it_fine(fineparams(lambda), NONSYM);
-    auto igrid  = nda::range(t.size());
-    auto idx    = nda::vector<int>(r);
+    int r      = dlr_it.size();
+    auto t     = std::get<0>(build_it_fine(fineparams(lambda), NONSYM));
+    auto igrid = nda::range(t.size());
+    auto idx   = nda::vector<int>(r);
 
     // Nearest-neighbor match: stored nodes may differ from the grid in the last few digits
     for (int l = 0; l < r; ++l) {
