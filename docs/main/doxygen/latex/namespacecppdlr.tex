@@ -20,9 +20,9 @@ struct \mbox{\hyperlink{structcppdlr_1_1make__common__helper}{make\+\_\+common\+
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}{build\+\_\+rf\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine)
+nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a72bd9e9181d379daa28fb3d96bc5ebca}{build\+\_\+rf\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} const \&fine, bool symmetrize=false)
 \begin{DoxyCompactList}\small\item\em Build fine composite Chebyshev grid in real frequency. \end{DoxyCompactList}\item 
-std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}{build\+\_\+it\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine)
+std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ \mbox{\hyperlink{namespacecppdlr_ad1e8fc182e3736d3324acdb200e1e242}{build\+\_\+it\+\_\+fine}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} const \&fine, bool symmetrize=false)
 \begin{DoxyCompactList}\small\item\em Get fine composite Legendre grid in imaginary time and corresponding square root quadrature weights. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a38c50dbbe81c1821676393f8584fb3f6}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
@@ -34,7 +34,7 @@ nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_ad4b931a8f12802eee8
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel.   \end{DoxyCompactList}\item 
 nda\+::vector$<$ double $>$ \mbox{\hyperlink{namespacecppdlr_a45377bb09b54d66487cf379b1a6037de}{build\+\_\+k\+\_\+it}} (nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ w, double om)
 \begin{DoxyCompactList}\small\item\em Get imaginary time discretization of analytic continuation kernel with L\texorpdfstring{$^\wedge$}{\string^}2 weighting.   \end{DoxyCompactList}\item 
-std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}{geterr\+\_\+k\+\_\+it}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&fine, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ kmat)
+std\+::tuple$<$ double, double $>$ \mbox{\hyperlink{namespacecppdlr_a9b0726a01d8e6a062f8abc1fc9fa1320}{geterr\+\_\+k\+\_\+it}} (\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} const \&fine, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ t, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$ kmat)
 \begin{DoxyCompactList}\small\item\em Get error of fine composite Chebyshev discretization of analytic continuation kernel in imaginary time. \end{DoxyCompactList}\item 
 nda\+::matrix$<$ \mbox{\hyperlink{namespacecppdlr_a7b5392bb6f0a8155f1f19cab3bd042e9}{dcomplex}} $>$ \mbox{\hyperlink{namespacecppdlr_a988f80420d11cd80ac3803bd3bd429c0}{build\+\_\+k\+\_\+if}} (int nmax, nda\+::vector\+\_\+const\+\_\+view$<$ double $>$ om, \mbox{\hyperlink{namespacecppdlr_ad0a7e33d9a03f4986937032c25ee7435}{statistic\+\_\+t}} statistic)
 \begin{DoxyCompactList}\small\item\em Get imaginary frequency discretization of analytic continuation kernel. \end{DoxyCompactList}\item 
@@ -356,8 +356,11 @@ Construct DLR basis by obtaining DLR frequencies.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-DLR frequencies 
+DLR frequencies
 \end{DoxyReturn}
+\begin{DoxyNote}{Note}
+With SYM the DLR frequencies are mirror-\/symmetric about omega=0, which is itself included as a self-\/paired node, so the rank is odd. 
+\end{DoxyNote}
 \Hypertarget{namespacecppdlr_a2a7a1e02824dc3fde4cb8618fa2e1463}\label{namespacecppdlr_a2a7a1e02824dc3fde4cb8618fa2e1463} 
 \index{cppdlr@{cppdlr}!build\_if2it@{build\_if2it}}
 \index{build\_if2it@{build\_if2it}!cppdlr@{cppdlr}}
@@ -398,11 +401,11 @@ Build matrix mapping DLR imaginary time grid values to DLR imaginary frequency g
 \begin{DoxyReturn}{Returns}
 Matrix mapping imaginary time grid values to imaginary frequency grid values (without beta factor) 
 \end{DoxyReturn}
-\Hypertarget{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57}\label{namespacecppdlr_afa672c293b0b90ab5045fbb091a1ed57} 
+\Hypertarget{namespacecppdlr_ad1e8fc182e3736d3324acdb200e1e242}\label{namespacecppdlr_ad1e8fc182e3736d3324acdb200e1e242} 
 \index{cppdlr@{cppdlr}!build\_it\_fine@{build\_it\_fine}}
 \index{build\_it\_fine@{build\_it\_fine}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_it\_fine()}{build\_it\_fine()}}
-{\footnotesize\ttfamily std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ cppdlr\+::build\+\_\+it\+\_\+fine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&}]{fine }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily std\+::tuple$<$ nda\+::vector$<$ double $>$, nda\+::vector$<$ double $>$ $>$ cppdlr\+::build\+\_\+it\+\_\+fine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} const \&}]{fine,  }\item[{bool}]{symmetrize = {\ttfamily false} }\end{DoxyParamCaption})}
 
 
 
@@ -410,7 +413,9 @@ Get fine composite Legendre grid in imaginary time and corresponding square root
 
 
 \begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em fine} & Fine grid parameters\\
+\mbox{\texttt{ in}}  & {\em fine} & Fine grid parameters \\
+\hline
+\mbox{\texttt{ in}}  & {\em symmetrize} & If true, include tau=beta/2 with zero quadrature weight, making the grid odd-\/sized and mirror-\/symmetric about it.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -545,11 +550,11 @@ Get imaginary time discretization of analytic continuation kernel with L\texorpd
 \begin{DoxyReturn}{Returns}
 Discretization of analytic continuation kernel on given grid 
 \end{DoxyReturn}
-\Hypertarget{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e}\label{namespacecppdlr_a83cde5c4ed014eb53f7c16392a41733e} 
+\Hypertarget{namespacecppdlr_a72bd9e9181d379daa28fb3d96bc5ebca}\label{namespacecppdlr_a72bd9e9181d379daa28fb3d96bc5ebca} 
 \index{cppdlr@{cppdlr}!build\_rf\_fine@{build\_rf\_fine}}
 \index{build\_rf\_fine@{build\_rf\_fine}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{build\_rf\_fine()}{build\_rf\_fine()}}
-{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+rf\+\_\+fine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&}]{fine }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily nda\+::vector$<$ double $>$ cppdlr\+::build\+\_\+rf\+\_\+fine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} const \&}]{fine,  }\item[{bool}]{symmetrize = {\ttfamily false} }\end{DoxyParamCaption})}
 
 
 
@@ -557,7 +562,9 @@ Build fine composite Chebyshev grid in real frequency.
 
 
 \begin{DoxyParams}[1]{Parameters}
-\mbox{\texttt{ in}}  & {\em fine} & Fine grid parameters\\
+\mbox{\texttt{ in}}  & {\em fine} & Fine grid parameters \\
+\hline
+\mbox{\texttt{ in}}  & {\em symmetrize} & If true, include omega=0, making the grid odd-\/sized and mirror-\/symmetric about it.\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -688,11 +695,11 @@ Uses Newton iteration to obtain the Gauss-\/\+Legendre nodes and weights
 \begin{DoxyReturn}{Returns}
 Tuple of nodes and weights 
 \end{DoxyReturn}
-\Hypertarget{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9}\label{namespacecppdlr_a48fb848c5a66d6141ad240d2e749aec9} 
+\Hypertarget{namespacecppdlr_a9b0726a01d8e6a062f8abc1fc9fa1320}\label{namespacecppdlr_a9b0726a01d8e6a062f8abc1fc9fa1320} 
 \index{cppdlr@{cppdlr}!geterr\_k\_it@{geterr\_k\_it}}
 \index{geterr\_k\_it@{geterr\_k\_it}!cppdlr@{cppdlr}}
 \doxysubsubsection{\texorpdfstring{geterr\_k\_it()}{geterr\_k\_it()}}
-{\footnotesize\ttfamily std\+::tuple$<$ double, double $>$ cppdlr\+::geterr\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} \&}]{fine,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{om,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$}]{kmat }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily std\+::tuple$<$ double, double $>$ cppdlr\+::geterr\+\_\+k\+\_\+it (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classcppdlr_1_1fineparams}{fineparams}} const \&}]{fine,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{t,  }\item[{nda\+::vector\+\_\+const\+\_\+view$<$ double $>$}]{om,  }\item[{nda\+::matrix\+\_\+const\+\_\+view$<$ double $>$}]{kmat }\end{DoxyParamCaption})}
 
 
 
@@ -947,7 +954,7 @@ This is a translation of the Fortran subroutine "{}qrdgrm"{} by V. Rokhlin.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots 
+Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry k given by the squared l2 norm of the orthogonal complement of kth selected row with respect to subspace spanned by first k-\/1 selected rows, (3) vector of pivots 
 \end{DoxyReturn}
 \Hypertarget{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47}\label{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47} 
 \index{cppdlr@{cppdlr}!pivrgs\_sym@{pivrgs\_sym}}
@@ -972,10 +979,10 @@ This is a translation of the Fortran subroutine "{}qrdgrm"{} by V. Rokhlin, with
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots
+Tuple of (1) matrix whose rows form orthogonal basis of row space of {\ttfamily a} to {\ttfamily eps} tolerance, (2) vector with entry k given by the squared l2 norm of the orthogonal complement of kth selected row with respect to subspace spanned by first k-\/1 selected rows, (3) vector of pivots
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. m must be even. 
+The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. If m is odd, the middle row (index (m-\/1)/2) is its own symmetric partner, and is automatically selected as the first pivot, so that the epsilon-\/rank is odd. Since that pivot is forced, the middle row must itself be above the {\ttfamily eps} tolerance; otherwise there is no symmetrized basis of odd rank, and an exception is thrown. 
 \end{DoxyNote}
 \Hypertarget{namespacecppdlr_ad64323a06309e2802fb97b93e3e24c2d}\label{namespacecppdlr_ad64323a06309e2802fb97b93e3e24c2d} 
 \index{cppdlr@{cppdlr}!pivrgs\_sym@{pivrgs\_sym}}
@@ -1000,10 +1007,12 @@ This is a translation of the Fortran subroutine "{}qrdgrm"{} by V. Rokhlin, with
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Tuple of (1) matrix whose rows are leading {\ttfamily r} vectors in orthogonal basis of row space of {\ttfamily a}, (2) vector with entry n given by the squared l2 norm of the orthogonal complement of nth selected row with respect to subspace spanned by first n-\/1 selected rows, (3) vector of pivots
+Tuple of (1) matrix whose rows are leading {\ttfamily r} vectors in orthogonal basis of row space of {\ttfamily a}, (2) vector with entry k given by the squared l2 norm of the orthogonal complement of kth selected row with respect to subspace spanned by first k-\/1 selected rows, (3) vector of pivots
 \end{DoxyReturn}
 \begin{DoxyNote}{Note}
-The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. A can have an odd number of rows if and only if {\ttfamily r} is odd, and in this case the middle row (index (m-\/1)/2) of A is automatically selected as a pivot. 
+The symmetrization condition is that if A(i,\+:), the ith row of A, is selected as a pivot, then A(m-\/i-\/1,\+:) is also selected as a pivot. Here, m is the row dimension of A, and A is zero-\/indexed. A can have an odd number of rows if and only if {\ttfamily r} is odd, and in this case the middle row (index (m-\/1)/2) of A is automatically selected as a pivot.
+
+{\ttfamily r} may be as large as n+1, where n is the column dimension of A -- one more than the largest meaningful rank. Mirror-\/paired rows are selected two at a time, so if A has no self-\/symmetric row (m even) the number of selected rows is even, and spanning a row space of odd dimension n requires selecting n+1 rows. The last of these is linearly dependent on the others, so its basis vector and its entry of the returned norms vector are meaningless; only the pivots should be used. The symmetrized fermionic Matsubara grid is constructed this way; see \doxylink{classcppdlr_1_1imfreq__ops}{imfreq\+\_\+ops}. 
 \end{DoxyNote}
 \Hypertarget{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229}\label{namespacecppdlr_a373b198ea4a2d60eb80052dc0d4ae229} 
 \index{cppdlr@{cppdlr}!rel2abs@{rel2abs}}

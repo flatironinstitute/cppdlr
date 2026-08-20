@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zlu_0',['zlu',['../classcppdlr_1_1imtime__ops.html#a4868c3d774292b4d3610ac3225682bc0',1,'cppdlr::imtime_ops']]]
+  ['x_0',['x',['../structcppdlr_1_1make__common__helper.html#a2d4aae79d5de09d01c41489d92939392',1,'cppdlr::make_common_helper']]]
 ];

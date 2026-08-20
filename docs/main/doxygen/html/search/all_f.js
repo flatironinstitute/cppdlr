@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['s_0',['S',['../structcppdlr_1_1make__common__helper.html#af2b0051f601013d1a403cff27d6719b4',1,'cppdlr::make_common_helper']]],
-  ['serialize_1',['serialize',['../classcppdlr_1_1imfreq__ops.html#a569cc24457f43b8de76e1496a6793a0d',1,'cppdlr::imfreq_ops::serialize()'],['../classcppdlr_1_1imtime__ops.html#af958ce61d0c823b2a356b13c3fa10f3d',1,'cppdlr::imtime_ops::serialize()']]],
-  ['solve_2',['solve',['../classcppdlr_1_1dyson__it.html#abe3b805dd90827fb5aad110a8c931609',1,'cppdlr::dyson_it']]],
-  ['statistic_5ft_3',['statistic_t',['../namespacecppdlr.html#ad0a7e33d9a03f4986937032c25ee7435',1,'cppdlr']]],
-  ['sym_4',['SYM',['../namespacecppdlr.html#afa13d278b5eff503e3399f445f84ab6da2926e3338e8cc759a75b8c9fac6f7d61',1,'cppdlr']]],
-  ['symmetrized_20bosonic_20case_5',['DLR imaginary freq nodes (different from r in symmetrized bosonic case)',['../classcppdlr_1_1imfreq__ops.html#autotoc_md2',1,'']]]
+  ['r_201_20in_20the_20symmetrized_20fermionic_20case_20else_20r_0',['DLR imaginary freq nodes (= r + 1 in the symmetrized fermionic case, else = r)',['../classcppdlr_1_1imfreq__ops.html#autotoc_md2',1,'']]],
+  ['rank_1',['rank',['../classcppdlr_1_1imfreq__ops.html#a06ed0bacc35deffd64fc67abeaa9734e',1,'cppdlr::imfreq_ops::rank()'],['../classcppdlr_1_1imtime__ops.html#a88f437cb31c98929ab8a1e6dadb174aa',1,'cppdlr::imtime_ops::rank()']]],
+  ['real_20frequency_20grid_20panels_2',['fine real frequency grid panels',['../classcppdlr_1_1fineparams.html#autotoc_md0',1,'']]],
+  ['reflect_3',['reflect',['../classcppdlr_1_1imtime__ops.html#a0ee9bfed6fc9facf2d25cea9868a3af6',1,'cppdlr::imtime_ops']]],
+  ['reflect_5finit_4',['reflect_init',['../classcppdlr_1_1imtime__ops.html#a3a47942235e7330cc6d392dc881d256f',1,'cppdlr::imtime_ops']]],
+  ['rel2abs_5',['rel2abs',['../namespacecppdlr.html#a3b1ccba6393dfc517757677a13ad2553',1,'cppdlr::rel2abs(nda::vector_const_view&lt; double &gt; t)'],['../namespacecppdlr.html#a373b198ea4a2d60eb80052dc0d4ae229',1,'cppdlr::rel2abs(double t)']]]
 ];

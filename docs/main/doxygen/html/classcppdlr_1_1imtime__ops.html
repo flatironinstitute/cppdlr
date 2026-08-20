@@ -255,10 +255,11 @@ Friends</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">lambda</td><td>DLR cutoff parameter </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">dlr_rf</td><td>DLR frequencies </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">symmetrize</td><td>NONSYM or false for non-symmetrized DLR frequencies, SYM or true for symmetrized </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">symmetrize</td><td>NONSYM or false for non-symmetrized DLR frequencies, SYM or true for symmetrized</td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>With SYM the nodes are mirror-symmetric about tau=beta/2, which is itself included as a self-paired node. SYM therefore requires <code>dlr_rf</code> of odd rank, as built by build_dlr_rf with SYM, and throws otherwise. </dd></dl>
 
 </div>
 </div>

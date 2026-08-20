@@ -1,18 +1,12 @@
 var searchData=
 [
-  ['dcomplex_0',['dcomplex',['../namespacecppdlr.html#a7b5392bb6f0a8155f1f19cab3bd042e9',1,'cppdlr']]],
-  ['deprecated_20list_1',['Deprecated List',['../deprecated.html',1,'']]],
-  ['deserialize_2',['deserialize',['../classcppdlr_1_1imtime__ops.html#aec5610238537886bb0c62c52c023f7b8',1,'cppdlr::imtime_ops::deserialize()'],['../classcppdlr_1_1imfreq__ops.html#a0908de840f70cbbd92341c85c5917fd2',1,'cppdlr::imfreq_ops::deserialize()']]],
-  ['different_20from_20r_20in_20symmetrized_20bosonic_20case_3',['DLR imaginary freq nodes (different from r in symmetrized bosonic case)',['../classcppdlr_1_1imfreq__ops.html#autotoc_md2',1,'']]],
-  ['dlr_20imaginary_20freq_20nodes_20different_20from_20r_20in_20symmetrized_20bosonic_20case_4',['DLR imaginary freq nodes (different from r in symmetrized bosonic case)',['../classcppdlr_1_1imfreq__ops.html#autotoc_md2',1,'']]],
-  ['dlr_5fbuild_2ecpp_5',['dlr_build.cpp',['../dlr__build_8cpp.html',1,'']]],
-  ['dlr_5fbuild_2ehpp_6',['dlr_build.hpp',['../dlr__build_8hpp.html',1,'']]],
-  ['dlr_5fdyson_2ehpp_7',['dlr_dyson.hpp',['../dlr__dyson_8hpp.html',1,'']]],
-  ['dlr_5fimfreq_2ecpp_8',['dlr_imfreq.cpp',['../dlr__imfreq_8cpp.html',1,'']]],
-  ['dlr_5fimfreq_2ehpp_9',['dlr_imfreq.hpp',['../dlr__imfreq_8hpp.html',1,'']]],
-  ['dlr_5fimtime_2ecpp_10',['dlr_imtime.cpp',['../dlr__imtime_8cpp.html',1,'']]],
-  ['dlr_5fimtime_2ehpp_11',['dlr_imtime.hpp',['../dlr__imtime_8hpp.html',1,'']]],
-  ['dlr_5fkernels_2ecpp_12',['dlr_kernels.cpp',['../dlr__kernels_8cpp.html',1,'']]],
-  ['dlr_5fkernels_2ehpp_13',['dlr_kernels.hpp',['../dlr__kernels_8hpp.html',1,'']]],
-  ['dyson_5fit_14',['dyson_it',['../classcppdlr_1_1dyson__it.html#ad74dd68fd0e0a186d621c3a9997ae3cd',1,'cppdlr::dyson_it::dyson_it(double beta, imtime_ops itops, Ht const &amp;h, double mu=0, bool time_order=false)'],['../classcppdlr_1_1dyson__it.html#ac13a90181eaf068f3d403186d8f55de3',1,'cppdlr::dyson_it::dyson_it(double beta, imtime_ops itops, Ht const &amp;h, bool time_order)'],['../classcppdlr_1_1dyson__it.html',1,'cppdlr::dyson_it&lt; Ht, Sh &gt;']]]
+  ['case_20else_20r_0',['DLR imaginary freq nodes (= r + 1 in the symmetrized fermionic case, else = r)',['../classcppdlr_1_1imfreq__ops.html#autotoc_md2',1,'']]],
+  ['coefs2eval_1',['coefs2eval',['../classcppdlr_1_1imfreq__ops.html#a2ac467d6a8903940482bad858896d52c',1,'cppdlr::imfreq_ops::coefs2eval(double beta, T const &amp;gc, int n) const'],['../classcppdlr_1_1imfreq__ops.html#ae8bc361ee298e53554c7c664e3cbf8be',1,'cppdlr::imfreq_ops::coefs2eval(T const &amp;gc, int n) const'],['../classcppdlr_1_1imtime__ops.html#a12761a877407fc347dc695da4b2d7f3d',1,'cppdlr::imtime_ops::coefs2eval()']]],
+  ['coefs2vals_2',['coefs2vals',['../classcppdlr_1_1imfreq__ops.html#a3179bf998af8b0a3c71fe7d333f0e44e',1,'cppdlr::imfreq_ops::coefs2vals(double beta, T const &amp;gc) const'],['../classcppdlr_1_1imfreq__ops.html#a4b37513f8cb287ea7033cc4d78f6157f',1,'cppdlr::imfreq_ops::coefs2vals(T const &amp;gc) const'],['../classcppdlr_1_1imtime__ops.html#a6f6d71c061aec134df9edf1255e19dfb',1,'cppdlr::imtime_ops::coefs2vals(T const &amp;gc) const']]],
+  ['convmat_3',['convmat',['../classcppdlr_1_1imtime__ops.html#aac344326d87caaabff268ca47e0f8427',1,'cppdlr::imtime_ops::convmat(double beta, T const &amp;fc, bool time_order=false) const'],['../classcppdlr_1_1imtime__ops.html#a689f31f5920a60448f6c6421a2aec48d',1,'cppdlr::imtime_ops::convmat(double beta, statistic_t statistic, T const &amp;fc, bool time_order=false) const']]],
+  ['convmat_5finplace_4',['convmat_inplace',['../classcppdlr_1_1imtime__ops.html#aadebc7d1f47b8f8497c2cca4b0711b69',1,'cppdlr::imtime_ops::convmat_inplace(nda::matrix_view&lt; S, nda::C_layout &gt; fconv, double beta, T const &amp;fc, bool time_order=false) const'],['../classcppdlr_1_1imtime__ops.html#a9f48c8e4b3164985af73fba0fd28b002',1,'cppdlr::imtime_ops::convmat_inplace(nda::matrix_view&lt; S, nda::C_layout &gt; fconv, double beta, statistic_t statistic, T const &amp;fc, bool time_order=false) const']]],
+  ['convolve_5',['convolve',['../classcppdlr_1_1imtime__ops.html#adbf464d1761e4c366166b4bb26f2b9cb',1,'cppdlr::imtime_ops::convolve(double beta, T const &amp;fc, T const &amp;gc, bool time_order=false) const'],['../classcppdlr_1_1imtime__ops.html#a2f85a500e7581631c164287ff5a75329',1,'cppdlr::imtime_ops::convolve(double beta, statistic_t statistic, T const &amp;fc, T const &amp;gc, bool time_order=false) const'],['../classcppdlr_1_1imtime__ops.html#a87b3e21ae66c97691a4580335795f77f',1,'cppdlr::imtime_ops::convolve(Tf const &amp;fconv, Tg const &amp;g) const']]],
+  ['convolve_5finit_6',['convolve_init',['../classcppdlr_1_1imtime__ops.html#a6257e0b3f43733c5ac06c8af11a47bb3',1,'cppdlr::imtime_ops']]],
+  ['cppdlr_7',['cppdlr',['../namespacecppdlr.html',1,'']]],
+  ['cppdlr_2ehpp_8',['cppdlr.hpp',['../cppdlr_8hpp.html',1,'']]]
 ];

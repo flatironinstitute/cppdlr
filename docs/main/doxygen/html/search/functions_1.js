@@ -7,8 +7,8 @@ var searchData=
   ['build_5fevalvec_4',['build_evalvec',['../classcppdlr_1_1imfreq__ops.html#a0ecdd54a26f407c084529ed3a90f4cb5',1,'cppdlr::imfreq_ops::build_evalvec(double beta, int n) const'],['../classcppdlr_1_1imfreq__ops.html#a0a39bab4f039eb81b2da6f78e69177c2',1,'cppdlr::imfreq_ops::build_evalvec(int n) const'],['../classcppdlr_1_1imtime__ops.html#a318b0b4409d0488814bb8db12c8b0611',1,'cppdlr::imtime_ops::build_evalvec()']]],
   ['build_5fif2it_5',['build_if2it',['../namespacecppdlr.html#a2a7a1e02824dc3fde4cb8618fa2e1463',1,'cppdlr']]],
   ['build_5fit2if_6',['build_it2if',['../namespacecppdlr.html#a5ed3d6913053f78b949261e92c980f51',1,'cppdlr']]],
-  ['build_5fit_5ffine_7',['build_it_fine',['../namespacecppdlr.html#afa672c293b0b90ab5045fbb091a1ed57',1,'cppdlr']]],
+  ['build_5fit_5ffine_7',['build_it_fine',['../namespacecppdlr.html#ad1e8fc182e3736d3324acdb200e1e242',1,'cppdlr']]],
   ['build_5fk_5fif_8',['build_k_if',['../namespacecppdlr.html#a988f80420d11cd80ac3803bd3bd429c0',1,'cppdlr']]],
   ['build_5fk_5fit_9',['build_k_it',['../namespacecppdlr.html#a38c50dbbe81c1821676393f8584fb3f6',1,'cppdlr::build_k_it(nda::vector_const_view&lt; double &gt; t, nda::vector_const_view&lt; double &gt; om)'],['../namespacecppdlr.html#ad6df2a0cc73644667ba77bf562a9e140',1,'cppdlr::build_k_it(nda::vector_const_view&lt; double &gt; t, nda::vector_const_view&lt; double &gt; w, nda::vector_const_view&lt; double &gt; om)'],['../namespacecppdlr.html#ab471fd1439bcd11be6bc10de9703138a',1,'cppdlr::build_k_it(double t, nda::vector_const_view&lt; double &gt; om)'],['../namespacecppdlr.html#ad4b931a8f12802eee8e74307c655ca85',1,'cppdlr::build_k_it(nda::vector_const_view&lt; double &gt; t, double om)'],['../namespacecppdlr.html#a45377bb09b54d66487cf379b1a6037de',1,'cppdlr::build_k_it(nda::vector_const_view&lt; double &gt; t, nda::vector_const_view&lt; double &gt; w, double om)']]],
-  ['build_5frf_5ffine_10',['build_rf_fine',['../namespacecppdlr.html#a83cde5c4ed014eb53f7c16392a41733e',1,'cppdlr']]]
+  ['build_5frf_5ffine_10',['build_rf_fine',['../namespacecppdlr.html#a72bd9e9181d379daa28fb3d96bc5ebca',1,'cppdlr']]]
 ];

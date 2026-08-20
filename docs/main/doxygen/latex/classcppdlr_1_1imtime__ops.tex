@@ -121,9 +121,12 @@ Constructor for \doxylink{classcppdlr_1_1imtime__ops}{imtime\+\_\+ops}.
 \hline
 \mbox{\texttt{ in}}  & {\em dlr\+\_\+rf} & DLR frequencies \\
 \hline
-\mbox{\texttt{ in}}  & {\em symmetrize} & NONSYM or false for non-\/symmetrized DLR frequencies, SYM or true for symmetrized \\
+\mbox{\texttt{ in}}  & {\em symmetrize} & NONSYM or false for non-\/symmetrized DLR frequencies, SYM or true for symmetrized\\
 \hline
 \end{DoxyParams}
+\begin{DoxyNote}{Note}
+With SYM the nodes are mirror-\/symmetric about tau=beta/2, which is itself included as a self-\/paired node. SYM therefore requires {\ttfamily dlr\+\_\+rf} of odd rank, as built by build\+\_\+dlr\+\_\+rf with SYM, and throws otherwise. 
+\end{DoxyNote}
 \Hypertarget{classcppdlr_1_1imtime__ops_a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7}\label{classcppdlr_1_1imtime__ops_a0a1d4dfc2eb1ebc6fbd4cf6b9c13b2d7} 
 \index{cppdlr::imtime\_ops@{cppdlr::imtime\_ops}!imtime\_ops@{imtime\_ops}}
 \index{imtime\_ops@{imtime\_ops}!cppdlr::imtime\_ops@{cppdlr::imtime\_ops}}

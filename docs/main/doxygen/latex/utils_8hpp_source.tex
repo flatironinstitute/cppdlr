@@ -137,199 +137,186 @@
 \DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordflow}{return}\ \{aa(nda::range(maxrnk),\ \_),\ norms(nda::range(maxrnk)),\ piv(nda::range(maxrnk))\};}
 \DoxyCodeLine{00199\ \ \ \}}
 \DoxyCodeLine{00200\ }
-\DoxyCodeLine{00224\ \ \ \textcolor{comment}{//\ Type\ T\ must\ be\ scalar-\/valued\ rank\ 2\ array/array\_view\ or\ matrix/matrix\_view}}
-\DoxyCodeLine{00225\ \ \ \textcolor{keyword}{template}\ <nda::MemoryArrayOfRank<2>\ T,\ nda::Scalar\ S\ =\ nda::get\_value\_t<T>>}
-\DoxyCodeLine{00226\ \ \ std::tuple<typename\ T::regular\_type,\ nda::vector<double>,\ nda::vector<int>>\ \mbox{\hyperlink{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47}{pivrgs\_sym}}(T\ \textcolor{keyword}{const}\ \&a,\ \textcolor{keywordtype}{double}\ eps)\ \{}
-\DoxyCodeLine{00227\ }
-\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ Get\ matrix\ dimensions}}
-\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{auto}\ [m,\ n]\ =\ a.shape();}
-\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordtype}{int}\ maxrnk\ \ =\ std::min(m,\ n);}
+\DoxyCodeLine{00228\ \ \ \textcolor{comment}{//\ Type\ T\ must\ be\ scalar-\/valued\ rank\ 2\ array/array\_view\ or\ matrix/matrix\_view}}
+\DoxyCodeLine{00229\ \ \ \textcolor{keyword}{template}\ <nda::MemoryArrayOfRank<2>\ T,\ nda::Scalar\ S\ =\ nda::get\_value\_t<T>>}
+\DoxyCodeLine{00230\ \ \ std::tuple<typename\ T::regular\_type,\ nda::vector<double>,\ nda::vector<int>>\ \mbox{\hyperlink{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47}{pivrgs\_sym}}(T\ \textcolor{keyword}{const}\ \&a,\ \textcolor{keywordtype}{double}\ eps)\ \{}
 \DoxyCodeLine{00231\ }
-\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\ \%\ 2\ !=\ 0)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Input\ matrix\ must\ have\ even\ number\ of\ rows."{}});\ \}}
-\DoxyCodeLine{00233\ }
-\DoxyCodeLine{00234\ \ \ \ \ \textcolor{comment}{//\ Copy\ input\ data,\ re-\/ordering\ rows\ to\ make\ symmetric\ rows\ adjacent.}}
-\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keyword}{auto}\ aa\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{typename}\ T::regular\_type(m,\ n);}
-\DoxyCodeLine{00236\ \ \ \ \ aa(nda::range(0,\ m,\ 2),\ \_)\ =\ a(nda::range(0,\ m\ /\ 2),\ \_);}
-\DoxyCodeLine{00237\ \ \ \ \ aa(nda::range(1,\ m,\ 2),\ \_)\ =\ a(nda::range(m\ -\/\ 1,\ m\ /\ 2\ -\/\ 1,\ -\/1),\ \_);}
-\DoxyCodeLine{00238\ }
-\DoxyCodeLine{00239\ \ \ \ \ \textcolor{comment}{//\ Compute\ norms\ of\ rows\ of\ input\ matrix,\ and\ rescale\ eps\ tolerance}}
-\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{auto}\ norms\ \ \ =\ nda::vector<double>(m);}
-\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordtype}{double}\ epssq\ =\ eps\ *\ eps;}
-\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ m;\ ++j)\ \{\ norms(j)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_));\ \}}
-\DoxyCodeLine{00243\ }
-\DoxyCodeLine{00244\ \ \ \ \ \textcolor{comment}{//\ Begin\ pivoted\ double\ Gram-\/Schmidt\ procedure}}
-\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keywordtype}{int}\ jpiv\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
-\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keywordtype}{double}\ nrm\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
-\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keyword}{auto}\ piv\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ nda::arange(0,\ m);}
-\DoxyCodeLine{00248\ \ \ \ \ piv(nda::range(0,\ m,\ 2))\ =\ nda::arange(0,\ m\ /\ 2);\ \textcolor{comment}{//\ Re-\/order\ pivots\ to\ match\ re-\/ordered\ input\ matrix}}
-\DoxyCodeLine{00249\ \ \ \ \ piv(nda::range(1,\ m,\ 2))\ =\ nda::arange(m\ -\/\ 1,\ m\ /\ 2\ -\/\ 1,\ -\/1);}
-\DoxyCodeLine{00250\ }
-\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordflow}{if}\ (maxrnk\ \%\ 2\ !=\ 0)\ \{\ \textcolor{comment}{//\ If\ n\ <\ m\ and\ n\ is\ odd,\ decrease\ maxrnk\ to\ maintain\ symmetry}}
-\DoxyCodeLine{00252\ \ \ \ \ \ \ maxrnk\ -\/=\ 1;}
-\DoxyCodeLine{00253\ \ \ \ \ \}}
-\DoxyCodeLine{00254\ }
-\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ maxrnk;\ j\ +=\ 2)\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{comment}{//\ Deliberately\ not\ \`{}auto\ [m,\ n]\ =\ a.shape()`:\ clang\ <\ 19\ with\ -\/fopenmp\ rejects}}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{comment}{//\ capturing\ a\ structured\ binding\ in\ the\ normalize\_and\_project\ lambda\ below.}}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keywordtype}{long}\ m\ \ \ \ \ \ \ \ =\ a.extent(0);}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordtype}{long}\ n\ \ \ \ \ \ \ \ =\ a.extent(1);}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keywordtype}{int}\ maxrnk\ \ \ \ =\ std::min(m,\ n);}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordtype}{int}\ nprs\ \ \ \ \ \ =\ m\ /\ 2;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Number\ of\ mirror\ pairs\ of\ rows}}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasmid\ \ \ =\ (m\ \%\ 2\ ==\ 1);\ \ \ \textcolor{comment}{//\ If\ m\ is\ odd,\ the\ middle\ row\ is\ its\ own\ mirror}}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keywordtype}{int}\ firstpair\ =\ hasmid\ ?\ 1\ :\ 0;\ \textcolor{comment}{//\ Row\ where\ the\ first\ mirror\ pair\ begins}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{comment}{//\ Order\ rows\ to\ make\ symmetric\ rows\ adjacent,\ putting\ the\ middle\ row\ first}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ if\ m\ is\ odd:\ piv\ =\ [(m-\/1)/2,]\ 0,\ m-\/1,\ 1,\ m-\/2,\ ...}}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keyword}{auto}\ piv\ =\ nda::arange(0,\ m);}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasmid)\ \{\ piv(0)\ =\ (m\ -\/\ 1)\ /\ 2;\ \}}
+\DoxyCodeLine{00245\ \ \ \ \ piv(nda::range(firstpair,\ m,\ 2))\ \ \ \ \ =\ nda::arange(0,\ nprs);}
+\DoxyCodeLine{00246\ \ \ \ \ piv(nda::range(firstpair\ +\ 1,\ m,\ 2))\ =\ nda::arange(m\ -\/\ 1,\ m\ -\/\ 1\ -\/\ nprs,\ -\/1);}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{comment}{//\ Copy\ input\ data\ in\ this\ order}}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{auto}\ aa\ =\ \textcolor{keyword}{typename}\ T::regular\_type(m,\ n);}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ m;\ ++j)\ \{\ aa(j,\ \_)\ =\ a(piv(j),\ \_);\ \}}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{comment}{//\ Compute\ norms\ of\ rows\ of\ input\ matrix,\ and\ rescale\ eps\ tolerance}}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{auto}\ norms\ \ \ =\ nda::vector<double>(m);}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordtype}{double}\ epssq\ =\ eps\ *\ eps;}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ m;\ ++j)\ \{\ norms(j)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_));\ \}}
 \DoxyCodeLine{00256\ }
-\DoxyCodeLine{00257\ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ next\ pair\ of\ pivots}}
-\DoxyCodeLine{00258\ \ \ \ \ \ \ jpiv\ =\ j;}
-\DoxyCodeLine{00259\ \ \ \ \ \ \ nrm\ \ =\ norms(j)\ +\ norms(j\ +\ 1);}
-\DoxyCodeLine{00260\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 2;\ k\ <\ m;\ k\ +=\ 2)\ \{}
-\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(k)\ +\ norms(k\ +\ 1)\ >\ nrm)\ \{}
-\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ jpiv\ =\ k;}
-\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ nrm\ \ =\ norms(k)\ +\ norms(k\ +\ 1);}
-\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{comment}{//\ Normalize\ row\ j,\ given\ its\ squared\ norm,\ and\ orthogonalize\ the\ rows\ after\ it}}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{comment}{//\ against\ it,\ updating\ their\ norms}}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{auto}\ normalize\_and\_project\ =\ [\&](\textcolor{keywordtype}{int}\ j,\ \textcolor{keywordtype}{double}\ nrmsq)\ \{}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ aa(j,\ \_)\ /=\ sqrt(nrmsq);}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 1;\ k\ <\ m;\ ++k)\ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(k)\ <=\ epssq)\ \{\ \textcolor{keywordflow}{continue};\ \}\ \textcolor{comment}{//\ Can\ skip\ rows\ with\ norm\ less\ than\ tolerance}}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ aa(k,\ \_)\ =\ aa(k,\ \_)\ -\/\ aa(j,\ \_)\ *\ nda::blas::dotc(aa(j,\ \_),\ aa(k,\ \_));}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ norms(k)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(k,\ \_));}
 \DoxyCodeLine{00265\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00266\ }
-\DoxyCodeLine{00267\ \ \ \ \ \ \ \textcolor{comment}{//\ Swap\ current\ row\ pair\ with\ chosen\ pivot\ row\ pair}}
-\DoxyCodeLine{00268\ \ \ \ \ \ \ deep\_swap(aa(j,\ \_),\ aa(jpiv,\ \_));}
-\DoxyCodeLine{00269\ \ \ \ \ \ \ deep\_swap(aa(j\ +\ 1,\ \_),\ aa(jpiv\ +\ 1,\ \_));}
-\DoxyCodeLine{00270\ \ \ \ \ \ \ std::swap(norms(j),\ norms(jpiv));}
-\DoxyCodeLine{00271\ \ \ \ \ \ \ std::swap(norms(j\ +\ 1),\ norms(jpiv\ +\ 1));}
-\DoxyCodeLine{00272\ \ \ \ \ \ \ std::swap(piv(j),\ piv(jpiv));}
-\DoxyCodeLine{00273\ \ \ \ \ \ \ std::swap(piv(j\ +\ 1),\ piv(jpiv\ +\ 1));}
-\DoxyCodeLine{00274\ }
-\DoxyCodeLine{00275\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ first\ chosen\ pivot\ row)\ against\ all}}
-\DoxyCodeLine{00276\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
-\DoxyCodeLine{00277\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j;\ ++k)\ \{\ aa(j,\ \_)\ =\ aa(j,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j,\ \_));\ \}}
-\DoxyCodeLine{00278\ }
-\DoxyCodeLine{00279\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ norm\ of\ current\ row}}
-\DoxyCodeLine{00280\ \ \ \ \ \ \ nrm\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_));}
-\DoxyCodeLine{00281\ }
-\DoxyCodeLine{00282\ \ \ \ \ \ \ \textcolor{comment}{//\ Terminate\ if\ sufficiently\ small,\ and\ return\ previously\ selected\ rows}}
-\DoxyCodeLine{00283\ \ \ \ \ \ \ \textcolor{comment}{//\ (not\ including\ current\ row)}}
-\DoxyCodeLine{00284\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nrm\ <=\ epssq)\ \{\ \textcolor{keywordflow}{return}\ \{aa(nda::range(0,\ j),\ \_),\ norms(nda::range(0,\ j)),\ piv(nda::range(0,\ j))\};\ \};}
-\DoxyCodeLine{00285\ }
-\DoxyCodeLine{00286\ \ \ \ \ \ \ \textcolor{comment}{//\ Normalize\ current\ row}}
-\DoxyCodeLine{00287\ \ \ \ \ \ \ aa(j,\ \_)\ /=\ sqrt(nrm);}
-\DoxyCodeLine{00288\ }
-\DoxyCodeLine{00289\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ remaining\ rows\ against\ current\ row}}
-\DoxyCodeLine{00290\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 1;\ k\ <\ m;\ ++k)\ \{}
-\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(k)\ <=\ epssq)\ \{\ \textcolor{keywordflow}{continue};\ \}\ \textcolor{comment}{//\ Can\ skip\ rows\ with\ norm\ less\ than\ tolerance}}
-\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ aa(k,\ \_)\ =\ aa(k,\ \_)\ -\/\ aa(j,\ \_)\ *\ nda::blas::dotc(aa(j,\ \_),\ aa(k,\ \_));}
-\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ norms(k)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(k,\ \_));}
-\DoxyCodeLine{00294\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00295\ }
-\DoxyCodeLine{00296\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ second\ chosen\ pivot\ row)\ against\ all}}
-\DoxyCodeLine{00297\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
-\DoxyCodeLine{00298\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j\ +\ 1;\ ++k)\ \{\ aa(j\ +\ 1,\ \_)\ =\ aa(j\ +\ 1,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j\ +\ 1,\ \_));\ \}}
-\DoxyCodeLine{00299\ }
-\DoxyCodeLine{00300\ \ \ \ \ \ \ \textcolor{comment}{//\ Normalize\ current\ row}}
-\DoxyCodeLine{00301\ \ \ \ \ \ \ aa(j\ +\ 1,\ \_)\ /=\ sqrt(\mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j\ +\ 1,\ \_)));}
-\DoxyCodeLine{00302\ }
-\DoxyCodeLine{00303\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ remaining\ rows\ against\ current\ row}}
-\DoxyCodeLine{00304\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 2;\ k\ <\ m;\ ++k)\ \{}
-\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(k)\ <=\ epssq)\ \{\ \textcolor{keywordflow}{continue};\ \}\ \textcolor{comment}{//\ Can\ skip\ rows\ with\ norm\ less\ than\ tolerance}}
-\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ aa(k,\ \_)\ =\ aa(k,\ \_)\ -\/\ aa(j\ +\ 1,\ \_)\ *\ nda::blas::dotc(aa(j\ +\ 1,\ \_),\ aa(k,\ \_));}
-\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ norms(k)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(k,\ \_));}
-\DoxyCodeLine{00308\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00309\ \ \ \ \ \}}
-\DoxyCodeLine{00310\ }
-\DoxyCodeLine{00311\ \ \ \ \ \textcolor{keywordflow}{return}\ \{aa(nda::range(maxrnk),\ \_),\ norms(nda::range(maxrnk)),\ piv(nda::range(maxrnk))\};}
-\DoxyCodeLine{00312\ \ \ \}}
-\DoxyCodeLine{00313\ }
-\DoxyCodeLine{00339\ \ \ \textcolor{comment}{//\ Type\ T\ must\ be\ scalar-\/valued\ rank\ 2\ array/array\_view\ or\ matrix/matrix\_view}}
-\DoxyCodeLine{00340\ \ \ \textcolor{keyword}{template}\ <nda::MemoryArrayOfRank<2>\ T,\ nda::Scalar\ S\ =\ nda::get\_value\_t<T>>}
-\DoxyCodeLine{00341\ \ \ std::tuple<typename\ T::regular\_type,\ nda::vector<double>,\ nda::vector<int>>\ \mbox{\hyperlink{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47}{pivrgs\_sym}}(T\ \textcolor{keyword}{const}\ \&a,\ \textcolor{keywordtype}{int}\ r)\ \{}
-\DoxyCodeLine{00342\ }
-\DoxyCodeLine{00343\ \ \ \ \ \textcolor{comment}{//\ Get\ matrix\ dimensions}}
-\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keyword}{auto}\ [m,\ n]\ =\ a.shape();}
-\DoxyCodeLine{00345\ }
-\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\ \%\ 2\ ==\ 1\ \&\&\ r\ \%\ 2\ ==\ 0)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}If\ input\ matrix\ has\ odd\ number\ of\ rows,\ r\ must\ be\ odd."{}});\ \}}
-\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ \%\ 2\ ==\ 1\ \&\&\ m\ \%\ 2\ ==\ 0)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}If\ r\ is\ odd,\ input\ matrix\ must\ have\ odd\ number\ of\ rows."{}});\ \}}
-\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ >\ m\ ||\ r\ >\ n\ +\ 1)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}r\ must\ be\ less\ than\ or\ equal\ to\ min(m,n+1)."{}});\ \}}
-\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ ==\ n\ +\ 1\ \&\&\ (n\ \%\ 2\ ==\ 1\ ||\ n\ >\ m))\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}If\ r\ =\ n+1,\ n\ must\ be\ even\ and\ less\ than\ or\ equal\ to\ m."{}});\ \}}
-\DoxyCodeLine{00350\ }
-\DoxyCodeLine{00351\ \ \ \ \ \textcolor{comment}{//\ Copy\ input\ data,\ re-\/ordering\ rows\ to\ make\ symmetric\ rows\ adjacent.\ If\ m}}
-\DoxyCodeLine{00352\ \ \ \ \ \textcolor{comment}{//\ odd,\ put\ middle\ row\ at\ the\ end.}}
-\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keyword}{auto}\ aa\ =\ \textcolor{keyword}{typename}\ T::regular\_type(m,\ n);}
-\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\ \%\ 2\ ==\ 0)\ \{}
-\DoxyCodeLine{00355\ \ \ \ \ \ \ aa(nda::range(0,\ m,\ 2),\ \_)\ =\ a(nda::range(0,\ m\ /\ 2),\ \_);}
-\DoxyCodeLine{00356\ \ \ \ \ \ \ aa(nda::range(1,\ m,\ 2),\ \_)\ =\ a(nda::range(m\ -\/\ 1,\ m\ /\ 2\ -\/\ 1,\ -\/1),\ \_);}
-\DoxyCodeLine{00357\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00358\ \ \ \ \ \ \ aa(0,\ \_)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ a((m\ -\/\ 1)\ /\ 2,\ \_);}
-\DoxyCodeLine{00359\ \ \ \ \ \ \ aa(nda::range(1,\ m,\ 2),\ \_)\ =\ a(nda::range(0,\ (m\ -\/\ 1)\ /\ 2),\ \_);}
-\DoxyCodeLine{00360\ \ \ \ \ \ \ aa(nda::range(2,\ m,\ 2),\ \_)\ =\ a(nda::range(m\ -\/\ 1,\ (m\ -\/\ 1)\ /\ 2,\ -\/1),\ \_);}
-\DoxyCodeLine{00361\ \ \ \ \ \ \ \textcolor{comment}{//aa(m\ -\/\ 1,\ \_)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ a((m\ -\/\ 1)\ /\ 2,\ \_);}}
-\DoxyCodeLine{00362\ \ \ \ \ \}}
-\DoxyCodeLine{00363\ }
-\DoxyCodeLine{00364\ \ \ \ \ \textcolor{comment}{//\ Compute\ norms\ of\ rows\ of\ input\ matrix}}
-\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keyword}{auto}\ norms\ =\ nda::vector<double>(m);}
-\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ m;\ ++j)\ \{\ norms(j)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_));\ \}}
-\DoxyCodeLine{00367\ }
-\DoxyCodeLine{00368\ \ \ \ \ \textcolor{comment}{//\ Begin\ pivoted\ double\ Gram-\/Schmidt\ procedure}}
-\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keywordtype}{int}\ jpiv\ \ \ =\ 0;}
-\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keywordtype}{double}\ nrm\ =\ 0;}
-\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keyword}{auto}\ piv\ \ \ =\ nda::arange(0,\ m);}
-\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\ \%\ 2\ ==\ 0)\ \{}
-\DoxyCodeLine{00373\ \ \ \ \ \ \ piv(nda::range(0,\ m,\ 2))\ =\ nda::arange(0,\ m\ /\ 2);\ \textcolor{comment}{//\ Re-\/order\ pivots\ to\ match\ re-\/ordered\ input\ matrix}}
-\DoxyCodeLine{00374\ \ \ \ \ \ \ piv(nda::range(1,\ m,\ 2))\ =\ nda::arange(m\ -\/\ 1,\ m\ /\ 2\ -\/\ 1,\ -\/1);}
-\DoxyCodeLine{00375\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{00376\ \ \ \ \ \ \ piv(0)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ (m\ -\/\ 1)\ /\ 2;}
-\DoxyCodeLine{00377\ \ \ \ \ \ \ piv(nda::range(1,\ m,\ 2))\ =\ nda::arange(0,\ (m\ -\/\ 1)\ /\ 2);}
-\DoxyCodeLine{00378\ \ \ \ \ \ \ piv(nda::range(2,\ m,\ 2))\ =\ nda::arange(m\ -\/\ 1,\ (m\ -\/\ 1)\ /\ 2,\ -\/1);}
-\DoxyCodeLine{00379\ \ \ \ \ \ \ \textcolor{comment}{//piv(m\ -\/\ 1)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ (m\ -\/\ 1)\ /\ 2;}}
-\DoxyCodeLine{00380\ \ \ \ \ \}}
-\DoxyCodeLine{00381\ }
-\DoxyCodeLine{00382\ \ \ \ \ \textcolor{comment}{//\ If\ m\ odd,\ first\ choose\ middle\ row\ (now\ last\ row)\ as\ first\ pivot}}
-\DoxyCodeLine{00383\ }
-\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\ \%\ 2\ ==\ 1)\ \{}
-\DoxyCodeLine{00385\ \ \ \ \ \ \ \textcolor{comment}{//\ Normalize}}
-\DoxyCodeLine{00386\ \ \ \ \ \ \ aa(0,\ \_)\ /=\ sqrt(\mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(0,\ \_)));}
-\DoxyCodeLine{00387\ }
-\DoxyCodeLine{00388\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ remaining\ rows\ against\ current\ row}}
-\DoxyCodeLine{00389\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 1;\ k\ <\ m;\ ++k)\ \{}
-\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ aa(k,\ \_)\ =\ aa(k,\ \_)\ -\/\ aa(0,\ \_)\ *\ nda::blas::dotc(aa(0,\ \_),\ aa(k,\ \_));}
-\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ norms(k)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(k,\ \_));}
-\DoxyCodeLine{00392\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00393\ \ \ \ \ \}}
-\DoxyCodeLine{00394\ }
-\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keywordtype}{int}\ jstrt\ =\ (m\ \%\ 2\ ==\ 1)\ ?\ 1\ :\ 0;}
-\DoxyCodeLine{00396\ \ \ \ \ \textcolor{comment}{//\ Then\ proceed\ with\ pivoted\ GS\ algorithm\ as\ normal}}
-\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ jstrt;\ j\ <\ r;\ j\ +=\ 2)\ \{}
-\DoxyCodeLine{00398\ }
-\DoxyCodeLine{00399\ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ next\ pair\ of\ pivots}}
-\DoxyCodeLine{00400\ \ \ \ \ \ \ jpiv\ =\ j;}
-\DoxyCodeLine{00401\ \ \ \ \ \ \ nrm\ \ =\ norms(j)\ +\ norms(j\ +\ 1);}
-\DoxyCodeLine{00402\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 2;\ k\ <\ m;\ k\ +=\ 2)\ \{}
-\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(k)\ +\ norms(k\ +\ 1)\ >\ nrm)\ \{}
-\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ jpiv\ =\ k;}
-\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ nrm\ \ =\ norms(k)\ +\ norms(k\ +\ 1);}
-\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00407\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00408\ }
-\DoxyCodeLine{00409\ \ \ \ \ \ \ \textcolor{comment}{//\ Swap\ current\ row\ pair\ with\ chosen\ pivot\ row\ pair}}
-\DoxyCodeLine{00410\ \ \ \ \ \ \ deep\_swap(aa(j,\ \_),\ aa(jpiv,\ \_));}
-\DoxyCodeLine{00411\ \ \ \ \ \ \ deep\_swap(aa(j\ +\ 1,\ \_),\ aa(jpiv\ +\ 1,\ \_));}
-\DoxyCodeLine{00412\ \ \ \ \ \ \ std::swap(norms(j),\ norms(jpiv));}
-\DoxyCodeLine{00413\ \ \ \ \ \ \ std::swap(norms(j\ +\ 1),\ norms(jpiv\ +\ 1));}
-\DoxyCodeLine{00414\ \ \ \ \ \ \ std::swap(piv(j),\ piv(jpiv));}
-\DoxyCodeLine{00415\ \ \ \ \ \ \ std::swap(piv(j\ +\ 1),\ piv(jpiv\ +\ 1));}
-\DoxyCodeLine{00416\ }
-\DoxyCodeLine{00417\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ first\ chosen\ pivot\ row)\ against\ all}}
-\DoxyCodeLine{00418\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
-\DoxyCodeLine{00419\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j;\ ++k)\ \{\ aa(j,\ \_)\ =\ aa(j,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j,\ \_));\ \}}
-\DoxyCodeLine{00420\ }
-\DoxyCodeLine{00421\ \ \ \ \ \ \ \textcolor{comment}{//\ Normalize\ current\ row}}
-\DoxyCodeLine{00422\ \ \ \ \ \ \ aa(j,\ \_)\ /=\ sqrt(\mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_)));}
-\DoxyCodeLine{00423\ }
-\DoxyCodeLine{00424\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ remaining\ rows\ against\ current\ row}}
-\DoxyCodeLine{00425\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 1;\ k\ <\ m;\ ++k)\ \{}
-\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ aa(k,\ \_)\ =\ aa(k,\ \_)\ -\/\ aa(j,\ \_)\ *\ nda::blas::dotc(aa(j,\ \_),\ aa(k,\ \_));}
-\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ norms(k)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(k,\ \_));}
-\DoxyCodeLine{00428\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{00429\ }
-\DoxyCodeLine{00430\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ second\ chosen\ pivot\ row)\ against\ all}}
-\DoxyCodeLine{00431\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
-\DoxyCodeLine{00432\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j\ +\ 1;\ ++k)\ \{\ aa(j\ +\ 1,\ \_)\ =\ aa(j\ +\ 1,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j\ +\ 1,\ \_));\ \}}
-\DoxyCodeLine{00433\ }
-\DoxyCodeLine{00434\ \ \ \ \ \ \ \textcolor{comment}{//\ Normalize\ current\ row}}
-\DoxyCodeLine{00435\ \ \ \ \ \ \ aa(j\ +\ 1,\ \_)\ /=\ sqrt(\mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j\ +\ 1,\ \_)));}
+\DoxyCodeLine{00266\ \ \ \ \ \};}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{comment}{//\ maxrnk\ must\ have\ the\ same\ parity\ as\ m,\ since\ rows\ are\ selected\ in\ pairs,}}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{comment}{//\ preceded\ by\ the\ middle\ row\ if\ m\ is\ odd}}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keywordflow}{if}\ (maxrnk\ \%\ 2\ !=\ m\ \%\ 2)\ \{\ maxrnk\ -\/=\ 1;\ \}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{comment}{//\ Choose\ the\ middle\ row\ (now\ the\ first\ row)\ as\ the\ first\ pivot.\ It\ is\ forced}}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{comment}{//\ rather\ than\ chosen\ by\ norm,\ so\ a\ negligible\ middle\ row\ says\ nothing\ about\ the}}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{comment}{//\ remaining\ rows:\ reporting\ an\ epsilon-\/rank\ of\ zero\ would\ be\ wrong,\ and\ no}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{comment}{//\ symmetrized\ basis\ of\ odd\ rank\ exists.}}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasmid)\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(0)\ <=\ epssq)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Middle\ row\ of\ input\ matrix\ must\ be\ above\ the\ eps\ tolerance,\ since\ it\ is\ a\ forced\ pivot."{}});\ \}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ normalize\_and\_project(0,\ norms(0));}
+\DoxyCodeLine{00279\ \ \ \ \ \}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{comment}{//\ Begin\ pivoted\ double\ Gram-\/Schmidt\ procedure}}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordtype}{int}\ jpiv\ \ \ =\ 0;}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keywordtype}{double}\ nrm\ =\ 0;}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ firstpair;\ j\ <\ maxrnk;\ j\ +=\ 2)\ \{}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ next\ pair\ of\ pivots}}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ jpiv\ =\ j;}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ nrm\ \ =\ norms(j)\ +\ norms(j\ +\ 1);}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 2;\ k\ <\ m;\ k\ +=\ 2)\ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(k)\ +\ norms(k\ +\ 1)\ >\ nrm)\ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ jpiv\ =\ k;}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ nrm\ \ =\ norms(k)\ +\ norms(k\ +\ 1);}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \textcolor{comment}{//\ Swap\ current\ row\ pair\ with\ chosen\ pivot\ row\ pair}}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ deep\_swap(aa(j,\ \_),\ aa(jpiv,\ \_));}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ deep\_swap(aa(j\ +\ 1,\ \_),\ aa(jpiv\ +\ 1,\ \_));}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ std::swap(norms(j),\ norms(jpiv));}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ std::swap(norms(j\ +\ 1),\ norms(jpiv\ +\ 1));}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ std::swap(piv(j),\ piv(jpiv));}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ std::swap(piv(j\ +\ 1),\ piv(jpiv\ +\ 1));}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ first\ chosen\ pivot\ row)\ against\ all}}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j;\ ++k)\ \{\ aa(j,\ \_)\ =\ aa(j,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j,\ \_));\ \}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ norm\ of\ current\ row}}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ nrm\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_));}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \textcolor{comment}{//\ Terminate\ if\ sufficiently\ small,\ and\ return\ previously\ selected\ rows}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \textcolor{comment}{//\ (not\ including\ current\ row)}}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nrm\ <=\ epssq)\ \{\ \textcolor{keywordflow}{return}\ \{aa(nda::range(0,\ j),\ \_),\ norms(nda::range(0,\ j)),\ piv(nda::range(0,\ j))\};\ \};}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ \ \ normalize\_and\_project(j,\ nrm);}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ second\ chosen\ pivot\ row)\ against\ all}}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j\ +\ 1;\ ++k)\ \{\ aa(j\ +\ 1,\ \_)\ =\ aa(j\ +\ 1,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j\ +\ 1,\ \_));\ \}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \ \ normalize\_and\_project(j\ +\ 1,\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j\ +\ 1,\ \_)));}
+\DoxyCodeLine{00323\ \ \ \ \ \}}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordflow}{return}\ \{aa(nda::range(maxrnk),\ \_),\ norms(nda::range(maxrnk)),\ piv(nda::range(maxrnk))\};}
+\DoxyCodeLine{00326\ \ \ \}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00362\ \ \ \textcolor{comment}{//\ Type\ T\ must\ be\ scalar-\/valued\ rank\ 2\ array/array\_view\ or\ matrix/matrix\_view}}
+\DoxyCodeLine{00363\ \ \ \textcolor{keyword}{template}\ <nda::MemoryArrayOfRank<2>\ T,\ nda::Scalar\ S\ =\ nda::get\_value\_t<T>>}
+\DoxyCodeLine{00364\ \ \ std::tuple<typename\ T::regular\_type,\ nda::vector<double>,\ nda::vector<int>>\ \mbox{\hyperlink{namespacecppdlr_ae2becc5e7e7dfe9a59d7a45c309a2e47}{pivrgs\_sym}}(T\ \textcolor{keyword}{const}\ \&a,\ \textcolor{keywordtype}{int}\ r)\ \{}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{//\ Deliberately\ not\ \`{}auto\ [m,\ n]\ =\ a.shape()`:\ clang\ <\ 19\ with\ -\/fopenmp\ rejects}}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{comment}{//\ capturing\ a\ structured\ binding\ in\ the\ normalize\_and\_project\ lambda\ below.}}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordtype}{long}\ m\ =\ a.extent(0);}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keywordtype}{long}\ n\ =\ a.extent(1);}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keywordflow}{if}\ (m\ \%\ 2\ ==\ 1\ \&\&\ r\ \%\ 2\ ==\ 0)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}If\ input\ matrix\ has\ odd\ number\ of\ rows,\ r\ must\ be\ odd."{}});\ \}}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ \%\ 2\ ==\ 1\ \&\&\ m\ \%\ 2\ ==\ 0)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}If\ r\ is\ odd,\ input\ matrix\ must\ have\ odd\ number\ of\ rows."{}});\ \}}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keywordflow}{if}\ (r\ >\ m\ ||\ r\ >\ n\ +\ 1)\ \{\ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}r\ must\ be\ less\ than\ or\ equal\ to\ min(m,n+1)."{}});\ \}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordtype}{int}\ nprs\ \ \ \ \ \ =\ m\ /\ 2;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Number\ of\ mirror\ pairs\ of\ rows}}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keywordtype}{bool}\ hasmid\ \ \ =\ (m\ \%\ 2\ ==\ 1);\ \ \ \textcolor{comment}{//\ If\ m\ is\ odd,\ the\ middle\ row\ is\ its\ own\ mirror}}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{keywordtype}{int}\ firstpair\ =\ hasmid\ ?\ 1\ :\ 0;\ \textcolor{comment}{//\ Row\ where\ the\ first\ mirror\ pair\ begins}}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{comment}{//\ Order\ rows\ to\ make\ symmetric\ rows\ adjacent,\ putting\ the\ middle\ row\ first}}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{comment}{//\ if\ m\ is\ odd:\ piv\ =\ [(m-\/1)/2,]\ 0,\ m-\/1,\ 1,\ m-\/2,\ ...}}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{auto}\ piv\ =\ nda::arange(0,\ m);}
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasmid)\ \{\ piv(0)\ =\ (m\ -\/\ 1)\ /\ 2;\ \}}
+\DoxyCodeLine{00383\ \ \ \ \ piv(nda::range(firstpair,\ m,\ 2))\ \ \ \ \ =\ nda::arange(0,\ nprs);}
+\DoxyCodeLine{00384\ \ \ \ \ piv(nda::range(firstpair\ +\ 1,\ m,\ 2))\ =\ nda::arange(m\ -\/\ 1,\ m\ -\/\ 1\ -\/\ nprs,\ -\/1);}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{comment}{//\ Copy\ input\ data\ in\ this\ order}}
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{auto}\ aa\ =\ \textcolor{keyword}{typename}\ T::regular\_type(m,\ n);}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ m;\ ++j)\ \{\ aa(j,\ \_)\ =\ a(piv(j),\ \_);\ \}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{comment}{//\ Compute\ norms\ of\ rows\ of\ input\ matrix}}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{auto}\ norms\ =\ nda::vector<double>(m);}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ 0;\ j\ <\ m;\ ++j)\ \{\ norms(j)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_));\ \}}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{comment}{//\ Normalize\ row\ j\ and\ orthogonalize\ the\ rows\ after\ it\ against\ it,\ updating}}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{comment}{//\ their\ norms}}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keyword}{auto}\ normalize\_and\_project\ =\ [\&](\textcolor{keywordtype}{int}\ j)\ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ aa(j,\ \_)\ /=\ sqrt(\mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(j,\ \_)));}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 1;\ k\ <\ m;\ ++k)\ \{}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ aa(k,\ \_)\ =\ aa(k,\ \_)\ -\/\ aa(j,\ \_)\ *\ nda::blas::dotc(aa(j,\ \_),\ aa(k,\ \_));}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ norms(k)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(k,\ \_));}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00402\ \ \ \ \ \};}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{comment}{//\ If\ m\ odd,\ first\ choose\ middle\ row\ (now\ the\ first\ row)\ as\ first\ pivot}}
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{keywordflow}{if}\ (hasmid)\ \{\ normalize\_and\_project(0);\ \}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{comment}{//\ Begin\ pivoted\ double\ Gram-\/Schmidt\ procedure}}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keywordtype}{int}\ jpiv\ \ \ =\ 0;}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keywordtype}{double}\ nrm\ =\ 0;}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ j\ =\ firstpair;\ j\ <\ r;\ j\ +=\ 2)\ \{}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \textcolor{comment}{//\ Find\ next\ pair\ of\ pivots}}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ jpiv\ =\ j;}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ nrm\ \ =\ norms(j)\ +\ norms(j\ +\ 1);}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 2;\ k\ <\ m;\ k\ +=\ 2)\ \{}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (norms(k)\ +\ norms(k\ +\ 1)\ >\ nrm)\ \{}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ jpiv\ =\ k;}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ nrm\ \ =\ norms(k)\ +\ norms(k\ +\ 1);}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \textcolor{comment}{//\ Swap\ current\ row\ pair\ with\ chosen\ pivot\ row\ pair}}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ deep\_swap(aa(j,\ \_),\ aa(jpiv,\ \_));}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ deep\_swap(aa(j\ +\ 1,\ \_),\ aa(jpiv\ +\ 1,\ \_));}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ std::swap(norms(j),\ norms(jpiv));}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ std::swap(norms(j\ +\ 1),\ norms(jpiv\ +\ 1));}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ std::swap(piv(j),\ piv(jpiv));}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ std::swap(piv(j\ +\ 1),\ piv(jpiv\ +\ 1));}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ first\ chosen\ pivot\ row)\ against\ all}}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j;\ ++k)\ \{\ aa(j,\ \_)\ =\ aa(j,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j,\ \_));\ \}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \ \ \ \ \ \ normalize\_and\_project(j);}
 \DoxyCodeLine{00436\ }
-\DoxyCodeLine{00437\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ remaining\ rows\ against\ current\ row}}
-\DoxyCodeLine{00438\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ j\ +\ 2;\ k\ <\ m;\ ++k)\ \{}
-\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ aa(k,\ \_)\ =\ aa(k,\ \_)\ -\/\ aa(j\ +\ 1,\ \_)\ *\ nda::blas::dotc(aa(j\ +\ 1,\ \_),\ aa(k,\ \_));}
-\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ norms(k)\ =\ \mbox{\hyperlink{namespacecppdlr_a767cf14e0aef568fefdb0386d255b510}{normsq}}(aa(k,\ \_));}
-\DoxyCodeLine{00441\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \textcolor{comment}{//\ Orthogonalize\ current\ row\ (now\ the\ second\ chosen\ pivot\ row)\ against\ all}}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \textcolor{comment}{//\ previously\ chosen\ rows}}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ k\ =\ 0;\ k\ <\ j\ +\ 1;\ ++k)\ \{\ aa(j\ +\ 1,\ \_)\ =\ aa(j\ +\ 1,\ \_)\ -\/\ aa(k,\ \_)\ *\ nda::blas::dotc(aa(k,\ \_),\ aa(j\ +\ 1,\ \_));\ \}}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \ \ \ \ \ \ normalize\_and\_project(j\ +\ 1);}
 \DoxyCodeLine{00442\ \ \ \ \ \}}
 \DoxyCodeLine{00443\ }
 \DoxyCodeLine{00444\ \ \ \ \ \textcolor{keywordflow}{return}\ \{aa(nda::range(r),\ \_),\ norms(nda::range(r)),\ piv(nda::range(r))\};}

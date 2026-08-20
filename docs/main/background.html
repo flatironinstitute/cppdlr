@@ -343,15 +343,24 @@ desirable to have symmetric frequencies and grids, and <code class="docutils lit
 functionality via symmetrization flags. Please see the <a class="reference internal" href="examples.html#listofothercapabilities"><span class="std std-ref">list of
 other cppdlr capabilities</span></a> section on the <a class="reference internal" href="examples.html#examples"><span class="std std-ref">examples
 page</span></a> for a list of <cite>cppdlr</cite> tests which showcase this functionality.</p>
-<p>We make a note about symmetrization for bosonic Green’s functions. In this case,
-we always include <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span> as a DLR imaginary frequency node. Since
-we do not include the point <span class="math notranslate nohighlight">\(\omega = 0\)</span> in the <span class="math notranslate nohighlight">\(r\)</span> symmetrized DLR
-frequencies, <span class="math notranslate nohighlight">\(r\)</span> is even in this case, and the extra imaginary frequency
-grid points makes the number of DLR imaginary frequency nodes <span class="math notranslate nohighlight">\(r+1\)</span>. To
-obtain the DLR coefficients from samples of the Green’s function at the DLR
-imaginary frequency nodes, we therefore solve a slightly overdetermined
+<p>A symmetrized grid includes its self-symmetric fixed point—the point which is
+its own mirror image—as a single self-paired node: <span class="math notranslate nohighlight">\(\omega = 0\)</span> among the
+DLR frequencies, and <span class="math notranslate nohighlight">\(\tau = \beta/2\)</span> among the DLR imaginary time nodes.
+The symmetrized DLR rank <span class="math notranslate nohighlight">\(r\)</span> is therefore odd.</p>
+<p>We make a note about the symmetrized imaginary frequency grids. In the bosonic
+case, <span class="math notranslate nohighlight">\(i \nu_n = 0\)</span> is the self-symmetric Matsubara frequency, and is
+included as the central node; there are then <span class="math notranslate nohighlight">\(r\)</span> DLR imaginary frequency
+nodes, and the values-to-coefficients map is a square <span class="math notranslate nohighlight">\(r \times r\)</span> linear
+system. In the fermionic case there is no self-symmetric Matsubara frequency,
+since <span class="math notranslate nohighlight">\(\nu_n = (2n+1) \pi / \beta\)</span> never vanishes, so a symmetrized
+fermionic grid consists of mirror pairs only and we use <span class="math notranslate nohighlight">\(r+1\)</span> imaginary
+frequency nodes. To obtain the DLR coefficients from samples of the Green’s
+function at these nodes, we therefore solve a slightly overdetermined
 (<span class="math notranslate nohighlight">\((r+1) \times r\)</span>, rather than <span class="math notranslate nohighlight">\(r \times r\)</span>) linear system using the
-least squares method.</p>
+least squares method. Consequently, evaluating the resulting expansion back at
+the DLR imaginary frequency nodes recovers the samples to a relative accuracy of
+order <span class="math notranslate nohighlight">\(\epsilon\)</span> in general, rather than to machine precision as in the
+square case.</p>
 </section>
 </section>
 

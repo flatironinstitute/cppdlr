@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['p_0',['p',['../classcppdlr_1_1fineparams.html#a232cba7c7f76e2aa385980da3850ae25',1,'cppdlr::fineparams']]],
-  ['panels_1',['panels',['../classcppdlr_1_1fineparams.html#autotoc_md1',1,'fine imaginary time grid panels'],['../classcppdlr_1_1fineparams.html#autotoc_md0',1,'fine real frequency grid panels']]],
-  ['piv_2',['piv',['../classcppdlr_1_1imfreq__ops.html#a4ed57fa49cb30dbe0f9b895cae2042c8',1,'cppdlr::imfreq_ops::piv'],['../classcppdlr_1_1imtime__ops.html#a7cd0e6b5498400d3afade53a6ebab389',1,'cppdlr::imtime_ops::piv']]],
-  ['pivrgs_3',['pivrgs',['../namespacecppdlr.html#a1d0c839b446002a589c9cc22534967b6',1,'cppdlr']]],
-  ['pivrgs_5fsym_4',['pivrgs_sym',['../namespacecppdlr.html#ae2becc5e7e7dfe9a59d7a45c309a2e47',1,'cppdlr::pivrgs_sym(T const &amp;a, double eps)'],['../namespacecppdlr.html#ad64323a06309e2802fb97b93e3e24c2d',1,'cppdlr::pivrgs_sym(T const &amp;a, int r)']]]
+  ['nmax_0',['nmax',['../classcppdlr_1_1fineparams.html#a619b3c58649fcaa1914b31a80c5b2263',1,'cppdlr::fineparams']]],
+  ['nodes_20r_201_20in_20the_20symmetrized_20fermionic_20case_20else_20r_1',['DLR imaginary freq nodes (= r + 1 in the symmetrized fermionic case, else = r)',['../classcppdlr_1_1imfreq__ops.html#autotoc_md2',1,'']]],
+  ['nom_2',['nom',['../classcppdlr_1_1fineparams.html#a7d45c880ad388622d31945ef1f932b43',1,'cppdlr::fineparams']]],
+  ['nonsym_3',['NONSYM',['../namespacecppdlr.html#afa13d278b5eff503e3399f445f84ab6da320d20930f8ff7ba461e55e30ea405c7',1,'cppdlr']]],
+  ['normsq_4',['normsq',['../namespacecppdlr.html#a767cf14e0aef568fefdb0386d255b510',1,'cppdlr']]],
+  ['npom_5',['npom',['../classcppdlr_1_1fineparams.html#ac0f50ae7582fa29d3810f1db5461772b',1,'cppdlr::fineparams']]],
+  ['npt_6',['npt',['../classcppdlr_1_1fineparams.html#af1cda9f262b1e8b7316a4577d391d5de',1,'cppdlr::fineparams']]],
+  ['nt_7',['nt',['../classcppdlr_1_1fineparams.html#af8eb17a1299f17a0adb564c152880eb1',1,'cppdlr::fineparams']]]
 ];
