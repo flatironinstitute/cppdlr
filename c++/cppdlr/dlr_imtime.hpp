@@ -339,8 +339,10 @@ namespace cppdlr {
         auto h = arraymult(tcf2it_v, tmp);
 
         // Off-diagonal contribution
+        auto hfc = arraymult(hilb_v, fc);
+        auto hgc = arraymult(hilb_v, gc);
         for (int i = 0; i < r; ++i) {
-          tmp(i, _, _) = matmul(arraymult(hilb_v, fc)(i, _, _), gc(i, _, _)) + matmul(fc(i, _, _), arraymult(hilb_v, gc)(i, _, _));
+          tmp(i, _, _) = matmul(hfc(i, _, _), gc(i, _, _)) + matmul(fc(i, _, _), hgc(i, _, _));
         }
 
         return beta * (h + arraymult(cf2it, tmp));
