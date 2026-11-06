@@ -437,6 +437,53 @@ static void check_h5_roundtrip(imfreq_ops const &ifops, std::string const &filen
   EXPECT_EQ_ARRAY(ifops.get_if2cf_piv(), ifops_ref.get_if2cf_piv());
 }
 
+/**
+* @brief Test DLR interpolation in imaginary frequency for large Lambda, for
+* all combinations of statistics and symmetrization
+*/
+TEST(imfreq_ops, interp_large_lambda) {
+
+  double eps = 1e-10; // DLR tolerance
+
+  for (double lambda : {31623.0, 3162278.0}) {
+
+    // Test poles, spread over [-0.7 lambda, lambda] on a logarithmic scale
+    auto om = nda::vector<double>(83);
+    om(0)   = 0;
+    for (int l = 0; l < 41; ++l) {
+      om(1 + l)  = lambda * pow(10.0, -6.0 * l / 40);
+      om(42 + l) = -0.7 * om(1 + l);
+    }
+
+    // Test indices: all |n| <= 1000, and logarithmically spaced up to 10 * lambda
+    auto ntst = std::vector<int>{};
+    for (int n = -1001; n <= 1000; ++n) ntst.push_back(n);
+    for (int i = 0; i <= 2000; ++i) {
+      int n = static_cast<int>(1000 * pow(10 * lambda / 1000, i / 2000.0));
+      ntst.push_back(n);
+      ntst.push_back(-n - 1);
+    }
+    auto nt = nda::vector<int>(ntst.size());
+    for (int i = 0; i < nt.size(); ++i) nt(i) = ntst[i];
+
+    for (bool symmetrize : {false, true}) {
+      auto dlr_rf = build_dlr_rf(lambda, eps, symmetrize);
+      for (auto statistic : {Fermion, Boson}) {
+
+        auto ifops = imfreq_ops(lambda, dlr_rf, statistic, symmetrize);
+
+        // Fit poles from values at DLR nodes, and evaluate at test indices
+        auto gc  = ifops.vals2coefs(build_k_if(nda::vector<int>(ifops.get_ifnodes()), om, statistic));
+        auto err = nda::max_element(nda::abs(build_k_if(nt, dlr_rf, statistic) * gc - build_k_if(nt, om, statistic)));
+
+        std::cout << fmt::format("Lambda = {:e}, statistic = {}, symmetrize = {}: L^inf err = {:e}\n", lambda,
+                                 (statistic == Fermion ? "Fermion" : "Boson"), symmetrize, err);
+        EXPECT_LT(err, 2 * eps);
+      }
+    }
+  }
+}
+
 TEST(dlr_imfreq, h5_rw) {
 
   double lambda = 1000;  // DLR cutoff

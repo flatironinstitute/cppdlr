@@ -42,13 +42,13 @@ namespace cppdlr {
     }
   }
 
-  std::complex<double> k_if_fermion(int n, double om) { return 1.0 / ((2 * n + 1) * pi * 1i - om); }
+  std::complex<double> k_if_fermion(int n, double om) { return 1.0 / ((2.0 * n + 1) * pi * 1i - om); }
 
   std::complex<double> k_if_boson(int n, double om) {
     if (n == 0 && om == 0.0) {
       return -0.5;
     } else {
-      return std::tanh(0.5 * om) / (2 * n * pi * 1i - om);
+      return std::tanh(0.5 * om) / (2.0 * n * pi * 1i - om);
     }
   }
 

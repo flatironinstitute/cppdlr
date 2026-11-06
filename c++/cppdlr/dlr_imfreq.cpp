@@ -34,9 +34,11 @@ namespace cppdlr {
     cf2if  = nda::matrix<dcomplex>(niom, r);
 
     // Get analytic continuation kernel at DLR frequencies, up to imaginary
-    // frequency cutoff
+    // frequency cutoff, on dyadic fine grid with 2r indices per panel
     auto nmax = fineparams(lambda).nmax;
-    auto kmat = build_k_if(nmax, dlr_rf, statistic);
+    auto nf   = build_if_fine(nmax, statistic, 2 * r);
+    if (nf.size() < niom) throw std::runtime_error("Fine imaginary frequency grid smaller than # DLR imaginary frequency nodes.");
+    auto kmat = build_k_if(nf, dlr_rf, statistic);
 
     // Pivoted Gram-Schmidt to obtain DLR imaginary frequency nodes
     auto [q, norms, piv] = (symmetrize ? pivrgs_sym(kmat, niom) : pivrgs(kmat, 1e-100));
@@ -50,7 +52,7 @@ namespace cppdlr {
       std::ranges::reverse(piv);           // so reverse restores ascending order
     }
 
-    for (int i = 0; i < niom; ++i) { dlr_if(i) = piv(i) - nmax; }
+    for (int i = 0; i < niom; ++i) { dlr_if(i) = nf(piv(i)); }
 
     // Obtain coefficients to imaginary frequency values transformation matrix
     for (int i = 0; i < niom; ++i) {

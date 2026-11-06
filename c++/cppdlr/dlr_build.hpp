@@ -120,6 +120,41 @@ namespace cppdlr {
   nda::matrix<dcomplex> build_k_if(int nmax, nda::vector_const_view<double> om, statistic_t statistic);
 
   /**
+  * @brief Get imaginary frequency discretization of analytic continuation kernel
+  * on a given set of imaginary frequency indices
+  *
+  * @param[in] n Imaginary frequency indices
+  * @param[in] om Real frequency grid
+  * @param[in] statistic Particle Statistic: Boson or Fermion
+  *
+  * @return Discretization of analytic continuation kernel, with row i
+  * corresponding to imaginary frequency index n(i)
+  */
+  nda::matrix<dcomplex> build_k_if(nda::vector_const_view<int> n, nda::vector_const_view<double> om, statistic_t statistic);
+
+  /**
+  * @brief Get dyadic fine grid of imaginary frequency indices
+  *
+  * The non-negative half of the grid consists of consecutive panels of @p npt
+  * indices each, where the spacing in panel j is 2^j. The grid is truncated
+  * at the imaginary frequency cutoff @p nmax, which is always included, and
+  * is mirrored to negative frequencies.
+  *
+  * @param[in] nmax Imaginary frequency cutoff
+  * @param[in] statistic Particle Statistic: Boson or Fermion
+  * @param[in] npt Number of indices per dyadic panel
+  *
+  * @return Sorted imaginary frequency indices, covering -nmax <= n < nmax
+  * (fermionic case) or -nmax <= n <= nmax (bosonic case)
+  *
+  * \note The grid is symmetric in the sense required by pivrgs_sym: if n is in
+  * entry i, then -n-1 (fermionic case) or -n (bosonic case) is in entry m-i-1,
+  * where m is the grid size. For @p npt >= @p nmax the grid contains all
+  * indices up to the cutoff.
+  */
+  nda::vector<int> build_if_fine(int nmax, statistic_t statistic, int npt);
+
+  /**
   * @brief Get error of fine composite Chebyshev discretization of analytic
   * continuation kernel in imaginary time
   * 
