@@ -273,6 +273,47 @@ namespace cppdlr {
     }
   }
 
+  nda::matrix<dcomplex> build_k_if(nda::vector_const_view<int> n, nda::vector_const_view<double> om, statistic_t statistic) {
+
+    auto kmat = nda::matrix<dcomplex>(n.size(), om.size());
+    for (int i = 0; i < n.size(); ++i) {
+      for (int j = 0; j < om.size(); ++j) { kmat(i, j) = k_if(n(i), om(j), statistic); }
+    }
+    return kmat;
+  }
+
+  nda::vector<int> build_if_fine(int nmax, statistic_t statistic, int npt) {
+
+    if (nmax < 1) throw std::runtime_error("Choose nmax >= 1.");
+    if (npt < 1) throw std::runtime_error("Choose npt >= 1.");
+
+    // Non-negative half of the grid: n = 0, ..., nmax - 1 (fermionic case) or
+    // n = 1, ..., nmax (bosonic case), in panels of npt indices with spacing 2^j
+    int nfirst = (statistic == Fermion ? 0 : 1);
+    int nlast  = (statistic == Fermion ? nmax - 1 : nmax);
+
+    auto half = std::vector<int>{};
+    long nn   = nfirst;
+    for (long step = 1; nn < nlast; step *= 2) {
+      for (int i = 0; i < npt && nn < nlast; ++i, nn += step) half.push_back(static_cast<int>(nn));
+    }
+    half.push_back(nlast);
+
+    // Mirror to negative frequencies, n -> -n-1 (fermionic case) or n -> -n
+    // (bosonic case), and include n = 0 in the bosonic case
+    int nh    = half.size();
+    int shift = (statistic == Fermion ? 1 : 0);
+    int mid   = (statistic == Fermion ? 0 : 1);
+    auto n    = nda::vector<int>(2 * nh + mid);
+    for (int i = 0; i < nh; ++i) {
+      n(nh - 1 - i)   = -half[i] - shift;
+      n(nh + mid + i) = half[i];
+    }
+    if (mid == 1) n(nh) = 0;
+
+    return n;
+  }
+
   nda::vector<double> build_dlr_rf(double lambda, double eps, bool symmetrize) {
 
     if (eps < 1e-14) {

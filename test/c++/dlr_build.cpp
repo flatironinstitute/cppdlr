@@ -18,6 +18,9 @@
 #include <cppdlr/dlr_build.hpp>
 #include <cppdlr/dlr_kernels.hpp>
 #include <fmt/format.h>
+#include <cmath>
+#include <complex>
+#include <numbers>
 
 using namespace cppdlr;
 
@@ -100,4 +103,73 @@ TEST(dlr_build, symmetric_fixed_points) {
   EXPECT_EQ(build_rf_fine(fine).size(), fine.nom);
   EXPECT_EQ(t_non.size(), fine.nt);
   EXPECT_EQ(w_non.size(), fine.nt);
+}
+
+/**
+* @brief Test structure of dyadic fine imaginary frequency grid
+*/
+TEST(dlr_build, build_if_fine) {
+
+  for (auto statistic : {Fermion, Boson}) {
+    for (int nmax : {1, 20, 1000, 1000000}) {
+      for (int npt : {1, 7, 128}) {
+
+        auto n = build_if_fine(nmax, statistic, npt);
+        int m  = n.size();
+
+        // Covers cutoff range, sorted, symmetric in the sense of pivrgs_sym
+        int shift = (statistic == Fermion ? 1 : 0);
+        EXPECT_EQ(n(0), -nmax);
+        EXPECT_EQ(n(m - 1), nmax - shift);
+        EXPECT_EQ(m % 2, 1 - shift);
+        for (int i = 0; i + 1 < m; ++i) { EXPECT_LT(n(i), n(i + 1)); }
+        for (int i = 0; i < m; ++i) { EXPECT_EQ(n(i) + n(m - 1 - i), -shift); }
+
+        // Spacing on the half with n >= 1 - shift doubles every npt points, except for
+        // the last step to the cutoff
+        int i0 = (m + 1) / 2;
+        for (int i = i0; i + 2 < m; ++i) { EXPECT_EQ(n(i + 1) - n(i), 1 << ((i - i0) / npt)); }
+        if (m - i0 >= 2) { EXPECT_LE(n(m - 1) - n(m - 2), 1 << ((m - 2 - i0) / npt)); }
+
+        // Full grid if panels cover cutoff range
+        if (npt >= nmax) { EXPECT_EQ(m, 2 * nmax + 1 - shift); }
+      }
+    }
+  }
+
+  EXPECT_THROW(build_if_fine(0, Fermion, 128), std::runtime_error);
+  EXPECT_THROW(build_if_fine(100, Fermion, 0), std::runtime_error);
+}
+
+/**
+* @brief Test that kernel on given imaginary frequency indices matches kernel
+* on full grid
+*/
+TEST(dlr_build, build_k_if_grid) {
+
+  int nmax = 300;
+  auto om  = nda::vector<double>{-250.0, -1.0, 0.0, 0.5, 300.0};
+
+  for (auto statistic : {Fermion, Boson}) {
+    auto n     = build_if_fine(nmax, statistic, 16);
+    auto kfull = build_k_if(nmax, om, statistic);
+    auto kgrid = build_k_if(n, om, statistic);
+    for (int i = 0; i < n.size(); ++i) { EXPECT_EQ(nda::max_element(nda::abs(kgrid(i, nda::range::all) - kfull(n(i) + nmax, nda::range::all))), 0); }
+  }
+}
+
+/**
+* @brief Test analytic continuation kernel in imaginary frequency for indices
+* where 2n+1 overflows int
+*/
+TEST(dlr_build, k_if_large_n) {
+
+  using std::numbers::pi;
+  for (int n : {(1 << 30) + 5, -(1 << 30) - 7, 2147483000, -2147483000}) {
+    double om = 3.0;
+    auto kf   = 1.0 / std::complex<double>(-om, (2.0 * n + 1) * pi);
+    auto kb   = std::tanh(0.5 * om) / std::complex<double>(-om, 2.0 * n * pi);
+    EXPECT_LE(std::abs(k_if(n, om, Fermion) - kf), 1e-15 * std::abs(kf));
+    EXPECT_LE(std::abs(k_if(n, om, Boson) - kb), 1e-15 * std::abs(kb));
+  }
 }

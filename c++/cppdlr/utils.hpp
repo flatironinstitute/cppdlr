@@ -357,6 +357,11 @@ namespace cppdlr {
    * vector and its entry of the returned norms vector are meaningless; only the
    * pivots should be used. The symmetrized fermionic Matsubara grid is constructed
    * this way; see imfreq_ops.
+   *
+   * \note Pairs of pivots are chosen to maximize the squared volume
+   * |r_i|^2 |r_i'|^2 - |<r_i, r_i'>|^2 spanned by the residuals r_i, r_i' of
+   * the pair, rather than the sum of their squared norms, as long as the
+   * number of selected rows does not exceed the column dimension.
    */
 
   // Type T must be scalar-valued rank 2 array/array_view or matrix/matrix_view
@@ -410,13 +415,25 @@ namespace cppdlr {
 
     for (int j = firstpair; j < r; j += 2) {
 
+      // Score candidate row pairs by the squared volume they add to the
+      // selected subspace, which penalizes pairs whose rows are nearly
+      // parallel after orthogonalization. If the pair exceeds the column
+      // dimension, the volume vanishes for all pairs, so use the sum of
+      // squared norms instead.
+      bool usevol  = (j + 1 < n);
+      auto pairnrm = [&](int k) {
+        if (!usevol) return norms(k) + norms(k + 1);
+        return norms(k) * norms(k + 1) - std::norm(nda::blas::dotc(aa(k, _), aa(k + 1, _)));
+      };
+
       // Find next pair of pivots
       jpiv = j;
-      nrm  = norms(j) + norms(j + 1);
+      nrm  = pairnrm(j);
       for (int k = j + 2; k < m; k += 2) {
-        if (norms(k) + norms(k + 1) > nrm) {
+        double nk = pairnrm(k);
+        if (nk > nrm) {
           jpiv = k;
-          nrm  = norms(k) + norms(k + 1);
+          nrm  = nk;
         }
       }
 

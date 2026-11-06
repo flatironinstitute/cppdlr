@@ -231,3 +231,35 @@ TEST(pivrgs, pivrgs_cplx) {
   EXPECT_EQ(pivthin, arange(r));
   EXPECT_LE(frobenius_norm(q - qthin), 1e-14);
 }
+
+/**
+* @brief Test that rank-r pivrgs_sym chooses mirror pairs by the volume they
+* span, not by the sum of their squared norms
+*/
+TEST(pivrgs, pivrgs_sym_pair_volume) {
+
+  // Pair (0,3) has the larger norms but nearly parallel rows, pair (1,2) spans
+  // two dimensions
+  auto a = nda::matrix<double>{{1.0, 0.0}, {0.6, 0.0}, {0.0, 0.6}, {1.0, 1e-8}};
+
+  auto [q, norms, piv] = pivrgs_sym(a, 2);
+  std::sort(piv.begin(), piv.end());
+
+  EXPECT_EQ(piv, (nda::vector<int>{1, 2}));
+}
+
+/**
+* @brief Test that rank-r pivrgs_sym chooses a mirror pair exceeding the column
+* dimension by the sum of squared norms
+*/
+TEST(pivrgs, pivrgs_sym_overcomplete_pair) {
+
+  // With one column every pair spans zero volume, so the larger pair (1,2)
+  // must be chosen by its norms
+  auto a = nda::matrix<double>{{0.5}, {1.0}, {1.0}, {0.5}};
+
+  auto [q, norms, piv] = pivrgs_sym(a, 2);
+  std::sort(piv.begin(), piv.end());
+
+  EXPECT_EQ(piv, (nda::vector<int>{1, 2}));
+}
